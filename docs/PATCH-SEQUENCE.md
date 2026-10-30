@@ -13,10 +13,15 @@ be reviewed or reverted independently; do not make large directory deletions fir
 ## 1. Close audit and runtime contract
 
 Candidate: `docs(audit): close runtime entrypoint and artifact inventory`.
-Finish all unchecked P1 items in EGRESS-INVENTORY, reconcile generated entrypoints,
-record approved policy values without secrets, and define test data paths and validation
-commands by reading scripts. Acceptance: every known reachable capability classified
-or explicitly blocked, high-risk unknowns assigned. No source change or install needed.
+Complete the bounded static slice in `enterprise-local/SESSION-PROMPTS.md` Session 01:
+eight coverage areas, existing E-ID reachability/disposition, generated entrypoints,
+and a concrete first pure-compile patch contract. Unavailable dependency/model/native/
+traffic evidence must have an owner, later step and required permission; do not close
+dynamic or unavailable-package items in this no-install session. Define prospective
+test paths/commands by reading scripts. Corporate policy values may remain pending
+for their stages. Acceptance: coverage and first patch defined, or exact blockers
+reported, in AUDIT-CLOSURE.md. Full P1/dependency/runtime acceptance remains pending.
+No source change or install needed.
 
 ## 2. Pure compile boundary
 

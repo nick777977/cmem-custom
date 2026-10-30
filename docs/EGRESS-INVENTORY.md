@@ -46,6 +46,12 @@ Functions and triggers below identify code reachability, not observed user activ
 
 ## Unfinished P1 checklist
 
+This is the full-program backlog, not an instruction to close everything in one
+read-only session. The next session closes the bounded static slice defined in
+`enterprise-local/SESSION-PROMPTS.md` Session 01. Unavailable dependencies, artifact
+equivalence and dynamic evidence remain later gates. An attributed UNKNOWN may
+complete that session's handoff without completing full P1.
+
 - [ ] Enumerate all process/network call sites and route/client reachability, including
   server/custom-provider, connectors, update/repair and dynamically built destinations.
 - [ ] Trace capture spool -> ingest -> queue -> observer -> durable storage in detail,

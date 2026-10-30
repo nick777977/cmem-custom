@@ -49,3 +49,17 @@ Recorded A06/A07, superseded P04/P05, narrowed step 8 and aligned architecture, 
 patch acceptance and root guidance. Existing isolation observations remain documented
 but no longer mandate changes or block this release. No application source changed;
 no install, build, app, AWS or test execution. Validation: documentation diff review.
+
+## 2026-10-30 — bounded next-session prompts
+
+User requested a complete audit-session prompt plus later session prompts to control
+context usage and avoid endless investigation. Added SESSION-PROMPTS.md with known
+baseline/commit/file index, selective reading, eight finite audit areas, one broad and
+one targeted pass, a 45-minute research ceiling, explicit complete/incomplete verdicts,
+deferred-evidence rules and the first patch handoff contract. Prepared separate
+later-stage prompts with authorization boundaries, acceptance and stop conditions.
+
+Clarified PATCH-SEQUENCE §1 and inventory backlog: bounded static handoff is distinct
+from full dependency/runtime proof. Updated README/STATE navigation. No audit findings
+were closed, no application changes, installs, builds, tests or network calls performed.
+Validation: document consistency/link review and Git whitespace diff inspection.

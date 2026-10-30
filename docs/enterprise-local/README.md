@@ -6,6 +6,10 @@ traffic. Local persistence does not imply offline inference.
 
 ## Reading order
 
+For a fresh session use [bounded session prompts](SESSION-PROMPTS.md): the next audit
+prompt, later per-increment prompts and selective reading rules. Do not load the entire
+history or original plan into every context window.
+
 1. [Current handoff](memory/STATE.md): completed work, limitations, next action.
 2. [Roadmap](../roadmap.md): increments, dependency graph and parallel lanes.
 3. [Baseline](../BASELINE.md) and [static inventory](../EGRESS-INVENTORY.md).

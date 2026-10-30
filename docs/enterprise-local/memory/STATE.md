@@ -27,6 +27,11 @@ No claim of zero telemetry, offline runtime or enterprise acceptance is justifie
 
 ## Next action
 
+Ready-to-copy next task: `docs/enterprise-local/SESSION-PROMPTS.md`, Session 01.
+It defines eight audit areas, at most two passes / 45 minutes, explicit completion
+criteria and a compact `AUDIT-CLOSURE.md` handoff. That file is not yet created;
+the next audit session owns it. Later prompts do not authorize implementation/execution.
+
 Confirmed scope: keep the local browser viewer and existing memory/project/worktree
 behavior, including imperfect current separation. No scope, capture or retrieval
 rewrite. Focus on unapproved network removal and local runtime assets; approved
