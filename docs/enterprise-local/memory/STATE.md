@@ -27,6 +27,9 @@ their IDs. Recheck branch/status and source drift at the start of the next sessi
 - [ ] Any build, test, Chroma/Bedrock call, worker startup or network proof.
 
 The existing `node_modules/` was present before this work; it was not installed or used.
+User clarification after Session 01: they have not installed this fork's dependencies.
+The observed directory remains unverified; no working development environment follows
+from its existence. See [next-session prompt](../NEXT-SESSION.md) for dependency gates.
 No claim of zero telemetry, offline runtime or enterprise acceptance is justified yet.
 
 ## Next action
@@ -35,6 +38,12 @@ Session 01 is finished; stop here. Next task, only when separately launched and
 authorized: `SESSION-PROMPTS.md` Session 02, roadmap step 2. Read AGENTS.md, this
 handoff, accepted decisions, AUDIT-CLOSURE's first patch/U2–U4 and PATCH-SEQUENCE §2;
 do not repeat the full audit or load the initial plan.
+
+Recommended launcher: [NEXT-SESSION.md](../NEXT-SESSION.md), main prompt (explicit
+future source-edit authorization plus development-preparation contract). Its optional
+block can additionally authorize dependency preparation/build/targeted checks after
+the user fills allowed sources/lifecycles. Writing that template grants no permission
+to execute it now. Keep current no-install/build/test/source-change restrictions.
 
 Exact first source concern: `package.json` build/compile/preparation scripts and
 `scripts/build-viewer.js` (remove embedded npm ci, retain local compiler/Vite with

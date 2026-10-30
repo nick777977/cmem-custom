@@ -36,6 +36,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
+| `docs/enterprise-local/NEXT-SESSION.md` | Recommended Session 02 launcher: source patch, dev-preparation contract and optional explicitly scoped install/build/check authorization |
 
 Keep durable results in tracked docs, disposable output in `.scratch/enterprise-local/`.
 No secrets, real prompts/tool contents or user memory in any audit document.
@@ -163,6 +164,10 @@ checks реально выполненные/pending, один следующи�
 ```
 
 ### Session 02 — pure compile (roadmap step 2)
+
+For the user-ready launcher and the dependency clarification, use
+[NEXT-SESSION.md](NEXT-SESSION.md). The short template below remains a source-boundary
+session; optional dependency acquisition/checks need the separate scoped authorization.
 
 ```text
 Выполни общие правила SESSION-PROMPTS.md. Цель — первый minimal pure-compile патч

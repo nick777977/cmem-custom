@@ -97,3 +97,23 @@ node_modules, build, test, application/script execution, AWS, network/browser, s
 plugin registration, credential/settings/database reads or user-data change. The local
 documentation commit is recorded in Git log; no push. Next: separately authorized
 Session 02 source boundary patch; execution remains separately gated. Stop after report.
+
+## 2026-10-30 — next-session launcher and dependency clarification
+
+User requested an effective next-session prompt, compact status, dependency preparation
+advice and model/reasoning recommendations. They report not having installed this fork's
+dependencies. This does not prove node_modules is absent; the previously observed tree
+remains unverified. No install/source/build/test permission was inferred for this turn.
+
+Added NEXT-SESSION.md: explicit future source-edit prompt for step 2, development
+preparation report and optional scoped acquisition/build/check block requiring filled
+package sources/lifecycle policy. Group preparation and focused validation with the
+build increment when authorized; do not combine unrelated feature removals. Updated
+STATE and session index; graph and accepted scope unchanged.
+
+Used openai-docs skill for the requested GPT-6.1 Sol/Medium advice. Read official
+OpenAI model/model-selection pages only; public queries contained no repo/user data.
+Those documentation lookups were for model guidance, not project runtime/network
+validation. No application source, dependencies, installed settings/data or services
+changed; no build, test, AWS or plugin invocation. Validation: documentation consistency,
+local links and Git diff/whitespace review; local docs commit only, no push.
