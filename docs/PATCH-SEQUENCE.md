@@ -77,16 +77,19 @@ embedding-function tests and `tests/integration/chroma-windows-lifecycle.test.ts
 Never clear a real user's cache; use disposable fixtures. Rollback: retain canonical
 SQLite and rebuild derived Chroma using a compatible model/version.
 
-## 8. Privacy, scope and HTTP
+## 8. Local API/viewer boundary; preserve memory behavior
 
-Candidates: capture limits/redaction/exclusions before spool/persistence and observer;
-canonical repository/worktree identities and required query scope; local-only runtime
-and API validation with existing Host/Origin protections retained; secret-safe diagnostics.
-Acceptance: synthetic secrets follow approved policy, same-name repos/worktrees behave
-as decided, no unscoped accidental results, non-loopback/config overrides rejected,
-destructive routes guarded. Planned validation: `tests/utils/project-name-*.test.ts`,
-`tests/servers/mcp-project-cwd.test.ts`, retrieval/HTTP tests, synthetic privacy fixtures.
-Rollback: keep identity/schema compatibility map; do not merge or rewrite user corpora.
+Candidates: reject non-loopback/config overrides, retain existing Host/Origin guards,
+review sensitive routes and bundle viewer assets locally. Keep the local browser viewer.
+Do not rewrite capture, project/worktree identity, sharing, optional query filtering or
+retrieval semantics. Existing scope weaknesses are deferred, not acceptance failures
+for this release. Preserve current privacy controls; a new capture/DLP subsystem is not
+scheduled. Review allowed payloads before real Bedrock testing and separately surface
+any policy incompatibility requiring a behavior change.
+Acceptance: no unapproved remote API/assets, local viewer works, existing memory behavior
+has no regression caused by egress removal. Planned validation: existing project/MCP/
+retrieval regression tests and targeted local HTTP/viewer tests; no new isolation
+guarantee. Rollback: revert the isolated boundary change; no identity/data migration.
 
 ## 9. Deterministic private Windows plugin
 
@@ -115,8 +118,10 @@ Candidate: `test: add offline and approved Bedrock acceptance evidence`.
 Run appropriate existing tests plus meaningful negative cases above, then two environments:
 fully offline with fake observer; approved Bedrock/auth with synthetic payloads and
 process-tree DNS/connection evidence. Include cold cache, concurrent sessions, crash
-recovery, queue replay, history retrieval and viewer. IP §7 T01–T45 remains the acceptance
-queue; add missing cases rather than claiming broad suites cover them automatically.
+recovery, queue replay, history retrieval and viewer. IP §7 T01–T45 is a source checklist,
+adapted to A06/A07: project/worktree/capture cases verify preserved behavior, not newly
+invented isolation or DLP guarantees. Record deferred weaknesses instead of making them
+release blockers; add missing egress cases rather than assuming broad suites cover them.
 Acceptance: exact tested artifact/source/locks/model hashes, logs sanitized, unexplained
 destination blocks release. A TCP snapshot is insufficient. No code rollback needed
 for a failed test; diagnose and fix the isolated owning change.

@@ -19,6 +19,12 @@ installed plugin settings merely to investigate the repository.
 
 ## Persistence and implementation discipline
 
+- Preserve the existing local browser viewer and upstream memory behavior, including
+  project/worktree identity, sharing, filtering, capture and retrieval semantics. The
+  user explicitly deferred redesign or isolation fixes, even where current behavior
+  is imperfect. Focus this release on removing unapproved remote connections and
+  runtime downloads; retain the previously specified approved Bedrock exception.
+  Record scope weaknesses as deferred observations, not implementation blockers.
 - Keep shared decisions, evidence, task status and handoffs under `docs/enterprise-local/`.
   Put disposable local output in `.scratch/enterprise-local/` (ignored); never put the
   only copy of a decision in ignored scratch space.

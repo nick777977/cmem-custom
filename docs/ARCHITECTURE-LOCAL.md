@@ -30,14 +30,14 @@ separate below. No runtime correctness or absence of egress has been demonstrate
 
 ```text
 Claude Code hooks / MCP (private local plugin)
-  -> capture policy BEFORE local spool/storage and observer submission
+  -> existing capture behavior and privacy controls, preserved
   -> loopback worker -> canonical SQLite/FTS5 + durable queue
                     -> Claude observer with restricted environment
                        -> approved Bedrock + corporate auth infrastructure
                     -> one persistent local Chroma MCP process
                        -> pre-provisioned ONNX model, no downloader
-  <- project-scoped search / timeline / detail / SessionStart context
-  <- optional local viewer with bundled assets and guarded sensitive routes
+  <- existing search scope / timeline / detail / SessionStart context
+  <- retained local viewer with bundled assets and guarded sensitive routes
 ```
 
 Security posture: reject unsupported provider/runtime/remote URL and non-loopback bind;
@@ -60,8 +60,9 @@ inert compatibility fields where necessary. Historical-data migration is deferre
 2. Audit server runtime, Codex and generic OpenAI-compatible dispatch too, beyond the
    older plan's Gemini/OpenRouter list. Removing extra harness folders alone is insufficient.
 3. Isolate plugin identity/paths early for development; complete the installer later.
-4. Put capture privacy in front of the first real Bedrock experiment, not only in a late
-   hardening phase. Redacted logs alone do not establish redacted stored/observer data.
+4. Review existing capture payloads before the first real Bedrock experiment. The user
+   deferred memory/capture redesign; do not introduce a new DLP subsystem implicitly.
+   Redacted logs alone do not establish redacted stored/observer data.
 5. Bedrock and Chroma preparation can overlap in distinct files; integration, generated
    artifacts and release acceptance remain sequential gates.
 6. Preserve current Host/Origin controls and assess their coverage instead of replacing
@@ -70,6 +71,8 @@ inert compatibility fields where necessary. Historical-data migration is deferre
 ## Remaining policy decisions
 
 See [decision log](enterprise-local/memory/DECISIONS.md). Main gates: approved artifact
-sources; allowed Bedrock payload/Region/model/profile; repository/worktree security
-scope; viewer requirement; plugin-loading permission; local retention/backup policy.
+sources; allowed Bedrock payload/Region/model/profile; plugin-loading permission;
+local retention/backup policy. Viewer retention and unchanged project/worktree behavior
+are settled by A06. No canonical identity rewrite, mandatory query-scope change or
+identity migration is planned; record existing weaknesses for possible later work.
 No precise AWS endpoint list or organizational approval is inferred from source code.

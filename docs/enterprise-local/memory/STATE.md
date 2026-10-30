@@ -1,6 +1,6 @@
 # Current handoff
 
-Updated: 2026-10-29. Phase: planning and preliminary static reconnaissance.
+Updated: 2026-10-30. Phase: planning and preliminary static reconnaissance.
 Source inspected: `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b` on
 `feat/cmem-light-local`. Documentation commits follow that source SHA; use Git log for
 their IDs. Recheck branch/status and source drift at the start of the next session.
@@ -17,7 +17,7 @@ their IDs. Recheck branch/status and source drift at the start of the next sessi
 ## Not completed
 
 - [ ] Full P1 source/route/generated/dependency closure audit (see inventory checklist).
-- [ ] Corporate artifact, inference payload, model/Region, scope and retention decisions.
+- [ ] Corporate artifact, inference payload, model/Region and retention decisions.
 - [ ] Disposable runtime test environment / upstream plugin coexistence configuration.
 - [ ] Any application implementation, dependency installation or baseline runtime validation.
 - [ ] Any build, test, Chroma/Bedrock call, worker startup or network proof.
@@ -26,6 +26,12 @@ The existing `node_modules/` was present before this work; it was not installed 
 No claim of zero telemetry, offline runtime or enterprise acceptance is justified yet.
 
 ## Next action
+
+Confirmed scope: keep the local browser viewer and existing memory/project/worktree
+behavior, including imperfect current separation. No scope, capture or retrieval
+rewrite. Focus on unapproved network removal and local runtime assets; approved
+Bedrock remains the existing inference exception. See A06/A07. This clarification
+does not authorize source changes, installation or execution.
 
 Review the roadmap with the owner. Next useful work is step 1: finish the remaining
 static audit and agree the minimal runtime/artifact contract, still without installs or

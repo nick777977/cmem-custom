@@ -36,3 +36,16 @@ Commit boundaries: (1) preserve source input, baseline and persistence conventio
 (2) add static findings, architecture, risk register, roadmap and patch/handoff plan.
 Use `git log --oneline` for actual commit IDs rather than maintaining self-referential
 hashes in files being committed. No push or external publication requested.
+
+## 2026-10-30 — preserve upstream memory semantics
+
+User confirmed retaining the local browser viewer and explicitly narrowed scope:
+leave existing project/worktree sharing, identity, capture and retrieval behavior
+unchanged, even if separation is imperfect. Focus on local runtime and removal of
+unapproved remote connections. Previously specified Bedrock exception is retained;
+this is not an inference redesign or an authorization to run anything.
+
+Recorded A06/A07, superseded P04/P05, narrowed step 8 and aligned architecture, risks,
+patch acceptance and root guidance. Existing isolation observations remain documented
+but no longer mandate changes or block this release. No application source changed;
+no install, build, app, AWS or test execution. Validation: documentation diff review.

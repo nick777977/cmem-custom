@@ -14,8 +14,8 @@ actual historical traffic are not established. No mitigation is implemented yet.
 | R06 | Remote Chroma/embedding and server runtime configuration, E09/E10/E16 | Reject remote modes before client construction, remove unreachable packaged closures | Release blocker |
 | R07 | Upstream/global launcher and runtime repair, E12/E13/E14 | Unique identity, absolute bundle paths, local preflight, coexistence test | Blocks installation |
 | R08 | Build silently resolves packages; root lock absent from tracked files, E15 | Pure compile boundary, reviewed lockfiles/lifecycles/artifact origin | Blocks install/build approval |
-| R09 | Raw capture privacy not established; log redaction != capture policy | Synthetic secret tests at pre-spool/pre-storage/pre-observer boundaries | Blocks real corporate payloads |
-| R10 | Basename identities and optional retrieval scope | Canonical identity policy, explicit filtering, merged-key compatibility tests | Blocks data acceptance |
+| R09 | Raw capture privacy not established; log redaction != capture policy | Review existing capture against allowed Bedrock payloads; preserve existing controls; separately scope any required policy change | Blocks real corporate payloads pending policy review, not local-memory redesign |
+| R10 | Basename identities and optional retrieval scope | Preserve upstream behavior per A06; regression coverage only; record weaknesses for later consideration | Deferred, not a release blocker in this scope |
 | R11 | Configurable listener, local API and browser surface, E17/E18 | Reject non-loopback, audit existing guards, destructive-route/browser asset tests | Release blocker |
 | R12 | Existing limits/locks do not prove recovery/concurrency | Queue/crash/replay tests, singleton lock recovery, Windows process-tree cleanup | Blocks reliability acceptance |
 | R13 | Generated bundles retain removed code | Generator/output changes, clean build manifest, bundle reachability review | Blocks artifact acceptance |
