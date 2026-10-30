@@ -1,6 +1,6 @@
 # Current handoff
 
-Updated: 2026-10-30. Phase: planning and preliminary static reconnaissance.
+Updated: 2026-10-30. Phase: bounded static audit complete; implementation unauthorized.
 Source inspected: `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b` on
 `feat/cmem-light-local`. Documentation commits follow that source SHA; use Git log for
 their IDs. Recheck branch/status and source drift at the start of the next session.
@@ -13,6 +13,10 @@ their IDs. Recheck branch/status and source drift at the start of the next sessi
 - [x] Record cited preliminary inventory, risks and architecture discrepancies.
 - [x] Write ordered roadmap, dependencies, parallel lanes and commit acceptance/rollback plan.
 - [x] Establish tracked project memory and ignored scratch directory.
+- [x] Complete Session 01's bounded eight-area static audit and first patch contract:
+  [AUDIT-CLOSURE.md](../AUDIT-CLOSURE.md). Reuse source evidence; no source drift at
+  entry HEAD `2f061267628a74384fff08fc79b163cc9038bc88`.
+- [x] Assign E01–E22 reachability/actions/owners and U1–U7 deferred evidence gates.
 
 ## Not completed
 
@@ -27,10 +31,30 @@ No claim of zero telemetry, offline runtime or enterprise acceptance is justifie
 
 ## Next action
 
-Ready-to-copy next task: `docs/enterprise-local/SESSION-PROMPTS.md`, Session 01.
-It defines eight audit areas, at most two passes / 45 minutes, explicit completion
-criteria and a compact `AUDIT-CLOSURE.md` handoff. That file is not yet created;
-the next audit session owns it. Later prompts do not authorize implementation/execution.
+Session 01 is finished; stop here. Next task, only when separately launched and
+authorized: `SESSION-PROMPTS.md` Session 02, roadmap step 2. Read AGENTS.md, this
+handoff, accepted decisions, AUDIT-CLOSURE's first patch/U2–U4 and PATCH-SEQUENCE §2;
+do not repeat the full audit or load the initial plan.
+
+Exact first source concern: `package.json` build/compile/preparation scripts and
+`scripts/build-viewer.js` (remove embedded npm ci, retain local compiler/Vite with
+missing-input preflight). Keep build-hooks generators/outputs and all runtime features.
+Plugin lock generation is explicit preparation, never compile. Marketplace sync/restart
+remain separate deployment commands. No implementation was made in Session 01.
+
+Acceptance next: static compile subprocess chain has no install/lock resolution/
+sync/restart/registration; missing dependencies fail locally. Request authorization
+for source edits/local commit when that next session starts. Builds, installs, tests,
+application, AWS/network and deployment still need their relevant explicit permission;
+trusted toolchain/artifact policy precedes any execution. No blocker to defining or
+editing that source boundary; unavailable dependencies are not permission to install.
+
+New audit leads for later owning steps: remote spool E19 (8); independent refresh/
+copy/judge SDK/CLI/API paths E20 (6); worker tree-sitter download E21 (9); conditional
+Telegram/Notion/webhook exports E22 (10, separate concern). E15 now includes viewer
+npm ci; E16 server/custom-module boundary and E18 mounted GitHub fetches are clarified.
+Details, paths/source SHA, payload classes, future proof and U1–U7 are in the closure.
+No graph dependencies changed; roadmap step 1's broader policy contract remains open.
 
 Confirmed scope: keep the local browser viewer and existing memory/project/worktree
 behavior, including imperfect current separation. No scope, capture or retrieval
@@ -38,14 +62,10 @@ rewrite. Focus on unapproved network removal and local runtime assets; approved
 Bedrock remains the existing inference exception. See A06/A07. This clarification
 does not authorize source changes, installation or execution.
 
-Review the roadmap with the owner. Next useful work is step 1: finish the remaining
-static audit and agree the minimal runtime/artifact contract, still without installs or
-execution. Before step 2's implementation, obtain the user's explicit permission to
-change source/build scripts. Installation, builds/tests and real Bedrock each remain
-separate authorization boundaries until the user broadens them.
-
-First proposed implementation concern after that: separate pure compile from dependency
-resolution, deployment and restart. Do not begin by deleting large feature directories.
+Full P1, dependency/model/native review, source/bundle provenance and real traffic
+remain open. Corporate policy questions are staged to their owners in the closure;
+do not turn deferred project/worktree isolation or payload observations into an
+unrequested redesign. Do not begin by deleting large feature directories.
 
 ## How to resume
 

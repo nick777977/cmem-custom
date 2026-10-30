@@ -12,27 +12,49 @@ be reviewed or reverted independently; do not make large directory deletions fir
 
 ## 1. Close audit and runtime contract
 
-Candidate: `docs(audit): close runtime entrypoint and artifact inventory`.
-Complete the bounded static slice in `enterprise-local/SESSION-PROMPTS.md` Session 01:
-eight coverage areas, existing E-ID reachability/disposition, generated entrypoints,
-and a concrete first pure-compile patch contract. Unavailable dependency/model/native/
-traffic evidence must have an owner, later step and required permission; do not close
-dynamic or unavailable-package items in this no-install session. Define prospective
-test paths/commands by reading scripts. Corporate policy values may remain pending
-for their stages. Acceptance: coverage and first patch defined, or exact blockers
-reported, in AUDIT-CLOSURE.md. Full P1/dependency/runtime acceptance remains pending.
-No source change or install needed.
+Session 01 result: **bounded static audit complete**, recorded in
+[AUDIT-CLOSURE.md](enterprise-local/AUDIT-CLOSURE.md). All eight areas have coverage
+and limits; E01–E22 have reachability/disposition/owning steps; generated entrypoints
+and the first patch are mapped. E19 remote spool, E20 background inference, E21
+tree-sitter runtime provisioning and E22 outbound connectors extend the preliminary
+inventory. Reuse those chains in their owning steps, without another broad audit.
+
+Full P1/dependency/runtime acceptance and corporate runtime/artifact agreement remain
+pending. Closure U1–U7 assign unavailable Python/native/model/traffic/provenance evidence
+and policy questions to later owners/permissions. No source change, install, build,
+test or application execution occurred. Step 1's broader contract is not marked shipped.
 
 ## 2. Pure compile boundary
 
-Candidates: `build: separate compile from dependency resolution and deployment`;
-`build: pin reviewed development and plugin dependency inputs`.
-Inspect viewer subprocesses, manifest generators and native lifecycle scripts. Introduce
-an explicit compile-only workflow, distinct approved dependency preparation, no sync or
-restart. Acceptance later: compile cannot invoke installers, alter plugin registration
-or restart services; reproducible lock inputs. Requires explicit install/build permission
-and artifact policy before executing anything. Do not assume `--ignore-scripts` means
-no network. Rollback: revert build changes; do not alter installed runtime.
+First candidate: `build: separate compile from dependency resolution and deployment`.
+Use the exact [first patch contract](enterprise-local/AUDIT-CLOSURE.md#first-patch-contract--step-2-source-edits-still-unauthorized):
+
+- Change `package.json` scripts: build/build:compile call only the local manifest and
+  bundle generators; explicit preparation owns plugin lock resolution and My Work ci.
+- Remove `npm ci` from `scripts/build-viewer.js:71`; keep its local compiler/Vite
+  subprocess with missing-input preflight and error propagation. Merely excluding
+  `gen-plugin-lockfile.cjs` leaves this second install path reachable.
+- Retain `scripts/build-hooks.js` targets, sibling SQLite modules, request-progress
+  bundle, viewer outputs, integrity/attribution checks and generator verification.
+  No feature removal or harness minimization in this patch; generated output mapping
+  and exceptions are in the closure. No automatic hook-template rewrite flag.
+- Keep dependency preparation and marketplace sync/restart as explicit separate
+  operations. Do not generate locks, resolve dependencies, compile runtime binaries,
+  register a plugin or repair the installed runtime during compile.
+
+Source editing/local source commit requires the next user authorization. Installation,
+builds/tests and deployment remain separate boundaries. U2/U4 (trusted inputs, lifecycle
+policy and root lock) gate execution, not definition of this patch. A second concern,
+`build: pin reviewed development and plugin dependency inputs`, follows approved
+artifact policy; do not silently acquire dependencies to make compile succeed.
+
+Acceptance: static subprocess closure has no acquisition/deployment; missing inputs
+fail without repair. Later authorized offline compile must account for all outputs,
+leave lock/installed trees unchanged, and show no install/sync/restart/registration
+process. Existing bundle checks and planned command are listed in the closure; none
+has run. Reproducibility and source/bundle equivalence stay pending until verified.
+Rollback: revert the isolated build-boundary commit and its paired outputs/docs;
+preserve installed runtime and user data. Revert dependency pins separately as a set.
 
 ## 3. Hosted setup and historical import removal
 

@@ -4,6 +4,9 @@ Source SHA: `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b`. All cited paths are
 VERIFIED IN CHECKOUT by static inspection; actual invocation/traffic is UNKNOWN.
 This is a bounded reconnaissance inventory, not completed P1 or proof of zero egress.
 Functions and triggers below identify code reachability, not observed user activity.
+Session 01's [bounded closure](enterprise-local/AUDIT-CLOSURE.md) adds coverage,
+reachability/owning steps for every E-ID, E15/E16/E18 refinements and E19–E22.
+The source SHA is unchanged; dependency and runtime proof remain pending.
 
 ## Reachable capability register
 
@@ -22,11 +25,15 @@ Functions and triggers below identify code reachability, not observed user activ
 | E11 | `ChromaMcpManager.ts:2245` assigns telemetry off only if inherited value unset | Python Chroma analytics destination/payload UNKNOWN without dependency inspection | Enforce supported disable setting and validate packaged dependency | Env alone insufficient; monitor Python child under boot/index/query/error/shutdown |
 | E12 | `src/npx-cli/install/setup-runtime.ts:138,176,427`; `src/npx-cli/commands/install.ts:649,1700,1872` | Bun/uv/Claude bootstrap, npm/Bun packages and CMEM OAuth endpoints; installer/process commands | Replace installer with local preflight; remove remote setup/auth/bootstrap | Dependency acquisition becomes approved build-time step; installer fixture must reject missing files without download |
 | E13 | `plugin/hooks/hooks.json:12,27,54`; `plugin/scripts/version-check.js:13,235`; `plugin/.mcp.json:9` | Setup package installation; global launcher, upstream cache/marketplace fallback; Node/Bun/shell | Replace with deterministic private bundle resolution | Generator and generated hooks/MCP must agree; test upstream coexistence, spaces/Unicode, missing bundle |
-| E14 | `plugin/scripts/ensure-launcher.cjs:8` generated self-heal; source `src/launcher/install-launcher.ts` | Bun compile, user PATH/registry effects; startup launcher | Replace runtime repair with approved build/install preflight | Full source trace pending; test startup cannot compile or modify registry |
-| E15 | `package.json` scripts; `scripts/gen-plugin-lockfile.cjs:57`; `scripts/build-hooks.js:483,576` | Package resolution and generated manifests/UI/bundles; Node/Bun build processes | Build-only acquisition requires explicit authorization; split from compile/deploy | Root lock/pinning strategy and native lifecycles; verify compile performs no package resolution or deployment |
+| E14 | `plugin/scripts/ensure-launcher.cjs:8` generated self-heal; `src/launcher/install-launcher.ts:424,703,776,813` | Bun compile, user PATH/registry effects; startup launcher | Replace runtime repair with approved build/install preflight | Bounded source trace in closure; test startup cannot compile or modify registry |
+| E15 | `package.json:74`; `scripts/gen-plugin-lockfile.cjs:57`; `scripts/build-hooks.js:576`; `scripts/build-viewer.js:71,72` | Viewer npm ci, plugin bun install, generated manifests/UI/bundles; Node/Bun build processes | Build-only acquisition requires explicit authorization; split both install paths from compile/deploy | Step 2; exact first patch in closure; root lock/native behavior remains pending |
 | E16 | `src/cli/handlers/observation.ts:96,112`; server-runtime branch | Configurable server client; raw tool input/output and cwd; hook process | External server runtime forbidden; remove worker-to-server switching/client reachability | Server auth/Postgres/Redis/custom provider surfaces require closure audit; malformed runtime setting must reject |
 | E17 | `src/services/server/Server.ts:274,362`; `SettingsDefaultsManager.ts:437,441` | Loopback HTTP default, configurable host/origins; local memory/API data; worker/browser | Retain and harden; explicit rejection of non-loopback config | Existing guards present; Host/Origin/CSRF/destructive routes/auth coverage needs route-by-route review |
-| E18 | `plugin/ui/`, `src/ui/viewer/`, `src/services/work-view/request-judge.mjs:50` | Browser assets/remote content and OpenRouter decision URL capability; browser/worker reachability partly UNKNOWN | Bundle local assets; remove hosted decision paths | Follow all UI dynamic clients and generated bundles; browser offline request capture and asset audit |
+| E18 | `src/ui/viewer/components/Header.tsx:119` -> `GitHubStarsButton.tsx:26`; `src/ui/my-work/src/App.tsx:233` -> `components/bits.tsx:241` | Mounted browser widgets GET GitHub API; hosted actions/navigation and provider strings distinguished in closure; judge moved to E20 | Remove automatic remote fetches/hosted actions; preserve local assets/viewer | Steps 8/3; source/bundle equivalence and browser request capture pending |
+| E19 | `src/cli/spool-hook-event.ts:41,125,155,199`; `src/shared/hook-spool-remote.ts:105`; `HookSpoolRoutes.ts:21` | Configured worker host; raw capture envelope/auth; HTTP upload and upload-spool child, conditional on remote transport | Remove remote spool transport/receiver access; retain durable local spool/nudge | Step 8; legacy host/token/HTTP settings must not upload; see closure chain |
+| E20 | `WorkViewRoutes.ts:295,354,370,418`; `src/services/agent-runner/run.ts:96,313,328`; `work-view/request-judge.mjs:158`; `human-copy-worker.mjs:92` | Independent refresh SDK/CLI inference with fallback; OpenRouter/gateway decisions and compatible chat; prompt-derived work/copy context | Constrain retained background inference to approved backend/auth; preserve local viewer/data/rules and memory semantics | Step 6; covers E18 judge reachability; legacy settings/probes/errors must not bypass Bedrock-only policy |
+| E21 | `src/services/worker-service.ts:786`; `worker/tree-sitter-cli-provisioning.ts:27`; `smart-file-read/tree-sitter-cli-provision.ts:110,140,292` | Runtime install.js executable download; Linux conda-forge fallback; dependency-selected primary URL UNKNOWN | Replace startup/repair acquisition with pre-provisioned verified binary | Step 9, final artifact 10/12; missing/corrupt binary must not download or spawn installer |
+| E22 | `worker/agents/ResponseProcessor.ts:915,932,940`; `worker/SessionManager.ts:413,422`; integrations `telegram-transport.ts:13`, `NotionExporter.ts:491`, `GrokBotBrainbeat.ts:54` | Telegram, Notion and configured webhook; observation text/metadata and session wrap-up; conditional settings, retries | Remove outbound connector callers/transports/jobs; retain storage/index/SSE and local file integrations | Step 10 as separate concern; saved secrets/events must not deliver remotely or break local storage |
 
 ## Exact source discrepancies and limits
 
@@ -47,8 +54,8 @@ Functions and triggers below identify code reachability, not observed user activ
 ## Unfinished P1 checklist
 
 This is the full-program backlog, not an instruction to close everything in one
-read-only session. The next session closes the bounded static slice defined in
-`enterprise-local/SESSION-PROMPTS.md` Session 01. Unavailable dependencies, artifact
+read-only session. Session 01 closed the bounded static slice in
+`enterprise-local/AUDIT-CLOSURE.md`, including explicit limits. Unavailable dependencies, artifact
 equivalence and dynamic evidence remain later gates. An attributed UNKNOWN may
 complete that session's handoff without completing full P1.
 
