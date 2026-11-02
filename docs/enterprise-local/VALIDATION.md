@@ -1,6 +1,7 @@
 # Build, runtime and CI evidence contract
 
-Accepted validation plan, 2026-11-02, A20. **New checks below are planned, not run.**
+Accepted validation plan, 2026-11-02, A20. V3-V6 remain planned/not run; bounded
+WINDOWS-09 V1/V2 results and newly authored harness/CI source are distinguished below.
 Execution needs the applicable user launch and isolated assets/permissions. This file
 owns validation levels and pass criteria; [roadmap](../roadmap.md) alone owns dependency
 edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
@@ -14,7 +15,8 @@ edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
 | CHROMA-07 | 127 mocked/synthetic tests + one real compile PASS | Approved Python/model, running Chroma or embeddings |
 | TELEMETRY-04 | 206 tests / 728 assertions + one real compile PASS | Full worker/MCP/host process-tree lifecycle or provider auth correctness |
 | Previous user build/start | User-reported build and worker ready; preserved separately | Current source/artifact, full memory/Chroma/provider acceptance |
-| Fork-specific CI and new process smoke | NOT RUN / not implemented | No green CI or runtime claim is available |
+| WINDOWS-09 source/harness | 17 V1 tests / 53 assertions, compile/viewer typecheck PASS; root three unchanged baseline TS2345 | No actual generated process, readiness or complete private path proof |
+| Fork-specific CI and actual process smoke | Source authored; runtime/CI NOT RUN, native adapter and D12 pending | Manual-only workflow unconditionally blocks; no green CI or V3 evidence |
 
 These are real tests and real compilation, not mere source review. Worker bundles are
 compiled by esbuild; the viewer also invokes its TypeScript/Vite build. This is not a
@@ -64,7 +66,9 @@ Planned source gates include policy resolver/default/role overrides; unsupported
 provider/model/protocol; legacy settings; SDK isolation; endpoint/key binding;
 queue/privacy/filter/replay regressions; launcher paths and missing inputs. Typecheck
 is a separate gate: package.json:113 currently defines root and viewer tsc --noEmit.
-It has not been run under this adaptation. Review pre/post scripts and installed inputs
+It was not run under PLAN-ADAPT-05; WINDOWS-09 subsequently ran reviewed direct compiler
+commands: viewer PASS, root FAIL with identical entry-baseline diagnostics. See
+[WINDOWS-09](handoffs/WINDOWS-09.md). Review pre/post scripts and installed inputs
 before authorizing it. Record existing unrelated failures against a baseline rather
 than weakening types, guards or tests to obtain a green run.
 
@@ -80,6 +84,12 @@ full no-egress assertion.
 Create a reusable fixture runner, owned initially by step 9 and reused by subsequent
 steps. Exercise copied generated files from a synthetic private bundle path, rather
 than just importing TypeScript or unit-mocking an entire WorkerService.
+
+WINDOWS-09 Hf2c722fad authors `scripts/enterprise-local/compiled-smoke.mjs` with
+copied generated hashes, explicit env allowlist and three leaf specs. Its orchestration
+was tested with mocks labelled V1/substituted. No native adapter/default spawn is supplied;
+owned-tree/OS-egress implementation and missing/stale/MCP/worker cases remain continuation
+work. Actual V3 NOT RUN. [Exact commands/deadlines/ownership](handoffs/WINDOWS-09.md).
 
 Required cases, selected according to implemented features:
 
@@ -205,8 +215,12 @@ services or change runners without runtime authorization.
 - Report unit/compile/process/mock-E2E/live-provider stages separately. A green lane
   with unavailable Bedrock/Chroma stages cannot be displayed as full release readiness.
 
-No workflow file, runner or CI execution is changed/started by this document. CI
-provisioning/execution and runtime permissions remain explicit future launches.
+PLAN-ADAPT-05 changed no workflow/runner. WINDOWS-09 Hf2c722fad subsequently added
+`.github/workflows/fork-local-validation.yml`: manual-only, unapproved runner label,
+exact version declarations and unconditional D12 failure; stage commands are comments,
+no actions/provisioning/upload/deploy. This is a blocked source skeleton, not executable
+approved CI. Existing upstream triggers remain unchanged and must be reviewed before push.
+CI provisioning/execution and runtime permissions remain explicit future launches.
 Final step 12 reruns against the exact installable bundle; any relevant rebuilt byte
 invalidates the corresponding earlier artifact evidence and requires the affected
 checks again, rather than accepting an old green run.

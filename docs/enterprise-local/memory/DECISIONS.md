@@ -25,6 +25,19 @@
 | A19 | Replace Bedrock-only target with explicit user provider/auth/model profiles for all retained LLM tasks; keep compatible Claude/Codex/API and optional existing adapters | User clarification and explicit plan-adaptation launch 2026-11-02. One default plus visible per-role overrides, no implicit fallback/auto-selected model/account/gateway; local embeddings/MCP/persistence and removal of telemetry/hosted signup/cloud sync retained. Supersedes exclusivity in A07/P02 and initial-plan W4, not prior source evidence. [Contract](../LLM-PROFILES.md). Not implemented yet. |
 | A20 | Add early actual compiled-process smoke, credential-free local mock-LLM E2E and fork CI; keep live evidence per intended profile separate | User requests robust runtime/CI validation despite no current Bedrock access. Prior focused fixtures/real compiles remain recorded; root typecheck and new V3-V6 checks are pending. Reuse harnesses/known tools, approved pre-provisioned Windows runner, no hidden acquisition/upload/services; unavailable Bedrock or Chroma stays explicit pending. [Contract](../VALIDATION.md). This launch changes documentation only; runtime/CI/live execution still needs scoped launch. |
 
+### A21 — WINDOWS-09 bounded source launch and result (accepted 2026-11-02)
+
+Explicit user authorization: serial step-9 source/test/generator changes, isolated
+mock checks, reviewed typecheck and one pure compile; author V3/PowerShell/fork-CI
+sources without actual processes/CI/registration/acquisition/user-state access.
+Implemented S0d0a4b176/G004588740/Hf2c722fad: SessionStart compile/PATH-repair and
+tree-sitter helper acquisition removed; preflight remains blocked. 17 tests/53
+assertions, compile/viewer PASS; root typecheck FAIL with identical three baseline
+errors. Private paths/bootstrap/remaining fallbacks/native process adapter require
+WINDOWS-09B; step 9 not complete. D5 proposals in [handoff](../handoffs/WINDOWS-09.md)
+are not selected; D12 CI remains blocked. No provider pruning or A19/A20 weakening.
+No graph/wave change, runtime permission, new SQLite-only mode or release acceptance.
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

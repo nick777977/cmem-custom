@@ -492,3 +492,51 @@ or runtime/CI result newly claimed. Reservations released; docs commit follows i
 Final manual review also found and replaced the obsolete active short BUILD-02-TRUST
 launcher at the bottom of SESSION-PROMPTS with the current WINDOWS-09 source scope.
 Historical completed templates remain labelled; no completed task is relaunched.
+
+## 2026-11-02 — WINDOWS-09 partial refusal, V3 orchestration and CI source
+
+Explicit user source launch, serial coordinator; clean entry 7d5f83cac. Read required
+bounded context/fixtures/callers, claimed exact files before editing, no agents/worktrees.
+**S0d0a4b176 / G004588740 / Hf2c722fad**. [Full evidence](../handoffs/WINDOWS-09.md).
+
+SessionStart runtime compile/PATH repair removed; sibling preflight always blocked,
+no implied private ID/readiness. Tree-sitter ensure/provision helper now verifies local
+regular files/package version/existing pinned hash before a bounded version probe;
+download/install/conda/staging removed there. Existing optional-parser warning retained.
+E12/E13/private resolver, installer E14 and parser E21 fallbacks remain WINDOWS-09B.
+Preserved provider/login adapters and memory/viewer/SQLite/Chroma behavior/contracts;
+no profile-step implementation, Chroma activation, new SQLite-only mode or dependency edit.
+
+Authored hash-bound copied-generated fixture/allowlist env/leaf specs and owned-tree
+orchestration contract; mock adapter reports V1, no native/default adapter. Four-action
+PowerShell planner only emits D5 BLOCKED/exit1 with zero mutations. D5 concrete options
+documented, not chosen. CI source manual-only, unresolved runner label, exact tools,
+unconditional D12 block, no runnable stages/actions/install/upload/deploy. No dispatch.
+
+Final **17 PASS / 53 assertions**, zero forbidden test operations. Earlier 16/49 pass
+preceded extra failure cases/final generated copies, not additional final counts.
+PowerShell parser and four synthetic refusal dry-runs PASS, no target directories created.
+Viewer --noEmit PASS. Root --noEmit FAIL with three Chroma SettingsDefaults TS2345;
+entry Git-source compiler-host overlay produces identical diagnostics. First overlay
+script had wrong compiler-relative path; corrected without repair/acquisition.
+**One** reviewed build:compile PASS; exact Node22.23.4/npm10.9.9/Bun1.4.4; explicit env
+allowlist/synthetic homes/CODEX_HOME/config/data/temp/isolated npm cache/offline, unchanged
+BUILD-02 guard. 19 selected inputs unchanged pre/post; prior 16 unchanged except intended
+generator source comments. 192 tracked outputs, four expected CJS/maps changed, 188
+unchanged. No manifest/lock/trust changes. Generated syntax/closure and baseline diagnostic
+comparison PASS; nine Node inits/five spawns/known Vite net use, no Node socket event.
+Not OS/native/shell-wide egress proof, provenance or whole-tree dependency verification.
+
+Actual V3/V4/V5/V6/runtime/CI/live auth/registration NOT RUN; U1/D9/D11/D12, A15 release
+gates and root typecheck remain open. No actual generated hooks/worker/MCP/services/
+listeners/Python/model processes, real state/assets/credentials, acquisition or push.
+Local commits with hooks/signing disabled. Rollback H then G then S restores unsafe
+legacy capability and is not a runtime approval; preserve real data and baseline.
+Shared memory/contracts/AGENTS/environment/next launcher updated, reservations released.
+Next sole task **WINDOWS-09B source continuation**, awaiting explicit launch; no full
+step-9 status and no other roadmap step begun.
+
+Closure validation PASS: 14 Markdown files/99 relative links/14 exact source-SHA
+line assertions, fences/whitespace; dependency graph unchanged, five historical
+contracts/handoffs unchanged. Source/generated/harness bytes match S/G/H; documentation
+commit follows, no additional application edit or compile. Reservations released.

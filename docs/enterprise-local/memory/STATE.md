@@ -1,70 +1,64 @@
 # Current handoff
 
-Updated: 2026-11-02 after PLAN-ADAPT-05 (documentation only).
-Branch feat/cmem-light-local; clean entry 48feeab567995de81d501b74007694b5ee95a880.
-Application source/tests remain 0abd4180b1971802d7939acba04d46960c4e8c14;
-paired generated remains 6bb7c6995ea47e92ae0176bc88eac75bae871290.
-Plan documentation commit follows in Git. Single coordinator, serial; no active work
-or reservations after closure. No source/runtime/CI execution in this adaptation.
+Updated 2026-11-02 after WINDOWS-09 bounded source increment. feat/cmem-light-local;
+clean entry 7d5f83cac2d9ca7694316bbc5d93bf8ca2ba9818. Single coordinator, serial.
+S **0d0a4b176**, G **004588740**, H **f2c722fad**; docs commit follows in Git.
+No active reservations after closure. [Evidence/rollback](../handoffs/WINDOWS-09.md).
 
-## Accepted target correction
+## Latest outcome and exact limits
 
-A19 replaces Bedrock-only with explicit owner-controlled provider/auth/model profiles
-for ALL retained model tasks: observer, summary/compression, standalone/knowledge,
-viewer refresh/copy/judges. Keep compatible Claude/Bedrock, Claude API/login, Codex
-ChatGPT login, direct OpenAI-compatible API and other existing explicitly configured
-adapters. One default plus visible role overrides; no automatic model/provider/account
-fallback or plugin subscription/signup. No universal auth/model compatibility promise.
-[LLM-PROFILES](../LLM-PROFILES.md) is the canonical target, **not implemented yet**.
-Do not prune Codex/API/auth support in WINDOWS-09 or step 10 under obsolete instructions.
+Partial step 9: SessionStart ensure-launcher no longer compiles, discovers Bun or
+mutates PATH/registry. Sibling-file preflight always reports blocked (missing files
+or PRIVATE_LAUNCH_POLICY_PENDING), not readiness. Tree-sitter's ensure/provision
+helpers now verify exact local package/version/pinned hash before a bounded probe;
+missing/stale assets refuse, installer/download/conda/staging removed from that helper.
+Worker retains existing optional-parser warning; Chroma gate unchanged.
 
-A20 adds [VALIDATION](../VALIDATION.md): distinguish focused fixtures, real compile /
-typecheck, actual compiled-process smoke, fake-LLM local E2E with real approved Chroma,
-live per-profile proof and exact-package install/rollback. Author reusable harness/CI
-in step 9; add early scoped process checkpoints, finalize fork CI/closure in 10 and
-exact-artifact proof in 11/12. Bedrock currently unavailable; mock/process work can
-proceed without it, while its live row stays pending. Current launch is docs-only:
-no new runtime, runner provisioning, hosted CI upload or live auth permission.
+Only two generated CJS/map pairs changed, 188/192 outputs unchanged. Manifests/locks/
+trust/guard preserved; 19 selected sentinels unchanged across the one compile.
+All A19 adapters/native login, viewer and memory identity/filter semantics retained.
 
-Local viewer, SQLite/FTS5 canonical data, Chroma derived index/local embeddings,
-capture/retrieval/project/worktree/sharing/filter semantics remain unchanged (A06).
-No new degraded SQLite-only product mode, automatic migration or hidden remote MCP.
+V3 orchestration source copies actual generated hashes into synthetic spaces/Unicode
+bundle, builds an env allowlist, defines three leaf cases and bounded owned-tree
+adapter contract. Mock adapters explicitly report V1. No native/default adapter;
+actual process smoke BLOCKED until reviewed process/OS boundary and explicit launch.
+PowerShell source planner is BLOCKED D5 for all four actions, zero mutations.
+Manual CI source skeleton unconditionally blocks D12; stage commands are comments,
+no provisioning/checkout/install/upload/deploy or CI run.
 
-## Completed evidence — preserved, not rerun
+Actual checks: **17 PASS / 53 assertions**, four PowerShell dry-runs + parser PASS,
+one build:compile PASS; viewer typecheck PASS. **Root typecheck FAIL**, three existing
+TS2345 in ChromaMcpManager 227/842, ChromaSync 385; identical Git-blob overlay baseline.
+Generated syntax/closure/input preservation checks PASS; no test forbidden operation.
+Compile guard recorded local tool children, no Node socket; not OS-wide egress proof.
+No generated entrypoint, worker/hook/MCP/service/listener/Python/model process executed.
 
-- Baseline/setup A14/C and pure-compile A15 source progression accepted. OS/full
-  runtime evidence stays 11; closure/provenance/reproducibility stays 10/12.
-- HOSTED-03 S 417483949 / G 298d44742: E01/E02 retired, 58 tests + one compile PASS.
-- CHROMA-07 S 8fa997979 / G b8734d9b2: source refusal, 127 tests + one compile PASS;
-  activation still blocked by U1/D9. [Limits](../handoffs/CHROMA-07.md), D11 open.
-- TELEMETRY-04 S 0abd4180b / G 6bb7c6995: Node E03/E04 transports/jobs inert,
-  local diagnostics retained; 206 tests / 728 assertions + one real compile PASS,
-  16 inputs unchanged. [Evidence](../handoffs/TELEMETRY-04.md).
-- PLAN-ADAPT-05: source/workflow static inspection and document consistency/preservation
-  checks only. New profiles, process smoke/CI and live model support have NOT been
-  implemented/validated by the new documents. [Handoff](../handoffs/PLAN-ADAPT-05.md).
+## Still open
 
-## Open limits and authorization
+E12 CLI/bootstrap, E13 launcher/hook/MCP upstream/global/cache fallback and remaining
+E14 install-launcher paths are **not removed**. E21 parser PATH/module fallback also
+remains; helper acquisition refusal is not complete E21 closure. Old hook configs and
+launcher can still select upstream/global paths. Always-blocked preflight does not
+enforce a perimeter around other hooks. No private ID/runtime integrity/registration
+contract has been selected. D5 options are concrete in the handoff, not accepted.
+Do not activate this partial candidate or treat it as full step-9 completion.
 
-No current full compiled-worker/MCP/host lifecycle, local-index E2E, live selected
-profile or OS-wide egress acceptance. Existing compiles are real but insufficient
-for runtime proof. Upstream CI uses acquisition/different tool versions and broad
-runtime lanes; do not execute it as the default fork CI. D12 runner policy is open.
-U1/D9 local Python/model/artifact/API evidence, D11, D5 registration and profile-specific
-payload/auth/network/data policies remain scoped gates. No guessed model/endpoint.
-No acquisition/install/update, service/worker/MCP/plugin start/registration, live
-AWS/OpenAI/Claude/Codex login/inference, real settings/credentials/memory/installed
-assets, push, new branch/worktree or agents authorized by this adaptation.
+A19/A20 and [LLM-PROFILES](../LLM-PROFILES.md)/[VALIDATION](../VALIDATION.md) remain targets:
+retain compatible Claude/Bedrock/API/login, Codex ChatGPT login, OpenAI-compatible and
+other explicitly selected adapters. Step 6 role/profile/fallback enforcement unimplemented.
+Chroma U1/D9 activation remains blocked; D11 stays open; no SQLite-only success mode.
+D12 runner/upload, per-profile real payload/auth/network policy and release gates open.
+
+Preserved earlier evidence: BUILD-02/A14/A15 compile boundary; HOSTED-03 S417483949 /
+G298d44742; CHROMA-07 S8fa997979 / Gb8734d9b2 source refusal; TELEMETRY-04 S0abd4180b /
+G6bb7c6995 Node telemetry retirement; PLAN-ADAPT-05 A19/A20 target correction. Do not rerun.
+No full V3/V4/V5/V6, install/rollback, OS-egress/provenance/reproducibility acceptance.
 
 ## One next task
 
-**WINDOWS-09 source increment + early compiled-smoke/CI harness authoring**, awaiting
-explicit launch of [NEXT-SESSION](../NEXT-SESSION.md). Preserve all A19 provider adapters;
-remove runtime acquisition/private path fallback, not supported selected-provider auth.
-Current prompt allows source/test/fixture/harness/workflow definition and one reviewed
-compile after source edits when launched; actual runtime/CI execution remains separate.
-Read AGENTS -> README -> STATE -> roadmap step 9/graph -> TASKS -> A19/A20 ->
-LLM-PROFILES relevant boundary / VALIDATION V1-V3 + CI -> DEV-ENVIRONMENT current ->
-PLAN-ADAPT-05 -> TELEMETRY-04/CHROMA-07 limits -> PATCH-SEQUENCE 9 -> E12/E13/E14/E21.
-No full history or repeat audit; close shared memory and emit the next concrete bounded
-prompt. Step 6 now PROFILE-06A/06B if needed; do not launch it during WINDOWS-09.
+**WINDOWS-09B source continuation**, awaiting explicit [NEXT-SESSION](../NEXT-SESSION.md)
+launch. Finish deterministic private entrypoint paths and remaining bootstrap/refusal
+work, pair generators/outputs, preserve adapters; native process adapter may be authored
+but not executed. D5/D12 remain scoped gates, not grounds to guess identity/runner.
+No runtime/acquisition/CI/services/registration/live auth/user state/push/agents/worktrees
+permission follows from this handoff. Do not start another roadmap step.

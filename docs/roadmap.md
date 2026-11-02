@@ -39,7 +39,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | not started; reuse existing adapters; split PROFILE-06A/06B if needed |
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17 | M | source refusal done-bounded, S 8fa997979 / G b8734d9b2, 127 tests + compile PASS; activation/contract U1/D9 open |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | not started; retain identity/sharing/filter/capture/retrieval behavior |
-| 9 | Deterministic Windows private paths and early compiled-entrypoint validation | IP W6; A20 | M | next proposed source increment WINDOWS-09; no runtime/registration authorized |
+| 9 | Deterministic Windows private paths and early compiled-entrypoint validation | IP W6; A20/A21 | M | partial WINDOWS-09 S0d0a4b176/G004588740/Hf2c722fad: E14 session/E21 helper refusal + mock harness/blocked CI; WINDOWS-09B source remains, V3 NOT RUN |
 | 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | not started; preserve needed SDK/Codex/API adapters, prune proved-unused closures only |
 | 11 | Exact-artifact local E2E, egress and selected-profile acceptance | IP P6/P7; A20 | M | not started; mock/offline checks independent of Bedrock availability; live rows separately gated |
 | 12 | Verified Windows bundle, SBOM, install/rollback and profile runbook | IP P8; A19/A20 | S | not started; deployment requires the intended profile's actual live evidence |
@@ -171,10 +171,10 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 9 | 11 | Exact artifact, disposable local E2E, process-tree/network evidence, separate V5 rows | Tested configuration; unavailable live routes remain pending |
 | 10 | 12 | Windows bundle/SBOM/runbook/install/rollback on exact final hashes | Release candidate for validated profiles |
 
-Remaining major blocks: 5/6/7 activation/8/9/10/11/12. This is not exactly eight chats:
+Remaining major blocks: 5/6/7 activation/8/9 completion/10/11/12. This is not exactly eight chats:
 step 6 and runtime/CI/artifact gates can need bounded continuations or separate permission
 launches. Avoid extra sessions for repeated audits; do not collapse unmet runtime gates
-to preserve a session estimate. Next single launcher is [WINDOWS-09](enterprise-local/NEXT-SESSION.md).
+to preserve a session estimate. Next single launcher is [WINDOWS-09B](enterprise-local/NEXT-SESSION.md).
 
 ## Shipped
 

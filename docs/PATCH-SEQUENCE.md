@@ -183,6 +183,14 @@ guarantee. Rollback: revert the isolated boundary change; no identity/data migra
 
 ## 9. Deterministic private Windows plugin and early process validation
 
+WINDOWS-09 **partial** S0d0a4b176 / G004588740 / Hf2c722fad: SessionStart compile/PATH
+repair and tree-sitter helper acquisition removed; diagnostic preflight always blocked.
+17 tests/53 assertions + one compile/viewer typecheck PASS; root has three unchanged
+baseline TS2345. Mock harness/PowerShell planner/manual BLOCKED CI source authored;
+actual V3/CI NOT RUN. E12/E13/private resolvers, remaining installer E14/parser E21
+fallbacks and native process adapter remain **WINDOWS-09B**. No full step-9 closure.
+[Evidence and rollback](enterprise-local/handoffs/WINDOWS-09.md).
+
 Private ID and bundle-local launcher/MCP/hooks; remove upstream/global cache fallback,
 Bash Setup/runtime install/update/self-repair compile. Local PowerShell preflight /
 install/verify/uninstall/rollback tooling as source/dry-run first. Generators and emitted

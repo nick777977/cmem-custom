@@ -1,14 +1,16 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated after PLAN-ADAPT-05
-(2026-11-02, docs-only). A19/A20 supersede the former Bedrock-only instructions:
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), WINDOWS-09B after the partial
+WINDOWS-09 source/compile/harness increment (2026-11-02). A19/A20 supersede Bedrock-only:
 retain explicit user-configured LLM adapters/roles; add real compiled-process/CI
 checkpoints without claiming mock/compile as full runtime proof. Contracts:
 [LLM-PROFILES](LLM-PROFILES.md), [VALIDATION](VALIDATION.md).
 
 Existing TELEMETRY-04 S 0abd4180b / G 6bb7c6995 and its 206 tests/one compile are
 unchanged. Chroma activation U1/D9 and D11 remain open; Bedrock live access unavailable.
-Next single task: WINDOWS-09 source/paths + early smoke/CI harness authoring.
+WINDOWS-09 S0d0a4b176/G004588740/Hf2c722fad: 17 tests/53 assertions, compile/viewer
+PASS; root three baseline TS2345. Full step 9 incomplete, actual V3/CI NOT RUN.
+Next single task: WINDOWS-09B remaining private paths/bootstrap/refusal source.
 Actual runtime/CI/provider execution still requires a scoped user launch.
 STATE/TASKS own current context. Session 01 and completed templates are historical;
 future templates below are adapted planning aids, never independent authorization.
@@ -55,7 +57,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | One proposed WINDOWS-09 source/harness launcher; profiles/CI/runtime scope explicit |
+| `docs/enterprise-local/NEXT-SESSION.md` | One proposed WINDOWS-09B source continuation; profiles/CI/runtime scope explicit |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Canonical user profile/role/auth/model target; not implemented yet |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |
@@ -320,10 +322,10 @@ Current short launcher (the full proposed task/scope is in NEXT-SESSION):
 
 ~~~text
 Продолжим в C:/0/ai/claude/claude-mem-custom/cmem-light на feat/cmem-light-local.
-Выполни WINDOWS-09 по полному copyable prompt в docs/enterprise-local/NEXT-SESSION.md,
+Выполни WINDOWS-09B по полному copyable prompt в docs/enterprise-local/NEXT-SESSION.md,
 с его bounded scope, context, permissions и completion. Один coordinator, serial.
-A19/A20: сохрани selected-provider adapters/login, подготовь deterministic paths и
-исходники reusable compiled-smoke/fork-CI harness. Только указанные source/fixture/
+A19/A20: сохрани selected-provider adapters/login, заверши remaining deterministic
+paths/refusal, reuse уже authored compiled-smoke/fork-CI sources. Только source/fixture/
 reviewed compile/typecheck/mock checks; actual worker/MCP/process smoke/CI/live auth /
 registration/acquisition/upload/push не разрешены этим source launch.
 Контекст/ownership — через STATE/TASKS; не повторять baseline/trust/hosted/Chroma/telemetry.

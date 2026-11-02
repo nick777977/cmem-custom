@@ -17,6 +17,19 @@ remain separate removals; E10 local embeddings remains local. Source findings be
 keep their pinned historical lines; target policy cells for E06/E07/E20/E12 are updated.
 [LLM contract](enterprise-local/LLM-PROFILES.md), [validation](enterprise-local/VALIDATION.md).
 
+## Current E14/E21 bounded delta (WINDOWS-09)
+
+Source 0d0a4b176e12945f6ade3088456d73436f38649d / generated 004588740:
+SessionStart ensure-launcher no longer compiles or changes PATH; every local preflight
+result is blocked pending private entrypoint/integrity policy. Tree-sitter helper now
+verifies bundle-local bytes/version/pinned hash before a bounded version probe; runtime
+install/download/conda/staging removed there. **E14 installer entrypoints and E21 parser
+PATH/module fallback remain open**, alongside E12/E13. No global no-acquisition claim.
+17 V1 tests and one compile/viewer typecheck PASS; root has three unchanged baseline
+errors. Hf2c722fad mock harness and manual BLOCKED CI source are not V3/runtime proof.
+[Exact source lines, preservation, gaps](enterprise-local/handoffs/WINDOWS-09.md).
+Next source task WINDOWS-09B; historical rows below retain original source citations.
+
 ## Current E08–E11 disposition (CHROMA-07)
 
 Historical rows retain their original pinned SHA. Source

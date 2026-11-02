@@ -1,84 +1,60 @@
-# Next session: WINDOWS-09 — source paths/preflight and early smoke/CI harness
+# Next session: WINDOWS-09B — remaining deterministic private entrypoint source
 
-Updated: 2026-11-02 after PLAN-ADAPT-05, entry/source snapshot 48feeab56.
-This replaces the pre-A19 source launcher; **proposed only, await explicit launch**.
-Existing S 0abd4180b / G 6bb7c6995 remain unchanged. Documentation adaptation ran no
-application tests/build/runtime/CI. Roadmap owns ordering; this is one serial task.
-
-## Copyable prompt
+Proposed only; await explicit user launch. Updated 2026-11-02 after bounded WINDOWS-09
+S0d0a4b176 / G004588740 / Hf2c722fad. Full step 9 and actual V3 are not complete.
+This replaces the initial WINDOWS-09 launcher; prior evidence in its tracked handoff.
 
 ~~~text
-Продолжаем в C:/0/ai/claude/claude-mem-custom/cmem-light,
-ветка feat/cmem-light-local. Выполни WINDOWS-09: bounded source increment roadmap
-step 9, с исходниками reusable compiled-process smoke harness и fork CI definition.
-Один coordinator, serial, без agents/branches/worktrees. Не запускать другие steps.
+Продолжаем C:/0/ai/claude/claude-mem-custom/cmem-light, feat/cmem-light-local.
+Выполни WINDOWS-09B — оставшийся source подэтап step 9, один coordinator, serial,
+без agents/branches/worktrees и без других steps. Сначала AGENTS -> README -> STATE ->
+roadmap step 9/graph -> TASKS -> handoffs/WINDOWS-09.md -> PATCH-SEQUENCE 9 ->
+LLM-PROFILES scope/auth/MCP и VALIDATION V1/V2/V3/CI -> DEV-ENVIRONMENT current.
+Не повторяй общий аудит/историю. Branch/status/HEAD проверить, exact files claim до edits.
 
-Сначала AGENTS -> README -> STATE -> docs/roadmap.md step 9/graph/checkpoints -> TASKS ->
-DECISIONS A06/A07/A09/A14/A15/A17/A18/A19/A20 -> LLM-PROFILES (scope/auth/MCP) ->
-VALIDATION (V1/V2/V3, CI) -> DEV-ENVIRONMENT current -> PLAN-ADAPT-05 -> TELEMETRY-04 и
-CHROMA-07 handoff limits -> PATCH-SEQUENCE 9 -> E12/E13/E14/E21 и audit notes.
-Проверь branch/status/HEAD; claim точных файлов до edits. Без повторного общего аудита.
+Сохранить S0d0a4b176/G004588740 refusal, Hf2c722fad harness и A19/A20. Provider/Claude/
+Bedrock/Claude API/login/Codex ChatGPT login/OpenAI-compatible adapters НЕ удалять.
+Profile role/model/fallback enforcement — step 6, не эта задача. Viewer, SQLite canonical,
+Chroma derived и текущие identity/sharing/filter/capture/retrieval semantics сохранить.
+Chroma activation U1/D9 остаётся закрыта; не делать SQLite-only success или test bypass.
 
-A19 ОТМЕНЯЕТ Bedrock-only target. Сохрани существующие Claude/Bedrock, Claude API/login,
-Codex ChatGPT login, OpenAI-compatible и другие явно выбираемые совместимые adapters.
-Не вырезай provider/native login code под видом удаления CMEM signup/bootstrap.
-Выбор ролей/моделей и устранение скрытых inference fallback — step 6, не этот increment.
-Никакие реальные settings/credentials/CODEX_HOME/модели не читать. Сохрани локальный
-viewer, SQLite canonical/Chroma derived и существующие memory identity/filter semantics.
+Разрешаю source/test/generator changes оставшегося WINDOWS-09B: deterministic private
+bundle-local launcher/hook/MCP/runtime paths вместо on-PATH/global/upstream/cache/cwd
+discovery; missing/stale/unapproved runtime/bundle -> ясный bounded refusal без download,
+install/compile/repair/login. E12 CLI/setup-runtime/version-check/CMEM signup-bootstrap,
+E13 hook/MCP/launcher generators, оставшиеся E14 install-launcher paths, E21 parser PATH/
+module fallback: trace только прямые callers, не новый общий аудит. Сохранить supported
+provider native login implementation; убрать автоматический plugin bootstrap, не адаптеры.
+Generators и paired outputs согласовать. D5 private ID/loading policy не выдумывать:
+использовать явный local root/refusal независимо от регистрации, оставить concrete варианты.
 
-Разрешаю source/test changes для deterministic private Windows launcher/hook/MCP
-bundle-local paths, local preflight и удаления runtime downloads/installation/repair /
-compile/upstream-global-cache fallback. Измени нужные generators + paired outputs.
-Missing/stale executable/bundle -> ясная ошибка без auto-discovery/download/login.
-PowerShell install/verify/uninstall/rollback — source/synthetic dry-run; actual plugin
-registration/PATH/registry/marketplace/user install не менять. D5 identity/registration
-policy не выдумывать: оформить concrete варианты, завершить независимую refusal часть.
+Reuse scripts/enterprise-local/compiled-smoke.mjs и tests/enterprise-local/. Дополнить
+missing/stale/controlled-refusal specs и, если хватает bounded scope, author native adapter
+с проверяемым owned-tree/egress/cleanup contract; source/mock only, adapter НЕ запускать.
+Fork CI skeleton оставить manual-only BLOCKED D12; неизвестный approved runner/artifact
+не подменять hosted config или fake green. PowerShell planner пока source/dry-run без
+реальной регистрации/PATH/registry/install. Upstream workflow triggers только review.
 
-A20: подготовь/адаптируй минимальный reusable harness для проверки РЕАЛЬНЫХ generated
-entrypoints (V3), не только TypeScript imports. Reuse reviewed compiled-bundle fixtures,
-замени broad env inheritance на allowlist synthetic HOME/USERPROFILE/APPDATA/config /
-CODEX_HOME/data/temp. Запиши точные команды, expected outputs/deadlines, process/port
-ownership, cleanup, no-acquisition/egress controls и различие controlled refusal vs
-readiness. Никакого production bypass для Chroma/profile security и нового SQLite-only
-success mode. Chroma activation остаётся закрыта U1/D9; actual V4 требует approved assets.
+Разрешены только reviewed inert/mock tests existing dependencies, synthetic allowlist env
+и state под .scratch/enterprise-local/windows-09b; read fixtures/preload/subprocess/network
+перед checks. Root typecheck сейчас имеет три baseline TS2345 (ChromaMcpManager 227/842,
+ChromaSync 385); зафиксировать отдельно, не расширять scope Chroma ради green. Reviewed
+root/viewer --noEmit без application runtime imports разрешён. После application source
+edits разрешаю ОДИН reviewed build:compile exact Node22.23.4/npm10.9.9/Bun1.4.4 с BUILD-02
+guard, process-local PATH, synthetic HOME/USERPROFILE/APPDATA/CODEX_HOME/config/data/temp,
+empty isolated npm config/cache/offline mode. Missing input -> fail без repair.
+Fingerprint source/generated и manifest/lock/trust/compiler sentinels до/после; никакого
+dependency graph/lock resolution. Declared identity delta только явно отдельно от locks.
 
-Подготовь reviewable fork CI lane source/config на exact Node 22.23.4/npm 10.9.9/Bun 1.4.4
-и pre-provisioned approved inputs: targeted fixtures/typecheck/pure compile/generated
-checks/process smoke по уровням. Workflow пока manual-only/no deployment; runtime/live
-jobs требуют отдельного scope, D12 runner/upload policy pending. Existing upstream
-workflows/trigger risks только review: не запускай npm install, Bun installer, broad
-fast/integration/server/cloud/publish suites. Не делай новый framework или redesign CI.
-Если CI definition требует неизвестных approved runner/artifact inputs — source skeleton
-с явным blocking preflight/status, не ложная исполнимая hosted конфигурация и не fake green.
+Запрещены actual generated hook/worker/MCP/service/HTTP listener/process smoke, CI job/
+provisioning/upload, install/download/update/preparation/build-and-sync/dev/registration,
+machine PATH/registry, реальные settings/credentials/CODEX_HOME/memory/models/caches,
+auth/inference/AWS, push/agents/worktrees. Bedrock недоступен и не нужен source checks.
+V1 mocks/compile не считать V3/readiness. V4 требует approved Chroma assets. A15 10/11/12 открыты.
 
-Перед targeted checks прочитай fixtures/subprocess/env/network behavior. В этой source
-сессии разрешены только reviewed inert/mock checks с existing dependencies, synthetic
-state под .scratch/enterprise-local/windows-09. Протестируй harness orchestration с mock
-process adapters; actual built hook/worker/MCP/services/HTTP listener/process smoke/CI
-НЕ ЗАПУСКАТЬ этим разрешением. Запуск compiled processes — последующий явно запущенный
-bounded runtime substep с concrete artifact, env, port/process scope и cleanup.
-
-После application source изменений разрешаю один reviewed build:compile с exact
-baseline, process-local PATH, synthetic HOME/config/data, isolated npm config/cache /
-offline mode, reviewed BUILD-02 harness. Reviewed root/viewer typecheck без source/runtime
-imports разрешён при existing compiler inputs; сначала проверь scripts/pre/post behavior.
-Source-only CI/harness definition не требует лишнего application rebuild, если emitted
-sources не менялись. Missing inputs -> fail, no repair. Сверь fingerprints source/generated,
-locks/trust/dependency/compiler sentinels. Declared private identity manifest delta отдели
-от запрещённой lock resolution; не ослабляй guard и не меняй dependency graph для build.
-
-Запрещены install/download/update/lock resolution/new dependency graph, preparation,
-build-and-sync/dev, actual worker/service/MCP/plugin start/restart/registration,
-machine PATH/registry changes, CI provisioning/execution/upload, live auth/inference/AWS,
-real settings/credentials/memory/installed model/cache inspection, push, agents/worktrees.
-Не превращай mocks/compile в runtime proof. Bedrock сейчас недоступен; не требуй его
-для source/check/harness работы и не помечай его проверенным. A15 gates 10/11/12 открыты.
-
-Completion: reviewable bounded source refusal/path increment, preserved adapters/behavior,
-paired outputs, targeted checks и preservation evidence; reusable V3/CI source reviewed,
-NOT RUN stages честно указаны. Если объём превышает increment — закончи полезную часть,
-остальное явно в handoff, без ложного full step-9 status. Logical local commits/rollback.
-Обнови STATE/TASKS/WORKLOG/DECISIONS/affected contracts/DEV-ENVIRONMENT/NEXT-SESSION.
-Один next concrete prompt: либо оставшийся source подэтап, либо отдельный compiled-process
-V3 launch после готовности артефакта и проверяемых разрешений. Другие steps не начинать.
+Completion: полезный reviewable private-path/refusal source slice с paired outputs,
+reviewed targeted checks/preservation/rollback; точные оставшиеся gaps без full step9 claim,
+если они есть. Logical local commits. Закрыть STATE/TASKS/WORKLOG/DECISIONS/affected
+contracts/DEV-ENVIRONMENT/NEXT-SESSION. Один следующий prompt: remaining source ИЛИ
+отдельный V3 launch только после готовности artifacts/native adapter/permissions/cleanup.
 ~~~

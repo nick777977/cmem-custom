@@ -6,6 +6,22 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
+Latest session **WINDOWS-09**: S0d0a4b176/G004588740/Hf2c722fad; exact baseline verified,
+no install/update. 17 reviewed inert/mock tests / 53 assertions PASS, four expected
+PowerShell planner refusals plus parser PASS, one reviewed pure compile PASS. Viewer
+typecheck PASS; root FAIL (three baseline TS2345, same entry Git-source overlay).
+19 selected inputs unchanged across compile, 188/192 tracked outputs unchanged; two
+expected CJS/map pairs changed. Generator comments are the only intentional difference
+from the prior 16-input set. No manifest/lock/trust/compiler mutation. Added root compiler
+sentinels: bin/tsc 8d5fa5bd883fec0979fc2004f1fe1d99aef40570155d550eadc0b03b55513bf0,
+lib/tsc.js 2cffde0b8c6760dfb0b5b0382bbb7e00ba6a8b2d981b9205b256a700a481d983,
+lib/_tsc.js 1c59e77a54b186ec43fa7f3e0d3c4bb15ca5eb5ba43e96b1d3a267139eddd3e3.
+Allowlist env replaced ambient inheritance; synthetic CODEX_HOME/home/config/data/temp,
+isolated npm config/cache/offline, unchanged BUILD-02 guard. No actual generated process,
+MCP/worker/hook/service/listener/CI/live provider or installed model/assets inspection.
+CI is a blocked source skeleton. [Commands, hashes, bounds](handoffs/WINDOWS-09.md).
+Earlier sections below are historical evidence, not a claim of current readiness.
+
 Use these exact known-working versions for local fork development until an accepted
 decision changes the baseline (A09). Do not upgrade/reinstall by default.
 

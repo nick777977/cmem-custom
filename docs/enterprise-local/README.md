@@ -9,7 +9,8 @@ Local persistence does not imply offline generative inference.
 
 Accepted target contracts A19/A20 (not implemented yet): [LLM-PROFILES](LLM-PROFILES.md),
 [VALIDATION](VALIDATION.md). Current adaptation [PLAN-ADAPT-05](handoffs/PLAN-ADAPT-05.md)
-is documentation-only: no build, service, CI, login or real user-state access.
+was documentation-only. Later WINDOWS-09 source/compile evidence is below; no runtime,
+CI, login or real user-state access was performed.
 
 ## Current local development baseline
 
@@ -28,11 +29,18 @@ Current CHROMA-07: source 8fa997979, generated b8734d9b2; 127 targeted tests /
 383 assertions and one compile PASS, 16 inputs unchanged. Acquisition/remote launch
 removed; **local Chroma activation blocked** pending approved Python/model/offline
 embedding/telemetry API evidence U1/D9. No actual Chroma acceptance.
-[Contract/limits](handoffs/CHROMA-07.md). Next proposed task: WINDOWS-09 source and early smoke/CI harness authoring.
+[Contract/limits](handoffs/CHROMA-07.md).
 
 TELEMETRY-04: source 0abd4180b / generated 6bb7c6995; E03/E04 Node telemetry
 removed, local diagnostics retained. 206 tests / 728 assertions and one compile PASS;
 16 inputs unchanged. [Evidence/limits](handoffs/TELEMETRY-04.md). No full runtime claim.
+
+WINDOWS-09 partial source: S0d0a4b176 / G004588740; harness Hf2c722fad. SessionStart
+compile/PATH repair and parser-helper acquisition removed, blocked local preflight.
+17 tests / 53 assertions, one compile and viewer typecheck PASS; root typecheck has
+three unchanged baseline TS2345. Harness mock-only; CI source manual-only BLOCKED D12.
+Private resolver/bootstrap completion remains **WINDOWS-09B**, next proposed source task.
+[Evidence, open gaps and rollback](handoffs/WINDOWS-09.md). No actual V3/runtime/CI run.
 
 ## Reading order
 

@@ -15,7 +15,8 @@ Claude/Bedrock, supported Claude/Codex logins, direct API/OpenAI-compatible and 
 existing explicitly selected adapters. All model tasks use user-controlled profiles
 with visible role/model/auth selection; no implicit provider/model/account fallback.
 See docs/enterprise-local/{LLM-PROFILES.md,VALIDATION.md}. These are target contracts,
-not implemented safeguards or runtime/CI permission. Current adaptation is docs-only.
+not implemented safeguards or runtime/CI permission. PLAN-ADAPT-05 was docs-only;
+later bounded WINDOWS-09 source evidence follows below.
 
 Session 02 established the compile boundary; A14/C aligned npm declarations.
 A15 accepts step 2 for source progression, with release evidence in steps 10/11/12.
@@ -28,9 +29,15 @@ D11 stays open. These launches do not authorize further runtime/acquisition work
 TELEMETRY-04 source 0abd4180b/generated 6bb7c6995 is done-bounded: E03/E04 Node
 telemetry removed; 206 tests and one compile PASS, 16 inputs unchanged. Local diagnostics
 retained; SDK pruning is step 10, Python E11 and full runtime gates remain open.
-Next proposed task is WINDOWS-09 source + early smoke/CI harness authoring in
-NEXT-SESSION/STATE; await explicit user launch. Provider adapters and selected-provider
-login support must not be pruned as a side effect of launcher/bootstrap removal.
+WINDOWS-09 partial source S0d0a4b176 / G004588740, harness Hf2c722fad: SessionStart
+compile/PATH-repair and tree-sitter helper acquisition removed; preflight always blocked.
+17 targeted tests/53 assertions, one compile and viewer typecheck PASS; root typecheck
+has three unchanged baseline TS2345. 19 inputs unchanged; four paired outputs changed.
+Remaining E12/E13/private resolvers, installer E14/parser E21 fallbacks and native V3
+adapter are NOT complete. CI skeleton is manual-only BLOCKED D12, not a runnable lane.
+See handoffs/WINDOWS-09.md. Next is WINDOWS-09B source continuation in NEXT-SESSION/STATE;
+await explicit launch. Provider adapters and selected-provider login support must not
+be pruned as a side effect of launcher/bootstrap removal.
 Actual compiled-process smoke/CI/provider execution remains separately scoped.
 No install/update/download, service/worker/MCP/plugin start/restart/registration, AWS,
 real user state, push or subagents inferred. Existing node_modules or installed
