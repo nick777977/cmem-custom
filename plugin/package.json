@@ -41,7 +41,32 @@
     "onnxruntime-web": "npm:onnxruntime-common@1.23.2"
   },
   "trustedDependencies": [
-    "tree-sitter-cli"
+    "tree-sitter-cli",
+    "@derekstride/tree-sitter-sql",
+    "@tree-sitter-grammars/tree-sitter-lua",
+    "@tree-sitter-grammars/tree-sitter-markdown",
+    "@tree-sitter-grammars/tree-sitter-toml",
+    "@tree-sitter-grammars/tree-sitter-yaml",
+    "@tree-sitter-grammars/tree-sitter-zig",
+    "onnxruntime-node",
+    "tree-sitter",
+    "tree-sitter-bash",
+    "tree-sitter-c",
+    "tree-sitter-cpp",
+    "tree-sitter-css",
+    "tree-sitter-go",
+    "tree-sitter-haskell",
+    "tree-sitter-java",
+    "tree-sitter-javascript",
+    "tree-sitter-kotlin",
+    "tree-sitter-php",
+    "tree-sitter-python",
+    "tree-sitter-ruby",
+    "tree-sitter-rust",
+    "tree-sitter-scala",
+    "tree-sitter-scss",
+    "tree-sitter-swift",
+    "tree-sitter-typescript"
   ],
   "allowScripts": {
     "tree-sitter-cli": true,

@@ -556,7 +556,15 @@ async function buildHooks() {
         'onnxruntime-web': `npm:onnxruntime-common@${onnxruntimeNode}`
       },
       trustedDependencies: [
-        'tree-sitter-cli'
+        ...new Set([
+          'tree-sitter-cli',
+          ...JSON.parse(
+            fs.readFileSync(
+              path.join(__dirname, 'plugin-trusted-dependencies.json'),
+              'utf8'
+            )
+          )
+        ])
       ],
       // npm 11.16+ runs dependency install scripts only for packages listed in
       // `allowScripts` — npm's counterpart to bun's `trustedDependencies` above.
