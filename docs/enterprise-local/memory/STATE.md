@@ -1,84 +1,70 @@
 # Current handoff
 
-Updated: 2026-10-30. Phase: bounded static audit complete; implementation unauthorized.
-Source inspected: `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b` on
-`feat/cmem-light-local`. Documentation commits follow that source SHA; use Git log for
-their IDs. Recheck branch/status and source drift at the start of the next session.
+Updated: 2026-11-02. Phase: user dependency/build baseline received; step 2 pure
+compile implementation remains pending. Agent actions this session are docs/read-only.
+Branch: `feat/cmem-light-local`; entry HEAD `62e79cceb26abb5bc8117ecd11f798ce38f30f60`.
+Historical audit source: `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b`.
+Current user build-source delta is uncommitted; exact paths/hashes are in DEV-ENVIRONMENT.
+Use Git log for later docs/source commits; never treat a docs HEAD as tested source proof.
 
-## Completed
+## Completed and evidence provenance
 
-- [x] Read the entire supplied initial plan in bounded sections and preserve it locally.
-- [x] Establish clean initial checkout, version, scripts, locks and instructions.
-- [x] Investigate observer/env, local/remote sync, hosted/telemetry, launcher/build paths.
-- [x] Record cited preliminary inventory, risks and architecture discrepancies.
-- [x] Write ordered roadmap, dependencies, parallel lanes and commit acceptance/rollback plan.
-- [x] Establish tracked project memory and ignored scratch directory.
-- [x] Complete Session 01's bounded eight-area static audit and first patch contract:
-  [AUDIT-CLOSURE.md](../AUDIT-CLOSURE.md). Reuse source evidence; no source drift at
-  entry HEAD `2f061267628a74384fff08fc79b163cc9038bc88`.
-- [x] Assign E01–E22 reachability/actions/owners and U1–U7 deferred evidence gates.
+- [x] Preserved requirements, scope decisions, roadmap/dependencies and tracked memory.
+- [x] Session 01 bounded static audit: f9f2b2efe; eight areas, E01–E22 and U1–U7,
+  first patch/acceptance/rollback in AUDIT-CLOSURE. Full P1/runtime not closed.
+- [x] USER-REPORTED dependency installation; supplied build log completes all targets,
+  distribution and hook-template checks. No agent rerun; see DEV-ENVIRONMENT.
+- [x] USER-LOG worker:start returns ready and reports default settings creation.
+  No independent health/pipeline validation; current process state UNKNOWN.
+- [x] User toolchain baseline A09: Node.js 22.23.4, npm 10.9.9, Bun 1.4.4.
+- [x] A08 durable handoff/coordination rules established; TASKS board owns active
+  ownership and reservations. No parallel agents started.
 
-## Not completed
+## Current worktree / limits
 
-- [ ] Full P1 source/route/generated/dependency closure audit (see inventory checklist).
-- [ ] Corporate artifact, inference payload, model/Region and retention decisions.
-- [ ] Disposable runtime test environment / upstream plugin coexistence configuration.
-- [ ] Any application implementation, dependency installation or baseline runtime validation.
-- [ ] Any build, test, Chroma/Bedrock call, worker startup or network proof.
+At entry there were 9 modified tracked files and untracked
+`scripts/plugin-trusted-dependencies.json`, no staged changes or newer source commits.
+These are USER-SETUP, not this docs agent's changes. Preserve manifests/trust settings,
+lock and rebuilt worker/watcher artifacts. See DEV-ENVIRONMENT for exact diff/fingerprints
+and suggested commit titles. A docs-only commit does not include those user changes.
 
-The existing `node_modules/` was present before this work; it was not installed or used.
-User clarification after Session 01: they have not installed this fork's dependencies.
-The observed directory remains unverified; no working development environment follows
-from its existence. See [next-session prompt](../NEXT-SESSION.md) for dependency gates.
-No claim of zero telemetry, offline runtime or enterprise acceptance is justified yet.
+Known static issue: root allowScripts adds two entries absent from canonical
+postinstall-allowlist.js; root declaration differs from the existing drift guard's
+expected map. Not executed. New trust JSON must remain paired with build-hooks generator.
+Successful upstream build did not prove that guard/test suites passed.
 
-## Next action
+Still pending: pure compile (both embedded npm ci and lock resolution remain), automated
+regression tests, source/bundle provenance and reproducible root inputs, dependency/native/
+Python/model closure, offline/no-download/traffic proof, approved Bedrock/payload/retention
+policy and full acceptance. No claim of zero telemetry or enterprise acceptance.
 
-Session 01 is finished; stop here. Next task, only when separately launched and
-authorized: `SESSION-PROMPTS.md` Session 02, roadmap step 2. Read AGENTS.md, this
-handoff, accepted decisions, AUDIT-CLOSURE's first patch/U2–U4 and PATCH-SEQUENCE §2;
-do not repeat the full audit or load the initial plan.
+Current assistant authorization remains inspection/docs/local docs commits only.
+User-run installs/build/start are evidence, not permission to run services/tests or read
+real settings/memory. Do not stop/restart the user's worker or inspect its data.
 
-Recommended launcher: [NEXT-SESSION.md](../NEXT-SESSION.md), main prompt (explicit
-future source-edit authorization plus development-preparation contract). Its optional
-block can additionally authorize dependency preparation/build/targeted checks after
-the user fills allowed sources/lifecycles. Writing that template grants no permission
-to execute it now. Keep current no-install/build/test/source-change restrictions.
+## One next task and context bundle
 
-Exact first source concern: `package.json` build/compile/preparation scripts and
-`scripts/build-viewer.js` (remove embedded npm ci, retain local compiler/Vite with
-missing-input preflight). Keep build-hooks generators/outputs and all runtime features.
-Plugin lock generation is explicit preparation, never compile. Marketplace sync/restart
-remain separate deployment commands. No implementation was made in Session 01.
+Next **BUILD-02**, roadmap step 2, ready-unclaimed, only when the user launches
+[NEXT-SESSION](../NEXT-SESSION.md). It proposes explicit future source/build/targeted-test
+permission with existing dependencies; no fresh acquisition or app/service execution.
 
-Acceptance next: static compile subprocess chain has no install/lock resolution/
-sync/restart/registration; missing dependencies fail locally. Request authorization
-for source edits/local commit when that next session starts. Builds, installs, tests,
-application, AWS/network and deployment still need their relevant explicit permission;
-trusted toolchain/artifact policy precedes any execution. No blocker to defining or
-editing that source boundary; unavailable dependencies are not permission to install.
+Read: AGENTS -> enterprise-local README -> this STATE -> roadmap step 2/graph ->
+[TASKS](TASKS.md) reservations -> accepted DECISIONS ->
+[DEV-ENVIRONMENT](../DEV-ENVIRONMENT.md) -> PATCH-SEQUENCE §2 -> AUDIT-CLOSURE first
+patch/E15/U2–U4. No whole history/initial plan/bundle scan.
 
-New audit leads for later owning steps: remote spool E19 (8); independent refresh/
-copy/judge SDK/CLI/API paths E20 (6); worker tree-sitter download E21 (9); conditional
-Telegram/Notion/webhook exports E22 (10, separate concern). E15 now includes viewer
-npm ci; E16 server/custom-module boundary and E18 mounted GitHub fetches are clarified.
-Details, paths/source SHA, payload classes, future proof and U1–U7 are in the closure.
-No graph dependencies changed; roadmap step 1's broader policy contract remains open.
+Sequence: preserve/reconcile USER-SETUP against fresh Git (if already committed, use real
+SHA; if still WIP, explicit future launcher permits separate reviewed baseline commits)
+-> claim BUILD-02 -> split build/compile/preparation -> use exact local toolchain and
+read fixtures before authorized focused checks -> record actual results/limitations.
+Handle baseline lifecycle-map drift as a separate reviewed concern, not an automatic
+allowlist expansion. Do not reinstall or upgrade by default.
 
-Confirmed scope: keep the local browser viewer and existing memory/project/worktree
-behavior, including imperfect current separation. No scope, capture or retrieval
-rewrite. Focus on unapproved network removal and local runtime assets; approved
-Bedrock remains the existing inference exception. See A06/A07. This clarification
-does not authorize source changes, installation or execution.
+Keep local viewer, SQLite canonical/Chroma derived and existing capture/retrieval/project/
+worktree behavior. No identity/schema/DLP redesign; Bedrock remains approved exception,
+not permission to invoke it. E19/E20/E21/E22 stay with owning steps 8/6/9/10.
 
-Full P1, dependency/model/native review, source/bundle provenance and real traffic
-remain open. Corporate policy questions are staged to their owners in the closure;
-do not turn deferred project/worktree isolation or payload observations into an
-unrequested redesign. Do not begin by deleting large feature directories.
-
-## How to resume
-
-Read root AGENTS.md -> this file -> `docs/roadmap.md` -> the relevant inventory and patch
-section. Resolve only decisions blocking the next increment. Update task checkboxes,
-decision status and WORKLOG with each logical commit. Never mark mocked/source-inspected
-behavior as successful live runtime evidence.
+Every session follows TASKS close protocol: statuses/ownership, compact STATE, WORKLOG
+actual delta, accepted/superseded decisions, affected contracts/environment evidence and
+fresh NEXT-SESSION context/permissions/criteria. Preserve historical evidence; replace
+obsolete active instructions. Next session must not depend on this chat/attachment.

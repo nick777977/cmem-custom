@@ -1,6 +1,6 @@
 ---
 status: living
-updated_at: 2026-10-30
+updated_at: 2026-11-02
 ---
 
 # Enterprise local memory roadmap
@@ -20,6 +20,12 @@ of no unapproved runtime egress in the tested scenarios.
 Sizes are provisional scope bands, not approved PR counts or schedules. `idea` means
 implementation has not begun; static reconnaissance is recorded separately in STATE.
 Source abbreviations below: IP = [preserved initial plan](enterprise-local/source/INITIAL-PLAN.md).
+
+Current prerequisite evidence: user-installed dependencies, successful existing upstream
+build and worker ready output on Node 22.23.4/npm 10.9.9/Bun 1.4.4; see
+[DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md). Pure-compile implementation,
+focused test results and step acceptance remain pending. Active execution ownership
+is in [TASKS](enterprise-local/memory/TASKS.md); no dependency edges/waves changed.
 
 | # | Step | Source | Size | Status |
 |---|---|---|:---:|---|

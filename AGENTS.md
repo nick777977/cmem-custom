@@ -3,6 +3,10 @@
 Start with `docs/enterprise-local/README.md`, then `memory/STATE.md` and
 `../roadmap.md` relative to that directory. Recheck Git branch/status before editing.
 The user selected `feat/cmem-light-local`; work on that branch unless asked otherwise.
+Use the documented local baseline: Node.js 22.23.4, npm 10.9.9, Bun 1.4.4;
+see `docs/enterprise-local/DEV-ENVIRONMENT.md` for evidence and limits. Do not
+upgrade/reinstall by default. User-run build/start evidence does not by itself
+authorize the agent to execute commands or use real user state.
 
 ## Current authorization
 
@@ -30,6 +34,19 @@ installed plugin settings merely to investigate the repository.
   only copy of a decision in ignored scratch space.
 - `docs/roadmap.md` owns task dependency edges and execution waves; `memory/STATE.md`
   owns the current handoff and `memory/DECISIONS.md` owns accepted/proposed decisions.
+- `memory/TASKS.md` is the single active ownership/file-reservation board. Read it
+  before claiming work. Current work is serial; parallel agents/worktrees need an
+  explicit user request. One coordinator serializes claims, Git/index operations,
+  shared source/generator/output integration and shared-memory updates. No overlapping
+  writes or builds/installs in the same directories; preserve user-owned WIP.
+- Every session closes the chain: update current STATE, TASKS status/ownership,
+  WORKLOG evidence, changed decisions/contracts, DEV-ENVIRONMENT when relevant,
+  and NEXT-SESSION with one concrete next task, bounded context files, permissions
+  and completion criteria. Do not leave decisions only in chat or agent notes.
+  Replace obsolete active instructions; preserve historical audit/evidence/decisions.
+  Mark superseded docs and repair links before deleting duplicates. No full-history
+  reread or new competing plan tree per session. Repository memory is the handoff;
+  do not assume hidden cross-chat memory.
 - Cite source paths and line numbers with the inspected source SHA. Distinguish static
   code evidence, inference and runtime unknowns. Recheck citations after source changes.
 - Implement one concern per commit once authorized. Record validation actually run,

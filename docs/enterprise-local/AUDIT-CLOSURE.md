@@ -1,5 +1,11 @@
 # Session 01: bounded static audit closure
 
+Historical source-pinned snapshot. For the 2026-11-02 user-installed toolchain,
+successful upstream build/start evidence and uncommitted build-source delta, use
+[DEV-ENVIRONMENT](DEV-ENVIRONMENT.md) and current [STATE](memory/STATE.md).
+The original no-execution record below remains true for Session 01. Its old line
+numbers are not silently reassigned to the later modified generator.
+
 Date: 2026-10-30. Branch: `feat/cmem-light-local`; clean entry HEAD:
 `2f061267628a74384fff08fc79b163cc9038bc88`.
 All source citations in this document refer to inspected source SHA

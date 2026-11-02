@@ -26,6 +26,14 @@ test or application execution occurred. Step 1's broader contract is not marked 
 
 ## 2. Pure compile boundary
 
+2026-11-02 entry update: the user installed dependencies, completed the existing
+upstream build and received worker:start ready output. This does **not** complete
+step 2: installers/lock resolution remain in compile. Use
+[DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md) for versions, provenance,
+9 modified files + new trust JSON, commit subjects and baseline allowScripts drift.
+Preserve/reconcile user WIP first; use [TASKS](enterprise-local/memory/TASKS.md)
+to claim BUILD-02. Do not repeat installation or erase the generator's new input.
+
 First candidate: `build: separate compile from dependency resolution and deployment`.
 Use the exact [first patch contract](enterprise-local/AUDIT-CLOSURE.md#first-patch-contract--step-2-source-edits-still-unauthorized):
 
@@ -44,7 +52,10 @@ Use the exact [first patch contract](enterprise-local/AUDIT-CLOSURE.md#first-pat
 
 Source editing/local source commit requires the next user authorization. Installation,
 builds/tests and deployment remain separate boundaries. U2/U4 (trusted inputs, lifecycle
-policy and root lock) gate execution, not definition of this patch. A second concern,
+policy and root lock) still limit reproducibility/acceptance; supplied successful local
+build evidence does not prove them. The updated NEXT-SESSION can explicitly authorize
+using the prepared dev environment for the new patch's build/targeted checks without
+fresh acquisition. A second concern,
 `build: pin reviewed development and plugin dependency inputs`, follows approved
 artifact policy; do not silently acquire dependencies to make compile succeed.
 

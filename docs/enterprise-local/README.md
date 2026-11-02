@@ -4,11 +4,21 @@ Goal: a Windows Claude Code memory plugin with local SQLite/FTS5 and persistent
 Chroma/ONNX; only explicitly approved Bedrock/auth infrastructure may receive observer
 traffic. Local persistence does not imply offline inference.
 
+## Current local development baseline
+
+Use **Node.js 22.23.4, npm 10.9.9, Bun 1.4.4** for this fork. User-provided logs
+show successful dependency preparation/build and worker:start returning ready;
+automated tests, pure/offline compile and full memory acceptance remain pending.
+See [DEV-ENVIRONMENT.md](DEV-ENVIRONMENT.md) for evidence, warnings, user WIP and
+limitations. Other attempted Node versions were unsuccessful for the user; this is
+not a complete compatibility matrix. Do not reinstall/update by default.
+
 ## Reading order
 
-For a fresh session use [bounded session prompts](SESSION-PROMPTS.md): the next audit
-prompt, later per-increment prompts and selective reading rules. Do not load the entire
-history or original plan into every context window.
+For a fresh session start with [STATE](memory/STATE.md), then the current
+[NEXT-SESSION](NEXT-SESSION.md) and [TASKS ownership board](memory/TASKS.md).
+[Session prompts](SESSION-PROMPTS.md) retain stage templates/history. Read only
+the current task's context bundle, not the whole history or initial plan.
 
 1. [Current handoff](memory/STATE.md): completed work, limitations, next action.
 2. [Roadmap](../roadmap.md): increments, dependency graph and parallel lanes.
@@ -30,6 +40,9 @@ not a delivery promise. Checkboxes in the state/patch documents record actual pr
 `VERIFIED IN CHECKOUT` means source inspection at the pinned SHA, never a successful
 runtime test unless explicitly stated. `INFERRED` and `UNKNOWN` retain uncertainty.
 
-No application runtime or tests were executed in this planning session. Shared memory
-is tracked in Git; temporary artifacts go to `.scratch/enterprise-local/`. The local
-SDD defaults file is ignored and is not an authorization source.
+The original planning/audit sessions ran no application/tests. Later user-run evidence
+is recorded separately in DEV-ENVIRONMENT, not retrospectively credited to those agents.
+Shared memory is tracked in Git; temporary output goes to `.scratch/enterprise-local/`.
+The local SDD defaults file is ignored and is not an authorization source. Follow the
+TASKS session-close protocol so current state, decisions, evidence and next launcher
+remain sufficient for a fresh chat; do not rely on implicit cross-chat memory.

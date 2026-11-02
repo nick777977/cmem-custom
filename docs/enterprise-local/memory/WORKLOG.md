@@ -117,3 +117,40 @@ Those documentation lookups were for model guidance, not project runtime/network
 validation. No application source, dependencies, installed settings/data or services
 changed; no build, test, AWS or plugin invocation. Validation: documentation consistency,
 local links and Git diff/whitespace review; local docs commit only, no push.
+
+## 2026-11-02 — user setup evidence and durable execution handoff
+
+User requested an updated next-session prompt after their successful dependency setup,
+build and worker start, plus durable linked memory/task coordination throughout the
+project and inspection/naming of their setup changes. Node/npm follow-up explicitly
+sets the working baseline to Node 22.23.4/npm 10.9.9; Bun 1.4.4 is in build log.
+Other Node 20/24 attempts reportedly failed; exact versions/errors unavailable.
+
+Entry branch feat/cmem-light-local, HEAD 62e79cceb26abb5bc8117ecd11f798ce38f30f60.
+Git showed 9 modified tracked files and untracked plugin-trusted-dependencies.json,
+no staged changes/new source commit. Inspected only source/config diffs, lock trust
+delta and generated-file names/stats/hashes; preserved all user source/artifact bytes.
+No source commit/amend was inferred from the request for a commit title.
+
+DEV-ENVIRONMENT persists sanitized build/start/version evidence and its limits,
+working-tree fingerprints, exact setup changes and suggested source commit subjects.
+Build completed with warnings; worker command returned ready; no automated test or
+full memory/offline acceptance evidence. Known static allowScripts/canonical-list
+drift is recorded for next session, not reported as an executed guard failure.
+
+Added accepted A08 (self-contained memory/coordination) and A09 (toolchain baseline).
+TASKS is the sole active ownership/file-reservation board, with coordinator-only shared
+integration/Git writes and per-task context bundles. Current work remains serial;
+no agents/worktrees started. AGENTS and project README point to these conventions.
+Replaced obsolete active pre-install/Session-01 launch instructions with BUILD-02:
+preserve user baseline, implement pure compile, validate using prepared local inputs
+only when the new user prompt grants that permission. No repeated install by default.
+Updated STATE/session index/PATCH-SEQUENCE/roadmap evidence; dependency graph unchanged.
+Historical audit pinned source retained with a pointer to current evidence.
+
+Validation in this docs session: supplied log/Git/source-delta inspection, local links,
+fingerprint preservation and documentation whitespace/diff/path review. No app/dependency
+scripts, tool version probes, install/build/tests, process control, network/AWS, real
+settings/databases or user data touched. Docs-only local commit; user WIP remains
+uncommitted and out of that commit, no push. Next task/context/permissions are in
+STATE/TASKS/NEXT-SESSION; later sessions update the same chain instead of relying on chat.
