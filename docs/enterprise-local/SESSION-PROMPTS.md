@@ -1,8 +1,8 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after user
-dependency installation/build/start evidence. Read current STATE/TASKS/DEV-ENVIRONMENT;
-Session 01 below is a completed historical stage, not a task to repeat.
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after Session 02
+compile/checks. Next is BUILD-02-TRUST, still within step 2. Read current
+STATE/TASKS/DEV-ENVIRONMENT; Sessions 01/02 below are historical templates, not work to repeat.
 
 Copy one prompt into a fresh session in this repository. These templates do not
 authorize later work or create chats/agents automatically. The user launches each
@@ -19,8 +19,8 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 - The 2026-10-30 agent planning/audit sessions performed no application implementation,
   installs/builds/tests/AWS. Later user setup/build/start evidence and dirty source
   delta are recorded in DEV-ENVIRONMENT (Node 22.23.4/npm 10.9.9/Bun 1.4.4).
-  Automated test/runtime acceptance and pure compile remain pending; do not reinstall
-  or treat user evidence as agent permission by default.
+  Session 02 compile and 6+21 focused checks now pass; lifecycle-policy/offline/
+  provenance and runtime acceptance remain pending. See handoffs/BUILD-02.md.
 - Preserve local browser viewer and current memory capture/storage/retrieval semantics,
   including project/worktree identity, sharing and optional query filters. Imperfect
   separation is deferred. No identity/schema migration, DLP or memory redesign.
@@ -43,8 +43,8 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | Active Session 02 launcher: preserve user setup, pure-compile source patch, scoped existing-dependency build/check permission when pasted |
-| `docs/enterprise-local/DEV-ENVIRONMENT.md` | Known-working tool versions, sanitized user evidence, uncommitted setup diff/hashes, guard drift and limitations |
+| `docs/enterprise-local/NEXT-SESSION.md` | Active BUILD-02-TRUST launcher: bounded lifecycle consistency/policy review |
+| `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, historical setup fingerprints now committed, Session 02 checks and remaining guard drift |
 | `docs/enterprise-local/memory/TASKS.md` | Single active ownership/file-reservation board and session-close/coordinator protocol |
 
 Keep durable results in tracked docs, disposable output in `.scratch/enterprise-local/`.
@@ -172,12 +172,10 @@ checks реально выполненные/pending, один следующи�
 не расширяй scope и не начинай повторное investigation ради заполнения окна.
 ```
 
-### Session 02 — pure compile (roadmap step 2)
+### Session 02 — pure compile (roadmap step 2; executed, historical template)
 
-For the user-ready launcher after successful user setup, use
-[NEXT-SESSION.md](NEXT-SESSION.md) and DEV-ENVIRONMENT. The short template below stays
-a source-boundary session; the active launcher can explicitly authorize existing-dependency
-build/targeted checks. Fresh acquisition remains a separate boundary.
+Session 02 results are in handoffs/BUILD-02.md. Do not rerun this template as the
+current task; use [NEXT-SESSION.md](NEXT-SESSION.md) for BUILD-02-TRUST.
 
 ```text
 Выполни общие правила SESSION-PROMPTS.md. Цель — первый minimal pure-compile патч
@@ -309,10 +307,10 @@ Current short launcher (the full active authorization/task is in NEXT-SESSION):
 ```text
 Продолжим в C:/0/ai/claude/claude-mem-custom/cmem-light на feat/cmem-light-local.
 Прочитай AGENTS.md и docs/enterprise-local/NEXT-SESSION.md. Выполни его активный
-copyable prompt Session 02: сохранить user setup baseline, реализовать pure compile,
-проверить текущий increment существующими зависимостями в указанном scope.
-В этой новой сессии подтверждаю разрешения source/build/targeted checks ровно
-как в этом prompt; без fresh installs/services/AWS/user data/push/step 3.
+copyable prompt BUILD-02-TRUST: ограниченный lifecycle/trust consistency review.
+Подтверждаю разрешения на узкое чтение local package scripts, документы и локальные
+docs-коммиты ровно как в prompt; без автоматических trust/source изменений,
+fresh installs/services/AWS/user data/push/step 3.
 Контекст/ownership — через STATE/TASKS/DEV-ENVIRONMENT; не повторять Session 01.
 На выходе обнови repo memory и следующий prompt; после отчёта остановись.
 ```

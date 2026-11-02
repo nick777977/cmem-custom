@@ -1,8 +1,8 @@
 # Reviewable commit and validation plan
 
 Dependencies and waves are owned only by [roadmap.md](roadmap.md). This file expands
-each increment into candidate logical commits, acceptance and rollback. No listed
-application patch or future test has been performed. Split further if a commit cannot
+each increment into logical commits, acceptance and rollback. Only work explicitly
+checked below has been performed; other candidates/tests remain planned. Split further if a commit cannot
 be reviewed or reverted independently; do not make large directory deletions first.
 
 ## Current documentation work
@@ -26,46 +26,40 @@ test or application execution occurred. Step 1's broader contract is not marked 
 
 ## 2. Pure compile boundary
 
-2026-11-02 entry update: the user installed dependencies, completed the existing
-upstream build and received worker:start ready output. This does **not** complete
-step 2: installers/lock resolution remain in compile. Use
-[DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md) for versions, provenance,
-9 modified files + new trust JSON, commit subjects and baseline allowScripts drift.
-Preserve/reconcile user WIP first; use [TASKS](enterprise-local/memory/TASKS.md)
-to claim BUILD-02. Do not repeat installation or erase the generator's new input.
+Session 02 implemented and checked the source boundary; **step 2 remains in progress**.
+See [BUILD-02 evidence](enterprise-local/handoffs/BUILD-02.md),
+[DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md) and
+[TASKS](enterprise-local/memory/TASKS.md). The historical first-patch contract in
+AUDIT-CLOSURE is retained as a snapshot, not a current permission source.
 
-First candidate: `build: separate compile from dependency resolution and deployment`.
-Use the exact [first patch contract](enterprise-local/AUDIT-CLOSURE.md#first-patch-contract--step-2-source-edits-still-unauthorized):
+- [x] Preserve all user setup: `49e4f65e1` inputs/trust/manifests/lock and
+  `ce7ded4dc` bundles/maps, after all 10 handoff fingerprints matched.
+- [x] `153a9953c`: build delegates to build:compile; only local manifest/bundle
+  generators are called. Explicit build:prepare:viewer owns ci; explicit
+  build:prepare:plugin-lock owns lock resolution. Neither is called by compile.
+- [x] Viewer preflights local tsc/Vite, removes embedded ci, retains Windows cwd/
+  invocation/error behavior, all viewer assets and generator/verifier targets.
+- [x] Agent compile PASS with exact existing Node 22.23.4/npm 10.9.9/Bun 1.4.4;
+  all distribution/template/integrity/attribution checks passed. 199 tracked outputs
+  and 15 input/sentinel hashes unchanged; no generated delta.
+- [x] 6 inert boundary fixtures and 21 committed-bundle syntax checks PASS.
+  `705cd1dc9` replaces the latter fixture's MSYS shell pipeline with native git/tar.
+- [ ] Allowlist consistency/policy: root's preserved onnxruntime-node/msgpackr-extract
+  entries differ from the canonical list. Actual guard FAIL exit 1. No automatic
+  trust expansion/removal or weakened check. Next **BUILD-02-TRUST** owns review.
+- [ ] OS-offline/complete child-traffic evidence, clean source/dependency closure,
+  root-lock provenance and full reproducibility remain open. Node instrumentation
+  observed no install/lock/deploy/socket event, but Vite invoked net use and native/
+  shell coverage is incomplete. Do not label this full no-egress acceptance.
 
-- Change `package.json` scripts: build/build:compile call only the local manifest and
-  bundle generators; explicit preparation owns plugin lock resolution and My Work ci.
-- Remove `npm ci` from `scripts/build-viewer.js:71`; keep its local compiler/Vite
-  subprocess with missing-input preflight and error propagation. Merely excluding
-  `gen-plugin-lockfile.cjs` leaves this second install path reachable.
-- Retain `scripts/build-hooks.js` targets, sibling SQLite modules, request-progress
-  bundle, viewer outputs, integrity/attribution checks and generator verification.
-  No feature removal or harness minimization in this patch; generated output mapping
-  and exceptions are in the closure. No automatic hook-template rewrite flag.
-- Keep dependency preparation and marketplace sync/restart as explicit separate
-  operations. Do not generate locks, resolve dependencies, compile runtime binaries,
-  register a plugin or repair the installed runtime during compile.
+Worker self-contained runtime-hook fixture and full suites were not run. No services,
+AWS, runtime repair, registration, fresh acquisition or real user state were used.
+Retain viewer and memory/project/worktree semantics. Steps 3+ are not started here.
 
-Source editing/local source commit requires the next user authorization. Installation,
-builds/tests and deployment remain separate boundaries. U2/U4 (trusted inputs, lifecycle
-policy and root lock) still limit reproducibility/acceptance; supplied successful local
-build evidence does not prove them. The updated NEXT-SESSION can explicitly authorize
-using the prepared dev environment for the new patch's build/targeted checks without
-fresh acquisition. A second concern,
-`build: pin reviewed development and plugin dependency inputs`, follows approved
-artifact policy; do not silently acquire dependencies to make compile succeed.
-
-Acceptance: static subprocess closure has no acquisition/deployment; missing inputs
-fail without repair. Later authorized offline compile must account for all outputs,
-leave lock/installed trees unchanged, and show no install/sync/restart/registration
-process. Existing bundle checks and planned command are listed in the closure; none
-has run. Reproducibility and source/bundle equivalence stay pending until verified.
-Rollback: revert the isolated build-boundary commit and its paired outputs/docs;
-preserve installed runtime and user data. Revert dependency pins separately as a set.
+Rollback: revert `153a9953c` for build wiring (then do not run the restored acquiring
+build); `705cd1dc9` is an independent test-only revert. No generated delta to undo.
+Keep user baseline commits/dependencies/data. Dependency-policy/pinning work is a
+separate concern after review; no reinstall merely to obtain a green guard.
 
 ## 3. Hosted setup and historical import removal
 

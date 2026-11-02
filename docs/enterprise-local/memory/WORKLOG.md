@@ -154,3 +154,46 @@ scripts, tool version probes, install/build/tests, process control, network/AWS,
 settings/databases or user data touched. Docs-only local commit; user WIP remains
 uncommitted and out of that commit, no push. Next task/context/permissions are in
 STATE/TASKS/NEXT-SESSION; later sessions update the same chain instead of relying on chat.
+
+## 2026-11-02 — Session 02 / BUILD-02 implementation and targeted validation
+
+User explicitly launched the full Session 02 prompt and authorized baseline/source/
+build/check work with existing dependencies. Entry 4d773b4b7 on feat/cmem-light-local;
+all 10 user fingerprints matched. Preserved baseline inputs in 49e4f65e1 and four
+bundles/maps in ce7ded4dc; no reset/stash/cleanup or dependency acquisition.
+
+153a9953c separates build:compile from explicit viewer-ci/plugin-lock preparation,
+adds missing local compiler failure and six inert regression fixtures. Exact installed
+Node 22.23.4/npm 10.9.9/Bun 1.4.4 located despite mismatched default PATH. Agent compile
+PASS with synthetic HOME/config/data, isolated npm config/cache/offline mode and Node
+child/socket instrumentation; generators, bundle integrity, distribution, attribution
+and hook-template checks PASS. 199 tracked outputs and 15 selected inputs/sentinels
+unchanged, no generated delta. Six boundary fixtures PASS.
+
+Known allowlist drift is now an actual FAIL (root extras only), not a new regression;
+no trust expansion or guard weakening. Narrow local script inspection identifies ONNX
+optional-download and msgpackr native-build paths, without executing/approving them.
+The committed-bundle fixture initially failed on MSYS named-object sandbox access;
+705cd1dc9 replaces shell pipeline with native git archive/tar. Retest: 21 PASS/0 FAIL.
+An initial scratch harness path quoting error stopped before generators; corrected
+forward-slash preload path worked. Existing generated baseline whitespace was retained.
+Git writes required sandbox escalation; authorized local commits succeeded with hooks
+disabled to avoid invoking unreviewed hooks. No automatic approval rejection occurred.
+
+Durable detailed evidence/source SHA/line references, input hashes, subprocess classes,
+limits and rollback are in handoffs/BUILD-02.md. Vite invokes net use for Windows mapped
+paths. Node instrumentation is not full native/OS network enforcement; no full no-egress,
+clean root/dependency closure or runtime acceptance claimed. Runtime-hook self-contained
+fixture/full suites/services/MCP/plugins/AWS/user data/push/step 3 were not run.
+
+A10/A11/A12 record scoped permission, compile boundary and preserved lifecycle-policy
+pending. STATE/TASKS/DEV-ENVIRONMENT/PATCH-SEQUENCE/roadmap/current launchers updated;
+step 2 remains in progress, dependency edges unchanged. All reservations released;
+one next task BUILD-02-TRUST, serial, bounded policy review only, in NEXT-SESSION.
+
+Session-close validation: changed-doc relative links PASS; tracked diff whitespace
+PASS (new code/docs, not the preserved generated baseline history). Fresh Git showed
+only the expected memory/guidance edits and new BUILD-02 evidence report before the
+memory commit. No extra application source/generated changes. Final Git status is
+checked after the local memory commit; source/test runtime checks were not rerun for
+docs-only edits.

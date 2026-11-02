@@ -1,118 +1,77 @@
-# Next session: preserve user setup, implement pure compile, validate locally
+# Next session: BUILD-02-TRUST — bounded lifecycle consistency review
 
-Updated: 2026-11-02. Replaces the 2026-10-30 pre-install launcher. This template
-authorizes nothing in the current docs session; the user launches it in a new chat.
+Updated: 2026-11-02 after Session 02. This replaces the completed baseline/compile
+launcher. It grants no new work until the user launches it. Step 2 remains in progress;
+no instruction here advances to step 3.
 
-## Current baseline
+Current source/test HEAD: `705cd1dc9a6dcf805d9748cc85715239f13eac7e`; later docs commit
+is in Git log. Baseline: `49e4f65e1` inputs, `ce7ded4dc` bundles. Pure compile:
+`153a9953c` PASS, 6 boundary + 21 syntax checks PASS, zero tracked generated delta.
+Allowlist guard FAILS on known preserved root drift. Full OS-offline/clean dependency
+provenance and runtime acceptance remain pending. [BUILD-02](handoffs/BUILD-02.md)
+contains durable commands, hashes, failures, observed child classes and rollback.
 
-Dependencies are user-installed. Supplied logs show existing build finishing and
-worker:start returning ready. Preferred versions: Node **22.23.4**, npm **10.9.9**,
-Bun **1.4.4**. See [DEV-ENVIRONMENT](DEV-ENVIRONMENT.md) for evidence/limits.
-No automated suite, pure/offline compile or full memory acceptance is demonstrated.
-
-Entry HEAD was `62e79cceb`; user setup was **uncommitted** (9 tracked files + 1 new
-trust JSON). A subsequent docs commit does not absorb that work. DEV-ENVIRONMENT
-records exact files/fingerprints and suggested source commit subjects. Preserve them.
-
-Next increment stays roadmap step 2. Do not reinstall or repeat the audit by default.
-Preserve setup baseline -> patch compile -> validate with existing local inputs.
-Root allowScripts/canonical-list drift is a known baseline issue, not automatically
-a regression introduced by the next patch. Keep new trust JSON in generator inputs.
-Successful setup does not approve every native script or final runtime connection.
-
-Use previously recommended GPT-6.1 Sol / Medium for this scoped increment. No new
-model/context-size claim is needed. Do not combine unrelated subsystem removals.
-
-## Copy this prompt into the new session
+## Copyable prompt
 
 ```text
 Продолжаем в C:/0/ai/claude/claude-mem-custom/cmem-light,
-ветка feat/cmem-light-local. Выполни Session 02 / roadmap step 2:
-сохрани user setup baseline -> реализуй pure compile -> проверь текущий increment.
+ветка feat/cmem-light-local. Выполни только BUILD-02-TRUST, продолжение step 2.
 
-Факты:
-- Session 01 bounded static audit завершена (f9f2b2efe); полный runtime/dependency
-  acceptance остаётся pending. Не повторять завершённый аудит/initial plan.
-- Я установил зависимости; переданный npm run build завершил все build targets;
-  npm run worker:start вернул status ready. Это user evidence, не pass E2E/tests.
-- Рабочая toolchain: Node.js 22.23.4, npm 10.9.9, Bun 1.4.4. Используй её;
-  не обновляй версии/не переустанавливай зависимости по умолчанию.
-- На инспекции 2026-11-02 после HEAD 62e79cceb были мои 9 modified files и
-  untracked scripts/plugin-trusted-dependencies.json. Проверь свежий Git:
-  docs-коммиты могут быть новее, исходные изменения могли быть мной закоммичены.
+Session 02 уже выполнена: user setup сохранён 49e4f65e1/ce7ded4dc,
+pure compile — 153a9953c, Windows syntax fixture — 705cd1dc9.
+Agent build:compile PASS; 6 boundary + 21 syntax checks PASS; 199 tracked outputs
+и 15 selected inputs/sentinels не изменились. Не повторяй аудит, baseline-коммиты
+или compile без новой причины. Не выдавай это за полный no-egress/runtime acceptance.
 
-В ЭТОЙ новой сессии разрешаю source/build-script изменения для step 2,
-связанный код целевых проверок, документы и локальные логические коммиты.
-Разрешаю read-only preflight tool versions/paths, узкий review необходимых local
-dependency manifests/scripts, использование подготовленных dev-зависимостей,
-исправленный build:compile и просмотренные целевые локальные проверки этого шага.
-Это не разрешение на новую установку/загрузки, npm test целиком, live inference,
-worker/MCP/plugin start/restart, установленную конфигурацию или реальные данные.
-Не запрашивай повторно уже выданные здесь разрешения.
+Задача: подготовить конкретное согласование lifecycle/trust policy, которое устраняет
+известный drift без автоматического расширения trust или потери моего setup.
+Root allowScripts содержит onnxruntime-node/msgpackr-extract, canonical list их
+не содержит; guard реально FAIL exit 1. Новый scripts/plugin-trusted-dependencies.json
+уже используется генератором и должен сохраняться согласованно с outputs/lock.
+Наличие записи в моём baseline не доказывает разрешённость любого lifecycle script.
 
-1. Контекст: AGENTS.md -> docs/enterprise-local/README.md -> memory/STATE.md
-   -> docs/roadmap.md (step 2 и graph). Далее memory/TASKS.md, memory/DECISIONS.md,
-   DEV-ENVIRONMENT.md, docs/PATCH-SEQUENCE.md §2, AUDIT-CLOSURE первый patch/E15/U2–U4.
-   Все сокращённые memory/пути здесь относительны docs/enterprise-local, кроме
-   PATCH-SEQUENCE и roadmap, для которых выше явно указан docs/.
-   Проверь Git branch/status/HEAD/source drift. Не загружай всю историю/bundles.
+Разрешаю чтение нужных repository files и узкий read-only review существующих local
+package manifests/lifecycle scripts для этих двух extras и текущего trust JSON,
+planning/evidence docs и логические локальные docs-коммиты. Сохраняются ранее выданные
+разрешения на step-2 source/build/целевые проверки, но эта задача сначала должна дать
+конкретный policy review. Никаких новых installs/downloads/upgrade или исполнения
+lifecycle scripts. Не меняй trust maps, canonical list, guard или lock до обоснованного
+выбора политики. Если необходимо решение владельца — сначала подготовь точные варианты
+с последствиями, затем задай один предметный вопрос; не спрашивай снова о разрешённом
+чтении/документах. После review остановись, не начинай следующий increment.
 
-2. Зафиксируй владение BUILD-02 через TASKS у единственного coordinator.
-   Сначала сохрани мой setup baseline: проверь delta из DEV-ENVIRONMENT, не делай
-   reset/stash/cleanup. Если изменения уже закоммичены — используй реальные SHA,
-   не создавай дубликат. Если всё ещё WIP, разрешаю отдельно зафиксировать только
-   перечисленные setup inputs и подтверждённые generated outputs после review;
-   не включай посторонние/новые неизвестные изменения. Явно отдели мой baseline
-   от своего нового патча, не утверждай, что старые inputs прошли новые проверки.
-   Подходящие subjects в DEV-ENVIRONMENT; исходные install errors неизвестны.
+Порядок:
+1. AGENTS.md -> docs/enterprise-local/README.md -> memory/STATE.md -> docs/roadmap.md
+   step 2/graph -> memory/TASKS.md -> memory/DECISIONS.md -> DEV-ENVIRONMENT.md,
+   раздел Current Session 02 -> handoffs/BUILD-02.md Pending policy -> PATCH-SEQUENCE §2.
+   memory/, handoffs/ и DEV-ENVIRONMENT здесь относительно docs/enterprise-local;
+   roadmap и PATCH-SEQUENCE — относительно docs/. Проверь свежие Git branch/status/HEAD.
+2. Claim BUILD-02-TRUST через TASKS, один coordinator, serial. Не трогай чужой WIP.
+   Не пересоздавай уже сохранённые baseline/source commits. Не читай реальные credentials,
+   settings, memory databases или installed plugin state.
+3. Сравни root allowScripts, canonical postinstall-allowlist.js, check guard,
+   build-hooks generator, trust JSON, plugin manifest/lock и точечные local lifecycle
+   scripts. Установи отдельно npm 10.9.9 semantics и Bun 1.4.4 trust semantics;
+   отличай static evidence, inference и unknown. Если нужна документация, используй
+   первичные источники без скачивания пакетов. Не считай успешный compile доводом
+   за разрешение installer. Известны потенциальные NuGet downloads у ONNX postinstall
+   и fallback node-gyp у msgpackr-extract; это не запускалось.
+4. Составь один bounded review в handoffs/BUILD-02-TRUST.md: цель каждого permission,
+   нужен ли он compile или только preparation/runtime, reachable script/children,
+   доказательства path:line + source SHA либо local input hash, рекомендуемый вариант
+   согласования, риски/rollback и точный pending policy choice. Не ослабляй guard.
+   Не удаляй/не расширяй user trust JSON молча. Не генерируй новый dependency graph.
+5. Обнови STATE/TASKS/WORKLOG/DECISIONS/DEV-ENVIRONMENT и NEXT-SESSION по факту.
+   Отдели это от оставшихся OS-offline/root-lock/provenance gates. Roadmap dependencies
+   не меняются без реальной причины; step 2 не объявляй shipped/completed.
 
-3. Проверь известный allowScripts drift и новый generator input:
-   root добавляет onnxruntime-node/msgpackr-extract, canonical allowlist не менялся;
-   plugin trustedDependencies теперь читаются из JSON. Не расширяй trust автоматически
-   и не ослабляй guard. Если нужен минимальный consistency fix, сначала установи
-   нужный script/политику и сохрани отдельным concern/commit; если разрешения
-   недостаточно — запиши точный pending, продолжи pure-compile часть.
+Используй существующие Node 22.23.4/npm 10.9.9/Bun 1.4.4, если потребуется read-only
+version preflight. DEV-ENVIRONMENT содержит точные пути: default PATH давал другие
+версии. Только process-local PATH, без глобальных переключений/регистрации.
+Сохраняем viewer, SQLite canonical/Chroma derived и memory/project/worktree/sharing/
+filter/capture/retrieval semantics. Без AWS, live inference, worker/MCP/plugin
+start/restart, user data, push, новых веток/worktrees/subagents и step 3.
 
-4. Реализуй первый patch contract:
-   - package.json: явный build:compile; build вызывает его; plugin lock resolution
-     и viewer dependency preparation — отдельные explicit commands;
-   - scripts/build-viewer.js: убрать npm ci; оставить локальные tsc/Vite,
-     Windows invocation/cwd/error propagation и fail без auto-install при missing inputs;
-   - сохранить viewer, generators/verifiers/outputs/attribution checks;
-     сохранить мой trust JSON и wiring. Не менять только generated manifest.
-   Не добавлять sync/restart/registration/runtime binary compile/repair в compile.
-
-5. До каждого выполнения прочитай script/fixture и цепочку children. Используй
-   существующие зависимости и точные версии. Проверь исправленный compile и
-   релевантные минимальные проверки без внешних calls или runtime bootstrap.
-   Missing-dependency failure проверяй disposable способом, не удаляя/переименовывая
-   мои node_modules. Для process fixtures — synthetic temp HOME/data; реальный
-   worker и созданные settings/data не трогать. Проверки, способные вызвать
-   SDK/Bedrock/Chroma downloads или services, исключить до отдельного разрешения.
-   Если offline enforcement/полный traffic proof недоступны, не заявляй no-egress.
-   Если выполнение нельзя ограничить текущим scope, укажи точный blocker и
-   продолжи независимую часть. Не делай установки/апгрейды ради зелёного build.
-
-6. Сравни source/manifests/locks/generated delta с сохранённым user baseline;
-   проверь, что compile не запускает installers/lock resolution/sync/restart.
-   Результаты pass/fail/pending с command/cwd/source/input hashes и причиной;
-   пользовательский прежний build не выдавай за свою проверку нового кода.
-
-7. Поддерживай самодостаточную repo memory по TASKS: current STATE, WORKLOG delta,
-   решения DECISIONS, фактический DEV-ENVIRONMENT, PATCH-SEQUENCE §2, ownership board.
-   Обнови NEXT-SESSION под следующий минимальный шаг: context files, task IDs,
-   разрешения, критерии завершения. Замени устаревшие активные указания, сохрани
-   исторические evidence/решения; не оставляй противоречащие handoffs.
-   Roadmap status по факту, edges только при изменении зависимостей.
-   Никакого completed/shipped при невыполненных acceptance gates.
-
-Сохраняем viewer, SQLite canonical + Chroma derived и upstream capture/retrieval/
-projects/worktrees semantics. Никаких scope/DLP/identity/schema redesign.
-Без AWS, реальных credentials/memories/user settings, registry/PATH/plugin registration,
-остановки/рестарта моего worker, push, upstream update и перехода к step 3.
-Без новых веток/worktrees/subagents: текущая сессия serial; будущий параллелизм
-только по отдельному запросу с claims/file ownership через TASKS.
-
-Финал: изменения, baseline/new commits, проверки/ограничения/rollback,
-один следующий шаг и свежий copyable prompt. Затем остановись.
+Финал: policy findings/конкретное предложение, docs commit, pending choice,
+один следующий самодостаточный prompt. Затем остановись.
 ```

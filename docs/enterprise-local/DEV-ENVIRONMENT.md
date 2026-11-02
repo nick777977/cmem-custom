@@ -1,7 +1,8 @@
 # Development baseline and user-provided execution evidence
 
 Updated: 2026-11-02. Supersedes the pre-install assumption in the 2026-10-30 launcher.
-This is not full runtime acceptance. Current agent session: file/Git inspection and docs only.
+This is not full runtime acceptance. Session 02 subsequently ran authorized step-2
+compile/targeted checks; see the current section below and [BUILD-02](handoffs/BUILD-02.md).
 
 ## Preferred local toolchain
 
@@ -18,8 +19,8 @@ decision changes the baseline (A09). Do not upgrade/reinstall by default.
 User reports unsuccessful attempts on Node 24 and possibly 20; exact patch versions
 and errors were not supplied. Prefer the baseline above; do not declare all other
 versions incompatible. Root `package.json:68–70` still has broader engine ranges;
-this docs task did not change engine/toolchain configuration. Next execution session
-checks resolved paths/versions first; historical successful executable paths were not logged.
+the earlier docs task did not change engine/toolchain configuration. Session 02 verified
+exact local executables below; historical user-run executable paths were not logged.
 
 ## Evidence received, not rerun
 
@@ -68,7 +69,7 @@ warning for __dirname; large UI chunk; advisory worker/MCP/watcher bundle sizes.
 Do not turn warnings into unsolicited upgrades/redesign. The user-run worker may have
 initialized normal state; do not read/stop/restart/delete/reuse it for tests without authorization.
 
-## Git and source delta at inspection
+## Historical Git and source delta before Session 02
 
 Branch `feat/cmem-light-local`; entry HEAD
 `62e79cceb26abb5bc8117ecd11f798ce38f30f60`. No newer commit visible, despite the user's
@@ -115,16 +116,47 @@ Suggested titles; no history rewrite or user source commit in this docs session:
 These subjects describe setup, not egress removal/full test success/completed step 2.
 Only explain original install errors in a body when the actual errors are available.
 
-## Next validation contract
+## Current Session 02 environment and results
 
-Do not reinstall by default. Use the user-prepared environment after the new session
-explicitly authorizes local build/targeted tests. Confirm tool paths/versions and local
-compiler files without credential/settings reads; dependency metadata review stays narrow.
-First preserve/reconcile user WIP, then implement step 2. Existing `package.json:74`
-still calls lock generation; `scripts/build-viewer.js:71` still calls npm ci. Successful
-upstream build removes neither call. Preserve new trust JSON as a required generator input.
+Entry `4d773b4b7`; baseline inputs preserved in `49e4f65e1`, four bundles/maps in
+`ce7ded4dc`. All 10 historical hashes matched. Compile source is
+`153a9953c3e62534ff3b96afc228645b88911399`; test fixture update is `705cd1dc9`.
+No user source WIP remains from the historical list. Trust JSON and its generator
+wiring are retained. No dependency installation/update or lock resolution ran.
 
-No fresh acquisition/global tools/Python/models/service/AWS needed by default. Missing
-inputs: record exact command/input/permission and continue independent source work.
-Each check records command/cwd/source and lock hashes/result/evidence path. Offline,
-no-egress, reproducibility and full runtime acceptance remain separate gates.
+Default PATH had Node 24.22.2/npm 11.19.1 Volta shims and no Bun. Correct local
+tools are already present; use only a process-local PATH prefix, without Volta/nvm
+switch/install or permanent PATH writes:
+
+```powershell
+$toolDir = 'C:/Users/MykolaPushnikov/AppData/Local/Volta/tools/image/node/22.23.4'
+$env:PATH = $toolDir + ';C:/Users/MykolaPushnikov/.bun/bin;' + $env:PATH
+node --version    # verified v22.23.4
+npm.cmd --version # verified 10.9.9, bundled under the same toolDir
+bun --version     # verified 1.4.4 (38afee6c8)
+```
+
+Agent `npm.cmd run build:compile` passed, as did 6 inert boundary checks and 21
+committed-bundle syntax checks. Generator/distribution/template/attribution checks
+passed inside compile. 199 tracked outputs and 15 selected input/sentinel hashes
+were unchanged. The existing ignored root `package-lock.json` fingerprint is recorded
+in BUILD-02; it was not added to Git or regenerated. Cache writes are permitted;
+there was no exhaustive dependency-tree hash or clean-build provenance proof.
+
+Compile used synthetic HOME/config/data, empty npm user/global config, scratch npm
+cache/offline mode and Node-level child/network tripwires. Observed children included
+local esbuild/tsc/Vite and Vite's `net use` mapped-path query; no installer, lock
+resolution, deploy/restart/runtime-repair command or Node socket event. OS-wide
+network enforcement/capture remains pending; do not claim full no-egress.
+
+Allowlist guard was now RUN: **FAIL exit 1, root drift**, exactly the known two extra
+entries. Canonical list/guard were not changed. onnxruntime-node 1.23.2's postinstall
+can acquire optional NuGet binaries; msgpackr-extract 3.0.4's installer can fall back
+to node-gyp rebuild (narrow static local-script evidence, no execution/approval).
+Next BUILD-02-TRUST reviews consistency/policy; no automatic trust expansion/removal.
+
+Initial trace preload quoting failure and MSYS fixture failure, native fixture fix,
+all commands/hashes/limits and rollback are tracked in [BUILD-02](handoffs/BUILD-02.md).
+Worker self-contained runtime-hook test, full suites, live memory/inference and
+OS-offline evidence remain pending. Do not use build-and-sync, worker commands,
+preparation commands or real user state as compile checks.

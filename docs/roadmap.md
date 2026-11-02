@@ -23,14 +23,15 @@ Source abbreviations below: IP = [preserved initial plan](enterprise-local/sourc
 
 Current prerequisite evidence: user-installed dependencies, successful existing upstream
 build and worker ready output on Node 22.23.4/npm 10.9.9/Bun 1.4.4; see
-[DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md). Pure-compile implementation,
-focused test results and step acceptance remain pending. Active execution ownership
+[DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md). Session 02 pure compile and
+6+21 focused checks passed; policy/offline/provenance acceptance remains pending
+([BUILD-02](enterprise-local/handoffs/BUILD-02.md)). Active execution ownership
 is in [TASKS](enterprise-local/memory/TASKS.md); no dependency edges/waves changed.
 
 | # | Step | Source | Size | Status |
 |---|---|---|:---:|---|
 | 1 | Close static audit and agree runtime/artifact contract | IP §6 P0/P1; §10; [inventory](EGRESS-INVENTORY.md) | S | idea |
-| 2 | Compile locally without install, marketplace sync or restart | IP §5.8 W8; [baseline](BASELINE.md#build-and-supply-chain-findings) | S | idea |
+| 2 | Compile locally without install, marketplace sync or restart | IP §5.8 W8; [baseline](BASELINE.md#build-and-supply-chain-findings) | S | in progress; compile/checks pass, lifecycle-policy/offline/provenance gates open |
 | 3 | Local memory works without hosted setup/history import | IP §5.1 W1 | S | idea |
 | 4 | Local diagnostics work without remote telemetry | IP §5.2 W2 | S | idea |
 | 5 | Local SQLite/Chroma works without cloud sync | IP §5.3 W3 | S | idea |
@@ -80,7 +81,8 @@ its dependent implementation is next, rather than requiring a large interview no
 ## Decisions so far
 
 - Use the selected branch and tracked repo documentation → [A01/A02](enterprise-local/memory/DECISIONS.md).
-- No install/build/run/test/source changes yet → [A03](enterprise-local/memory/DECISIONS.md).
+- Historical docs-only restriction A03; bounded Session 02 source/compile/check permission
+  and implemented boundary A10/A11 → [decisions](enterprise-local/memory/DECISIONS.md).
 - Separate source evidence from requirements/hypotheses → [A04](enterprise-local/memory/DECISIONS.md).
 - Retain local viewer and upstream memory scope behavior; project/worktree redesign
   deferred → [A06/A07](enterprise-local/memory/DECISIONS.md). This closes former D3/D4/D6

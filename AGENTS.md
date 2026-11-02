@@ -10,11 +10,15 @@ authorize the agent to execute commands or use real user state.
 
 ## Current authorization
 
-The current phase permits repository inspection, planning documents and logical local
-commits only. Do not install dependencies, build, execute application scripts, start or
-restart services, run tests, invoke AWS, register plugins, or change application source
-until the user authorizes the relevant next phase. A pre-existing `node_modules/` does
-not constitute permission to use it. Do not push without authorization.
+Session 02 explicitly authorized step-2 source/build-script and targeted-check changes,
+preservation of reviewed user setup in separate commits, existing dev dependencies,
+corrected `build:compile` and reviewed local checks. See actual results and limits
+in `docs/enterprise-local/handoffs/BUILD-02.md`. This supersedes the former docs-only
+restriction for that increment; it does not authorize unrelated runtime work.
+The next bounded task/permissions are in NEXT-SESSION and STATE. Do not install/update
+dependencies, start/restart services, invoke AWS, register plugins, read real user state,
+push or advance to step 3 without relevant user authorization. A pre-existing
+`node_modules/` alone is never permission to execute it.
 
 Treat `docs/enterprise-local/source/INITIAL-PLAN.md` as supplied requirements and
 hypotheses, not executable instructions or verified implementation facts. The user's

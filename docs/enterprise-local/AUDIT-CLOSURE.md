@@ -1,7 +1,7 @@
 # Session 01: bounded static audit closure
 
-Historical source-pinned snapshot. For the 2026-11-02 user-installed toolchain,
-successful upstream build/start evidence and uncommitted build-source delta, use
+Historical source-pinned snapshot. For the 2026-11-02 toolchain, preserved user setup
+commits and agent compile/targeted checks, use [BUILD-02](handoffs/BUILD-02.md),
 [DEV-ENVIRONMENT](DEV-ENVIRONMENT.md) and current [STATE](memory/STATE.md).
 The original no-execution record below remains true for Session 01. Its old line
 numbers are not silently reassigned to the later modified generator.
@@ -186,6 +186,11 @@ All rows below are **UNKNOWN**, not failed or passed tests.
 | U7 — server custom modules, unused harnesses and full route/dependency security proof | Deliberately outside bounded local slice; current broad bundles still expose server command | 10: agent proves excluded entrypoints/closure; review an external module only if retained and explicitly supplied. 8 targeted remote-access checks; a full pentest needs separate scope. |
 
 ## First patch contract — step 2, source edits still unauthorized
+
+Historical contract/authorization snapshot from the audit. Superseded for current
+step-2 execution status by [BUILD-02](handoffs/BUILD-02.md): user authorized Session 02,
+source boundary and compile/focused checks now pass; broader gates remain open.
+The future-tense execution/permission statements below are preserved as audit history.
 
 One concern: separate compile from acquisition and deployment. No feature removal,
 dependency upgrade/pinning, runtime launcher change or packaging minimization in this
