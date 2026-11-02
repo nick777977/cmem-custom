@@ -2,8 +2,7 @@
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
-import { execFile, execSync, spawn, type ChildProcess } from 'child_process';
-import { promisify } from 'util';
+import type { ChildProcess } from 'child_process';
 import path from 'path';
 import os from 'os';
 import fs from 'fs';
@@ -11,61 +10,22 @@ import { randomUUID } from 'crypto';
 import { logger } from '../../utils/logger.js';
 import { SettingsDefaultsManager } from '../../shared/SettingsDefaultsManager.js';
 import { USER_SETTINGS_PATH, paths } from '../../shared/paths.js';
-import { getUvxBinDirs } from '../../shared/uvx-bin-dirs.js';
 import { killProcessTree, collectDescendantIdentities } from '../../shared/kill-process-tree.js';
 import { reclaimOrphanChromaDataDirWriters } from '../../shared/port-reclaim.js';
-import { stripForeignPythonEnv } from '../../shared/uvx-env.js';
-import { sanitizeEnv } from '../../supervisor/env-sanitizer.js';
 import { getSupervisor } from '../../supervisor/index.js';
 import { captureProcessName, captureProcessStartToken, isSameProcess, isSameProcessName, isPidAlive, normalizeProcessName } from '../../supervisor/process-registry.js';
-import { clearDependencyStatus, recordChromaVectorSearchUnavailable, recordUvxVectorSearchUnavailable } from '../../shared/dependency-health.js';
+import { clearDependencyStatus, recordChromaVectorSearchUnavailable } from '../../shared/dependency-health.js';
 import { ChromaUnavailableError } from '../worker/search/errors.js';
 import type { ChromaCollectionDrop } from './ChromaSync.js';
 
-const execFileAsync = promisify(execFile);
+import { assertLocalChromaConfiguration, assertLocalEmbeddingFunction, requireApprovedLocalChromaRuntime } from './ChromaLocalRuntime.js';
+import type { LocalChromaLaunch } from './ChromaLocalRuntime.js';
 
 const CHROMA_MCP_CLIENT_NAME = 'claude-mem-chroma';
 const CHROMA_MCP_CLIENT_VERSION = '1.0.0';
 const MCP_CONNECTION_TIMEOUT_MS = 30_000;
-const DEFAULT_CHROMA_PREWARM_TIMEOUT_MS = 120_000;
-const CHROMA_PREWARM_TIMEOUT_SETTING = 'CLAUDE_MEM_CHROMA_PREWARM_TIMEOUT_MS';
-const CHROMA_PREWARM_TIMEOUT_BOUNDS = { min: 1, max: 600_000 } as const;
 const DEFAULT_CHROMA_MUTATION_TIMEOUT_MS = 600_000;
 const CHROMA_MUTATION_TIMEOUT_BOUNDS = { min: 60_000, max: 3_600_000 } as const;
-const CHROMA_PREWARM_REAP_TIMEOUT_MS = 1_000;
-// Circuit breaker for a doomed prewarm (#4108). A broken host (missing uv, an
-// unresolvable dep, an NTFS hardlink ceiling) fails the same way every time, so
-// retrying forever just burns CPU and, on NTFS, leaks a half-built env per
-// attempt until the disk fills. After this many CONSECUTIVE failures we open the
-// breaker and stop spawning uvx; the only limiter before was a flat backoff gate
-// that never grew. A single success resets the count and closes the breaker.
-const CHROMA_PREWARM_MAX_CONSECUTIVE_FAILURES = 5;
-// While the breaker is open, allow one half-open probe after a cooldown so a
-// host that becomes healthy (disk freed, uv installed, dep resolvable) recovers
-// without a worker restart. The cooldown grows exponentially with each failed
-// probe, from this base up to the cap below, so a persistently broken host is
-// retried ever more rarely instead of once per fixed interval forever.
-const CHROMA_PREWARM_BREAKER_BASE_COOLDOWN_MS = 10 * 60_000;
-const CHROMA_PREWARM_BREAKER_MAX_COOLDOWN_MS = 6 * 60 * 60_000;
-// Hard stop: after this many consecutive failures the breaker latches and stops
-// spawning until the worker restarts. With the exponential cooldown this leaves
-// a recovery window of roughly two days before giving up, which caps the total
-// wasted builds (and the scratch they can leak) on a host that never recovers.
-const CHROMA_PREWARM_GIVE_UP_FAILURES = 20;
-// A failed prewarm can leave uv's half-built environment behind under
-// `<uv cache>/builds-v0/.tmp*`; `uv cache prune` never reclaims it, and on NTFS
-// each leftover pins hardlinks against the 1,023-per-file ceiling, so the debt
-// compounds (#4108). We only remove scratch dirs older than this window: no
-// legitimate uv build runs for a day, so age past it reliably means abandoned,
-// and a concurrent build elsewhere on the machine is never disturbed. Our own
-// fresh leftover is reclaimed by a later sweep once it ages past this bound.
-const CHROMA_UV_BUILDS_SCRATCH_ABANDONED_MS = 24 * 60 * 60_000;
-// A host hit by #4108 can carry ~10k leaked scratch dirs (18.5M files), so the
-// sweep never removes them in one go: each pass deletes at most this many dirs,
-// asynchronously and one at a time, then pauses before the next pass. The event
-// loop keeps serving health checks throughout, and disk I/O stays bounded.
-const CHROMA_UV_BUILDS_SCRATCH_SWEEP_BATCH = 25;
-const CHROMA_UV_BUILDS_SCRATCH_SWEEP_PAUSE_MS = 5_000;
 // Bounded wait for the child's 'exit' after close() resolves. close() can
 // return before Node processes the event, and treating that gap as "still
 // alive" escalates to a hard kill against a process that already exited —
@@ -96,55 +56,16 @@ const CHROMA_OUTPUT_TAIL_MAX_CHARS = 2048;
 const DEFAULT_MAX_PENDING_MUTATIONS = 5_000;
 const CHROMA_MUTATION_TOOL_PATTERN = /^chroma_(?:add|create|delete|modify|update|upsert)_/;
 
+// Historical store metadata only; no Python runtime is approved by these values.
 const CHROMA_MCP_PINNED_VERSION = '0.2.6';
-
-// Override transitive dep resolutions for chroma-mcp 0.2.6 (issue #2371).
-//
-// Why onnxruntime>=1.20: the shipped all-MiniLM-L6-v2 model has pytorch-2.0
-// IR. Older onnxruntime versions can't parse it and fail every embedding
-// add with `[ONNXRuntimeError] : 7 : INVALID_PROTOBUF`. uv may otherwise
-// resolve to a too-old onnxruntime on macOS arm64 / Python 3.13 depending
-// on cache state, so we force a floor.
-//
-// Why protobuf<7: protobuf 7.x's stricter generated-file check rejects
-// opentelemetry's _pb2 stubs (generated with protoc <3.19), throwing
-// `TypeError: Descriptors cannot be created directly` at chromadb import.
-// Capping below 7 lands on protobuf 6.x which opentelemetry tolerates.
-//
-// Why chromadb==1.5.9: chroma-mcp 0.2.6 only declares chromadb>=1.0.16, so
-// the storage engine floated under persisted stores and an unannounced
-// upgrade segfaulted existing ones (#3362). The pin must be the version
-// installs already run, never lower: chromadb migrations are forward-only,
-// and 1.0.16 panics opening a store 1.5.9 wrote. 1.5.9 is the newest release
-// and what an unpinned env resolves today; it opens stores written by 1.0.16
-// and by 1.5.9. Raise it only after the same check on both.
-//
-// Why pydantic<2.14: chroma-mcp 0.2.6 pins mcp[cli]==1.6.0, whose
-// fastmcp func_metadata.py imports the private
-// pydantic._internal._typing_extra.eval_type_backport. pydantic 2.14.0
-// removed it, so every fresh env failed prewarm with an ImportError and
-// vector search stayed off (#4593). Lift the cap once a chroma-mcp release
-// ships an mcp newer than 1.6.0.
-//
-// These pins are runtime-only (uvx --with) so we don't have to fork
-// chroma-mcp upstream — they apply only to claude-mem's spawned subprocess.
-const CHROMA_MCP_DEP_OVERRIDES: ReadonlyArray<string> = [
-  'onnxruntime>=1.20',
-  'protobuf<7',
-  'chromadb==1.5.9',
-  'pydantic<2.14',
-];
-
-// The chromadb version the launcher pins, read from the override list itself
-// so the store record can never disagree with what uvx actually runs.
-const CHROMADB_PINNED_VERSION: string | null =
-  CHROMA_MCP_DEP_OVERRIDES.find(spec => spec.startsWith('chromadb=='))?.slice('chromadb=='.length) ?? null;
+const CHROMADB_PINNED_VERSION = '1.5.9';
+const CHROMA_MCP_DEP_OVERRIDES: ReadonlyArray<string> = [];
 
 /** Chroma child health for /api/admin/doctor and `npx claude-mem doctor`. */
 export interface ChromaCrashState {
-  /** Unexpected exits of the chroma-mcp child (uvx) in this worker's lifetime. */
+  /** Unexpected exits of the local adapter child in this worker lifetime. */
   count: number;
-  /** The last one. uvx is the direct child, so a crash inside chroma-mcp usually shows as its exit code. */
+  /** Last direct-child exit; not evidence of an approved Python runtime. */
   lastExit: {
     timestamp: string;
     code: number | null;
@@ -152,7 +73,8 @@ export interface ChromaCrashState {
   } | null;
   chromaMcpVersion: string;
   dependencyOverrides: string[];
-  /** The uvx prewarm circuit breaker (#4108): paused after 5 consecutive failures, stopped after 20. */
+  localRuntime: 'artifact-contract-unverified';
+  /** Compatibility health field: runtime prewarm was removed; always stopped. */
   prewarm: {
     consecutiveFailures: number;
     state: 'ok' | 'paused' | 'stopped';
@@ -160,14 +82,6 @@ export interface ChromaCrashState {
   /** The last collection dropped as corrupt and rebuilt from SQLite (#3202), if any. */
   collectionDrop?: ChromaCollectionDrop | null;
 }
-
-// Issue #2696 (revised): chroma-mcp is now spawned by invoking uvx DIRECTLY on
-// every platform — see ChromaMcpManager.resolveUvxCommand(). The previous
-// `cmd.exe` shell-wrapper path, and the cmd.exe metacharacter-quoting helper that
-// went with it, were removed: even with the dep-override specs wrapped in double
-// quotes, Node's child_process arg-quoting for cmd.exe re-mangled the `>`/`<` in
-// `onnxruntime>=1.20` / `protobuf<7`, so cmd.exe parsed them as redirection and
-// died with "The directory name is invalid" in ~10ms — killing semantic search.
 
 class ChromaMcpConnectionCancelledError extends Error {
   constructor(message = 'chroma-mcp connection cancelled during shutdown') {
@@ -255,19 +169,6 @@ export class ChromaMcpManager {
   private connected: boolean = false;
   private lastConnectionFailureTimestamp: number = 0;
   private connecting: Promise<void> | null = null;
-  private activePrewarmChild: ChildProcess | null = null;
-  /** Identity of activePrewarmChild, captured at spawn while it was alive. */
-  private activePrewarmTracked: TrackedChild | null = null;
-  /** Consecutive prewarm failures; trips the circuit breaker, reset on success. */
-  private consecutivePrewarmFailures: number = 0;
-  /** When the breaker last opened; gates the half-open recovery probe. */
-  private prewarmBreakerOpenedAt: number = 0;
-  /** Monotonic prewarm-attempt counter, so the retry cap is observable in logs. */
-  private prewarmAttempts: number = 0;
-  /** Whether the first successful prewarm has already started a scratch sweep. */
-  private sweptUvBuildsScratchAfterSuccess = false;
-  /** The in-flight background scratch sweep; at most one runs per process. */
-  private static uvBuildsScratchSweep: Promise<void> | null = null;
   private connectionGeneration: number = 0;
   private intentionallyClosingTransports = new WeakSet<object>();
   private readonly chromaWriterOwnerId = CHROMA_WRITER_OWNER_ID;
@@ -295,9 +196,7 @@ export class ChromaMcpManager {
   private acceptingLocalMutations = true;
   private chromaCrashCount = 0;
   private chromaLastExit: ChromaCrashState['lastExit'] = null;
-  private static uvxAvailabilityProbe: ((command: string, env: Record<string, string>, platform: NodeJS.Platform) => boolean) | null = null;
   private static exitObserveTimeoutMs = CHROMA_EXIT_OBSERVE_TIMEOUT_MS;
-  private static prewarmReapTimeoutMs = CHROMA_PREWARM_REAP_TIMEOUT_MS;
 
   private constructor() {
     const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
@@ -312,7 +211,7 @@ export class ChromaMcpManager {
           Math.max(CHROMA_MUTATION_TIMEOUT_BOUNDS.min, configuredMutationTimeout)
         )
       : DEFAULT_CHROMA_MUTATION_TIMEOUT_MS;
-    this.serializeMutations = (settings.CLAUDE_MEM_CHROMA_MODE || 'local') !== 'remote';
+    this.serializeMutations = true;
   }
 
   static getInstance(): ChromaMcpManager {
@@ -323,6 +222,9 @@ export class ChromaMcpManager {
   }
 
   private async ensureConnected(): Promise<void> {
+    // Configuration/artifact refusals must stay explicit on every call, including
+    // cached connections and retries. Do not turn U1/D9 into transient backoff.
+    const launch = requireApprovedLocalChromaRuntime(SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH));
     await this.waitForUnexpectedCloseCleanup();
 
     if (this.connected && this.client) {
@@ -339,7 +241,7 @@ export class ChromaMcpManager {
       return;
     }
 
-    const connectionAttempt = this.connectInternal();
+    const connectionAttempt = this.connectInternal(launch);
     this.connecting = connectionAttempt;
     try {
       await connectionAttempt;
@@ -369,58 +271,13 @@ export class ChromaMcpManager {
     }
   }
 
-  private async connectInternal(): Promise<void> {
+  private async connectInternal(launch: LocalChromaLaunch): Promise<void> {
     const connectionGeneration = this.connectionGeneration;
-
-    // Singleton invariant (#2313): kill any pre-existing chroma-mcp subprocess
-    // tree before spawning a new one. The MCP SDK's transport.close() only
-    // signals the direct child (uvx); on Linux the grandchildren (uv, python,
-    // chroma-mcp) get re-parented to init and survive, accumulating 20+
-    // instances per session if reconnects fire repeatedly. Reuse the same
-    // tree-kill primitive used by stop() so reconnect can never leave
-    // orphans behind.
     await this.disposeCurrentSubprocess();
     this.assertConnectionNotCancelled(connectionGeneration);
-
-    const localChromaDataDir = this.getLocalPersistentChromaDataDir();
-
-    // Pre-spawn compatibility check (refs #3012): refuse before prewarm and
-    // before lock acquisition when the on-disk record proves this store was
-    // last written by a newer epoch than this runtime.  The reader never
-    // creates the data dir — acquireChromaWriterLock() retains that right.
-    if (localChromaDataDir) {
-      ChromaMcpManager.assertChromaStoreCompatible(localChromaDataDir);
-    }
-
-    const commandArgs = this.buildCommandArgs(localChromaDataDir);
-    const uvxPreflightEnv = ChromaMcpManager.getUvxPreflightEnv();
+    const localChromaDataDir = paths.chroma();
+    ChromaMcpManager.assertChromaStoreCompatible(localChromaDataDir);
     getSupervisor().assertCanSpawn('chroma mcp');
-
-    // Spawn uvx DIRECTLY (no `cmd.exe` shell wrapper). On Windows, routing through
-    // cmd.exe makes it parse the `>`/`<` in the dep-override specs as shell
-    // redirection before uvx sees them; a shell-less spawn passes them literally.
-    // resolveUvxCommand returns the absolute uvx.exe path on Windows (Node won't
-    // PATHEXT-resolve a bare `uvx`) and bare `uvx` elsewhere (#2696).
-    const uvxSpawnCommand = ChromaMcpManager.resolveUvxCommand();
-    const uvxSpawnArgs = commandArgs;
-
-    if (!ChromaMcpManager.isUvxAvailable(uvxSpawnCommand, uvxPreflightEnv, process.platform)) {
-      const message = `uvx executable not found for chroma-mcp (${uvxSpawnCommand})`;
-      recordUvxVectorSearchUnavailable(message);
-      throw new ChromaUnavailableError(message);
-    }
-
-    const spawnEnvironment = this.getSpawnEnv(uvxPreflightEnv);
-
-    await this.prewarmChromaMcp(uvxSpawnCommand, uvxSpawnArgs, spawnEnvironment, connectionGeneration);
-    this.assertConnectionNotCancelled(connectionGeneration);
-
-    clearDependencyStatus('uvx');
-
-    logger.info('CHROMA_MCP', 'Connecting to chroma-mcp via MCP stdio', {
-      command: uvxSpawnCommand,
-      args: uvxSpawnArgs.join(' ')
-    });
 
     let writerLock: ChromaWriterLockHandle | null = null;
     try {
@@ -447,9 +304,9 @@ export class ChromaMcpManager {
       }
 
       this.transport = new StdioClientTransport({
-        command: uvxSpawnCommand,
-        args: uvxSpawnArgs,
-        env: spawnEnvironment,
+        command: launch.command,
+        args: launch.args,
+        env: launch.env,
         cwd: os.homedir(),
         stderr: 'pipe'
       });
@@ -590,19 +447,15 @@ export class ChromaMcpManager {
   }
 
   getCrashState(): ChromaCrashState {
-    const consecutiveFailures = this.consecutivePrewarmFailures;
     return {
       count: this.chromaCrashCount,
       lastExit: this.chromaLastExit ? { ...this.chromaLastExit } : null,
       chromaMcpVersion: CHROMA_MCP_PINNED_VERSION,
       dependencyOverrides: [...CHROMA_MCP_DEP_OVERRIDES],
+      localRuntime: 'artifact-contract-unverified',
       prewarm: {
-        consecutiveFailures,
-        state: consecutiveFailures >= CHROMA_PREWARM_GIVE_UP_FAILURES
-          ? 'stopped'
-          : consecutiveFailures >= CHROMA_PREWARM_MAX_CONSECUTIVE_FAILURES
-            ? 'paused'
-            : 'ok',
+        consecutiveFailures: 0,
+        state: 'stopped',
       },
     };
   }
@@ -652,56 +505,6 @@ export class ChromaMcpManager {
     if (this.connectionGeneration !== connectionGeneration) {
       throw new ChromaMcpConnectionCancelledError();
     }
-  }
-
-  private getLocalPersistentChromaDataDir(): string | null {
-    const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
-    const chromaMode = settings.CLAUDE_MEM_CHROMA_MODE || 'local';
-    return chromaMode === 'remote' ? null : paths.chroma();
-  }
-
-  private buildCommandArgs(localChromaDataDir: string | null = this.getLocalPersistentChromaDataDir()): string[] {
-    const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
-    const pythonVersion = process.env.CLAUDE_MEM_PYTHON_VERSION || settings.CLAUDE_MEM_PYTHON_VERSION || '3.13';
-    const launcherPrefix = ChromaMcpManager.buildLauncherPrefix(pythonVersion);
-
-    if (!localChromaDataDir) {
-      const chromaHost = settings.CLAUDE_MEM_CHROMA_HOST || '127.0.0.1';
-      const chromaPort = settings.CLAUDE_MEM_CHROMA_PORT || '8000';
-      const chromaSsl = settings.CLAUDE_MEM_CHROMA_SSL === 'true';
-      const chromaTenant = settings.CLAUDE_MEM_CHROMA_TENANT || 'default_tenant';
-      const chromaDatabase = settings.CLAUDE_MEM_CHROMA_DATABASE || 'default_database';
-      const chromaApiKey = settings.CLAUDE_MEM_CHROMA_API_KEY || '';
-
-      const args = [
-        ...launcherPrefix,
-        '--client-type', 'http',
-        '--host', chromaHost,
-        '--port', chromaPort
-      ];
-
-      args.push('--ssl', chromaSsl ? 'true' : 'false');
-
-      if (chromaTenant !== 'default_tenant') {
-        args.push('--tenant', chromaTenant);
-      }
-
-      if (chromaDatabase !== 'default_database') {
-        args.push('--database', chromaDatabase);
-      }
-
-      if (chromaApiKey) {
-        args.push('--api-key', chromaApiKey);
-      }
-
-      return args;
-    }
-
-    return [
-      ...launcherPrefix,
-      '--client-type', 'persistent',
-      '--data-dir', localChromaDataDir.replace(/\\/g, '/')
-    ];
   }
 
   private acquireChromaWriterLock(dataDir: string): ChromaWriterLockHandle {
@@ -1012,59 +815,6 @@ export class ChromaMcpManager {
     }
   }
 
-  private static buildLauncherPrefix(pythonVersion: string): string[] {
-    const depOverrideFlags = CHROMA_MCP_DEP_OVERRIDES.flatMap(spec => ['--with', spec]);
-    return [
-      '--python', pythonVersion,
-      ...depOverrideFlags,
-      '--from', `chroma-mcp==${CHROMA_MCP_PINNED_VERSION}`,
-      'chroma-mcp',
-    ];
-  }
-
-  private static buildPrewarmCommandArgs(commandArgs: string[]): string[] {
-    const executableIndex = commandArgs.indexOf('chroma-mcp');
-    const launcherPrefix = executableIndex >= 0
-      ? commandArgs.slice(0, executableIndex + 1)
-      : commandArgs;
-    return [...launcherPrefix, '--help'];
-  }
-
-  private static parseBoundedTimeoutMs(rawValue: string | undefined): number | null {
-    if (!rawValue) {
-      return null;
-    }
-    const parsed = Number.parseInt(rawValue, 10);
-    if (
-      Number.isFinite(parsed) &&
-      parsed >= CHROMA_PREWARM_TIMEOUT_BOUNDS.min &&
-      parsed <= CHROMA_PREWARM_TIMEOUT_BOUNDS.max
-    ) {
-      return parsed;
-    }
-    return null;
-  }
-
-  private static getChromaPrewarmTimeoutMs(): number {
-    const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
-    const envValue = process.env[CHROMA_PREWARM_TIMEOUT_SETTING];
-    const settingsValue = settings[CHROMA_PREWARM_TIMEOUT_SETTING];
-
-    const parsed = ChromaMcpManager.parseBoundedTimeoutMs(envValue ?? settingsValue);
-    if (parsed !== null) {
-      return parsed;
-    }
-
-    if (envValue !== undefined || settingsValue) {
-      logger.warn('CHROMA_MCP', `Invalid ${CHROMA_PREWARM_TIMEOUT_SETTING}, using default`, {
-        value: envValue ?? settingsValue,
-        min: CHROMA_PREWARM_TIMEOUT_BOUNDS.min,
-        max: CHROMA_PREWARM_TIMEOUT_BOUNDS.max
-      });
-    }
-    return DEFAULT_CHROMA_PREWARM_TIMEOUT_MS;
-  }
-
   private static captureOutputTail(
     stream: { on(event: 'data', listener: (chunk: Buffer | string | Uint8Array) => void): unknown } | null | undefined,
   ): () => string {
@@ -1081,323 +831,6 @@ export class ChromaMcpManager {
   }
 
   /**
-   * Cooldown for the open circuit breaker: the base doubled once per failed
-   * probe (each failure past the open threshold), capped at the max. A host that
-   * keeps failing is therefore probed ever more rarely instead of at a fixed
-   * interval, which bounds the wasted builds while still allowing recovery.
-   */
-  private static prewarmBreakerCooldownMs(consecutiveFailures: number): number {
-    const overshoot = Math.max(0, consecutiveFailures - CHROMA_PREWARM_MAX_CONSECUTIVE_FAILURES);
-    const scaled = CHROMA_PREWARM_BREAKER_BASE_COOLDOWN_MS * 2 ** overshoot;
-    return Math.min(scaled, CHROMA_PREWARM_BREAKER_MAX_COOLDOWN_MS);
-  }
-
-  /**
-   * uv's build-scratch directory (`<uv cache>/builds-v0`), resolved from the
-   * spawn env with uv's own cache-dir precedence: `UV_CACHE_DIR`, else
-   * `%LOCALAPPDATA%\uv\cache` on Windows, else `$XDG_CACHE_HOME/uv` or
-   * `~/.cache/uv`. Windows env names are case-insensitive, so the lookup is too.
-   * `platform` and `homedir` are injectable so the resolution is testable.
-   */
-  static resolveUvBuildsScratchDir(
-    env: Record<string, string>,
-    platform: NodeJS.Platform = process.platform,
-    homedir: string = os.homedir(),
-  ): string {
-    const read = (name: string): string | undefined => {
-      if (platform === 'win32') {
-        const target = name.toLowerCase();
-        const key = Object.keys(env).find(k => k.toLowerCase() === target);
-        return key ? env[key]?.trim() || undefined : undefined;
-      }
-      return env[name]?.trim() || undefined;
-    };
-
-    const explicitCache = read('UV_CACHE_DIR');
-    const cacheDir = explicitCache
-      ? explicitCache
-      : platform === 'win32'
-        ? path.join(read('LOCALAPPDATA') || path.join(homedir, 'AppData', 'Local'), 'uv', 'cache')
-        : path.join(read('XDG_CACHE_HOME') || path.join(homedir, '.cache'), 'uv');
-    return path.join(cacheDir, 'builds-v0');
-  }
-
-  /**
-   * Delete abandoned uv build-scratch dirs left by a failed prewarm.
-   *
-   * uv builds chroma-mcp's environment in `builds-v0/.tmp*` and removes the dir
-   * on success, but a build that fails or is killed mid-way leaks it, and `uv
-   * cache prune` never reclaims it. On NTFS each leftover also pins hardlinks
-   * against the 1,023-per-file ceiling, so they compound until the disk fills
-   * (#4108). Only `.tmp*` entries are scratch — real cached builds have other
-   * names and are left untouched — and only ones past the abandoned age are
-   * removed, so a build in progress elsewhere (which can take minutes) is never
-   * disturbed. Best-effort: every failure is logged at debug and swallowed.
-   *
-   * One pass removes at most `maxDirs` dirs and returns how many it removed.
-   * Everything is async: a synchronous recursive delete of a large backlog
-   * would block the worker's event loop for minutes.
-   */
-  private static async sweepUvBuildsScratch(
-    env: Record<string, string>,
-    maxDirs: number = CHROMA_UV_BUILDS_SCRATCH_SWEEP_BATCH,
-  ): Promise<number> {
-    const buildsDir = ChromaMcpManager.resolveUvBuildsScratchDir(env);
-    let entries: fs.Dirent[];
-    try {
-      entries = await fs.promises.readdir(buildsDir, { withFileTypes: true });
-    } catch {
-      // No cache dir yet, or unreadable — nothing to sweep.
-      return 0;
-    }
-
-    const now = Date.now();
-    let removed = 0;
-    for (const entry of entries) {
-      if (removed >= maxDirs) break;
-      if (!entry.name.startsWith('.tmp')) continue;
-      const scratchPath = path.join(buildsDir, entry.name);
-      try {
-        const { mtimeMs } = await fs.promises.stat(scratchPath);
-        if (now - mtimeMs < CHROMA_UV_BUILDS_SCRATCH_ABANDONED_MS) {
-          continue;
-        }
-        await fs.promises.rm(scratchPath, { recursive: true, force: true });
-        removed += 1;
-      } catch (error) {
-        logger.debug('CHROMA_MCP', 'Failed to remove uv build scratch dir (best-effort)', {
-          scratchPath,
-          error: error instanceof Error ? error.message : String(error),
-        });
-      }
-    }
-
-    if (removed > 0) {
-      logger.info('CHROMA_MCP', 'Swept abandoned uv build scratch dirs', { buildsDir, removed });
-    }
-    return removed;
-  }
-
-  /**
-   * Run sweep passes until one removes less than a full batch, pausing between
-   * passes so a large backlog is reclaimed without monopolising the disk.
-   */
-  private static async drainUvBuildsScratch(
-    env: Record<string, string>,
-    pauseMs: number = CHROMA_UV_BUILDS_SCRATCH_SWEEP_PAUSE_MS,
-  ): Promise<void> {
-    while (await ChromaMcpManager.sweepUvBuildsScratch(env) >= CHROMA_UV_BUILDS_SCRATCH_SWEEP_BATCH) {
-      await new Promise<void>(resolve => {
-        // unref: a pending pause must never keep a shutting-down worker alive.
-        setTimeout(resolve, pauseMs).unref?.();
-      });
-    }
-  }
-
-  /**
-   * Start a background drain of abandoned uv build scratch and return at once
-   * (fire-and-forget). A request while a drain is running is dropped: the
-   * running drain already removes everything past the age bound.
-   */
-  private static startUvBuildsScratchSweep(env: Record<string, string>): void {
-    if (ChromaMcpManager.uvBuildsScratchSweep) {
-      return;
-    }
-    ChromaMcpManager.uvBuildsScratchSweep = ChromaMcpManager.drainUvBuildsScratch(env)
-      .catch(error => {
-        logger.debug('CHROMA_MCP', 'uv build scratch sweep stopped (best-effort)', {
-          error: error instanceof Error ? error.message : String(error),
-        });
-      })
-      .finally(() => {
-        ChromaMcpManager.uvBuildsScratchSweep = null;
-      });
-  }
-
-  /** Test hook: resolves once the in-flight background scratch sweep, if any, ends. */
-  static async waitForUvBuildsScratchSweepForTesting(): Promise<void> {
-    await ChromaMcpManager.uvBuildsScratchSweep;
-  }
-
-  private async prewarmChromaMcp(
-    command: string,
-    commandArgs: string[],
-    env: Record<string, string>,
-    connectionGeneration: number,
-  ): Promise<void> {
-    this.assertConnectionNotCancelled(connectionGeneration);
-
-    if (this.consecutivePrewarmFailures >= CHROMA_PREWARM_GIVE_UP_FAILURES) {
-      // Latched: a full recovery window of exponentially spaced probes has
-      // failed, so stop spawning entirely until the worker restarts. This caps
-      // the total wasted builds (and the scratch they can leak) on a host that
-      // never recovers.
-      const message = `chroma-mcp prewarm disabled after ${this.consecutivePrewarmFailures} consecutive failures; restart required`;
-      logger.warn('CHROMA_MCP', 'chroma-mcp prewarm circuit breaker latched, restart required', {
-        consecutiveFailures: this.consecutivePrewarmFailures,
-        prewarmAttempts: this.prewarmAttempts,
-      });
-      recordUvxVectorSearchUnavailable(message);
-      throw new ChromaUnavailableError(message);
-    }
-
-    if (this.consecutivePrewarmFailures >= CHROMA_PREWARM_MAX_CONSECUTIVE_FAILURES) {
-      const cooldownMs = ChromaMcpManager.prewarmBreakerCooldownMs(this.consecutivePrewarmFailures);
-      const msSinceOpen = Date.now() - this.prewarmBreakerOpenedAt;
-      if (msSinceOpen < cooldownMs) {
-        const retryInS = Math.ceil((cooldownMs - msSinceOpen) / 1000);
-        const message = `chroma-mcp prewarm paused after ${this.consecutivePrewarmFailures} consecutive failures; retrying in ${retryInS}s`;
-        logger.warn('CHROMA_MCP', 'chroma-mcp prewarm circuit breaker open, skipping spawn', {
-          consecutiveFailures: this.consecutivePrewarmFailures,
-          prewarmAttempts: this.prewarmAttempts,
-          retryInS,
-        });
-        recordUvxVectorSearchUnavailable(message);
-        throw new ChromaUnavailableError(message);
-      }
-      // Cooldown elapsed — let a single probe through (half-open). A failure
-      // re-opens the breaker for a longer cooldown; a success resets the count
-      // and closes it, so a recovered host reconnects without a restart.
-      logger.info('CHROMA_MCP', 'chroma-mcp prewarm circuit breaker half-open, allowing one probe', {
-        consecutiveFailures: this.consecutivePrewarmFailures,
-        prewarmAttempts: this.prewarmAttempts,
-      });
-    }
-
-    const args = ChromaMcpManager.buildPrewarmCommandArgs(commandArgs);
-    const timeoutMs = ChromaMcpManager.getChromaPrewarmTimeoutMs();
-    this.prewarmAttempts += 1;
-
-    logger.info('CHROMA_MCP', 'Prewarming chroma-mcp uvx environment', {
-      command,
-      args: args.join(' '),
-      timeoutMs,
-      attempt: this.prewarmAttempts,
-      consecutiveFailures: this.consecutivePrewarmFailures,
-    });
-
-    const child = spawn(command, args, {
-      cwd: os.homedir(),
-      env,
-      shell: false,
-      stdio: ['ignore', 'pipe', 'pipe'],
-      windowsHide: process.platform === 'win32',
-    });
-    this.activePrewarmChild = child;
-    const prewarmTracked = trackChild(child);
-    this.activePrewarmTracked = prewarmTracked;
-
-    const stdoutTail = ChromaMcpManager.captureOutputTail(child.stdout);
-    const stderrTail = ChromaMcpManager.captureOutputTail(child.stderr);
-
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
-    const exitPromise = new Promise<void>((resolve, reject) => {
-      child.once('error', (error) => {
-        if (this.connectionGeneration !== connectionGeneration) {
-          reject(new ChromaMcpConnectionCancelledError());
-          return;
-        }
-        reject(error);
-      });
-      child.once('close', (code: number | null, signal: NodeJS.Signals | null) => {
-        if (this.connectionGeneration !== connectionGeneration) {
-          reject(new ChromaMcpConnectionCancelledError());
-          return;
-        }
-        if (code === 0) {
-          resolve();
-          return;
-        }
-        reject(new Error(`chroma-mcp prewarm exited with code ${code ?? 'null'}${signal ? ` signal ${signal}` : ''}`));
-      });
-    });
-    const timeoutPromise = new Promise<never>((_, reject) => {
-      timeoutId = setTimeout(
-        () => reject(new Error(`chroma-mcp prewarm timed out after ${timeoutMs}ms`)),
-        timeoutMs
-      );
-    });
-
-    try {
-      await Promise.race([exitPromise, timeoutPromise]);
-      this.assertConnectionNotCancelled(connectionGeneration);
-      this.consecutivePrewarmFailures = 0;
-      logger.debug('CHROMA_MCP', 'chroma-mcp uvx prewarm completed');
-      if (!this.sweptUvBuildsScratchAfterSuccess) {
-        // A host that recovered (e.g. once UV_LINK_MODE=copy lets installs
-        // finish) still carries every scratch dir its failed attempts leaked,
-        // and a sweep that ran only on failure would never reclaim them.
-        this.sweptUvBuildsScratchAfterSuccess = true;
-        ChromaMcpManager.startUvBuildsScratchSweep(env);
-      }
-    } catch (error) {
-      if (error instanceof ChromaMcpConnectionCancelledError) {
-        logger.debug('CHROMA_MCP', 'chroma-mcp uvx prewarm cancelled during shutdown');
-        // A cancelled build is killed but not cleaned up by uv, so its scratch
-        // dir leaks too. Sweep here as well so repeated shutdowns/reconnects
-        // cannot accumulate abandoned builds (#4108).
-        ChromaMcpManager.startUvBuildsScratchSweep(env);
-        throw error;
-      }
-      this.assertConnectionNotCancelled(connectionGeneration);
-      this.consecutivePrewarmFailures += 1;
-      if (this.consecutivePrewarmFailures >= CHROMA_PREWARM_MAX_CONSECUTIVE_FAILURES) {
-        // Mark when the breaker opened (or re-opened after a failed probe) so
-        // the half-open cooldown is measured from the latest failure.
-        this.prewarmBreakerOpenedAt = Date.now();
-      }
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      const pid = child.pid;
-      const stdout = stdoutTail();
-      const stderr = stderrTail();
-      logger.warn('CHROMA_MCP', 'chroma-mcp uvx prewarm failed', {
-        command,
-        args: args.join(' '),
-        timeoutMs,
-        attempt: this.prewarmAttempts,
-        consecutiveFailures: this.consecutivePrewarmFailures,
-        ...(pid ? { pid } : {}),
-        error: errorMessage,
-        ...(stdout ? { stdoutTail: stdout } : {}),
-        ...(stderr ? { stderrTail: stderr } : {})
-      });
-
-      if (pid) {
-        try {
-          // Token from spawn time: by here the prewarm may already have exited
-          // (that is often WHY we are in this branch), so self-capture would
-          // read a replacement rather than the child we spawned.
-          await killProcessTree(pid, { expectedStartToken: prewarmTracked?.startToken ?? null });
-        } catch (killError) {
-          logger.debug('CHROMA_MCP', 'prewarm process tree kill finished (best-effort)', {
-            pid,
-            error: killError instanceof Error ? killError.message : String(killError)
-          });
-        }
-      } else {
-        try { child.kill('SIGKILL'); } catch { /* already dead */ }
-      }
-
-      // Reclaim the half-built env this failed attempt may have leaked, so a
-      // retry loop cannot fill the disk on NTFS (#4108). Runs after the kill so
-      // our own scratch dir is no longer held open.
-      ChromaMcpManager.startUvBuildsScratchSweep(env);
-
-      const unavailableMessage = `chroma-mcp prewarm failed: ${errorMessage}`;
-      recordUvxVectorSearchUnavailable(unavailableMessage);
-      throw new ChromaUnavailableError(unavailableMessage, error instanceof Error ? error : undefined);
-    } finally {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-      if (this.activePrewarmChild === child) {
-        this.activePrewarmChild = null;
-        this.activePrewarmTracked = null;
-      }
-    }
-  }
-
-  /**
    * Whether a mutation sent now would be accepted. False in local mode once
    * stop() has begun, because callTool() then refuses every mutation.
    */
@@ -1406,6 +839,10 @@ export class ChromaMcpManager {
   }
 
   async callTool(toolName: string, toolArguments: Record<string, unknown>): Promise<unknown> {
+    assertLocalChromaConfiguration(SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH));
+    if ('embedding_function_name' in toolArguments) {
+      assertLocalEmbeddingFunction(toolArguments.embedding_function_name);
+    }
     if (!this.serializeMutations || !ChromaMcpManager.isMutationTool(toolName)) {
       return this.callToolUnqueued(toolName, toolArguments);
     }
@@ -1700,7 +1137,6 @@ export class ChromaMcpManager {
    * subprocess (no-op in that case).
    */
   private async disposeCurrentSubprocess(): Promise<void> {
-    await this.disposeActivePrewarm();
 
     const closingTransport = this.transport;
     if (closingTransport) {
@@ -1886,39 +1322,6 @@ export class ChromaMcpManager {
     }
   }
 
-  private async disposeActivePrewarm(): Promise<void> {
-    const prewarmChild = this.activePrewarmChild;
-    const tracked = this.activePrewarmTracked;
-    if (!prewarmChild) {
-      return;
-    }
-    if (this.activePrewarmChild === prewarmChild) {
-      this.activePrewarmChild = null;
-      this.activePrewarmTracked = null;
-    }
-
-    const pid = prewarmChild.pid;
-    if (pid) {
-      try {
-        // Spawn-time identity: this handle may already have exited.
-        await killProcessTree(pid, { expectedStartToken: tracked?.startToken ?? null });
-      } catch (error) {
-        logger.warn('CHROMA_MCP', 'failed to kill in-flight chroma-mcp prewarm tree (best-effort)', {
-          pid,
-          error: error instanceof Error ? error.message : String(error)
-        });
-      }
-    }
-
-    try {
-      prewarmChild.kill('SIGKILL');
-    } catch {
-      // Already dead.
-    }
-
-    await ChromaMcpManager.waitForChildClose(prewarmChild, ChromaMcpManager.prewarmReapTimeoutMs);
-  }
-
   private static async waitForChildClose(child: ChildProcess, timeoutMs: number): Promise<void> {
     if (child.exitCode !== null || child.signalCode !== null) {
       return;
@@ -1959,7 +1362,7 @@ export class ChromaMcpManager {
     this.connectionGeneration += 1;
     await this.waitForUnexpectedCloseCleanup();
 
-    if (!this.client && !this.transport && !this.activePrewarmChild) {
+    if (!this.client && !this.transport) {
       logger.debug('CHROMA_MCP', 'No active MCP connection to stop');
       this.releaseChromaWriterLock();
       this.connecting = null;
@@ -1985,292 +1388,9 @@ export class ChromaMcpManager {
     ChromaMcpManager.instance = null;
   }
 
-  private getCombinedCertPath(): string | undefined {
-    const combinedCertPath = paths.combinedCerts();
-
-    if (fs.existsSync(combinedCertPath)) {
-      const stats = fs.statSync(combinedCertPath);
-      const ageMs = Date.now() - stats.mtimeMs;
-      if (ageMs < 24 * 60 * 60 * 1000) {
-        return combinedCertPath;
-      }
-    }
-
-    if (process.platform !== 'darwin') {
-      return undefined;
-    }
-
-    try {
-      let certifiPath: string | undefined;
-      try {
-        certifiPath = execSync(
-          'uvx --with certifi python -c "import certifi; print(certifi.where())"',
-          { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], timeout: 10000 }
-        ).trim();
-      } catch (error) {
-        logger.debug('CHROMA_MCP', 'Failed to resolve certifi path via uvx', {
-          error: error instanceof Error ? error.message : String(error)
-        });
-        return undefined;
-      }
-
-      if (!certifiPath || !fs.existsSync(certifiPath)) {
-        return undefined;
-      }
-
-      let zscalerCert = '';
-      try {
-        zscalerCert = execSync(
-          'security find-certificate -a -c "Zscaler" -p /Library/Keychains/System.keychain',
-          { encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'], timeout: 5000 }
-        );
-      } catch (error) {
-        logger.debug('CHROMA_MCP', 'No Zscaler certificate found in system keychain', {
-          error: error instanceof Error ? error.message : String(error)
-        });
-        return undefined;
-      }
-
-      if (!zscalerCert ||
-          !zscalerCert.includes('-----BEGIN CERTIFICATE-----') ||
-          !zscalerCert.includes('-----END CERTIFICATE-----')) {
-        return undefined;
-      }
-
-      const certifiContent = fs.readFileSync(certifiPath, 'utf8');
-      const tempPath = combinedCertPath + '.tmp';
-      fs.writeFileSync(tempPath, certifiContent + '\n' + zscalerCert);
-      fs.renameSync(tempPath, combinedCertPath);
-
-      logger.info('CHROMA_MCP', 'Created combined SSL certificate bundle for Zscaler', {
-        path: combinedCertPath
-      });
-
-      return combinedCertPath;
-    } catch (error) {
-      logger.debug('CHROMA_MCP', 'Could not create combined cert bundle', {}, error as Error);
-      return undefined;
-    }
-  }
-
-  /**
-   * CLAUDE_MEM_CHROMA_UVX_PATH from settings.json, with the environment
-   * variable taking precedence (loadFromFile applies env overrides).
-   */
-  private static uvxPathSetting(): string {
-    return SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH).CLAUDE_MEM_CHROMA_UVX_PATH;
-  }
-
-  /**
-   * uv installs `uvx` to a per-user bin dir that is often NOT on the PATH the
-   * worker inherited (the worker is spawned by the host with a minimal env that
-   * predates the user adding uv to PATH). Without it, `uvx`/`cmd /c uvx` dies
-   * with "not recognized" in ~25ms and semantic search silently falls back to
-   * keyword (#2790). Prepend uv's known bin dirs and the macOS Homebrew bins so
-   * the chroma child can always resolve uvx. Only dirs that exist are added.
-   */
-  private static uvBinDirs(): string[] {
-    return getUvxBinDirs({
-      homedir: os.homedir,
-      override: ChromaMcpManager.uvxPathSetting(),
-      platform: process.platform,
-      isFile: dir => {
-        try {
-          return fs.existsSync(dir) && fs.statSync(dir).isFile();
-        } catch (error) {
-          logger.debug('CHROMA_MCP', 'Failed to stat uv bin dir candidate, using as-is', { dir }, error instanceof Error ? error : new Error(String(error)));
-          return false;
-        }
-      },
-    });
-  }
-
-  /**
-   * Resolve the command used to launch uvx.
-   *
-   * On Windows we MUST spawn uvx.exe DIRECTLY rather than via a `cmd.exe` wrapper:
-   * cmd.exe parses the `>`/`<` in the dep-override specs (onnxruntime>=1.20,
-   * protobuf<7) as shell redirection before uvx sees them, and Node's
-   * child_process arg-quoting for cmd.exe re-mangles even pre-quoted args, so
-   * cmd.exe dies with "The directory name is invalid" in ~10ms. The MCP
-   * transport then reports "Connection closed", the manager backs off, and
-   * semantic search silently degrades to keyword-only (#2696 follow-up).
-   *
-   * Node's shell-less spawn won't resolve a bare `uvx` via PATHEXT on Windows,
-   * so we resolve the absolute path to uvx.exe from the same uv bin dirs that
-   * ensureUvOnPath() adds to the child PATH (honouring CLAUDE_MEM_CHROMA_UVX_PATH
-   * when it points straight at a binary), falling back to bare 'uvx.exe'.
-   */
-  static resolveUvxCommand(platform: NodeJS.Platform = process.platform): string {
-    if (platform !== 'win32') {
-      return 'uvx';
-    }
-    const override = ChromaMcpManager.uvxPathSetting();
-    if (override) {
-      try {
-        if (fs.existsSync(override) && fs.statSync(override).isFile()) {
-          return override;
-        }
-      } catch {
-        // fall through to scanning the known uv bin dirs
-      }
-    }
-    for (const dir of ChromaMcpManager.uvBinDirs()) {
-      const candidate = path.join(dir, 'uvx.exe');
-      try {
-        if (fs.existsSync(candidate)) {
-          return candidate;
-        }
-      } catch {
-        // ignore and try the next candidate
-      }
-    }
-    return 'uvx.exe';
-  }
-
-  private static isUvxAvailable(
-    command: string,
-    env: Record<string, string>,
-    platform: NodeJS.Platform,
-  ): boolean {
-    if (ChromaMcpManager.uvxAvailabilityProbe) {
-      return ChromaMcpManager.uvxAvailabilityProbe(command, env, platform);
-    }
-
-    const executableNames = platform === 'win32' && !command.toLowerCase().endsWith('.exe')
-      ? [command, `${command}.exe`]
-      : [command];
-
-    if (command.includes('/') || command.includes('\\')) {
-      return executableNames.some(candidate => {
-        try {
-          return fs.existsSync(candidate) && fs.statSync(candidate).isFile();
-        } catch (error) {
-          logger.debug('CHROMA_MCP', 'Failed to stat uvx candidate path', { candidate }, error instanceof Error ? error : new Error(String(error)));
-          return false;
-        }
-      });
-    }
-
-    const sep = platform === 'win32' ? ';' : ':';
-    const pathKey = Object.keys(env).find(k => k.toLowerCase() === 'path') ?? 'PATH';
-    const dirs = (env[pathKey] ?? '').split(sep).filter(Boolean);
-
-    for (const dir of dirs) {
-      for (const name of executableNames) {
-        const candidate = path.join(dir, name);
-        try {
-          if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
-            return true;
-          }
-        } catch {
-          // Try the next PATH entry.
-        }
-      }
-    }
-    return false;
-  }
-
-  static setUvxAvailabilityProbeForTesting(
-    probe: ((command: string, env: Record<string, string>, platform: NodeJS.Platform) => boolean) | null,
-  ): void {
-    ChromaMcpManager.uvxAvailabilityProbe = probe;
-  }
-
-  /**
-   * Bounds on how long teardown waits to see a child exit: the chroma-mcp
-   * child after close() before tree-killing it, and a killed prewarm child.
-   * null restores the defaults.
-   */
+  /** Retained bounded teardown test seam; there is no prewarm process. */
   static setChildExitWaitTimeoutsForTesting(timeoutMs: number | null): void {
     ChromaMcpManager.exitObserveTimeoutMs = timeoutMs ?? CHROMA_EXIT_OBSERVE_TIMEOUT_MS;
-    ChromaMcpManager.prewarmReapTimeoutMs = timeoutMs ?? CHROMA_PREWARM_REAP_TIMEOUT_MS;
-  }
-
-  private static ensureUvOnPath(env: Record<string, string>): void {
-    const sep = process.platform === 'win32' ? ';' : ':';
-    const pathKey = Object.keys(env).find(k => k.toLowerCase() === 'path') ?? 'PATH';
-    const current = env[pathKey] ? env[pathKey].split(sep).filter(Boolean) : [];
-    const have = new Set(current.map(p => (process.platform === 'win32' ? p.toLowerCase() : p)));
-    const additions = ChromaMcpManager.uvBinDirs().filter(dir => {
-      try {
-        if (!fs.existsSync(dir)) return false;
-      } catch (error) {
-        logger.debug('CHROMA_MCP', 'Failed to check uv bin dir existence', { dir }, error instanceof Error ? error : new Error(String(error)));
-        return false;
-      }
-      const key = process.platform === 'win32' ? dir.toLowerCase() : dir;
-      return !have.has(key);
-    });
-    if (additions.length > 0) {
-      env[pathKey] = [...additions, ...current].join(sep);
-      logger.debug('CHROMA_MCP', 'Prepended uv bin dir(s) to chroma child PATH', { added: additions });
-    }
-  }
-
-  private static getUvxPreflightEnv(): Record<string, string> {
-    const baseEnv: Record<string, string> = {};
-    for (const [key, value] of Object.entries(sanitizeEnv(process.env))) {
-      if (value !== undefined) {
-        baseEnv[key] = value;
-      }
-    }
-
-    // Ensure uvx is resolvable even if the worker's inherited PATH omits uv's
-    // bin dir (#2790).
-    ChromaMcpManager.ensureUvOnPath(baseEnv);
-
-    // Never let an activated venv / conda shell leak its interpreter into the
-    // uvx child (#3552). This is THE spawn env for chroma-mcp, so this is the
-    // call that actually fixes the numpy ABI clash.
-    stripForeignPythonEnv(baseEnv);
-
-    // On NTFS, uv installs cached files into each build env with hardlinks, but
-    // a single file can back at most 1,023 hardlinks; chroma-mcp's large deps
-    // blow past that ceiling, and from then on every install fails and leaks a
-    // half-built env — over time this fills the disk (#4108). `copy` link mode
-    // trades a little extra space for installs that actually complete on
-    // Windows: offline install succeeds in ~15s under copy, fails in ~3s without
-    // it. Only a default: an explicit UV_LINK_MODE still wins. Windows env names
-    // are case-insensitive, so a lowercase `uv_link_mode` counts as set too —
-    // otherwise we would add a duplicate uppercase key the user did not choose.
-    if (process.platform === 'win32'
-        && !Object.keys(baseEnv).some(key => key.toLowerCase() === 'uv_link_mode')) {
-      baseEnv.UV_LINK_MODE = 'copy';
-    }
-
-    // Disable Chroma's anonymous telemetry — it issues background HTTP from
-    // the embedding subprocess on every collection touch.
-    if (!baseEnv.ANONYMIZED_TELEMETRY) baseEnv.ANONYMIZED_TELEMETRY = 'false';
-
-    // Force UTF-8 on the Python child's stdio. Without this, a non-UTF-8 ANSI
-    // code page (e.g. cp936) makes Python encode JSON-RPC stdout in the locale
-    // encoding, which Node then decodes as UTF-8 — the bad bytes become U+FFFD
-    // and JSON.parse throws. These vars govern both directions of the pipe.
-    baseEnv.PYTHONUTF8 = '1';
-    baseEnv.PYTHONIOENCODING = 'utf-8';
-    return baseEnv;
-  }
-
-  private getSpawnEnv(preflightEnv?: Record<string, string>): Record<string, string> {
-    const baseEnv = preflightEnv ? { ...preflightEnv } : ChromaMcpManager.getUvxPreflightEnv();
-
-    const combinedCertPath = this.getCombinedCertPath();
-    if (!combinedCertPath) {
-      return baseEnv;
-    }
-
-    logger.info('CHROMA_MCP', 'Using combined SSL certificates for enterprise compatibility', {
-      certPath: combinedCertPath
-    });
-
-    return {
-      ...baseEnv,
-      SSL_CERT_FILE: combinedCertPath,
-      REQUESTS_CA_BUNDLE: combinedCertPath,
-      CURL_CA_BUNDLE: combinedCertPath,
-      NODE_EXTRA_CA_CERTS: combinedCertPath
-    };
   }
 
   private registerManagedProcess(): void {

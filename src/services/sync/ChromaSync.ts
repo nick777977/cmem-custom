@@ -1,4 +1,5 @@
 
+import { assertLocalChromaConfiguration } from './ChromaLocalRuntime.js';
 import { ChromaMcpManager } from './ChromaMcpManager.js';
 import { ChromaSyncState, ProjectWatermarks } from './ChromaSyncState.js';
 import { parseStringListField } from './string-list-field.js';
@@ -169,13 +170,6 @@ function observationTitleText(obs: Pick<StoredObservation, 'title' | 'subtitle'>
   const title = obs.title?.trim() === 'Untitled' ? '' : obs.title?.trim() ?? '';
   return [title, obs.subtitle?.trim() ?? ''].filter(part => part.length > 0).join('\n');
 }
-
-// The embedding functions the pinned chroma-mcp (0.2.6) knows. It resolves the
-// name before checking whether the collection exists, so any other value would
-// fail every chroma_create_collection call, and with it every write.
-const CHROMA_MCP_EMBEDDING_FUNCTIONS: ReadonlySet<string> = new Set([
-  'default', 'openai', 'cohere', 'jina', 'voyageai', 'roboflow',
-]);
 
 // Chroma's error for an HNSW segment that can no longer apply its write-ahead
 // log (#3202). Only this proves the collection itself is broken: an
@@ -388,6 +382,7 @@ export class ChromaSync {
 
   // Public: cmem-sdk requires Chroma at construction. Plan §3 line 192.
   public async ensureCollectionExists(): Promise<void> {
+    assertLocalChromaConfiguration(SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH));
     if (this.collectionEnsuredGeneration === ChromaSync.collectionGeneration) {
       return;
     }
@@ -405,12 +400,6 @@ export class ChromaSync {
     const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
     const embeddingFunction =
       settings.CLAUDE_MEM_CHROMA_EMBEDDING_FUNCTION || 'default';
-    if (!CHROMA_MCP_EMBEDDING_FUNCTIONS.has(embeddingFunction)) {
-      throw new Error(
-        `CLAUDE_MEM_CHROMA_EMBEDDING_FUNCTION="${embeddingFunction}" is not an embedding function chroma-mcp supports ` +
-        `(${[...CHROMA_MCP_EMBEDDING_FUNCTIONS].join(', ')})`
-      );
-    }
     try {
       await chromaMcp.callTool('chroma_create_collection', {
         collection_name: this.collectionName,
