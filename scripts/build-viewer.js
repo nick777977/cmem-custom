@@ -14,6 +14,20 @@ async function buildViewer() {
   console.log('Building React viewer...');
 
   try {
+    const myWorkAppDir = path.join(rootDir, 'src/ui/my-work');
+    const requiredCompilers = [
+      'node_modules/typescript/bin/tsc',
+      'node_modules/vite/bin/vite.js'
+    ];
+    const missingCompilers = requiredCompilers.filter(file => !fs.existsSync(path.join(myWorkAppDir, file)));
+    if (missingCompilers.length > 0) {
+      throw new Error(
+        `My Work build inputs missing: ${missingCompilers.join(', ')}. ` +
+        'Dependency preparation is required (npm run build:prepare:viewer, only when authorized). ' +
+        'Compile does not install or repair dependencies.'
+      );
+    }
+
     await esbuild.build({
       entryPoints: [path.join(rootDir, 'src/ui/viewer/index.tsx')],
       bundle: true,
@@ -66,9 +80,7 @@ async function buildViewer() {
     // The My Work React app (src/ui/my-work) has its own package.json and lockfile; Vite writes it
     // to plugin/ui/work-view with fonts bundled locally, so an offline install renders immediately.
     // execFileSync throws on a non-zero exit, which fails the build. Windows needs a shell to run npm.cmd.
-    const myWorkAppDir = path.join(srcUiDir, 'my-work');
     const npmRunOptions = { cwd: myWorkAppDir, stdio: 'inherit', shell: process.platform === 'win32' };
-    execFileSync('npm', ['ci', '--no-audit', '--no-fund'], npmRunOptions);
     execFileSync('npm', ['run', 'build'], npmRunOptions);
     const iconFiles = fs.readdirSync(srcUiDir).filter(file => file.startsWith('icon-thick-') && file.endsWith('.svg'));
     for (const file of iconFiles) {
