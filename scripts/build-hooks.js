@@ -110,9 +110,8 @@ const HOOK_LAUNCHER = {
   source: 'src/launcher/claude-mem-launcher.ts'
 };
 
-// SessionStart self-heal that compiles HOOK_LAUNCHER onto PATH when it is
-// missing or stale (plan-17 #3605, Phase 3). Runs under plain `node`, so it
-// must stay free of bun:sqlite and worker imports.
+// SessionStart local diagnostic preflight. No compile/PATH repair or worker
+// imports; private resolver/registration completion remains WINDOWS-09B/D5.
 const ENSURE_LAUNCHER = {
   name: 'ensure-launcher',
   source: 'src/launcher/ensure-launcher.ts'
@@ -133,14 +132,8 @@ const ENSURE_LAUNCHER = {
 // CLAUDE_MEM_SESSION_INIT_TIMEOUT_MS allows up to 14 s) plus hook startup (#3434).
 const SESSION_INIT_HOOK_TIMEOUT_SECONDS = 15;
 
-// SessionStart self-heal timeout (seconds). The hook is synchronous so its
-// failure systemMessage reaches the user, so this bounds session start in the
-// worst case: the installed launcher's --version probe (10 s), the Bun lookup
-// (`bun --version`, normally well under 1 s), `bun build --compile` (120 s),
-// the compiled launcher's --version probe (10 s) and the Windows PowerShell
-// user-PATH write (30 s) back to back = 170 s plus node startup
-// (src/launcher/install-launcher.ts). When the launcher is current it is one
-// --version spawn and returns in milliseconds.
+// Existing host timeout retained for compatibility. The synchronous entry now
+// reports local preflight diagnostics only; no subprocess or repair is performed.
 const ENSURE_LAUNCHER_HOOK_TIMEOUT_SECONDS = 180;
 
 // The only shell-form entry allowed in plugin/hooks/hooks.json. Setup fires
@@ -205,10 +198,9 @@ export function shellTemplateManifest(buildShellCommand, buildCodexWindowsComman
         'SessionStart.0.0': claudeExecHook(['start'], { timeout: 60, async: true }, 'startup|resume|clear|compact'),
         // No `resume`: a resumed session already has its timeline (#4423).
         'SessionStart.1.0': claudeExecHook(['hook', 'claude-code', 'context'], { timeout: 60 }, 'startup|clear|compact'),
-        // Self-heal for marketplace-only installs (SPIKE Decision 1): compile the
-        // launcher onto PATH when it is missing or stale. `startup` only.
+        // Local diagnostic preflight, `startup` only. No compile or PATH repair.
         // Synchronous (no `async`): Claude Code shows a sync hook's
-        // systemMessage to the user, which is how a failed self-heal is reported.
+        // systemMessage to the user, including a controlled blocked result.
         'SessionStart.2.0': {
           groupMatcher: 'startup',
           entry: { type: 'command', ...buildEnsureLauncherExecHook(), timeout: ENSURE_LAUNCHER_HOOK_TIMEOUT_SECONDS },
@@ -986,7 +978,7 @@ async function buildHooks() {
     const hookLauncherStats = fs.statSync(`${hooksDir}/${HOOK_LAUNCHER.name}.cjs`);
     console.log(`✓ claude-mem-launcher built (${(hookLauncherStats.size / 1024).toFixed(2)} KB)`);
 
-    console.log(`\n🔧 Building ensure-launcher self-heal...`);
+    console.log(`\n🔧 Building ensure-launcher local preflight...`);
     await build({
       entryPoints: [ENSURE_LAUNCHER.source],
       bundle: true,

@@ -743,11 +743,11 @@ export class WorkerService implements WorkerRef {
         logger.info('SYSTEM', 'Dependency preflight passed');
       }
 
-      // Not awaited: a download must not hold readiness. See
-      // provisionTreeSitterCliForPluginRoot for why the worker does it.
+      // Check-only local artifact verification. Optional parser unavailability
+      // keeps the existing feature/error behavior; this is not memory readiness.
       const pluginRoot = path.dirname(__dirname);
       provisionTreeSitterCliForPluginRoot(pluginRoot).catch(error => {
-        logger.warn('SYSTEM', 'tree-sitter CLI provisioning failed: smart_search, smart_outline and smart_unfold cannot parse, and the File Read Gate stays off, until the next worker start retries (or npx claude-mem repair)', { pluginRoot }, error instanceof Error ? error : new Error(String(error)));
+        logger.warn('SYSTEM', 'Local tree-sitter CLI unavailable: parser features remain unavailable. Supply approved bundle-local assets; automatic installation/repair is disabled.', { pluginRoot }, error instanceof Error ? error : new Error(String(error)));
       });
 
       // A restore staged by `npx claude-mem restore` lands here, before
