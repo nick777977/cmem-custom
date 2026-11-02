@@ -287,3 +287,31 @@ no socket/acquisition/deploy event observed, not OS/native/shell no-egress proof
 Known generated-worker whitespace retained. No acquisition, real state/assets,
 services, Python/model, AWS or push. E11/U1/D9/D11 and release gates remain open.
 [Commands, hashes, limits and rollback](handoffs/TELEMETRY-04.md).
+
+## PLAN-ADAPT-05 current planning boundary — 2026-11-02
+
+Inspected repository source/workflows at 48feeab567995de81d501b74007694b5ee95a880.
+Documentation-only adaptation A19/A20; no source/generated/dependency/toolchain change.
+No new application test, typecheck, compile, service, CI or model call was run. Prior
+206-test TELEMETRY-04 and prior real compile evidence remains exactly as recorded;
+it is not upgraded to current full runtime acceptance.
+
+New [LLM-PROFILES](LLM-PROFILES.md) preserves explicitly selected compatible adapters
+and visible role/model/auth routing. [VALIDATION](VALIDATION.md) distinguishes existing
+unit/mock/compile evidence from required actual compiled-process, fake-LLM real-local-
+index E2E, live per-profile and exact-install proof. Bedrock is currently unavailable;
+its live row remains pending, while credential-free process/mock work can proceed
+when explicitly launched. Chroma activation/assets remain blocked by U1/D9, D11 open.
+
+Static CI review: upstream ci.yml uses Node 20/Bun latest/npm install and broad lanes;
+windows.yml uses Node 22 range, downloaded Bun installer/npm install. Neither is an
+approved fork validation run. Target exact Node 22.23.4/npm 10.9.9/Bun 1.4.4 and approved
+pre-provisioned runner inputs; D12 runner/network/hosted upload policy open. Prepare
+runner/config with step 9, finalize closure/CI with 10 and actual exact-artifact proof
+in 11/12. Existing runtime integration fixtures require env/subprocess review before
+reuse. Details/evidence scope in [PLAN-ADAPT-05](handoffs/PLAN-ADAPT-05.md).
+
+Documentation closure only: 19 Markdown files / 123 relative links / 15 source-line
+assertions PASS; no source/workflow/generated changes, six prior handoffs and original
+plan unchanged. Installed tree was not inspected/rehashed. No new application typecheck,
+test, compile or runtime/CI/provider validation was performed.

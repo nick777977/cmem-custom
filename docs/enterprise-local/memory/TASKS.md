@@ -18,7 +18,21 @@ This board does not grant permission or duplicate the dependency graph.
 | HOSTED-03 / 3 | done-bounded | 2026-11-02 coordinator; feat/cmem-light-local; entry f7df0cccd; serial | None active; reservations released. Written source/test/artifact scope recorded in 417483949/298d44742 and handoff; includes setup-data.ts, tests/fixtures/hosted-03-routes.ts and Windows work-view fixture adjustments. Documentation scope extended to ARCHITECTURE-LOCAL.md and SESSION-PROMPTS.md to retire stale active instructions. | Source/tests 417483949, generated 298d44742; 58 tests PASS, one compile PASS, 16 inputs unchanged; A15/A16 and handoffs/HOSTED-03.md. No acquisition/services/real state. |
 | CHROMA-07 / 7 | done-bounded source refusal; activation pending U1/D9 | 2026-11-02 coordinator; feat/cmem-light-local; entry 46c12bfe7; serial | None active; reservations released. Historical exact scope below and S/G. | Source 8fa997979, generated b8734d9b2; 127 tests / 383 assertions + one compile PASS; 16 inputs unchanged. A17, handoffs/CHROMA-07.md. No approved artifact/API or real Python smoke. |
 | TELEMETRY-04 / 4 | done-bounded | Coordinator finished; feat/cmem-light-local; serial; entry 1f41cec12 | None active; all reservations released | S 0abd4180b / G 6bb7c6995; 206 tests / 728 assertions + one compile PASS; 16 inputs unchanged. A18, handoffs/TELEMETRY-04.md. No runtime/acquisition. |
-| WINDOWS-09 / 9 | ready-unclaimed; awaiting user launch | None; serial selected branch | None | NEXT-SESSION; wave 4 deterministic Windows paths/bootstrap refusal; D5/actual registration gated. |
+| PLAN-ADAPT-05 / coordination, steps 6/10/11/12 | done; documentation only | Coordinator finished; feat/cmem-light-local; entry 48feeab56 clean | None active; reservations released | A19/A20, LLM-PROFILES/VALIDATION, updated roadmap/prompts; 19 Markdown files / 123 links / 15 source citations checked; no source/runtime/CI change. handoffs/PLAN-ADAPT-05.md; docs commit follows in Git. |
+| WINDOWS-09 / 9 | ready-unclaimed; awaiting user launch | None; serial selected branch | None | NEXT-SESSION after A19/A20: source paths/refusal + early V3/CI harness authoring; retain adapters; actual runtime/CI gated. |
+
+## PLAN-ADAPT-05 reservation history — all released
+
+Claimed at 48feeab567995de81d501b74007694b5ee95a880 after branch/status check.
+Reserved: AGENTS.md; docs/{roadmap.md,PATCH-SEQUENCE.md,ARCHITECTURE-LOCAL.md,
+RISK-REGISTER.md,EGRESS-INVENTORY.md,BASELINE.md}; docs/enterprise-local/{README.md,
+AUDIT-CLOSURE.md,DEV-ENVIRONMENT.md,NEXT-SESSION.md,SESSION-PROMPTS.md,LLM-PROFILES.md,
+VALIDATION.md,handoffs/PLAN-ADAPT-05.md,memory/STATE.md,memory/TASKS.md,
+memory/DECISIONS.md,memory/WORKLOG.md}; .scratch/enterprise-local/plan-adapt-05/.
+Read-only source/workflow inspection; historical source-pinned records and
+source/INITIAL-PLAN.md preserved verbatim. Contracts/instructions aligned, document
+checks PASS; no active reservation or application/runtime work. Local docs commit
+follows in Git; rollback/limitations are in handoffs/PLAN-ADAPT-05.md.
 
 ## TELEMETRY-04 reservation history — all released
 
@@ -113,9 +127,10 @@ SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 
 ## Minimal context for proposed WINDOWS-09
 
-- AGENTS -> README -> STATE -> roadmap step 4/graph -> TASKS.
-- DECISIONS A06/A07/A09/A14/A15/A16/A17/A18; current environment; NEXT-SESSION.
-- TELEMETRY-04 and CHROMA-07 handoff limits; PATCH-SEQUENCE section 9;
+- AGENTS -> README -> STATE -> roadmap step 9/graph/checkpoints -> TASKS.
+- DECISIONS A06/A07/A09/A14/A15/A16/A17/A18/A19/A20; current environment; NEXT-SESSION.
+- LLM-PROFILES and VALIDATION V1-V3/CI; PLAN-ADAPT-05/current environment;
+  TELEMETRY-04 and CHROMA-07 limits; PATCH-SEQUENCE section 9;
   E12/E13/E14/E21 and corresponding AUDIT-CLOSURE notes, then direct callers after claim.
 
 No whole-history or baseline/trust/hosted/Chroma replay. No real user state or runtime

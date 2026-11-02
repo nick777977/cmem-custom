@@ -1,5 +1,11 @@
 # Baseline: enterprise local fork
 
+Historical snapshot; original findings below are not current permissions or target
+policy. Later builds/tests and current authorization are in STATE/DEV-ENVIRONMENT.
+A19/A20 now permit explicit user LLM profiles rather than Bedrock exclusivity; see
+[LLM-PROFILES](enterprise-local/LLM-PROFILES.md) and
+[VALIDATION](enterprise-local/VALIDATION.md).
+
 Recorded: 2026-10-29. Evidence: local read-only source and Git inspection only.
 
 | Item | Observed value |

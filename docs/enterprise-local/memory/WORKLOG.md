@@ -446,3 +446,49 @@ source matches S, all 16 input hashes still unchanged, roadmap graph/waves ident
 to entry after newline normalization. Documentation whitespace PASS. Source/generated
 commits recorded above; documentation commit follows in Git. No further build/test or
 next-increment execution.
+
+## 2026-11-02 — PLAN-ADAPT-05 explicit LLM profiles and runtime/CI plan
+
+User explicitly authorized plan/file/handoff adaptation after a read-only discussion.
+One coordinator, serial; clean entry 48feeab567995de81d501b74007694b5ee95a880,
+feat/cmem-light-local. Claimed exact documentation paths before edits. No agents,
+branches/worktrees, source/runtime/CI work, live auth or installed-user-state access.
+
+A19 supersedes Bedrock-only target in A07/P02/initial-plan W4; retain compatible
+Claude/Bedrock/API/login, Codex ChatGPT login, OpenAI-compatible and existing explicit
+adapters. One default plus visible role/profile/model/auth overrides, no implicit
+fallback or hidden model/account/gateway. Local SQLite/Chroma/embeddings/MCP remain;
+no mandatory plugin signup/subscription. Preserve completed hosted/telemetry/Chroma
+refusal work. All model surfaces, including standalone/refresh/copy/judges, are in
+scope for shared enforcement in step 6; existing Codex/API auth constraints explicit.
+
+A20 adds staged actual compiled-process smoke, credential-free fake-LLM E2E with real
+approved Chroma, fork CI and separate intended live-profile proof. Bedrock currently
+unavailable; does not block preparing/performing earlier levels when launched, but
+its live row remains pending. Existing real tests/compile are evidence, not full
+runtime proof. Upstream workflows inspected; acquisition, tool-version mismatch and
+broad suite/secret/upload risks recorded. D12 runner policy remains open.
+
+LLM-PROFILES and VALIDATION are canonical contracts, not another execution plan tree.
+Roadmap alone owns edges/waves: still 12 steps, new 6 -> 8 profile-settings dependency,
+existing wave order preserved, step-10 size provisionally M. Steps 6/9/10/11/12 and
+PATCH-SEQUENCE adapted. AGENTS/README/architecture/inventory/risks/current prompts /
+STATE/TASKS/environment aligned; historical baseline/audit receive labelled override,
+original supplied plan and prior handoffs unchanged. All new work is planned, not PASS.
+
+Application S 0abd4180b / G 6bb7c6995 and prior tests/toolchain/inputs untouched. Next
+single prompt: WINDOWS-09 source/paths and reusable V3/CI harness authoring, preserving
+selected-provider adapters/auth; actual runtime/CI/live execution separately scoped.
+[Handoff](../handoffs/PLAN-ADAPT-05.md) details source citations, limits and plan rollback.
+No application tests/typecheck/build or provider/worker/MCP/CI run in this session.
+
+Actual closure checks PASS: 19 Markdown files, 123 relative links, balanced fences,
+whitespace, 15 exact source/workflow line assertions; zero source/test/generator/CI /
+manifest/lock/generated delta. Six prior handoffs and INITIAL-PLAN bytes unchanged.
+Roadmap graph adds only 6 -> 8, no removed edges, still 12 steps. Fixed README's missing
+explicit A20 reference during review; tightened source citations. No application test
+or runtime/CI result newly claimed. Reservations released; docs commit follows in Git.
+
+Final manual review also found and replaced the obsolete active short BUILD-02-TRUST
+launcher at the bottom of SESSION-PROMPTS with the current WINDOWS-09 source scope.
+Historical completed templates remain labelled; no completed task is relaunched.

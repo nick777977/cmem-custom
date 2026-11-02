@@ -5,6 +5,11 @@ each increment into logical commits, acceptance and rollback. Only work explicit
 checked below has been performed; other candidates/tests remain planned. Split further if a commit cannot
 be reviewed or reverted independently; do not make large directory deletions first.
 
+A19/A20 (2026-11-02) supersede the old Bedrock-only target. Keep all explicitly
+selected compatible provider routes; remove unrequested/implicit routing. Canonical
+contracts: [LLM-PROFILES](enterprise-local/LLM-PROFILES.md) and
+[VALIDATION](enterprise-local/VALIDATION.md). Original checked evidence is unchanged.
+
 ## Current documentation work
 
 - [x] Baseline, original plan, project-memory entrypoint and operating boundary.
@@ -104,16 +109,38 @@ rebuild/restart preserved. Planned validation: DatabaseManager/SQLite/sync fixtu
 including `tests/services/sync/chroma-sync-reconcile.test.ts`. Rollback: preserve data;
 revert source, no destructive down migration.
 
-## 6. Bedrock-only observer
+## 6. Explicit user LLM profiles for every retained model task
 
-Candidates: strict provider/runtime/model/base-URL validator; explicit allowed environment
-and no OAuth/direct-key substitution; cover session and standalone SDK invocations;
-remove quota/gateway provider switching and preserve bounded retries/isolation.
-Acceptance: absent/invalid/expired auth fails visibly without alternate provider;
-required approved proxy/CA/AWS config preserved; recursive hooks prevented. Planned
-validation: `tests/supervisor/env-sanitizer.test.ts`, `tests/worker/provider-dispatch.test.ts`,
-`tests/claude-provider-*.test.ts`, SDK option tests. Real Bedrock evidence waits for
-step 11 and approved privacy rules. Rollback: revert source artifact, retain pending events.
+Target [LLM-PROFILES](enterprise-local/LLM-PROFILES.md), replacing the former Bedrock-only
+candidate. Preserve Claude/Bedrock, direct Claude, supported native logins, Codex and
+OpenAI-compatible/other existing explicitly configured adapters. No CMEM trial/gateway,
+implicit login discovery, quota fallback or unrequested model/account switching.
+
+Smallest implementation first: reuse existing settings, SDK/Codex/API transports and
+safe auth mechanisms; one default profile with optional role overrides. Resolve and
+validate destination/auth/model before any send. Preserve same-profile bounded retries,
+credential refresh and existing SDK/tool/MCP/recursion protections. Do not promise every
+provider/auth/protocol combination works. Model tier aliases and legacy settings cannot
+bypass the profile policy. Expose safe effective role/profile/model/auth state using the
+existing settings/status surface; never return secret values.
+
+Suggested bounded commits (split sessions only if needed):
+- PROFILE-06A: contract/config resolution, synthetic legacy conversion/refusal, scoped
+  auth/env isolation, observer + summary/compression routing, effective status and tests.
+- PROFILE-06B: standalone/KnowledgeAgent, background refresh/copy/request/focus judges;
+  remove independent defaults/hardcoded models/agent probing fallback. Reuse selected
+  adapters with thin role wrappers instead of another provider framework. Retained
+  features must work through their configured route or expose an explicit unsupported
+  result, without silently replacing or disabling them.
+
+Acceptance: all retained data-bearing model calls use resolved request snapshots;
+wrong/expired/missing auth, unsupported models/protocols, quota, redirect, bad replies
+and timeouts never send via another profile/key/model. User explicitly picks all role
+overrides; default configuration needs only one profile/model. No user-state migration.
+V1/V2 plus authorized V3 mock/profile failure checks; V4 with fake loopback LLM when
+prerequisites exist. V5 live rows are separate: Bedrock unavailable does not block
+source/mock tests, but remains unverified. Rollback matched source/generated concerns,
+preserve pending events and all local data. See VALIDATION for CI/runtime scope.
 
 ## 7. Offline Chroma and model
 
@@ -136,7 +163,7 @@ CHROMA-07 **source refusal done-bounded**, not operational activation. Source
 Full runtime/OS acceptance stays 11; closure/provenance/reproducibility stays 10/12.
 Graph/waves unchanged. Rollback G then S restores unsafe resolution/remote capability;
 retain SQLite/Chroma data, never delete the sync directory or real cache. Next independent
-increment: step 4.
+increment is in current STATE/NEXT-SESSION; do not rerun completed TELEMETRY-04.
 
 ## 8. Local API/viewer boundary; preserve memory behavior
 
@@ -145,57 +172,111 @@ review sensitive routes and bundle viewer assets locally. Keep the local browser
 Do not rewrite capture, project/worktree identity, sharing, optional query filtering or
 retrieval semantics. Existing scope weaknesses are deferred, not acceptance failures
 for this release. Preserve current privacy controls; a new capture/DLP subsystem is not
-scheduled. Review allowed payloads before real Bedrock testing and separately surface
+scheduled. Review allowed payloads per role/profile before real provider testing and separately surface
 any policy incompatibility requiring a behavior change.
+Present effective profile/model/auth/inheritance and disabled/error state, redact secrets;
+no new dashboard or identity filtering. Profile config contract depends on step 6.
 Acceptance: no unapproved remote API/assets, local viewer works, existing memory behavior
 has no regression caused by egress removal. Planned validation: existing project/MCP/
 retrieval regression tests and targeted local HTTP/viewer tests; no new isolation
 guarantee. Rollback: revert the isolated boundary change; no identity/data migration.
 
-## 9. Deterministic private Windows plugin
+## 9. Deterministic private Windows plugin and early process validation
 
-Candidates: private plugin ID and absolute bundle-local launcher/MCP/hook paths;
-remove Bash Setup/cache fallback/self-repair downloads/runtime compile; local PowerShell
-preflight/install/uninstall/verify with dry-run and rollback. Change generator sources
-alongside generated manifests. Acceptance: stale upstream coexistence cannot redirect
-execution; spaces/Unicode work; missing tools produce errors; no registry/marketplace
-mutation at session start. Test approved disposable profile only. Rollback: restore
-documented test registration; preserve both existing upstream data and fork data.
+Private ID and bundle-local launcher/MCP/hooks; remove upstream/global cache fallback,
+Bash Setup/runtime install/update/self-repair compile. Local PowerShell preflight /
+install/verify/uninstall/rollback tooling as source/dry-run first. Generators and emitted
+outputs stay paired. Preserve existing host integrations and every retained LLM adapter;
+launcher work must not hardwire Bedrock, discard Codex/OpenAI or initiate provider login.
+D5 still gates actual registration/PATH/registry/marketplace changes.
 
-## 10. Minimal packaged closure
+Author/review a reusable compiled-entrypoint smoke runner and fork CI lane definition
+as part of this increment, using VALIDATION V3. Adapt existing bundle fixtures rather
+than inherit broad env or automatically run upstream integration lanes. Pin known
+Node/npm/Bun and require pre-provisioned inputs. CI setup/execution/hosted upload is
+separately gated by D12; no workflow execution implied by writing its source.
 
-Candidates: remove unused non-Claude/server/custom-provider runtime and connectors
-from reachable entrypoints; prune dependencies and regenerate reviewed locks; generate
-clean worker/MCP/UI artifacts with provenance. Reachability review comes before bulk
-folder removal; keeping non-shipped upstream source may reduce maintenance risk.
-Acceptance: no stale prohibited clients in runtime closure; hashes/build inputs recorded;
-no external viewer asset loads. Planned validation: bundle self-contained tests,
-postinstall allowlist checks after authorization, artifact/source closure inspection.
-Rollback: restore matched source+lock+artifact set, never mix old/new bundles.
+Source-only launch may produce fixtures/harness/workflow without starting worker/MCP.
+A later explicit V3 sublaunch exercises copied emitted entrypoints under synthetic
+HOME/config/data, no model credentials/remote access: help/no-op/path/missing-tool /
+controlled-refusal and safe local stdio/API lifecycle slices. Actual full memory readiness
+requires V4; preserve Chroma refusal and do not invent a SQLite-only mode. Spaces/Unicode,
+coexistence, no runtime acquisition, exit/status/stderr/deadlines and owned-child cleanup
+must be tested at the appropriate level. Missing prerequisites are named, not auto-repaired.
+Rollback source/generated and only test-owned registration if separately authorized;
+preserve existing upstream/fork data and user install.
 
-## 11. Integrated acceptance
+## 10. Retained runtime closure, artifact and fork CI
 
-Candidate: `test: add offline and approved Bedrock acceptance evidence`.
-Run appropriate existing tests plus meaningful negative cases above, then two environments:
-fully offline with fake observer; approved Bedrock/auth with synthetic payloads and
-process-tree DNS/connection evidence. Include cold cache, concurrent sessions, crash
-recovery, queue replay, history retrieval and viewer. IP §7 T01–T45 is a source checklist,
-adapted to A06/A07: project/worktree/capture cases verify preserved behavior, not newly
-invented isolation or DLP guarantees. Record deferred weaknesses instead of making them
-release blockers; add missing egress cases rather than assuming broad suites cover them.
-Acceptance: exact tested artifact/source/locks/model hashes, logs sanitized, unexplained
-destination blocks release. A TCP snapshot is insufficient. No code rollback needed
-for a failed test; diagnose and fix the isolated owning change.
+Prove reachability before pruning. Keep SDK/Codex/API modules and dependencies required
+by any retained explicit profile/role or host integration. Remove unused remote-memory
+server/cloud/telemetry/connector/setup/recovery capabilities and proved-unused modules,
+not entire non-Claude directories by name. Local ChromaSync is distinct from CloudSync.
 
-## 12. Distribution and operational handoff
+Pin approved artifact/dependency closure, SBOM/licenses and sources; reviewed lock/trust
+work needs explicit acquisition/resolution scope, not a compile side effect. Generate
+matched entrypoint/manifest/UI artifacts and record all hashes. Reject stale clients /
+hardcoded model routes and unsupported adapter combinations. Preserve selected-profile
+config and safe diagnostics; include no fake credentials/test bypass in release.
 
-Candidates: offline Windows bundle and checksums/SBOM/notices; installation/Bedrock/
-Chroma/retention/support/rollback docs; clean-profile install/uninstall/reinstall check.
-Acceptance: final signed/approved artifact where required, policy-compliant deployment,
-data-preserving rollback, manual upstream security-update process. Rerun installation
-acceptance on the exact final bundle; no automatic production migration or push/release.
+Finalize/reuse step-9 runner and fork CI lane with approved D12 runner/provisioning policy:
+exact tools, reviewed V1/typecheck/V2/V3 commands, no ambient secrets or network package
+resolution, no deploy/sync/publish. V4 with fake LLM + real approved local Chroma is a
+required package-candidate check once prerequisites exist, independent of Bedrock.
+Review upstream CI/publish/deploy triggers before any authorized push; do not launch
+existing acquiring workflows by default. Missing assets/CI stages stay explicit pending.
+Acceptance: exact closure and source/generated pairing; needed adapters preserved,
+reviewed CI evidence/stage report, no unapproved application destination. V5 live and
+final OS evidence remain 11. Rollback matched source/locks/artifacts, preserve all data.
+
+## 11. Exact-artifact runtime, E2E and selected-profile acceptance
+
+Use VALIDATION V3-V6 against the exact step-10 candidate. Earlier checkpoint evidence
+must be repeated if relevant emitted bytes changed. Real compiled-process startup/MCP /
+worker/API/viewer/stop is required; unit mocks/typecheck/compile are not runtime proof.
+
+V4 without Bedrock: fake loopback LLM with explicit test profiles, actual approved local
+Chroma/embedding assets, synthetic hook capture -> SQLite -> observations/summaries ->
+index/query -> restart/replay -> viewer. Check errors, private input, unchanged identity /
+sharing/filter semantics, concurrency, missing/corrupt assets, bounded retries/cleanup.
+This is not a new degraded production mode; blocked Chroma cannot pass full V4.
+
+V5: separate actual provider/auth/model rows for intended enabled profiles, including
+Bedrock/SSO when available, selected Claude/Codex logins and direct API paths. Unsupported
+combinations reject. Failures cannot switch to another profile/model/account; optional
+role overrides must be explicit and observable. No live credentials in CI PR jobs or
+tracked evidence. Currently unavailable Bedrock stays NOT RUN/BLOCKED; one live backend
+cannot certify another. Reuse fixture/process work meanwhile rather than wait on AWS.
+
+Process-tree DNS/connection and browser request evidence across startup/capture/index/
+query/error/shutdown is needed for final egress conclusions, including SDK/CLI/native
+children and auth refresh. Node tripwires/TCP snapshots alone are insufficient. Sanitize
+logs and record exact hashes, command, environment and tested topology. Unexplained
+application destination blocks release. Retained capture/DLP/identity redesign remains
+out of scope. Diagnose failures in their owning increment; no fake green from skipped jobs.
+
+## 12. Distribution, configuration and operational handoff
+
+Verified offline Windows bundle, checksums/SBOM/licenses and approved artifact sources;
+local install/verify/uninstall/reinstall and data-preserving rollback on exact final
+hashes. Document default/role profile setup, explicit model/auth selection, local Chroma
+assets, payload/retention rules and troubleshooting. No plugin registration/subscription
+or third-party MCP service required; chosen providers may require owner entitlement.
+
+Publish tested support matrix by adapter/auth/model/platform, distinguish mocked from
+live rows and identify unavailable Bedrock or other routes. Regular use requires the
+intended profile's actual evidence plus local memory/index and install acceptance.
+A separately agreed preview on another validated route does not certify Bedrock.
+No automatic migration/update or upstream/fork data merging. No push/deployment inferred.
+Final approved package must preserve useful local behavior and all configured retained
+routes, rather than silently return to a single-provider distribution.
 
 ## Validation discipline
+
+[VALIDATION](enterprise-local/VALIDATION.md) is the canonical evidence-level contract.
+A20 adds early real process checks and fork CI to existing steps; it does not grant
+current runtime/acquisition permission. Source-only, compiled-process, fake-LLM E2E
+and live-profile results must stay separate; a green compile or mock is insufficient.
 
 Every future commit records tests actually run, blocked checks and evidence limits in
 the worklog. Existing tests are leads, not baseline passes. Tests can invoke subprocesses

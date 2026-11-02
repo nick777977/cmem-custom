@@ -1,7 +1,11 @@
 # Architecture: retained core and proposed boundaries
 
 Evidence baseline: [BASELINE.md](BASELINE.md). Current code and target design are
-separate below. No runtime correctness or absence of egress has been demonstrated.
+separate below. Full runtime/egress correctness is still unproved; completed bounded
+tests and real compiles remain in the linked handoffs. A19/A20 now supersede the
+former Bedrock-only target, not its historical evidence. See
+[LLM-PROFILES](enterprise-local/LLM-PROFILES.md) and
+[VALIDATION](enterprise-local/VALIDATION.md) for the accepted target contracts.
 
 ## Implemented hosted boundary (2026-11-02)
 
@@ -33,7 +37,10 @@ settings/env. Local logger and normal memory/viewer behavior retained. SDK pruni
 stays step 10; Python telemetry/Chroma U1/D9, D11 and actual runtime gates unchanged.
 206 targeted tests / one compile PASS. [Evidence](enterprise-local/handoffs/TELEMETRY-04.md).
 
-## Current structure — VERIFIED IN CHECKOUT
+## Retained structure — historical baseline citations
+
+The source references in this structure list retain the SHA in BASELINE; use current
+contracts and task-specific source inspection for implementation.
 
 - `plugin/hooks/hooks.json`: lifecycle hooks call the on-PATH launcher, a Bash-based
   Setup resolver and startup launcher repair. `plugin/.mcp.json` contains local and
@@ -59,19 +66,24 @@ stays step 10; Python telemetry/Chroma U1/D9, D11 and actual runtime gates uncha
 ## Proposed target — not yet implemented
 
 ```text
-Claude Code hooks / MCP (private local plugin)
+Claude Code / Codex hooks and local MCP (private local plugin)
   -> existing capture behavior and privacy controls, preserved
   -> loopback worker -> canonical SQLite/FTS5 + durable queue
-                    -> Claude observer with restricted environment
-                       -> approved Bedrock + corporate auth infrastructure
+                    -> shared role/profile resolution and validation
+                       -> explicit selected adapter + model + isolated auth
+                          (Bedrock / Claude login or API / Codex login /
+                           OpenAI-compatible API / explicitly enabled adapters)
+                    -> refresh / copy / judges / standalone model work
+                       -> the same profile policy; no hidden model/fallback
                     -> one persistent local Chroma MCP process
                        -> pre-provisioned ONNX model, no downloader
   <- existing search scope / timeline / detail / SessionStart context
   <- retained local viewer with bundled assets and guarded sensitive routes
 ```
 
-Security posture: reject unsupported provider/runtime/remote URL and non-loopback bind;
-no hosted fallback; explicit failure for missing local executables/models; keep queued
+Security posture: reject unselected or unsupported adapter/auth/model/destination and
+non-loopback worker bind; explicit user-configured LLM/auth destinations are allowed.
+No implicit provider/model/credential or hosted fallback; explicit failure for missing local executables/models; keep queued
 data recoverable without reporting successful indexing. A SQLite-only degraded mode
 requires a deliberate product decision; it is not a substitute for shipping Chroma.
 
@@ -90,18 +102,22 @@ inert compatibility fields where necessary. Historical-data migration is deferre
 2. Audit server runtime, Codex and generic OpenAI-compatible dispatch too, beyond the
    older plan's Gemini/OpenRouter list. Removing extra harness folders alone is insufficient.
 3. Isolate plugin identity/paths early for development; complete the installer later.
-4. Review existing capture payloads before the first real Bedrock experiment. The user
+4. Review existing capture payloads for each selected profile before real inference. The user
    deferred memory/capture redesign; do not introduce a new DLP subsystem implicitly.
    Redacted logs alone do not establish redacted stored/observer data.
-5. Bedrock and Chroma preparation can overlap in distinct files; integration, generated
-   artifacts and release acceptance remain sequential gates.
-6. Preserve current Host/Origin controls and assess their coverage instead of replacing
+5. Keep existing SDK/Codex/API adapters; use minimal shared profile validation and
+   explicit role overrides, not a provider rewrite. Preserve tool/MCP isolation.
+6. Add early compiled-process and credential-free mock-LLM tests/CI within existing
+   steps. Root typecheck, build, process smoke, real local-index E2E and live-profile
+   acceptance are distinct; unavailable Bedrock does not block earlier levels.
+7. Preserve current Host/Origin controls and assess their coverage instead of replacing
    them blindly. The supplied 503 explanation remains historical, not a new diagnosis.
 
 ## Remaining policy decisions
 
 See [decision log](enterprise-local/memory/DECISIONS.md). Main gates: approved artifact
-sources; allowed Bedrock payload/Region/model/profile; plugin-loading permission;
+sources; selected-profile auth/endpoint/model/payloads (AWS details when selected);
+CI runner/network/artifact policy; plugin-loading permission;
 local retention/backup policy. Viewer retention and unchanged project/worktree behavior
 are settled by A06. No canonical identity rewrite, mandatory query-scope change or
 identity migration is planned; record existing weaknesses for possible later work.

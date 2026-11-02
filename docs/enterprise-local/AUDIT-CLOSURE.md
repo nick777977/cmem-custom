@@ -1,5 +1,13 @@
 # Session 01: bounded static audit closure
 
+Current target supersession (A19/A20, 2026-11-02): historical E06/E07/E20 removal /
+Bedrock-only dispositions below are no longer implementation instructions. Preserve
+explicitly selected Claude/Codex/API and other compatible routes; all roles share
+[LLM-PROFILES](LLM-PROFILES.md). Remove CMEM signup/implicit fallback while preserving
+selected provider auth. Local Chroma/MCP and remote-memory/connector boundaries stay.
+[VALIDATION](VALIDATION.md) adds early compiled-process/CI and fake-LLM E2E checks;
+no such new checks or actual model runs have occurred. Historical findings remain intact.
+
 Historical source-pinned snapshot. For the 2026-11-02 toolchain, preserved user setup
 commits and agent compile/targeted checks, use [BUILD-02](handoffs/BUILD-02.md),
 [DEV-ENVIRONMENT](DEV-ENVIRONMENT.md) and current [STATE](memory/STATE.md).

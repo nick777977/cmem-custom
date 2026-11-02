@@ -1,0 +1,212 @@
+# Build, runtime and CI evidence contract
+
+Accepted validation plan, 2026-11-02, A20. **New checks below are planned, not run.**
+Execution needs the applicable user launch and isolated assets/permissions. This file
+owns validation levels and pass criteria; [roadmap](../roadmap.md) alone owns dependency
+edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
+
+## What has actually been tested
+
+| Evidence | Result already recorded | What it does not establish |
+|---|---|---|
+| BUILD-02 | Pure compile boundary, focused fixtures and committed bundle syntax PASS | Whole-OS no-egress, supply-chain provenance or runtime functionality |
+| HOSTED-03 | 58 isolated tests + one real compile PASS | Full installed memory flow or actual model access |
+| CHROMA-07 | 127 mocked/synthetic tests + one real compile PASS | Approved Python/model, running Chroma or embeddings |
+| TELEMETRY-04 | 206 tests / 728 assertions + one real compile PASS | Full worker/MCP/host process-tree lifecycle or provider auth correctness |
+| Previous user build/start | User-reported build and worker ready; preserved separately | Current source/artifact, full memory/Chroma/provider acceptance |
+| Fork-specific CI and new process smoke | NOT RUN / not implemented | No green CI or runtime claim is available |
+
+These are real tests and real compilation, not mere source review. Worker bundles are
+compiled by esbuild; the viewer also invokes its TypeScript/Vite build. This is not a
+substitute for root typecheck or executing the compiled worker. Existing tests often
+mock process/network/provider boundaries. A successful build can still contain a
+runtime import, path, ABI, lifecycle, configuration or auth error.
+
+Current baseline is Node 22.23.4, npm 10.9.9, Bun 1.4.4. Preserve existing local inputs;
+no reinstall/download/update to make validation green. Missing/corrupt dependencies
+are explicit failures with a separate acquisition request, not automatic repair.
+
+## Validation levels and honest result labels
+
+| Level | Runs what | Pass criteria | Earliest owning checkpoint |
+|---|---|---|---|
+| V0 static/contract | Source, entrypoints, generators, policy, config and artifact lists | No unowned inference/network route; source-SHA citations; changed scope known | Each increment |
+| V1 focused behavior | Reviewed isolated unit/route/adapter fixtures with mock transport/process | Meaningful success/failure/legacy assertions; no real assets/accounts; no-send negatives | Each source increment |
+| V2 compile/typecheck | Exact local build:compile, approved typecheck and syntax/closure checks | Exit 0; no install/deploy/lock resolution; expected generated delta and preserved input hashes | Each application-source increment under its build permission |
+| V3 compiled-process smoke | Actual generated launcher/CLI/hook/MCP/worker entrypoints on a disposable profile | Expected exit/JSON/readiness/diagnostic, bounded time, no external traffic/repair/orphans; distinguish stubbed components | Step 9 starts safe entrypoint/failure smoke; repeat relevant slices after 5/6/8 |
+| V4 local memory E2E | Compiled worker + explicit loopback mock LLM + actual approved local Chroma/model | Synthetic capture -> SQLite -> observation/summary -> index -> query -> restart/replay -> viewer; no unapproved remote traffic | Once 5/6/7/8/9 prerequisites permit; before accepting step-10 package |
+| V5 live selected profile | One real chosen provider/auth/model using synthetic content | Actual login/auth/model/transport and failure behavior verified, no profile escape | Step 6/11 when that profile's access is explicitly available |
+| V6 exact release/install | Exact packaged hashes on clean disposable Windows profile | Install/verify/uninstall/reinstall/rollback, process-tree egress and all required selected-profile evidence | Steps 11/12 |
+
+V3 is not automatically full memory readiness. Loading a module or seeing /health
+cannot replace V4. V4's fake LLM is not Bedrock/OpenAI/Codex authentication proof.
+A fake Chroma adapter is useful V1/V3 evidence but cannot pass real-index V4.
+Do not implement a new production SQLite-only success mode as a testing shortcut;
+D11 remains open. V3 may verify the current controlled Chroma refusal while U1/D9
+block activation, with that expected refusal explicitly reported.
+
+Each result has one of PASS, FAIL, BLOCKED (named missing prerequisite), NOT RUN or
+NOT APPLICABLE (explained). An unavailable/omitted/conditional job is never counted as
+PASS. Record commit, source/output/input hashes, command, exact versions, isolated
+paths, actual process scope, evidence level, failures/retries, cleanup and limits.
+For a multi-provider artifact, publish a per-route matrix; one working provider cannot
+certify the rest. Avoid claiming tested model IDs/auth modes not actually exercised.
+
+## V1/V2: extend existing checks, keep feedback short
+
+Reuse reviewed tests and tools; do not introduce another test framework or full CI
+system. Run the smallest meaningful affected suite per increment. Read fixtures first:
+full upstream fast/integration lanes are not permission-safe defaults. They can launch
+workers, browsers, grammars, installers, Docker or network. Explicitly review file lists,
+subprocess/env behavior and native/runtime dependencies before including them.
+
+Planned source gates include policy resolver/default/role overrides; unsupported
+provider/model/protocol; legacy settings; SDK isolation; endpoint/key binding;
+queue/privacy/filter/replay regressions; launcher paths and missing inputs. Typecheck
+is a separate gate: package.json:113 currently defines root and viewer tsc --noEmit.
+It has not been run under this adaptation. Review pre/post scripts and installed inputs
+before authorizing it. Record existing unrelated failures against a baseline rather
+than weakening types, guards or tests to obtain a green run.
+
+Compile is the reviewed build:compile path only. Capture pre/post manifest/lock/trust/
+compiler/input/output hashes; compare expected generated changes, syntax and packaged
+closure. No build-and-sync, dev, package resolution, publish or implicit registration.
+Rebuild/test again only after a relevant change or failed check warrants it. Node
+tripwires supplement isolation; native/shell children require OS-level controls for a
+full no-egress assertion.
+
+## V3: actual compiled entrypoints, bounded before all features are finished
+
+Create a reusable fixture runner, owned initially by step 9 and reused by subsequent
+steps. Exercise copied generated files from a synthetic private bundle path, rather
+than just importing TypeScript or unit-mocking an entire WorkerService.
+
+Required cases, selected according to implemented features:
+
+- Node/Bun entrypoint parsing/loading and help/version/no-op hook commands under the
+  intended executable, from spaces/Unicode paths. No package auto-install, global/PATH
+  fallback, upstream cache, inherited plugin configuration or real host profile.
+- Missing runtime/bundle/config returns a clear bounded nonzero/structured failure;
+  no download, repair, subprocess search or hidden provider. Test expected refusal
+  where Chroma is intentionally blocked; do not call that successful startup.
+- Local own MCP starts via the exact copied stdio entrypoint with synthetic config,
+  performs initialize/list-tools and a harmless synthetic request, then closes cleanly.
+  Do not invoke a host's unrelated MCP servers or installed plugin settings.
+- When safe prerequisites exist: spawn compiled worker, wait for readiness with a
+  deadline, exercise allowed loopback API and local viewer assets, stop/restart and
+  verify the owned process tree exits. Capture stderr, exit status, handle/PID ownership
+  and response content. Missing exports, native ABI/import errors, stale bundles and
+  async startup failures must fail the run, not be swallowed as a skip.
+- A separate bad-config/error-path run must prove no network client or alternate
+  provider/account/model is attempted; startup and shutdown must remain bounded.
+
+The runner gets an explicit env allowlist with synthetic HOME/USERPROFILE/APPDATA/
+LOCALAPPDATA/CLAUDE_CONFIG_DIR/CODEX_HOME/data/temp/npm config/cache; no ambient AWS,
+OpenAI, Anthropic, gateway tokens or real memory. Do not copy the full parent env.
+Disposable test credential files contain synthetic values only. Bind mock endpoints
+on loopback with explicit ports allocated to the run; synthetic hosts/HTTP are fixture
+exceptions, not production validation bypasses. Disable external network at the
+approved process/OS boundary; inspect DNS, redirects and child processes too.
+
+Own every child/port/file created and clean only verified descendants/task paths.
+No killing existing workers or processes by image name, no changing real registration,
+PATH/registry, caches or user installation. Bound readiness/stop deadlines and preserve
+failure evidence before cleanup. Do not add a hidden production test override to
+bypass profile or Chroma enforcement; fixture injection belongs at reviewed adapter
+seams, is labelled as substituted evidence and is excluded from release packaging.
+
+## V4: real local workflow without a cloud account
+
+Use an explicit test profile directed to a loopback OpenAI-compatible mock server,
+with deterministic structured observation/summary responses. This exercises real
+HTTP serialization, compiled provider routing/parsing, durable storage and recovery
+without spending tokens or needing Bedrock. Fixture protocol support is not proof of
+all provider-specific SDK/CLI flows; those have their own adapter/process tests.
+
+With approved local Python/Chroma/embedding artifacts and runtime permission, check:
+
+1. Feed synthetic prompt/tool events through retained hook/MCP/spool entrypoints;
+   assert canonical SQLite observations/summaries and existing privacy/project filters.
+2. Confirm every mock LLM request matches the resolved role/profile/model and contains
+   only intended synthetic payload; explicit role overrides reach only their mock route.
+3. Query the actual derived index and SQLite/FTS, verify expected retrieval identifiers
+   and unchanged viewer/API content, without asserting new isolation guarantees.
+4. Restart the owned processes; confirm persistence, queue replay/deduplication,
+   index checkpoint recovery and no duplicated stores. Cover bounded concurrent sessions.
+5. Simulate auth/timeout/429/bad response/unknown model, refused redirect and unreachable
+   endpoint; no unselected model/key/provider, hidden telemetry/cloud/MCP or retry storm.
+6. Test empty/cold approved model cache, corrupted/missing artifact and index failure:
+   fail visibly without acquisition, deletion of canonical data or false success.
+7. Capture process-tree/network evidence across boot/capture/index/query/error/shutdown;
+   show the approved loopback topology and explain all other attempts. Browser requests
+   count too; bundling assets alone does not prove the viewer makes no external call.
+
+If local assets are unavailable, V4 is BLOCKED by U1/D9, with earlier evidence retained.
+An isolated SQLite/queue test is valuable but must not be renamed full memory acceptance.
+
+## V5: unavailable Bedrock and honest supported-provider status
+
+Bedrock access is currently unavailable per the user; do not block V1-V3, CI fixture
+work or mock-LLM testing on AWS credentials. Bedrock live status remains NOT RUN/BLOCKED
+until account/Region/model/profile/payload/network permission is supplied. Do not
+request real credentials in tracked files or reuse the user's running environment.
+
+Use synthetic content for each approved live route. Verify both a small successful
+observation/summary and failure behavior, auth refresh and no fallback. AWS SSO,
+Claude login, Codex ChatGPT login, direct Anthropic key and OpenAI-compatible key are
+separate rows. Unsupported combinations are rejected, not called tested support.
+Only an actually validated profile is enabled for regular use under its policy.
+A documented preview on another tested route can be evaluated separately; it does
+not certify Bedrock, and no release targeting Bedrock passes while its row is open.
+
+## Fork CI design and ownership
+
+Existing upstream workflows are evidence leads, not the fork validation contract.
+At source 48feeab567995de81d501b74007694b5ee95a880:
+
+| Path:line | Static finding |
+|---|---|
+| .github/workflows/ci.yml:18,23,30,44,50 | Node 20, Bun latest, npm install, typecheck and build; later broad test lanes |
+| .github/workflows/windows.yml:23,30,34,37,39 | Windows runner, Node 22 range, downloaded Bun installer, npm install and build |
+| package.json:74-77,113,116-117 | Pure compile/preparation split, typecheck and upstream fast/integration commands |
+| tests/infrastructure/worker-bundle-self-contained.test.ts:25,32,38-39 | Existing compiled-hook child fixture; copies bundle but inherits broad env, needs adaptation before reuse |
+| tests/integration/worker-api-endpoints.test.ts:1 | Existing in-process WorkerService/API tests are not exact-artifact process proof |
+
+Plan one fork Windows validation lane using existing tools and pre-provisioned approved
+runner inputs. Prepare its harness/config with step 9, run reviewed available checks at
+subsequent implementation checkpoints, finalize dependency/provenance pinning in 10,
+and consume exact-artifact evidence in 11/12. This is an added checkpoint within existing
+steps, not a new independent roadmap or a requirement to wait until step 11 to detect
+runtime failures. Source-only launch can author the runner/workflow but cannot execute
+services or change runners without runtime authorization.
+
+- Pin the known toolchain exactly; Windows is required for Windows lifecycle claims.
+  Optional Linux checks supplement it without replacing Windows evidence.
+- Separate dependency/runner provisioning from the validation job. No npm install,
+  Bun installer, uvx, model download, preparation or registry lookup during verification.
+  Supply a reviewed closure from approved artifacts; missing inputs fail clearly.
+- Reuse V1-V3 runner commands locally and in CI. Avoid two divergent test pipelines.
+  Run targeted typecheck/tests, pure compile, emitted-source/closure checks, then actual
+  compiled-process smoke. Add V4 only when its local assets and runtime scope are present.
+- Default CI lane has no live provider credentials and denies external egress. Live V5
+  is an explicitly launched restricted job/profile, never an untrusted PR secret job.
+- Review upstream workflow triggers before the first authorized push/PR: preserve useful
+  tests but prevent broad acquiring/deploying/cloud jobs from becoming the default fork
+  gate. Do not run all existing workflows merely because they are present. Existing
+  publish/deploy workflows require separate review, not a trial execution.
+- Prefer a trusted self-hosted/offline or otherwise explicitly approved runner. Do not
+  upload private code/assets/logs to a hosted CI by implication. Workflow actions,
+  runner image and any allowed CI control-plane/artifact traffic need approved pinned
+  inputs; distinguish that traffic from the application's denied egress. An isolated
+  application job does not mean its CI controller is offline.
+- Least-privilege job permissions, bounded time, no secrets on untrusted changes,
+  sanitized logs, immutable artifact hashes and evidence retention. No publish,
+  marketplace sync, registration, services deployment or push from the validation job.
+- Report unit/compile/process/mock-E2E/live-provider stages separately. A green lane
+  with unavailable Bedrock/Chroma stages cannot be displayed as full release readiness.
+
+No workflow file, runner or CI execution is changed/started by this document. CI
+provisioning/execution and runtime permissions remain explicit future launches.
+Final step 12 reruns against the exact installable bundle; any relevant rebuilt byte
+invalidates the corresponding earlier artifact evidence and requires the affected
+checks again, rather than accepting an old green run.

@@ -1,12 +1,17 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after
-TELEMETRY-04 (S 0abd4180b / G 6bb7c6995; 206 tests + one compile PASS).
-E03/E04 Node dispatch retired; local diagnostics retained. Chroma activation remains
-blocked by U1/D9; D11 open. A15 release gates stay 10/11/12. One proposed next task:
-WINDOWS-09 / step 9, deterministic private Windows paths and bootstrap refusal.
-STATE/TASKS/DEV-ENVIRONMENT own current context; templates below are historical.
-Do not repeat baseline/trust/hosted/Chroma/telemetry implementation.
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated after PLAN-ADAPT-05
+(2026-11-02, docs-only). A19/A20 supersede the former Bedrock-only instructions:
+retain explicit user-configured LLM adapters/roles; add real compiled-process/CI
+checkpoints without claiming mock/compile as full runtime proof. Contracts:
+[LLM-PROFILES](LLM-PROFILES.md), [VALIDATION](VALIDATION.md).
+
+Existing TELEMETRY-04 S 0abd4180b / G 6bb7c6995 and its 206 tests/one compile are
+unchanged. Chroma activation U1/D9 and D11 remain open; Bedrock live access unavailable.
+Next single task: WINDOWS-09 source/paths + early smoke/CI harness authoring.
+Actual runtime/CI/provider execution still requires a scoped user launch.
+STATE/TASKS own current context. Session 01 and completed templates are historical;
+future templates below are adapted planning aids, never independent authorization.
 
 Copy one prompt into a fresh session in this repository. These templates do not
 authorize later work or create chats/agents automatically. The user launches each
@@ -16,8 +21,9 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 
 - Repo: `C:/0/ai/claude/claude-mem-custom/cmem-light`; branch `feat/cmem-light-local`.
   Preserve user edits; no reset, checkout, push or installed-user-data inspection.
-- Inspected source: `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b`, version 15.5.0,
-  describe `v15.5.0-1-gd7c2da3e5`. Recheck source drift rather than repeating the audit.
+- Historical Session-01 inspected source: `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b`, version 15.5.0,
+  describe `v15.5.0-1-gd7c2da3e5`. Current adaptation inspected 48feeab56;
+  use STATE/Git for current source instead of repeating the audit.
 - Completed commits: `08bc35882` baseline/persistence, `e861598b4` reconnaissance/plan,
   `37a4a444a` narrowed scope. Inspect Git for newer documentation/source changes.
 - The 2026-10-30 agent planning/audit sessions performed no application implementation,
@@ -29,16 +35,17 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 - Preserve local browser viewer and current memory capture/storage/retrieval semantics,
   including project/worktree identity, sharing and optional query filters. Imperfect
   separation is deferred. No identity/schema migration, DLP or memory redesign.
-- Remove unapproved remote services, telemetry, cloud sync, inference alternatives,
-  runtime downloads/update/bootstrap. Approved Bedrock/auth remains an exception,
-  not permission to invoke it. Local storage does not mean offline LLM inference.
+- Remove unapproved remote services, telemetry, cloud sync and runtime acquisition.
+  Retain explicitly selected compatible inference adapters/auth per A19; all roles
+  share that policy. No implicit fallback or plugin signup. Local storage does not
+  mean offline LLM inference; actual login/model/CI execution needs scoped permission.
 
 | File | Purpose / selective reading |
 |---|---|
 | `AGENTS.md` | Current authorization and invariants; always read |
 | `docs/enterprise-local/README.md` | Navigation; do not automatically read every linked file |
 | `docs/enterprise-local/memory/STATE.md` | Current progress and next task; always read |
-| `docs/enterprise-local/memory/DECISIONS.md` | Accepted A14/C, A15/P10 progression and A16 hosted retirement; historical alternatives retained |
+| `docs/enterprise-local/memory/DECISIONS.md` | Accepted decisions incl. A19 profiles/A20 staged runtime and CI; preserve history |
 | `docs/BASELINE.md` | Baseline SHA, scripts, locks, limits |
 | `docs/EGRESS-INVENTORY.md` | E01–E22 and Session 01 refinements; update, do not recreate |
 | `docs/ARCHITECTURE-LOCAL.md` | Current/target architecture and discrepancies |
@@ -48,8 +55,10 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | One proposed TELEMETRY-04 launcher; Chroma activation/release gates retained |
+| `docs/enterprise-local/NEXT-SESSION.md` | One proposed WINDOWS-09 source/harness launcher; profiles/CI/runtime scope explicit |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
+| `docs/enterprise-local/LLM-PROFILES.md` | Canonical user profile/role/auth/model target; not implemented yet |
+| `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |
 | `docs/enterprise-local/memory/TASKS.md` | Single active ownership/file-reservation board and session-close/coordinator protocol |
 
 Keep durable results in tracked docs, disposable output in `.scratch/enterprise-local/`.
@@ -152,10 +161,10 @@ dependency/runtime audit и release acceptance остаются pending. Не у
 
 ## Later sessions: common authorization and completion rules
 
-Read this block when launching any later prompt. These numbered sessions are a
-conservative serial order, not new dependency edges. Chroma preparation can overlap
-hosted removal, and deterministic launcher work can overlap telemetry with disjoint
-ownership, but do not create parallel agents/checkouts/source edits automatically.
+Read current NEXT-SESSION when launching work; the roadmap alone owns dependency
+edges/waves. Templates below do not add authorization. Use one bounded increment;
+A19/A20 override historical Bedrock-only/provider-pruning language anywhere in old
+snapshots. No parallel agents/checkouts or runtime/CI execution by implication.
 
 ```text
 Прочитай AGENTS.md, актуальный STATE.md, принятые решения и только текущую секцию
@@ -223,17 +232,22 @@ legacy cloud settings не активируют remote client; local indexing/qu
 checks по разрешению или pending. Заверши только этот subsystem и передай handoff.
 ```
 
-### Session 06 — Bedrock-only (step 6)
+### Session 06 — explicit LLM profiles (step 6; replaces Bedrock-only template)
 
-```text
-Выполни общие правила; PATCH-SEQUENCE §6, E06/E07. Ограничь observer corporate
-Claude/Bedrock path: config/provider validation и env/auth без OAuth/direct-key/
-alternate-provider fallback, для session И standalone calls. Сохрани SDK, recursion
-guards и bounded concurrency/retries. Region/model/ARN/SSO endpoints не придумывать;
-запрашивать только необходимые несекретные данные. Mock checks и live AWS — разные
-разрешения. Готовность: negative auth/config fail closed; live proof pending до
-разрешения и approved payload/model configuration. Handoff, стоп.
-```
+~~~text
+Выполни общие правила, PATCH-SEQUENCE 6, LLM-PROFILES, VALIDATION и A19/A20.
+Сохрани compatible Claude/Bedrock/login/API, Codex и OpenAI-compatible/other adapters.
+Реализуй один default profile + explicit role overrides без hidden model/auth/account
+fallback. Reuse existing settings/transports/isolation. PROFILE-06A: resolution,
+legacy/config validation, observer/summary/compression/status. PROFILE-06B: standalone,
+knowledge, refresh/copy/judges и все retained calls. Конкретный launch выбирает один
+bounded substep; шаблон не запускает оба. Никаких secrets или real login discovery.
+Wrong config/auth/quota/model/error -> explicit pause/refusal, same-profile retries;
+не переключаться на другой provider/model/key. No CMEM gateway/default/free model.
+V1/V2 и отдельно разрешённый V3; mock LLM не подтверждает live Bedrock. Нужные
+live modes проверять отдельными rows при доступе; Bedrock сейчас pending.
+Коммиты, source/generated pairing, handoff, стоп. Не переделывать identity/data/UI.
+~~~
 
 ### Session 07 — offline Chroma (step 7)
 
@@ -264,41 +278,36 @@ memory checks подтверждают regression, не новую isolation gua
 ```text
 Выполни общие правила; PATCH-SEQUENCE §9, E12–E14. Private bundle-local hook/MCP/
 launcher resolution без upstream/global cache fallback, runtime install/update/repair
-compile. Измени source generators и нужные outputs. Local PowerShell preflight/
+compile. Сохрани A19 provider/login adapters; CMEM signup != native provider auth. Измени source generators и нужные outputs. Local PowerShell preflight/
 install/verify/uninstall/rollback с dry-run. Не менять actual registration/PATH/
 registry/старую установку или worker без разрешения. Plugin ID не равен project
-memory identity. Готовность: deterministic paths, missing-file errors; coexistence/
+memory identity. Подготовь minimal reusable V3 compiled-entrypoint harness и fork CI source по VALIDATION;
+actual process/CI launch отдельно, без hosted upload/provisioning по умолчанию.
+Готовность: deterministic paths, missing-file errors; coexistence/
 Unicode/install evidence только после разрешённых checks. Handoff, стоп.
 ```
 
-### Sessions 10–12 — integration, checks, release (launch separately)
+### Sessions 10-12 — retained artifact, validation and release (launch separately)
 
-```text
-ШАГ 10. Выполни общие правила; PATCH-SEQUENCE §10. По handoffs шагов 2–9 сведи
-минимальный runtime closure, prune доказанно ненужные packaged dependencies/
-entrypoints, согласуй generators/manifests/locks/artifacts. Не удаляй нешиппящийся
-upstream source ради косметики. Clean build/acquisition только по разрешению.
-Готовность: reviewed closure и source/artifact provenance либо точный pending gate.
-Handoff отдельной сессии проверок, не начинай общий E2E автоматически.
-```
-
-```text
-ШАГ 11. Выполни общие правила; PATCH-SEQUENCE §11. Прочитай test scripts, проверь
-разрешения/prerequisites, не скачивай missing tooling автоматически. На disposable
-fixtures выполни разрешённые targeted/regression и offline fake-observer acceptance.
-Live Bedrock/process-tree monitoring требуют действующего разрешения и approved
-payload/model/network config. Готовность: pass/fail/pending matrix, artifact hashes,
-evidence limits. При fail — минимальный owning fix, не redesign. Не заявлять zero
-egress без достаточных доказательств. Handoff, стоп, без production deployment.
-```
-
-```text
-ШАГ 12. Выполни общие правила; PATCH-SEQUENCE §12. На принятом artifact подготовь
-offline bundle/checksums/SBOM/licenses и install/diagnose/rollback docs. Разрешённый
-clean-profile test exact final bundle: install/uninstall/reinstall/data preservation.
-Pending IT/security signoff явно. Не publish/push/production install/user-memory
-migration без разрешения. Готовность: reviewable release candidate и handoff. Стоп.
-```
+~~~text
+Используй PATCH-SEQUENCE текущего шага, LLM-PROFILES и VALIDATION. Каждый launch
+охватывает только один bounded increment, не всю последовательность 10-12.
+ШАГ 10: prune только доказанно ненужные closures; сохранить SDK/Codex/API adapters и
+все явно configured roles. Финализировать approved artifact/dependency/CI inputs,
+source/generated pairing и exact hashes. Reuse step-9 smoke runner/CI; no acquisition,
+workflow push/upload/deploy или live credentials без отдельного scope. V1/V2/V3;
+V4 fake LLM + actual approved local Chroma, если assets/runtime уже разрешены.
+ШАГ 11: actual compiled processes, local capture/storage/index/query/restart/viewer и
+process-tree/browser network evidence на exact candidate. V5 live rows по реально
+выбранным profiles/auth/models отдельно; unavailable Bedrock остаётся pending,
+не мешая mocks/offline checks. Условно пропущенный stage не PASS. No fallback.
+ШАГ 12: final Windows bundle/SBOM/profile runbook, clean synthetic install/uninstall/
+reinstall/rollback на final hashes с разрешённым test registration. No automatic
+migration/upstream update. Готовность для regular use — фактическая проверка intended
+profile плюс local memory/index/runtime/install/egress, не только green unit/compile.
+No real prompts/secrets/memory in artifacts. D5/D9/D12 и actual live permission не
+выдумывать. Сохранять approved toolchain/data, logical commits и один next handoff.
+~~~
 
 ## Compact handoff and short launcher
 
@@ -307,15 +316,16 @@ actually performed, deferred/blockers and reason, one next task with acceptance 
 the few files to read. Update STATE/WORKLOG; do not paste project history repeatedly.
 Source drift requires rechecking that slice, not restarting the audit after every reset.
 
-Current short launcher (the full active authorization/task is in NEXT-SESSION):
+Current short launcher (the full proposed task/scope is in NEXT-SESSION):
 
-```text
+~~~text
 Продолжим в C:/0/ai/claude/claude-mem-custom/cmem-light на feat/cmem-light-local.
-Прочитай AGENTS.md и docs/enterprise-local/NEXT-SESSION.md. Выполни его активный
-copyable prompt BUILD-02-TRUST: ограниченный lifecycle/trust consistency review.
-Подтверждаю разрешения на узкое чтение local package scripts, документы и локальные
-docs-коммиты ровно как в prompt; без автоматических trust/source изменений,
-fresh installs/services/AWS/user data/push/step 3.
-Контекст/ownership — через STATE/TASKS/DEV-ENVIRONMENT; не повторять Session 01.
-На выходе обнови repo memory и следующий prompt; после отчёта остановись.
-```
+Выполни WINDOWS-09 по полному copyable prompt в docs/enterprise-local/NEXT-SESSION.md,
+с его bounded scope, context, permissions и completion. Один coordinator, serial.
+A19/A20: сохрани selected-provider adapters/login, подготовь deterministic paths и
+исходники reusable compiled-smoke/fork-CI harness. Только указанные source/fixture/
+reviewed compile/typecheck/mock checks; actual worker/MCP/process smoke/CI/live auth /
+registration/acquisition/upload/push не разрешены этим source launch.
+Контекст/ownership — через STATE/TASKS; не повторять baseline/trust/hosted/Chroma/telemetry.
+Обнови repo memory и один следующий bounded prompt; после отчёта остановись.
+~~~

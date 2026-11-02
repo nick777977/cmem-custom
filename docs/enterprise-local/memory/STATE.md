@@ -1,49 +1,70 @@
 # Current handoff
 
-Updated: 2026-11-02 after TELEMETRY-04. Branch feat/cmem-light-local.
-Source/tests **0abd4180b1971802d7939acba04d46960c4e8c14**; paired generated **6bb7c6995ea47e92ae0176bc88eac75bae871290**.
-Entry 1f41cec12 clean; documentation commit follows in Git.
-One coordinator, serial; no active work or reservations.
+Updated: 2026-11-02 after PLAN-ADAPT-05 (documentation only).
+Branch feat/cmem-light-local; clean entry 48feeab567995de81d501b74007694b5ee95a880.
+Application source/tests remain 0abd4180b1971802d7939acba04d46960c4e8c14;
+paired generated remains 6bb7c6995ea47e92ae0176bc88eac75bae871290.
+Plan documentation commit follows in Git. Single coordinator, serial; no active work
+or reservations after closure. No source/runtime/CI execution in this adaptation.
 
-## Goal and retained behavior
+## Accepted target correction
 
-Local viewer, canonical SQLite/FTS5 and local Chroma derived index; approved corporate
-Bedrock/auth is the intended remote inference exception. Preserve capture/retrieval,
-project/worktree identity, sharing/filter defaults. No migration/isolation redesign.
+A19 replaces Bedrock-only with explicit owner-controlled provider/auth/model profiles
+for ALL retained model tasks: observer, summary/compression, standalone/knowledge,
+viewer refresh/copy/judges. Keep compatible Claude/Bedrock, Claude API/login, Codex
+ChatGPT login, direct OpenAI-compatible API and other existing explicitly configured
+adapters. One default plus visible role overrides; no automatic model/provider/account
+fallback or plugin subscription/signup. No universal auth/model compatibility promise.
+[LLM-PROFILES](../LLM-PROFILES.md) is the canonical target, **not implemented yet**.
+Do not prune Codex/API/auth support in WINDOWS-09 or step 10 under obsolete instructions.
 
-## Completed bounded work
+A20 adds [VALIDATION](../VALIDATION.md): distinguish focused fixtures, real compile /
+typecheck, actual compiled-process smoke, fake-LLM local E2E with real approved Chroma,
+live per-profile proof and exact-package install/rollback. Author reusable harness/CI
+in step 9; add early scoped process checkpoints, finalize fork CI/closure in 10 and
+exact-artifact proof in 11/12. Bedrock currently unavailable; mock/process work can
+proceed without it, while its live row stays pending. Current launch is docs-only:
+no new runtime, runner provisioning, hosted CI upload or live auth permission.
 
-- Baseline/setup, A14/C declaration consistency and A15 source progression accepted.
-  No replay needed; OS/runtime gates stay in 11, closure/provenance/reproducibility 10/12.
-- HOSTED-03 S 417483949 / G 298d44742: E01/E02 retired; 58 tests + one compile PASS.
-- CHROMA-07 S 8fa997979 / G b8734d9b2: source refusal done-bounded, local activation
-  pending approved artifact/API U1/D9. 127 tests + one compile PASS; no real Python/model.
-  [Exact Chroma limits](../handoffs/CHROMA-07.md). D11 stays open; no SQLite-only mode.
-- TELEMETRY-04 S 0abd4180b / G 6bb7c6995: **E03/E04 Node sinks/jobs removed**.
-  Worker/CLI/backfill transport inert, legacy opt-in cannot enable it; no autocapture,
-  payload buffers, telemetry timers/flush, installer prompt or analytics spool/receipts.
-  Local file/stderr diagnostics, optional sink API and memory/viewer behavior retained.
-  **206 tests / 728 assertions PASS, zero FAIL, 18 isolated files; one compile PASS**.
-  Exact Node 22.23.4/npm 10.9.9/Bun 1.4.4; synthetic state and mocked lifecycle only.
-  16 input sentinels unchanged vs CHROMA-07/pre/post; 14 generated modifications,
-  178/192 unchanged, no additions/deletions, UI unchanged. [Evidence/rollback](../handoffs/TELEMETRY-04.md).
+Local viewer, SQLite/FTS5 canonical data, Chroma derived index/local embeddings,
+capture/retrieval/project/worktree/sharing/filter semantics remain unchanged (A06).
+No new degraded SQLite-only product mode, automatic migration or hidden remote MCP.
 
-## Open limits
+## Completed evidence — preserved, not rerun
 
-No actual runtime/full memory/Chroma/Bedrock smoke or OS-wide no-egress evidence.
-Node compile instrumentation has native/shell limits; known Vite net use query and
-emitted-worker whitespace warning retained. posthog-node declarations/tree retained
-for step 10; installed dependency/native/Python/model provenance remains unproved.
-Chroma artifact/API/telemetry contract U1/D9, D11 and step-10 prerequisite remain open.
-No acquisition/install/update, service/worker/MCP/plugin start/registration, AWS,
-real user settings/credentials/memory, push, new branch/worktree or agents.
-Roadmap graph/waves unchanged; E05+ work not started by TELEMETRY-04.
+- Baseline/setup A14/C and pure-compile A15 source progression accepted. OS/full
+  runtime evidence stays 11; closure/provenance/reproducibility stays 10/12.
+- HOSTED-03 S 417483949 / G 298d44742: E01/E02 retired, 58 tests + one compile PASS.
+- CHROMA-07 S 8fa997979 / G b8734d9b2: source refusal, 127 tests + one compile PASS;
+  activation still blocked by U1/D9. [Limits](../handoffs/CHROMA-07.md), D11 open.
+- TELEMETRY-04 S 0abd4180b / G 6bb7c6995: Node E03/E04 transports/jobs inert,
+  local diagnostics retained; 206 tests / 728 assertions + one real compile PASS,
+  16 inputs unchanged. [Evidence](../handoffs/TELEMETRY-04.md).
+- PLAN-ADAPT-05: source/workflow static inspection and document consistency/preservation
+  checks only. New profiles, process smoke/CI and live model support have NOT been
+  implemented/validated by the new documents. [Handoff](../handoffs/PLAN-ADAPT-05.md).
+
+## Open limits and authorization
+
+No current full compiled-worker/MCP/host lifecycle, local-index E2E, live selected
+profile or OS-wide egress acceptance. Existing compiles are real but insufficient
+for runtime proof. Upstream CI uses acquisition/different tool versions and broad
+runtime lanes; do not execute it as the default fork CI. D12 runner policy is open.
+U1/D9 local Python/model/artifact/API evidence, D11, D5 registration and profile-specific
+payload/auth/network/data policies remain scoped gates. No guessed model/endpoint.
+No acquisition/install/update, service/worker/MCP/plugin start/registration, live
+AWS/OpenAI/Claude/Codex login/inference, real settings/credentials/memory/installed
+assets, push, new branch/worktree or agents authorized by this adaptation.
 
 ## One next task
 
-**WINDOWS-09 / roadmap wave 4, step 9**, awaiting explicit user launch of
-[NEXT-SESSION](../NEXT-SESSION.md). Deterministic private Windows launcher/hook/MCP
-paths and refusal of runtime acquisition/repair. D5/actual registration remains gated.
-Read AGENTS -> README -> STATE -> roadmap step 9/graph -> TASKS -> relevant decisions /
-current environment -> TELEMETRY-04 and CHROMA-07 limits -> PATCH-SEQUENCE section 9 ->
-E12/E13/E14/E21 and audit notes. No baseline/trust/hosted/Chroma/telemetry replay.
+**WINDOWS-09 source increment + early compiled-smoke/CI harness authoring**, awaiting
+explicit launch of [NEXT-SESSION](../NEXT-SESSION.md). Preserve all A19 provider adapters;
+remove runtime acquisition/private path fallback, not supported selected-provider auth.
+Current prompt allows source/test/fixture/harness/workflow definition and one reviewed
+compile after source edits when launched; actual runtime/CI execution remains separate.
+Read AGENTS -> README -> STATE -> roadmap step 9/graph -> TASKS -> A19/A20 ->
+LLM-PROFILES relevant boundary / VALIDATION V1-V3 + CI -> DEV-ENVIRONMENT current ->
+PLAN-ADAPT-05 -> TELEMETRY-04/CHROMA-07 limits -> PATCH-SEQUENCE 9 -> E12/E13/E14/E21.
+No full history or repeat audit; close shared memory and emit the next concrete bounded
+prompt. Step 6 now PROFILE-06A/06B if needed; do not launch it during WINDOWS-09.

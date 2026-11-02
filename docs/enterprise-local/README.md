@@ -1,8 +1,15 @@
 # Enterprise local fork: project memory
 
-Goal: a Windows Claude Code memory plugin with local SQLite/FTS5 and persistent
-Chroma/ONNX; only explicitly approved Bedrock/auth infrastructure may receive observer
-traffic. Local persistence does not imply offline inference.
+Goal: Windows local-first memory with existing Claude Code/Codex integrations,
+canonical SQLite/FTS5, persistent local Chroma/embedding assets and local viewer.
+The owner explicitly chooses provider, model and auth for every LLM task, with one
+default and optional role overrides. A19 supersedes Bedrock-only; no hidden model,
+account/gateway fallback, CMEM registration/subscription, telemetry or cloud sync.
+Local persistence does not imply offline generative inference.
+
+Accepted target contracts A19/A20 (not implemented yet): [LLM-PROFILES](LLM-PROFILES.md),
+[VALIDATION](VALIDATION.md). Current adaptation [PLAN-ADAPT-05](handoffs/PLAN-ADAPT-05.md)
+is documentation-only: no build, service, CI, login or real user-state access.
 
 ## Current local development baseline
 
@@ -21,7 +28,7 @@ Current CHROMA-07: source 8fa997979, generated b8734d9b2; 127 targeted tests /
 383 assertions and one compile PASS, 16 inputs unchanged. Acquisition/remote launch
 removed; **local Chroma activation blocked** pending approved Python/model/offline
 embedding/telemetry API evidence U1/D9. No actual Chroma acceptance.
-[Contract/limits](handoffs/CHROMA-07.md). Next proposed task: WINDOWS-09.
+[Contract/limits](handoffs/CHROMA-07.md). Next proposed task: WINDOWS-09 source and early smoke/CI harness authoring.
 
 TELEMETRY-04: source 0abd4180b / generated 6bb7c6995; E03/E04 Node telemetry
 removed, local diagnostics retained. 206 tests / 728 assertions and one compile PASS;
@@ -36,11 +43,13 @@ the current task's context bundle, not the whole history or initial plan.
 
 1. [Current handoff](memory/STATE.md): completed work, limitations, next action.
 2. [Roadmap](../roadmap.md): increments, dependency graph and parallel lanes.
-3. [Baseline](../BASELINE.md) and [static inventory](../EGRESS-INVENTORY.md).
-4. [Architecture](../ARCHITECTURE-LOCAL.md), [risks](../RISK-REGISTER.md),
+3. Current target contracts: [LLM profiles](LLM-PROFILES.md),
+   [runtime/CI evidence levels](VALIDATION.md); read task-relevant sections.
+4. [Baseline](../BASELINE.md) and [static inventory](../EGRESS-INVENTORY.md).
+5. [Architecture](../ARCHITECTURE-LOCAL.md), [risks](../RISK-REGISTER.md),
    [commit sequence](../PATCH-SEQUENCE.md).
-5. [Decision log](memory/DECISIONS.md) and [session history](memory/WORKLOG.md).
-6. [Original supplied plan](source/INITIAL-PLAN.md): preserved verbatim; not an
+6. [Decision log](memory/DECISIONS.md) and [session history](memory/WORKLOG.md).
+7. [Original supplied plan](source/INITIAL-PLAN.md): preserved verbatim; not an
    instruction to execute its commands or evidence that its hypotheses are true.
 
 Use `docs/` rather than an additional `Documents/` tree so existing documentation
