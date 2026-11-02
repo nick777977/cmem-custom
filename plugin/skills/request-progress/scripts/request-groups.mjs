@@ -1017,7 +1017,7 @@ var init_SettingsDefaultsManager = __esm({
         CLAUDE_MEM_CHROMA_ENABLED: "true",
         // Set to 'false' to disable Chroma and use SQLite-only search
         CLAUDE_MEM_CHROMA_MODE: "local",
-        // 'local' uses persistent chroma-mcp via uvx, 'remote' connects to existing server
+        // Only local is permitted; legacy remote config is rejected
         CLAUDE_MEM_CHROMA_HOST: "127.0.0.1",
         CLAUDE_MEM_CHROMA_PORT: "8000",
         CLAUDE_MEM_CHROMA_SSL: "false",
@@ -1029,12 +1029,8 @@ var init_SettingsDefaultsManager = __esm({
         // Chroma embedding/index writes can exceed the MCP SDK's 60s default
         CLAUDE_MEM_CHROMA_MAX_PENDING_MUTATIONS: "5000",
         // Bound burst imports without changing normal live indexing
-        // Embedding function used when creating the Chroma collection. 'default' is
-        // the local all-MiniLM-L6-v2 (English-tuned). The pinned chroma-mcp also
-        // accepts 'openai', 'cohere', 'jina', 'voyageai' and 'roboflow'; those are
-        // API-backed, need the vendor's API key in the environment, and send your
-        // memory text to that vendor. Any other value is rejected. Applies to new
-        // collections only — changing it requires re-indexing.
+        // Only default is a candidate; launch remains blocked until the local model,
+        // offline API and telemetry-disable contract are verified. No remote providers.
         CLAUDE_MEM_CHROMA_EMBEDDING_FUNCTION: "default",
         // The server's search by meaning (pgvector): it embeds every observation
         // in process, existing rows in the background at startup. 'true'
@@ -1055,8 +1051,10 @@ var init_SettingsDefaultsManager = __esm({
         // every observation, and search by meaning covers only rows already
         // re-embedded until that finishes.
         CLAUDE_MEM_EMBEDDING_MODEL: "all-MiniLM-L6-v2",
+        CLAUDE_MEM_CHROMA_EXECUTABLE: "",
+        // No discovery, runtime resolution or automatic repair
         CLAUDE_MEM_CHROMA_UVX_PATH: "",
-        // Empty = search uv's install folders, then PATH (#4195)
+        // Legacy field retained for round-trip only; never executed
         CLAUDE_MEM_SEARCH_RECENCY_DAYS: "90",
         // Date-less semantic search only ranks matches from the last N days (#4770). 0 = no window (every match eligible); an explicit dateStart/dateEnd always wins. Restart the worker after changing it
         // Worker-native cloud sync: credentials come from cmem.ai → Connect.
