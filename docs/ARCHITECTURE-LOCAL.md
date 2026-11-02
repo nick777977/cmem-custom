@@ -15,6 +15,16 @@ derived data and project/worktree/sharing/filter/capture/retrieval semantics ret
 58 targeted synthetic tests and one compile pass; full network/runtime acceptance
 and inference enforcement are pending. [Evidence and exact paths](enterprise-local/handoffs/HOSTED-03.md).
 
+## Implemented Chroma source refusal (2026-11-02)
+
+CHROMA-07 source 8fa997979 / generated b8734d9b2 removes manager resolution/prewarm /
+cache/certificate acquisition and HTTP launch. Legacy remote/vendor embedding settings
+reject. All local activation is blocked pending approved executable/dependency/model /
+offline embedding/telemetry API evidence; a path/config cannot self-enable it. Local
+index/lock/mutation/teardown logic retained with synthetic lifecycle tests. 127 tests /
+one compile PASS; no actual Python/model or full memory smoke. U1/D9/D11 open.
+[Contract/limits](enterprise-local/handoffs/CHROMA-07.md).
+
 ## Current structure — VERIFIED IN CHECKOUT
 
 - `plugin/hooks/hooks.json`: lifecycle hooks call the on-PATH launcher, a Bash-based
@@ -58,8 +68,8 @@ data recoverable without reporting successful indexing. A SQLite-only degraded m
 requires a deliberate product decision; it is not a substitute for shipping Chroma.
 
 Retain the existing Claude SDK unless a verified constraint requires replacement.
-Use a direct absolute Python executable and argument array for local Chroma. Select
-the concrete Python package/model versions only after inspecting compatible artifacts;
+Use a reviewed absolute local adapter executable and argument array only after the
+actual Python/embedding/telemetry API and compatible artifacts are verified;
 do not turn the plan's guessed ONNX model into a pinned dependency without evidence.
 
 Fresh fork/test data must be separate from upstream memory. Initial implementation

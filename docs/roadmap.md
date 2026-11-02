@@ -40,12 +40,17 @@ is in [TASKS](enterprise-local/memory/TASKS.md); no dependency edges/waves chang
 | 4 | Local diagnostics work without remote telemetry | IP §5.2 W2 | S | idea |
 | 5 | Local SQLite/Chroma works without cloud sync | IP §5.3 W3 | S | idea |
 | 6 | Observer uses only validated corporate Bedrock | IP §5.4 W4 | M | idea |
-| 7 | Chroma starts and retrieves from pre-provisioned local assets | IP §5.5 W5 | M | idea |
+| 7 | Chroma starts and retrieves from pre-provisioned local assets | IP §5.5 W5 | M | source refusal done-bounded (CHROMA-07); activation/contract pending U1/D9; 127 tests + compile PASS; no runtime acceptance |
 | 8 | Local API/viewer rejects remote access while existing memory behavior is preserved | IP §5.7 W7, narrowed by [A06/A07](enterprise-local/memory/DECISIONS.md) | S | idea |
 | 9 | Private plugin loads through deterministic Windows-local paths | IP §5.6 W6 | M | idea |
 | 10 | Minimal artifact contains only the approved runtime closure | IP §5.8 W8; §6 P2/P5 | S | idea |
 | 11 | Integrated memory passes offline and approved Bedrock acceptance | IP §6 P6/P7; §7 | M | idea |
 | 12 | Verified Windows bundle, SBOM, install and rollback are ready | IP §6 P8; §13 | S | idea |
+
+CHROMA-07 source 8fa997979 / generated b8734d9b2 removes manager resolution/remote
+launch and blocks all local activation pending approved artifact/API evidence.
+U1/D9/D11 remain open; step 10's finalized Python/model-contract prerequisite is not
+satisfied by this refusal. [Evidence](enterprise-local/handoffs/CHROMA-07.md).
 
 ## Not yet specified
 

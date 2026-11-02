@@ -8,6 +8,19 @@ Session 01's [bounded closure](enterprise-local/AUDIT-CLOSURE.md) adds coverage,
 reachability/owning steps for every E-ID, E15/E16/E18 refinements and E19–E22.
 The source SHA is unchanged; dependency and runtime proof remain pending.
 
+## Current E08–E11 disposition (CHROMA-07)
+
+Historical rows retain their original pinned SHA. Source
+8fa9979797b5478ec8b36eebd6c52533112aec83 / generated
+b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf removes manager E08 resolution/prewarm/cache /
+certificate acquisition and E09 HTTP launch. Legacy remote mode/provider overrides
+reject. E10/E11 cannot run: every launch explicitly refuses before store/client/process
+pending approved dependency/model/offline embedding/telemetry API evidence U1/D9.
+This does not establish a working local model or supported telemetry-disable mechanism.
+127 mocked/synthetic tests and one compile PASS; no real Python/cold-cache/traffic smoke.
+[Source lines, contract and limits](enterprise-local/handoffs/CHROMA-07.md).
+Other broad-bundle clients remain their owning increments; no full egress claim.
+
 ## Current E01/E02 disposition (HOSTED-03)
 
 The table below remains the historical reconnaissance at its pinned SHA. E01/E02

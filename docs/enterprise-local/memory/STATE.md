@@ -1,74 +1,63 @@
 # Current handoff
 
-Updated: 2026-11-02 after HOSTED-03. Branch `feat/cmem-light-local`.
-Source/tests **`4174839497f8cc1247b864bd1c889e2a2b649738`**; paired generated
-**`298d447423c2ebf7404ce79329683484902080b7`**. Docs commit follows in Git log.
-Entry `f7df0cccd` was clean. One coordinator, serial; no active reservations.
+Updated: 2026-11-02 after CHROMA-07. Branch feat/cmem-light-local.
+Source/tests **8fa9979797b5478ec8b36eebd6c52533112aec83**; paired generated **b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf**.
+Documentation commit follows in Git. Entry 46c12bfe7 was clean.
+One coordinator, serial; no active work or reservations.
 
-## Goal and preserved behavior
+## Goal and retained behavior
 
-Windows Claude Code memory fork: local SQLite/FTS5 canonical data, persistent local
-Chroma derived index/embeddings and viewer; approved corporate Bedrock/auth is the
-intended sole remote inference exception. Preserve capture/retrieval, project/worktree
-identity, sharing and filtering semantics. No isolation redesign or migration.
-Other remote clients/downloads remain open in their owning roadmap increments.
+Retain local viewer, canonical SQLite/FTS5 and local Chroma derived index; approved
+corporate Bedrock/auth is the intended sole remote inference exception. Preserve
+capture/retrieval, project/worktree identity, sharing/filter semantics. No migration,
+isolation redesign or new SQLite-only product mode (D11 remains open).
 
-## Completed and accepted
+## Completed boundaries
 
-- User setup preserved in `49e4f65e1` inputs/trust/manifests/lock and `ce7ded4dc`
-  bundles/maps. Pure compile boundary `153a9953c`, Windows syntax fixture `705cd1dc9`.
-  Historical compile + 6 boundary / 21 syntax checks PASS; no setup replay needed.
-- Selected C/A14 `8bc557532` aligns canonical/root/plugin npm allowScripts (30);
-  actual historical guard PASS. Bun JSON/plugin/lock trust stays 26 names. No new
-  permission choice. [Trust evidence](../handoffs/BUILD-02-TRUST-APPLY.md).
-- **P10 explicitly accepted as A15 by the user's HOSTED-03 launch:** step 2 is
-  **boundary accepted for source progression, release evidence pending**. No graph
-  edge/wave change; no shipped/full no-egress acceptance and no install to close it.
-- **HOSTED-03 done-bounded (A16):** all legacy /api/setup methods return 410 after
-  loopback checks; hosted extraction/history clients reject before credentials/data/
-  transport; worker scan/upload and CLI browser/checkout wiring removed. Viewer opens
-  local work even for ?setup=1, without registration. Inert UI setup actions cannot
-  dispatch. Local search/note/count utilities, local import receiver and other local
-  viewer/memory behavior retained. Source-only setup utilities were not bulk-deleted.
-- Actual final checks: **58 targeted tests PASS, 0 FAIL, 249 assertions**; **one**
-  reviewed compile PASS with exact Node 22.23.4/npm 10.9.9/Bun 1.4.4. Synthetic paths,
-  mocks and loopback fixtures only. Windows SQLite fixture cleanup adapted. Worker/UI
-  syntax and mapped hosted closure checks PASS; source/generated pair committed.
-- All **16** selected input/sentinel hashes unchanged. Of 199 pre-existing tracked
-  outputs, 188 unchanged, 3 modified and 8 removed; one new main UI JS. Generated
-  delta limited to worker CJS/map and My Work assets/HTML. Manifests/locks/trust,
-  dependencies and user baseline preserved. [Exact evidence/paths/rollback](../handoffs/HOSTED-03.md).
+- Preserved setup 49e4f65e1/ce7ded4dc; pure compile 153a9953c, fixture 705cd1dc9;
+  A14/C 8bc557532 declaration alignment. No baseline/trust replay needed.
+- A15: step 2 boundary accepted for source progression; release evidence pending.
+  OS/runtime remains 11; closure/provenance/reproducibility remains 10/12.
+- HOSTED-03 source 417483949 / generated 298d44742, E01/E02 retired; 58 targeted
+  tests and one compile PASS. [Prior evidence](../handoffs/HOSTED-03.md).
+- CHROMA-07 **source refusal done-bounded; activation pending U1/D9** (A17).
+  Manager uvx resolution/prewarm/cache sweep/certificate acquisition and HTTP launch
+  removed. Remote/unknown modes and vendor embeddings reject, including legacy config
+  and direct tool overrides. New absolute local executable setting has no discovery /
+  repair/fallback. Every launch refuses pending approved artifact/API evidence before
+  store/lock/process/transport. Merely setting a path cannot enable it. Default
+  embedding name certifies no offline behavior. D11 unselected; error remains explicit.
+- Actual checks: **127 PASS, 0 FAIL, 383 assertions**, ten isolated test files;
+  **one compile PASS**, exact Node 22.23.4/npm 10.9.9/Bun 1.4.4. Mocks/synthetic
+  state only; no Python/model process. 16 inputs unchanged vs HOSTED-03 and before /
+  after compile. 192 outputs: 177 unchanged, 15 paired modifications, zero added/deleted;
+  UI unchanged. [Exact source lines/checks/rollback](../handoffs/CHROMA-07.md).
 
-## Limits that remain open
+## Open limits
 
-Compile Node tripwires saw no socket/acquisition/deploy event; local esbuild/tsc/Vite
-and Vite's net use query observed. Native/shell/OS traffic coverage is incomplete.
-Generated worker diff has an emitted trailing-whitespace warning; output kept verbatim.
-No clean root-lock/dependency/native/Python/model provenance, reproducibility or release
-closure is established. Acquisition still needs approved sources/lifecycle beforehand.
+No approved Python/Chroma/MCP/native/model paths or offline API supplied. U1/D9 remain
+UNKNOWN; no model hashes, supported telemetry flag or compatibility invented. Activation
+needs explicit artifact/read permission, resolved graph/hashes/licenses, real local-only
+model/telemetry API and existing-collection compatibility, then separately authorized
+runtime smoke. Internal Node launch description is not a Python API/approval manifest.
+Step 10's finalized step-7 contract prerequisite remains open; graph/waves unchanged.
 
-No full Claude Code capture -> SQLite -> Chroma search -> restart/retrieval -> viewer
--> approved Bedrock acceptance ran. No services/worker/MCP/plugin start/restart,
-registration, AWS/live inference, real settings/credentials/memory, installs/downloads,
-push, new branch/worktree or agents. Synthetic HTTP tests needed execution outside the
-sandbox because sandbox loopback fetch returned EACCES; no approval rejection occurred.
-The Codex-hook fixture was not used as a substitute for Claude Code acceptance.
-
-Telemetry/cloud sync/other inference/viewer network/bootstrap paths remain later work;
-HOSTED-03 removes E01/E02 only. Retained refresh/copy follows existing settings;
-Bedrock-only enforcement is not yet implemented. Full OS/runtime acceptance belongs
-to 11; root-lock/dependency/artifact provenance/reproducibility to 10/12.
+D11 remains open; no new successful SQLite-only fallback policy. Existing callers'
+error/unavailability handling retained. No full capture -> SQLite -> Chroma query /
+restart -> viewer -> Bedrock acceptance or real settings/credentials/memory access.
+Compile Node instrumentation observed no socket/acquisition/deploy event; native/shell
+coverage incomplete (Vite net use query observed). Generated-worker whitespace warning
+retained. Installed-tree/native/Python/model provenance and reproducibility unproved.
+No acquisition/lock resolution, services/worker/MCP/plugin start/registration, AWS,
+real user state, push, new branch/worktree or agents.
 
 ## One next task
 
-**CHROMA-07**, roadmap step 7, **awaiting user launch** of [NEXT-SESSION](../NEXT-SESSION.md).
-Use absolute pre-provisioned local Chroma/Python/embedding assets, no runtime package
-resolution/model download or remote mode. Inspect only E08–E11 and their affected live
-source/tests/contracts. Do not acquire assets or reuse real user installation/state.
-Unavailable approved artifacts/interfaces are an explicit unknown/failure, not an
-invitation to download or fabricate compatibility. No step 7 work ran in HOSTED-03.
-
-Context: AGENTS -> README -> STATE -> roadmap step 7/graph -> TASKS -> DECISIONS
-A06/A07/A09/A14/A15/A16 -> DEV-ENVIRONMENT current section -> HOSTED-03 handoff limits ->
-PATCH-SEQUENCE §7 -> EGRESS-INVENTORY E08–E11 -> affected source/tests only.
-Close STATE/TASKS/WORKLOG/DECISIONS/affected contracts/environment/NEXT-SESSION each session.
+**TELEMETRY-04 / roadmap step 4**, awaiting explicit launch of
+[NEXT-SESSION](../NEXT-SESSION.md): remove Node remote telemetry, retain local diagnostics.
+Only E03/E04 and direct callers/tests; do not activate Chroma, acquire artifacts,
+repeat baseline/trust/hosted/Chroma work or start step 5/6/9.
+Read AGENTS -> README -> STATE -> roadmap step 4/graph -> TASKS -> relevant decisions /
+current environment -> CHROMA-07 limits -> PATCH-SEQUENCE section 4 -> E03/E04 and
+corresponding audit notes. Close STATE/TASKS/WORKLOG/DECISIONS/contracts/environment /
+NEXT-SESSION again.

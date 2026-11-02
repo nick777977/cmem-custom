@@ -6,6 +6,12 @@ commits and agent compile/targeted checks, use [BUILD-02](handoffs/BUILD-02.md),
 The original no-execution record below remains true for Session 01. Its old line
 numbers are not silently reassigned to the later modified generator.
 
+Current E08–E11 supplement: CHROMA-07 source 8fa997979 / generated b8734d9b2
+removes manager uvx/acquisition/remote launch and rejects vendor embeddings. All local
+activation refuses pending actual approved artifact/API evidence; U1/D9 remain UNKNOWN.
+No model hash, supported Python telemetry flag or cold-cache compatibility asserted.
+[Current exact evidence](handoffs/CHROMA-07.md); historical rows below unchanged.
+
 Date: 2026-10-30. Branch: `feat/cmem-light-local`; clean entry HEAD:
 `2f061267628a74384fff08fc79b163cc9038bc88`.
 All source citations in this document refer to inspected source SHA

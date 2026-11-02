@@ -17,6 +17,12 @@ See [HOSTED-03 evidence](handoffs/HOSTED-03.md) and [DEV-ENVIRONMENT.md](DEV-ENV
 limitations. Other attempted Node versions were unsuccessful for the user; this is
 not a complete compatibility matrix. Do not reinstall/update by default.
 
+Current CHROMA-07: source 8fa997979, generated b8734d9b2; 127 targeted tests /
+383 assertions and one compile PASS, 16 inputs unchanged. Acquisition/remote launch
+removed; **local Chroma activation blocked** pending approved Python/model/offline
+embedding/telemetry API evidence U1/D9. No actual Chroma acceptance.
+[Contract/limits](handoffs/CHROMA-07.md). Next proposed task: TELEMETRY-04.
+
 ## Reading order
 
 For a fresh session start with [STATE](memory/STATE.md), then the current

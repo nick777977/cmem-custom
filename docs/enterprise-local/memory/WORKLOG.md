@@ -350,3 +350,53 @@ services/worker/plugin/MCP start, AWS/live inference, real settings/data/credent
 push, new branch/worktree or subagent. Rollback G then S; preserve baseline and all data.
 Final docs links/whitespace, graph/wave identity, SHA citations/fingerprints and Git
 scope/status checked at closure; docs commit follows source/artifact commits in Git log.
+
+## 2026-11-02 — CHROMA-07 source refusal boundary
+
+Explicit user launch; one serial coordinator, no agents/branches/worktrees. Entry
+46c12bfe7 clean. Read required bounded chain; exact claims/extensions before edits /
+retaining additional declared build outputs. No baseline/trust interview/full audit.
+
+Source 8fa9979797b5478ec8b36eebd6c52533112aec83 removes manager uvx/Python/dependency resolution, prewarm/circuit breaker,
+uv scratch deletion, certificate acquisition and HTTP launch. Legacy remote/unknown
+modes, vendor embeddings and direct tool overrides reject. New absolute local adapter
+setting cannot self-authorize: all candidates explicitly refuse before store/lock /
+process/transport pending approved artifact/API evidence. No Python/model/telemetry API
+or hashes invented. U1/D9/D11 open; local SQLite/Chroma/index/query/filter/identity /
+watermark/mutation/teardown behavior retained behind gate. No new degraded-mode policy.
+
+Read fixture/subprocess/env/network behavior. Exact Node 22.23.4/npm 10.9.9/Bun 1.4.4
+verified; synthetic HOME/config/data/temp/appdata/npm config/cache/offline env.
+Final 127 PASS / zero FAIL / 383 assertions, ten isolated Bun files; no forbidden
+fetch/subprocess operation. Missing/cold/corrupt/present Node fixtures refuse with zero
+transport/client creation; 51 mocked lifecycle, existing filters/typed lookup/checkpoint
+regressions pass. No actual Python/model cold-cache claim. Two Windows fixture assertions
+corrected to mocked killProcessTree call target; no real process signaled. Three fields
+accidentally removed during editing restored before test execution. Scratch artifact
+checker corrected for maps omitting sourcesContent; no embedded-source equivalence claim.
+
+One reviewed build:compile PASS with unchanged BUILD-02 guard. Nine Node inits, five
+spawns, one execFileSync/exec/execFile; local compilers and Vite net use query. No Node
+socket/acquisition/deploy event, not OS/native/shell proof. 16 inputs match pre/post and
+HOSTED-03; no trust/lock/dependency/version mutation or exhaustive installed-tree proof.
+G b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf: 15 paired generated modifications, 177/192 unchanged, zero added/deleted,
+UI unchanged. Six script CJS/map pairs, SessionStore.js/map and request-groups.mjs
+(shared settings inlining, no SQLite/progress source behavior changes). Generated
+syntax/source-list/emitted gate/npm maps PASS. Known emitted-worker whitespace retained;
+source/test whitespace PASS. Initial Git index denied by sandbox read-only .git;
+authorized escalation succeeded, per-command hooks/signing disabled, no approval rejection.
+Compile ran once from exact S bytes before S recorded; source/index pairing checked.
+
+No acquisition, real user assets/state/credentials/memory, services/worker/MCP/plugin,
+AWS/live inference or push. [Handoff](../handoffs/CHROMA-07.md) persists exact S citations,
+actual checks/evidence hashes, required artifact inputs and rollback G then S (restores
+unsafe acquisition/remote capability; preserve data/setup). A17/shared memory/contracts /
+environment/launchers updated. Graph/waves unchanged; step 10's finalized step-7 artifact
+contract prerequisite still open. NEXT-SESSION proposes only TELEMETRY-04, awaiting
+launch. Reservations released; full runtime/no-egress/provenance/release gates unpassed.
+
+Session-close checks actually PASS: 15 changed/new Markdown files, 81 relative file
+links valid; S line citations rechecked, source/generated worktree clean, all 16 input
+fingerprints still unchanged. Roadmap dependency graph and execution waves identical
+to entry after CRLF normalization. Documentation whitespace PASS. Docs commit follows
+S/G in Git history; no further compile/test or next-increment execution.

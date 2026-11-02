@@ -1,11 +1,12 @@
 # Session prompts and bounded handoffs
 
 Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after
-HOSTED-03 (source/tests `417483949`, generated `298d44742`; 58 tests + compile PASS).
-P10 is accepted as A15 for source progression; release evidence stays pending.
-One next proposed task is CHROMA-07, pre-provisioned local Chroma/embedding assets,
-without downloads. STATE/TASKS/DEV-ENVIRONMENT own current context. Sessions 01/02
-below are historical templates; do not repeat baseline/trust/hosted implementation.
+CHROMA-07 (source 8fa997979, generated b8734d9b2; 127 tests + one compile PASS).
+Local activation is blocked pending approved artifact/API evidence U1/D9; no Python smoke.
+P10/A15 source progression accepted; release gates stay in 10/11/12. One proposed next
+task: TELEMETRY-04, remove Node remote telemetry and retain local diagnostics.
+STATE/TASKS/DEV-ENVIRONMENT own current context; templates below are historical.
+Do not repeat baseline/trust/hosted/Chroma implementation.
 
 Copy one prompt into a fresh session in this repository. These templates do not
 authorize later work or create chats/agents automatically. The user launches each
@@ -47,7 +48,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | One proposed CHROMA-07 launcher; HOSTED-03 complete and release gates retained |
+| `docs/enterprise-local/NEXT-SESSION.md` | One proposed TELEMETRY-04 launcher; Chroma activation/release gates retained |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/memory/TASKS.md` | Single active ownership/file-reservation board and session-close/coordinator protocol |
 

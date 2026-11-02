@@ -115,14 +115,26 @@ step 11 and approved privacy rules. Rollback: revert source artifact, retain pen
 
 ## 7. Offline Chroma and model
 
-Candidates: reviewed Python/model dependency manifest and hashes; replace uvx with
-absolute local executable/argument-array spawn; reject remote Chroma and embedding
-providers; enforce telemetry disable; validate model presence and process lifecycle.
-Acceptance: local cold-cache index/query/restart without downloads; missing asset fails
-clearly; no orphan processes. Planned validation: `tests/services/sync/chroma-mcp-manager-*.test.ts`,
-embedding-function tests and `tests/integration/chroma-windows-lifecycle.test.ts`.
-Never clear a real user's cache; use disposable fixtures. Rollback: retain canonical
-SQLite and rebuild derived Chroma using a compatible model/version.
+CHROMA-07 **source refusal done-bounded**, not operational activation. Source
+8fa997979, paired generated b8734d9b2; [evidence/rollback](enterprise-local/handoffs/CHROMA-07.md).
+
+- [x] Remove manager uvx/package resolution, prewarm/cache deletion, certificate
+  acquisition and HTTP launch; reject legacy remote/unknown modes and vendor embeddings.
+- [x] New absolute local executable setting, no discovery/repair/fallback. All candidates
+  refuse before store/client/process pending actual approved artifact/embedding/telemetry
+  API evidence. No config flag or self-attested manifest can unblock this boundary.
+- [x] 127 mocked/synthetic tests / 383 assertions PASS; one compile PASS; 16 inputs
+  unchanged and 15 generated outputs paired. Existing query/filter/typed selection,
+  checkpoint, writer-lock/mutation/teardown regressions checked with fixtures.
+- [ ] U1/D9: approved paths, resolved Python/native/model graph/hashes/licenses and
+  supported offline embedding/telemetry-disable API evidence. No artifacts supplied.
+- [ ] Actual cold-cache index/query/restart/telemetry/error/no-orphan evidence requires
+  separate approved assets/runtime permission. No real Python process ran. D11 open.
+
+Full runtime/OS acceptance stays 11; closure/provenance/reproducibility stays 10/12.
+Graph/waves unchanged. Rollback G then S restores unsafe resolution/remote capability;
+retain SQLite/Chroma data, never delete the sync directory or real cache. Next independent
+increment: step 4.
 
 ## 8. Local API/viewer boundary; preserve memory behavior
 

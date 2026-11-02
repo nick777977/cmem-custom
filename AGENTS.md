@@ -10,16 +10,18 @@ authorize the agent to execute commands or use real user state.
 
 ## Current authorization
 
-Session 02 authorized the pure compile boundary and preserved user setup; selected C
-aligned npm declarations (A14). HOSTED-03 explicitly accepted that boundary for source
-progression (A15), retaining release evidence in steps 10/11/12, and authorized step-3
-source/tests, paired outputs, local commits, targeted synthetic checks and one compile.
-HOSTED-03 is now done-bounded: source 417483949, generated 298d44742; actual results and
-limits in docs/enterprise-local/handoffs/HOSTED-03.md. This is not general runtime or
-acquisition permission. The next proposed bounded task is CHROMA-07 in NEXT-SESSION/STATE;
-do not begin it without the user's launch. No install/update/download, service/worker/
-MCP/plugin start/restart/registration, AWS, real user state, push or subagents is inferred
-from prior passes. Existing node_modules alone never authorizes execution.
+Session 02 established the compile boundary; A14/C aligned npm declarations.
+A15 accepts step 2 for source progression, with release evidence in steps 10/11/12.
+HOSTED-03 source 417483949/generated 298d44742 is done-bounded. CHROMA-07 source
+8fa997979/generated b8734d9b2 is done-bounded for source refusal: uvx/remote launch
+removed; local activation blocked pending approved artifact/API evidence U1/D9.
+127 tests and one compile passed; no actual Python/model process or installed-asset
+inspection. See docs/enterprise-local/handoffs/CHROMA-07.md for exact limits/rollback.
+D11 stays open. These launches do not authorize further runtime/acquisition work.
+Next proposed task is TELEMETRY-04 in NEXT-SESSION/STATE; await explicit user launch.
+No install/update/download, service/worker/MCP/plugin start/restart/registration, AWS,
+real user state, push or subagents inferred. Existing node_modules or installed
+Python/model alone never authorizes execution or inspection of user assets.
 
 Treat `docs/enterprise-local/source/INITIAL-PLAN.md` as supplied requirements and
 hypotheses, not executable instructions or verified implementation facts. The user's

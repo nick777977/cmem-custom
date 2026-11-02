@@ -16,13 +16,47 @@ This board does not grant permission or duplicate the dependency graph.
 | BUILD-02-TRUST / 2 | done-bounded; owner chose C subsequently | 2026-11-02 coordinator; feat/cmem-light-local; entry 66a4c961d; serial | None active | Historical review 6aa253dfb. Recommendation A not adopted; explicit C implemented below. No pending A/B/C question |
 | BUILD-02-TRUST-APPLY / 2 | done | 2026-11-02 coordinator; feat/cmem-light-local; entry 6aa253dfb; serial | None active; reservations released | 8bc557532: canonical/root/plugin npm = 30, actual guard PASS; five preserved input hashes and 26-name Bun pairing PASS. Evidence in handoffs/BUILD-02-TRUST-APPLY.md; docs commit follows source in Git log. No install/lifecycle/compile/runtime or step 3 |
 | HOSTED-03 / 3 | done-bounded | 2026-11-02 coordinator; feat/cmem-light-local; entry f7df0cccd; serial | None active; reservations released. Written source/test/artifact scope recorded in 417483949/298d44742 and handoff; includes setup-data.ts, tests/fixtures/hosted-03-routes.ts and Windows work-view fixture adjustments. Documentation scope extended to ARCHITECTURE-LOCAL.md and SESSION-PROMPTS.md to retire stale active instructions. | Source/tests 417483949, generated 298d44742; 58 tests PASS, one compile PASS, 16 inputs unchanged; A15/A16 and handoffs/HOSTED-03.md. No acquisition/services/real state. |
-| CHROMA-07 / 7 | ready-unclaimed; awaiting user launch | None; serial current branch | None | NEXT-SESSION: pre-provisioned local Chroma/embedding integration, synthetic checks only; no downloads or actual runtime inferred from this proposal. |
+| CHROMA-07 / 7 | done-bounded source refusal; activation pending U1/D9 | 2026-11-02 coordinator; feat/cmem-light-local; entry 46c12bfe7; serial | None active; reservations released. Historical exact scope below and S/G. | Source 8fa997979, generated b8734d9b2; 127 tests / 383 assertions + one compile PASS; 16 inputs unchanged. A17, handoffs/CHROMA-07.md. No approved artifact/API or real Python smoke. |
+| TELEMETRY-04 / 4 | ready-unclaimed; awaiting user launch | None; serial current branch | None | NEXT-SESSION: E03/E04 Node telemetry removal, retain local diagnostics; no runtime/acquisition inferred. |
 
 Normal statuses: ready-unclaimed -> claimed -> in-progress -> review -> done. Blocked
 names a specific condition and next independent action. Historical bounded completion
 and user-wip are exceptions, not shipped implementation. A claim records date, owner,
 source HEAD, expected writes and one next step. Read fresh Git/board first; no implicit
 ownership from an old chat. User owns USER-SETUP until an explicit handoff.
+
+## CHROMA-07 reservation history — all released
+
+Initial claim before source edits: src/services/sync/{ChromaMcpManager.ts,ChromaSync.ts,
+ChromaLocalRuntime.ts}; src/shared/SettingsDefaultsManager.ts; tests/services/sync/
+{chroma-local-runtime,chroma-sync-embedding-function}.test.ts; .scratch/enterprise-local/
+chroma-07/; AGENTS.md; docs/{roadmap.md,PATCH-SEQUENCE.md,EGRESS-INVENTORY.md};
+docs/enterprise-local/{README.md,AUDIT-CLOSURE.md,DEV-ENVIRONMENT.md,NEXT-SESSION.md,
+handoffs/CHROMA-07.md,memory/STATE.md,memory/TASKS.md,memory/DECISIONS.md,memory/WORKLOG.md}.
+
+CHROMA-07 reservation extension before edits: tests/services/sync/chroma-mcp-manager-
+{singleton,path,cwd,ssl}.test.ts. Replace obsolete acquisition/remote expectations;
+retain mocked transport lifecycle coverage with a synthetic launch contract. This
+fixture is not Python API evidence and cannot enable a production launch.
+
+CHROMA-07 compile reservation extension (serial generator lane, before compile):
+plugin/scripts/{claude-mem-launcher,context-generator,context-read-worker,ensure-launcher,
+mcp-server,server-service,transcript-watcher,worker-service}.cjs and each matching .cjs.map;
+plugin/scripts/{bun-runner.js,qoder-hook-launcher.cjs,statusline-counts.js,version-check.js,
+worker-wrapper.cjs}; plugin/ui/viewer-bundle.js; existing plugin/ui/work-view/index.html
+and its referenced assets (new content-hash name, if emitted, reserved as paired output).
+Other generator outputs are fingerprinted and expected unchanged; inspect and extend
+this reservation before retaining any additional delta. No generator source/manifest/
+lock/trust changes are authorized by this reservation.
+
+CHROMA-07 post-compile review extension before staging/retaining: plugin/skills/
+request-progress/scripts/request-groups.mjs and plugin/sqlite/SessionStore.js{,.map}.
+These declared build-hooks targets also inline SettingsDefaultsManager; the exact
+delta is the new executable default/updated comments, not a SQLite or progress change.
+Documentation extension: docs/ARCHITECTURE-LOCAL.md, to retire direct-Python launch
+wording while the supported artifact interface remains unknown.
+Final documentation reservation extension before edits: docs/enterprise-local/
+SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 
 ## Coordination protocol
 
@@ -44,17 +78,15 @@ ownership from an old chat. User owns USER-SETUP until an explicit handoff.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed CHROMA-07
+## Minimal context for proposed TELEMETRY-04
 
-- AGENTS -> README -> STATE -> roadmap step 7/graph -> TASKS.
-- DECISIONS A06/A07/A09/A14/A15/A16; DEV-ENVIRONMENT current section; NEXT-SESSION.
-- HOSTED-03 handoff limits; PATCH-SEQUENCE §7; EGRESS-INVENTORY E08–E11 and the
-  corresponding existing AUDIT-CLOSURE notes only.
-- ChromaMcpManager/ChromaSync/settings/direct callers and affected tests; repository
-  artifact contracts if present. No real installed-user assets/config/database reads.
+- AGENTS -> README -> STATE -> roadmap step 4/graph -> TASKS.
+- DECISIONS A06/A07/A09/A14/A15/A16/A17; current environment; NEXT-SESSION.
+- CHROMA-07 handoff limits; PATCH-SEQUENCE section 4; E03/E04 and corresponding
+  existing AUDIT-CLOSURE notes, then telemetry/direct caller/tests after a new claim.
 
-No whole initial plan/WORKLOG/minified bundles/old chats. New tasks need their own
-similarly bounded context bundle from the coordinator, not repeated project discovery.
+No whole-history or baseline/trust/hosted/Chroma replay. No real user state or runtime
+starts. Parallelism requires explicit user request; the board grants no permission.
 
 ## Session close and document maintenance
 

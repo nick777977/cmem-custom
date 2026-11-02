@@ -116,7 +116,7 @@ Suggested titles; no history rewrite or user source commit in this docs session:
 These subjects describe setup, not egress removal/full test success/completed step 2.
 Only explain original install errors in a body when the actual errors are available.
 
-## Current Session 02 environment and results
+## Historical Session 02 environment and results
 
 Entry `4d773b4b7`; baseline inputs preserved in `49e4f65e1`, four bundles/maps in
 `ce7ded4dc`. All 10 historical hashes matched. Compile source is
@@ -216,7 +216,7 @@ open. At that session close HOSTED-03 was proposed; its later explicit launch an
 actual results are recorded below. No toolchain upgrade/reinstall or further policy
 choice is needed. Step 2 has no shipped/full release acceptance.
 
-## Current HOSTED-03 environment and results
+## Historical HOSTED-03 environment and results
 
 Source/tests `4174839497f8cc1247b864bd1c889e2a2b649738`; generated
 `298d447423c2ebf7404ce79329683484902080b7`. Entry `f7df0cccd` was clean.
@@ -246,3 +246,27 @@ download/update, lock resolution, trust/version change, services, AWS, real stat
 push. Installed-tree/provenance/reproducibility and full memory/Chroma/Bedrock acceptance
 remain unproved. Exact commands, hashes, generated delta, failures resolved and rollback:
 [HOSTED-03](handoffs/HOSTED-03.md). Next proposed task: CHROMA-07, no acquisition implied.
+
+## Current CHROMA-07 environment and results
+
+Source/tests 8fa9979797b5478ec8b36eebd6c52533112aec83; generated b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf.
+Entry 46c12bfe7 clean, selected branch. Existing Node 22.23.4/npm 10.9.9/Bun 1.4.4
+verified; process-local PATH and synthetic HOME/config/data/temp/appdata/npm config /
+cache/offline environment under .scratch/enterprise-local/chroma-07. No upgrade/install,
+lock resolution, trust/dependency/version change or installed-user Python/model read.
+
+127 tests / 383 assertions PASS, zero FAIL, ten separate Bun runs. Python/SDK/process /
+supervisor/identity mocks, no forbidden fetch/subprocess operation recorded. One reviewed
+compile PASS with unchanged BUILD-02 guard: nine Node inits, five spawns, one execFileSync /
+exec/execFile, local compilers and Vite net use query. No Node socket/acquisition/deploy
+event; native/shell/OS-wide no-egress unproved. All 16 inputs/sentinels match HOSTED-03
+and pre/post compile. 192 tracked outputs: 177 unchanged, 15 modified, none added/deleted;
+UI unchanged. Generated syntax, source-list/emitted-gate and npm-map checks PASS. Maps
+omit sourcesContent; no embedded-source equality proof. Worker whitespace warning retained.
+
+All local Chroma launches explicitly blocked: no approved executable/dependency/model
+paths or actual offline embedding/telemetry API supplied. U1/D9 and D11 open; no model
+hash/compatibility/telemetry flag invented. Actual runtime/no-egress stays 11; closure /
+provenance/reproducibility stays 10/12. Exact contract, checks, initial fixture/checker
+failures resolved, Git sandbox escalation, evidence hashes and rollback:
+[CHROMA-07](handoffs/CHROMA-07.md). Next proposed task: TELEMETRY-04.
