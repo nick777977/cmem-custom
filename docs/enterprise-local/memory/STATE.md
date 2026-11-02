@@ -1,10 +1,10 @@
 # Current handoff
 
-Updated: 2026-11-02. Session 02 / BUILD-02 source and local checks finished; roadmap
-step 2 remains **in progress**, with lifecycle-policy/offline/provenance gates open.
-Branch: `feat/cmem-light-local`. Entry `4d773b4b790879d993fb5bfbd6bef6003cf16594`.
-Current source/test HEAD: `705cd1dc9a6dcf805d9748cc85715239f13eac7e`; subsequent
-memory commit is in Git log. Compile tested source `153a9953c3e62534ff3b96afc228645b88911399`.
+Updated: 2026-11-02 after BUILD-02-TRUST review. Roadmap step 2 remains **in progress**,
+with policy selection/application, OS-offline and provenance gates open.
+Branch: `feat/cmem-light-local`. Review entry/source SHA:
+`66a4c961da95d21526d00c44cad26199b8eda59e`; subsequent docs commit is in Git log.
+Source/test commits remain `153a9953c` / `705cd1dc9`; no source delta in this review.
 Historical audit source remains `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b`; no re-audit.
 
 ## Completed / evidence
@@ -24,14 +24,30 @@ Historical audit source remains `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b`; no r
   `705cd1dc9` fixes their MSYS-dependent extraction with native git/tar.
 - Full evidence, commands, source lines/hashes, initial harness/fixture failures,
   subprocess trace and rollback: [BUILD-02](../handoffs/BUILD-02.md).
+- **BUILD-02-TRUST review complete, no policy applied.** Exact npm 10.9.9 local
+  implementation and release-tagged Bun 1.4.4 docs distinguish their semantics.
+  Canonical/plugin npm maps = 28 names; root = 30 (only ONNX/msgpackr extras).
+  JSON/plugin/lock Bun trust already agree as 26-name sets. Narrow local script review
+  covers every JSON name with hashes/missing-input limits. No lifecycle execution.
+  [BUILD-02-TRUST](../handoffs/BUILD-02-TRUST.md) contains evidence/options/rollback.
 
 ## Current limits
 
 Allowlist guard actually **FAILS** (exit 1) on preserved root onnxruntime-node and
 msgpackr-extract additions absent from the canonical list. Not introduced by the
-compile patch. No trust expansion or guard weakening; plugin trust JSON still paired
-with generator. Narrow installed script review identified possible download/native
-build behavior, not policy approval. Next task is the bounded consistency review.
+compile patch; not rerun in the review. No trust expansion/removal or guard weakening.
+Recommendation **A**, pending owner choice: remove only the two root npm map extras;
+preserve JSON/generator/plugin/lock byte-for-byte and prohibit lifecycle execution.
+Alternative B additionally revokes ONNX Bun trust in paired input/output/lock; C
+broadens canonical npm permission (not recommended). P09 remains proposed, not accepted.
+
+npm 10 ignores both trust fields as lifecycle filters; explicit ignore-scripts is needed
+for separately authorized acquisition. Bun's explicit list replaces defaults and is an
+active capability if install is run without suppression. Preserving it does not approve
+execution. ONNX's inspected default Windows requirements are empty; Linux/CUDA can
+download NuGet assets. msgpackr native tests can fall back to node-gyp; SQL grammar uses
+npx --yes and CLI installer downloads GitHub binaries. None was run. Missing root
+tree-sitter manifest and CLI version differences remain explicit static-review limits.
 
 Compile used synthetic HOME/config/data and isolated npm config/cache plus offline npm
 mode, child trace and Node-socket tripwire. No installer/lock/deploy/runtime-repair
@@ -44,16 +60,15 @@ push or step 3. Existing user worker/process state remains UNKNOWN and untouched
 
 ## One next task
 
-**BUILD-02-TRUST**, ready-unclaimed, serial, no active file reservations. Read
-AGENTS -> README -> this STATE -> roadmap step 2/graph -> TASKS -> accepted DECISIONS
--> DEV-ENVIRONMENT current Session 02 section -> BUILD-02 pending policy ->
-[NEXT-SESSION](../NEXT-SESSION.md). No whole audit/initial plan/bundle reread.
-
-Review only the two root extras, canonical guard/map, generator trust JSON and relevant
-local lifecycle scripts/lock metadata. Produce a reviewable reconciliation and policy
-choice; do not automatically broaden trust or remove user setup. The next launcher
-defines permissions and completion criteria. Root-input reproducibility/OS-offline
-evidence stay explicitly pending; do not silently add them or start step 3.
+**Owner selects A/B/C from BUILD-02-TRUST**, then **BUILD-02-TRUST-APPLY** only,
+serial; no active reservations. [NEXT-SESSION](../NEXT-SESSION.md) is a self-contained
+launcher with an explicit selection slot; no default/elapsed-time consent. Read AGENTS
+-> README -> STATE -> roadmap step 2/graph -> TASKS -> DECISIONS P09/A13 ->
+DEV-ENVIRONMENT current sections -> BUILD-02-TRUST -> PATCH-SEQUENCE §2.
+No repeat audit/baseline/compile without a new reason. For recommended A, one root
+manifest delta plus direct reviewed guard and static trust/hash comparisons suffice;
+JSON/generator/plugin/lock must stay unchanged. No dependency resolution/install.
+Root-input reproducibility/OS-offline/runtime work stays separate; no step 3.
 
 Preserve viewer and upstream capture/retrieval/project/worktree/sharing/filter semantics,
 SQLite canonical / Chroma derived. Close every session via TASKS, STATE, WORKLOG,

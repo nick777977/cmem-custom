@@ -197,3 +197,48 @@ only the expected memory/guidance edits and new BUILD-02 evidence report before 
 memory commit. No extra application source/generated changes. Final Git status is
 checked after the local memory commit; source/test runtime checks were not rerun for
 docs-only edits.
+
+## 2026-11-02 — BUILD-02-TRUST bounded lifecycle/policy review
+
+Explicit user launch: only this step-2 continuation; serial coordinator, no subagents,
+new branch/worktree or runtime work. Entry/source SHA 66a4c961da95d21526d00c44cad26199b8eda59e
+on feat/cmem-light-local, clean working tree/index. Claimed BUILD-02-TRUST in TASKS
+before docs edits. No prior baseline/audit/compile work repeated.
+
+Read root/canonical/guard/generator/JSON/plugin/lock declarations and narrow local
+manifests/lifecycle helpers for the two extras and all current JSON names. Local npm
+10.9.9 implementation (Arborist 8.0.5) plus primary npm v10 and release-tagged Bun 1.4.4
+docs establish separate semantics: npm 10 does not filter by either trust field;
+Bun explicit trust replaces defaults; ignore-scripts is independent suppression,
+not network enforcement. No package code imported or executed, no version preflight.
+
+Static comparisons: canonical/plugin npm maps 28, root 30; exactly ONNX/msgpackr extras.
+JSON/plugin/lock Bun trust sets already equal (26); root Bun trust remains 11.
+A proposed removal in memory yields exactly 28 canonical true entries: structural
+PASS, not actual guard execution. The last real guard result remains Session 02 FAIL.
+ONNX default Windows requirements are empty; Linux/CUDA can acquire NuGet binaries.
+msgpackr tests can load native code/fall back to node-gyp; SQL grammar invokes npx --yes;
+CLI installer downloads GitHub releases. Missing root tree-sitter and root CLI 0.26.13
+versus plugin 0.26.9/nested versions prevent claiming complete installed closure approval.
+
+Durable handoffs/BUILD-02-TRUST.md accounts for every JSON permission, reachable child
+classes, static/inferred/unknown limits, source paths/lines/SHA and local input hashes.
+P09 recommends A: remove only root extras and preserve JSON/generator/plugin/lock;
+B also revokes paired ONNX Bun trust; C broadens canonical npm permission (not recommended).
+No owner selection inferred. No declaration/source/guard/lock changes, acquisition or
+lifecycle execution. Preserved Bun trust remains an active capability, not approved use.
+
+Updated STATE/TASKS/DECISIONS A13/P09/DEV-ENVIRONMENT and PATCH-SEQUENCE current pointer;
+replaced completed NEXT-SESSION launcher with one BUILD-02-TRUST-APPLY prompt requiring
+explicit A/B/C selection. Released reservations. Roadmap graph/waves unchanged, step 2
+still in progress; OS-offline/root-lock/provenance/runtime gates remain independent.
+No services/worker/MCP/plugins, AWS/live inference, real settings/databases/credentials/
+user data, dependency acquisition/update, lifecycle scripts, build/compile, push or step 3.
+
+Validation actually run: set comparisons and in-memory option A check; 36 report input
+fingerprints rechecked PASS, manifest evidence fingerprints checked separately; changed-doc
+relative links and whitespace checks PASS; Git scope check shows docs only. No source or
+setup bytes changed. Git line-ending normalization notice for STATE is not a failed check.
+One local docs commit follows this entry (see Git log), with hooks/signing disabled for
+this command to avoid unreviewed execution. Final status is checked after commit.
+Rollback: revert only this docs concern; no runtime/data state exists to undo.

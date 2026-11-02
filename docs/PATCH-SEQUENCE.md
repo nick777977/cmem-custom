@@ -46,7 +46,10 @@ AUDIT-CLOSURE is retained as a snapshot, not a current permission source.
   `705cd1dc9` replaces the latter fixture's MSYS shell pipeline with native git/tar.
 - [ ] Allowlist consistency/policy: root's preserved onnxruntime-node/msgpackr-extract
   entries differ from the canonical list. Actual guard FAIL exit 1. No automatic
-  trust expansion/removal or weakened check. Next **BUILD-02-TRUST** owns review.
+  trust expansion/removal or weakened check. **BUILD-02-TRUST** review is complete:
+  [policy options/evidence](enterprise-local/handoffs/BUILD-02-TRUST.md), P09 recommends
+  removing only root extras while preserving Bun JSON/plugin/lock. Owner choice and
+  BUILD-02-TRUST-APPLY remain pending; no reconciliation applied or new guard PASS.
 - [ ] OS-offline/complete child-traffic evidence, clean source/dependency closure,
   root-lock provenance and full reproducibility remain open. Node instrumentation
   observed no install/lock/deploy/socket event, but Vite invoked net use and native/
@@ -171,5 +174,7 @@ acceptance on the exact final bundle; no automatic production migration or push/
 Every future commit records tests actually run, blocked checks and evidence limits in
 the worklog. Existing tests are leads, not baseline passes. Tests can invoke subprocesses
 and network too: inspect fixtures and lane definitions before execution. Use fresh
-isolated home/data/model-cache paths and synthetic content. Current authorization is
-documentation only; all checks above are deferred.
+isolated home/data/model-cache paths and synthetic content. Authorization is bounded
+by the current user launch and [handoff](enterprise-local/memory/STATE.md). Session 02
+compile/focused results above are completed evidence; BUILD-02-TRUST performed only
+read-only review/docs. Other checks remain planned unless explicitly recorded as run.

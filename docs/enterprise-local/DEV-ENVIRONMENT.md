@@ -153,10 +153,38 @@ Allowlist guard was now RUN: **FAIL exit 1, root drift**, exactly the known two 
 entries. Canonical list/guard were not changed. onnxruntime-node 1.23.2's postinstall
 can acquire optional NuGet binaries; msgpackr-extract 3.0.4's installer can fall back
 to node-gyp rebuild (narrow static local-script evidence, no execution/approval).
-Next BUILD-02-TRUST reviews consistency/policy; no automatic trust expansion/removal.
+BUILD-02-TRUST subsequently reviewed consistency/policy below; no trust expansion/removal.
 
 Initial trace preload quoting failure and MSYS fixture failure, native fixture fix,
 all commands/hashes/limits and rollback are tracked in [BUILD-02](handoffs/BUILD-02.md).
 Worker self-contained runtime-hook test, full suites, live memory/inference and
 OS-offline evidence remain pending. Do not use build-and-sync, worker commands,
 preparation commands or real user state as compile checks.
+
+## Current BUILD-02-TRUST review (no execution)
+
+Review source/entry `66a4c961da95d21526d00c44cad26199b8eda59e`; clean entry status,
+same branch and baseline. Read-only local package/toolchain implementation inspection
+and primary npm v10 / release-tagged Bun 1.4.4 documentation; no version command,
+compile, guard, installer, dependency resolution, lifecycle or runtime command rerun.
+Existing exact toolchain paths above remain authoritative; default PATH unchanged.
+
+Canonical and plugin npm maps have 28 names, root has the same plus ONNX/msgpackr.
+JSON/generated-plugin/lock Bun trust sets already match (26); root Bun trust remains
+11 names. npm 10.9.9 does not filter lifecycle by allowScripts/trustedDependencies;
+its ignore-scripts defaults false. Bun 1.4.4 explicit trust replaces built-in defaults;
+ignore-scripts suppresses lifecycle independently. Neither setting is a network sandbox.
+Existing preparation commands remain acquisition surfaces, not safe compile checks.
+
+ONNX 1.23.2 default Windows requirements are empty (static branch evidence), while
+Linux/CUDA can download NuGet assets. msgpackr-extract can test/load native code and
+fall back to node-gyp; trusted SQL grammar can run npx --yes and CLI installer can
+download GitHub binaries. Root tree-sitter manifest is missing; installed CLI 0.26.13
+does not certify plugin-pinned 0.26.9/nested CLI scripts. No new compatibility claim.
+
+Recommendation P09/A awaits owner: remove only the two root extras, retain JSON,
+generator, plugin trust/lock unchanged; no script execution authorized by preservation.
+Alternatives B/C, per-permission evidence, local hashes, risks and rollback:
+[BUILD-02-TRUST](handoffs/BUILD-02-TRUST.md). Actual guard remains Session 02 FAIL,
+not a new run. Setup/source/lock hashes unchanged. Root-lock/provenance, OS-offline
+and full runtime acceptance remain separate pending gates; step 2 is not complete.

@@ -16,6 +16,7 @@
 | A10 | Session 02 may preserve reviewed USER-SETUP in separate local commits, edit step-2 source/build/check code, use existing dev dependencies and run corrected compile/reviewed focused local checks | Explicit user launch 2026-11-02; excludes acquisition, runtime services/hooks outside reviewed checks, real settings/data, AWS, push and step 3. Results in handoffs/BUILD-02.md |
 | A11 | Compile generates/verifies with local inputs only; viewer ci and plugin lock resolution are explicit preparation commands; missing local viewer compilers fail without auto-repair | Implemented 153a9953c with user's first-patch contract; compile/fixtures pass. Does not establish approved dependency policy or OS-level no-egress |
 | A12 | Preserve existing user lifecycle policy separately; do not auto-expand canonical allowlist or weaken its guard to hide known drift | Session 02: guard confirms root drift. No consistency mutation needed by compile; bounded BUILD-02-TRUST is next. Bun JSON remains generator input |
+| A13 | BUILD-02-TRUST is a serial read-only lifecycle/policy review with docs commits; no automatic trust change or script execution | Explicit user launch 2026-11-02. Review complete in [BUILD-02-TRUST](../handoffs/BUILD-02-TRUST.md); A12's review is fulfilled, reconciliation still awaits P09 selection. Existing setup/baseline preserved; step 2 remains in progress |
 
 ## Proposed architecture, pending confirmation/implementation
 
@@ -29,6 +30,7 @@
 | P06 | Compile/acquisition separation implemented as A11; pre-provision Python/model remains proposed | Runtime uvx and approved mirror/model artifacts remain later-step work; compile success is not runtime closure |
 | P07 | Review existing capture and allowed Bedrock payload before live corporate inference | No new capture/redaction redesign is scheduled; any required policy-driven behavior change must be separately scoped |
 | P08 | Preserve schema compatibility; avoid destructive migration in initial release | Preserve existing identity semantics too; no identity migration is planned |
+| P09 | Recommend A: remove only root npm allowScripts ONNX/msgpackr extras, retain canonical 28 and all 26 Bun JSON/plugin/lock names; keep lifecycle execution prohibited pending separate authorization | Owner selection **pending**, not accepted/applied. npm 10 does not enforce these maps; Bun list is an active capability, not execution approval. B additionally revokes ONNX Bun trust in paired inputs/outputs/lock; C broadens canonical npm permission without demonstrated need (not recommended). Exact alternatives/risks/rollback in [BUILD-02-TRUST](../handoffs/BUILD-02-TRUST.md) |
 
 Formal ADRs should be added when architectural choices are accepted, with alternatives
 and consequences. Do not label these proposals as implemented safeguards.

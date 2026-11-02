@@ -13,7 +13,8 @@ This board does not grant permission or duplicate the dependency graph.
 | USER-SETUP / 2 prerequisites | done-preserved | Session 02 coordinator; feat/cmem-light-local | None active | Exact 10 handoff hashes matched; inputs 49e4f65e1, bundles ce7ded4dc; provenance/limits in BUILD-02 |
 | DOC-HANDOFF-03 / coordination | done | Documentation session 2026-11-02; feat/cmem-light-local; entry 62e79cceb | None active | Evidence, A08/A09 and next launcher persisted; links/whitespace and 10 user-file hashes checked; docs commit follows entry (see Git log); USER-SETUP untouched |
 | BUILD-02 / 2 | review; acceptance pending | Session 02 coordinator finished; feat/cmem-light-local; entry 4d773b4b7 | None active; all source/generated/Git reservations released | 153a9953c boundary, 705cd1dc9 Windows syntax fixture; compile PASS, fixtures 6+21 PASS; allowlist drift FAIL; OS-offline/provenance gates open. handoffs/BUILD-02.md |
-| BUILD-02-TRUST / 2 | ready-unclaimed | None; serial current branch | None yet | Next bounded lifecycle/trust consistency review; NEXT-SESSION. No auto trust expansion/removal, installs or step 3 |
+| BUILD-02-TRUST / 2 | done-bounded; owner policy pending | 2026-11-02 coordinator; feat/cmem-light-local; entry 66a4c961d; serial | None active; all reservations released | Review in handoffs/BUILD-02-TRUST.md: recommend A; B/C explicit alternatives. npm/Bun semantics and 26-name JSON pairing reviewed; no policy/source/lock changes or script execution. Last actual guard remains FAIL |
+| BUILD-02-TRUST-APPLY / 2 | awaiting-owner-choice | None; serial current branch | None | Select A/B/C (P09) first; then apply only that policy and targeted checks per NEXT-SESSION. No default consent, installs, acquisition or step 3 |
 
 Normal statuses: ready-unclaimed -> claimed -> in-progress -> review -> done. Blocked
 names a specific condition and next independent action. Historical bounded completion
@@ -41,13 +42,15 @@ ownership from an old chat. User owns USER-SETUP until an explicit handoff.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for BUILD-02-TRUST
+## Minimal context for BUILD-02-TRUST-APPLY
 
 - AGENTS -> enterprise-local README -> STATE -> roadmap step 2/graph.
 - TASKS reservations; accepted DECISIONS.
-- DEV-ENVIRONMENT current Session 02 section: exact tools, preserved baseline and guard failure.
-- NEXT-SESSION active prompt; PATCH-SEQUENCE §2; handoffs/BUILD-02.md pending policy.
-- Root/canonical/plugin trust declarations, generator and only their relevant local lifecycle metadata/scripts.
+- DEV-ENVIRONMENT current Session 02 and BUILD-02-TRUST sections; DECISIONS P09/A13.
+- NEXT-SESSION active prompt; PATCH-SEQUENCE §2; handoffs/BUILD-02-TRUST.md options/evidence.
+- Explicit owner selection; root/canonical/plugin trust declarations and reviewed guard.
+- For A: no installed-script reread, generator or lock operation needed. Other choices
+  need the exact selected paired delta review, not a new dependency graph or install.
 
 No whole initial plan/WORKLOG/minified bundles/old chats. New tasks need their own
 similarly bounded context bundle from the coordinator, not repeated project discovery.
