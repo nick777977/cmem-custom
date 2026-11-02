@@ -23,15 +23,11 @@ import { ChromaSync } from './sync/ChromaSync.js';
 import { openConfiguredSqliteDatabase } from './sqlite/connection.js';
 import { configureSupervisorSignalHandlers, getSupervisor, startSupervisor } from '../supervisor/index.js';
 import { sanitizeEnv } from '../supervisor/env-sanitizer.js';
-import { setRegistryDegradedReporter } from '../supervisor/process-registry.js';
 
 import { ensureWorkerStarted as ensureWorkerStartedShared, getLastWorkerBootFailure, type WorkerStartResult } from './worker-spawner.js';
 import { acquireSpawnLock, releaseSpawnLock } from '../shared/worker-spawn-gate.js';
 import { snapshotDependencyHealth, type DependencyHealthSnapshot } from '../shared/dependency-health.js';
-import { captureEvent, captureException, shutdownTelemetry, enableExceptionAutocaptureForWorker } from './telemetry/telemetry.js';
-import { telemetryBuffer } from './telemetry/buffer.js';
-import { collectInstallStats } from './telemetry/install-stats.js';
-import { runHistoricalBackfill } from './telemetry/backfill.js';
+import { captureEvent, shutdownTelemetry } from './telemetry/telemetry.js';
 import { runWorkerDependencyPreflight } from './worker/dependency-preflight.js';
 import { provisionTreeSitterCliForPluginRoot } from './worker/tree-sitter-cli-provisioning.js';
 import { IdleExitMonitor, MIN_IDLE_EXIT_MS, parseIdleExitMs } from './worker/idle-exit-monitor.js';
@@ -644,21 +640,6 @@ export class WorkerService implements WorkerRef {
     const port = getWorkerPort();
     const host = getWorkerHost();
 
-    // Phase 3 telemetry: bridge logged errors into PostHog Error Tracking
-    // WITHOUT the logger importing telemetry (no import cycle). captureException
-    // enforces consent + kill-switch + rate-limit internally and never throws.
-    // enableExceptionAutocaptureForWorker() must run BEFORE the first capture
-    // constructs the client, since enableExceptionAutocapture is read at
-    // construction — so it is set here at the very top of worker start.
-    enableExceptionAutocaptureForWorker();
-    logger.setErrorSink((err) => captureException(err));
-    // Bridge a degraded (unwritable) supervisor registry into a low-volume
-    // operational event WITHOUT the supervisor layer importing telemetry. Fires
-    // once per degraded episode, so it measures the recovery, not each failure.
-    setRegistryDegradedReporter(({ errorCategory }) =>
-      captureEvent('supervisor_registry_degraded', { error_category: errorCategory })
-    );
-
     // Boot watchdog (#3557): nothing in the boot path below holds a ref'd
     // handle until server.listen(), so a stall before the bind lets the event
     // loop empty and the process exit 0 — a silent capture-dead install. This
@@ -937,63 +918,6 @@ export class WorkerService implements WorkerRef {
       this.resolveInitialization();
       this.initPhaseTracker.setInitPhase('ready');
       logger.info('SYSTEM', 'Core initialization complete (DB + search ready)');
-
-      // Lifecycle telemetry (person profile = anonymous install UUID). ide is
-      // this install's dominant client read from session history — a bounded
-      // platform enum (claude-code / cursor / ...), never user data. Props are
-      // rebuilt per capture so the daily heartbeat reports the install's
-      // current DB size/age/activity, not boot-time values.
-      const buildLifecycleProps = (): Record<string, unknown> => {
-        const props: Record<string, unknown> = {
-          runtime_mode: 'worker',
-          provider: settings.CLAUDE_MEM_PROVIDER,
-          mode: settings.CLAUDE_MEM_MODE,
-        };
-        try {
-          const row = this.dbManager.getConnection()
-            .query(`SELECT platform_source FROM sdk_sessions
-                    WHERE platform_source IS NOT NULL AND platform_source != ''
-                    ORDER BY id DESC LIMIT 1`)
-            .get() as { platform_source?: string } | null;
-          if (row?.platform_source) props.ide = row.platform_source;
-        } catch (error) {
-          // [ANTI-PATTERN IGNORED]: telemetry enrichment is best-effort — the worker_started event must ship even without the ide property. Expected only before the schema exists; logged at debug so anything else (e.g. the wrong-table query this once masked) stays diagnosable.
-          logger.debug('SYSTEM', 'ide lookup for lifecycle telemetry failed', {}, error instanceof Error ? error : new Error(String(error)));
-        }
-        try {
-          Object.assign(props, collectInstallStats(this.dbManager.getConnection()));
-        } catch (error) {
-          // [ANTI-PATTERN IGNORED]: install-stats snapshot is best-effort telemetry enrichment; the lifecycle event still ships without it. Logged at debug for diagnosability.
-          logger.debug('SYSTEM', 'Install stats snapshot failed', {}, error instanceof Error ? error : new Error(String(error)));
-        }
-        // Process health for the daily heartbeat: memoryUsage() returns bytes;
-        // the scrubber drops non-finite numbers, so round to whole MiB.
-        const memory = process.memoryUsage();
-        props.process_rss_mb = Math.round(memory.rss / 1024 / 1024);
-        props.heap_used_mb = Math.round(memory.heapUsed / 1024 / 1024);
-        return props;
-      };
-      captureEvent('worker_started', {
-        trigger: 'start',
-        duration_ms: Date.now() - this.startTime,
-        // Crash detection (detectPreviousShutdown): crash case carries no
-        // previous_uptime_seconds — the stop time is unknowable.
-        previous_shutdown: this.previousShutdown,
-        ...(this.previousUptimeSeconds !== null && { previous_uptime_seconds: this.previousUptimeSeconds }),
-        ...buildLifecycleProps(),
-      }, { person: true });
-      telemetryBuffer.start();
-
-      // One-time historical telemetry backfill (anonymized daily rollups).
-      // Fire-and-forget: gated internally by the backfill.json marker and the
-      // same consent checks as live telemetry; a failed run retries on the
-      // next worker start because no marker is written.
-      // runHistoricalBackfill never rejects by contract (its body is fully
-      // try/caught), so this .catch is an unhandled-rejection backstop that
-      // keeps the worker alive if that contract ever regresses.
-      runHistoricalBackfill(this.dbManager.getConnection()).catch(error => {
-        logger.error('SYSTEM', 'Telemetry historical backfill failed (non-blocking)', {}, error as Error);
-      });
 
       await this.startTranscriptWatcher(settings);
       try {

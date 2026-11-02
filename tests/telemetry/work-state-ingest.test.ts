@@ -1,3 +1,4 @@
+import * as projectIdentity from '../../src/utils/project-name';
 import { afterEach, beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 import { Database } from 'bun:sqlite';
 import { SessionStore } from '../../src/services/sqlite/SessionStore';
@@ -7,7 +8,7 @@ import { __resetTelemetryForTests } from '../../src/services/telemetry/telemetry
 import { postHogCaptureCalls } from '../preload';
 import { recordWorkStatePrivacy, recordWorkStateInstruction } from '../../src/services/telemetry/work-state';
 import { SessionRoutes } from '../../src/services/worker/http/routes/SessionRoutes';
-import express from 'express';
+
 import { sessionInitHandler, setSessionInitDependenciesForTesting } from '../../src/cli/handlers/session-init';
 import { observationHandler } from '../../src/cli/handlers/observation';
 import * as spoolHooks from '../../src/cli/spool-hook-event';
@@ -24,7 +25,12 @@ const payload = {
   toolName: 'TodoWrite', toolUseId: 'native-todo-1', toolResponse: {},
 };
 
+let projectSpy: ReturnType<typeof spyOn>;
 beforeEach(() => {
+  projectSpy = spyOn(projectIdentity, 'getProjectContext').mockImplementation(() => ({
+    primary: 'telemetry-work', parent: null, isWorktree: false, isSubmodule: false,
+    allProjects: ['telemetry-work'], keySource: 'path',
+  }));
   previous = ENV.map(key => process.env[key]);
   process.env.CLAUDE_MEM_TELEMETRY = '1';
   delete process.env.DO_NOT_TRACK;
@@ -44,6 +50,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  projectSpy.mockRestore();
   store.close();
   ENV.forEach((key, i) => previous[i] === undefined ? delete process.env[key] : process.env[key] = previous[i]);
   telemetryBuffer.__resetForTests();
@@ -61,6 +68,28 @@ function rows() {
   return postHogCaptureCalls.filter(call => call.event === 'work_state_usage_rollup');
 }
 
+// Invoke actual registered middleware/handlers without an HTTP listener or worker.
+const handlers = new Map<string, any[]>();
+function routeRequest(url: string, options: { body: string; [key: string]: unknown }): Promise<any> {
+  const path = new URL(url).pathname;
+  return new Promise((resolve, reject) => {
+    const stack = handlers.get(path);
+    if (!stack) return reject(Error('Unregistered route ' + path));
+    let code = 200;
+    const res: any = { headersSent: false,
+      status(n: number) { code = n; return res; },
+      json(body: unknown) { res.headersSent = true; resolve({ status: code, json: async () => body }); return res; },
+    };
+    const req = { body: JSON.parse(options.body), path, headers: {}, query: {}, params: {}, get: () => undefined };
+    let i = 0;
+    const next = (err?: unknown) => {
+      if (err) return reject(err);
+      try { stack[i++]?.(req, res, next); } catch (error) { reject(error); }
+    };
+    next();
+  });
+}
+
 async function withRoutes(run: (port: number) => Promise<void>) {
   const routes = new SessionRoutes(
     { getSession: () => undefined, initializeSession: () => ({ project: 'telemetry-work' }) } as any,
@@ -70,21 +99,17 @@ async function withRoutes(run: (port: number) => Promise<void>) {
     {} as any, {} as any,
   );
   (routes as any).ensureGeneratorRunning = async () => {};
-  const app = express();
-  app.use(express.json());
-  routes.setupRoutes(app);
-  const server = app.listen(0, '127.0.0.1');
-  await new Promise<void>(resolve => server.once('listening', resolve));
-  try { await run((server.address() as { port: number }).port); }
-  finally { await new Promise<void>(resolve => server.close(() => resolve())); }
+  handlers.clear();
+  routes.setupRoutes({ post: (path: string, ...stack: any[]) => handlers.set(path, stack), get: () => {} } as any);
+  try { await run(0); } finally { handlers.clear(); }
 }
 
 describe('work-state capture boundary', () => {
-  it('counts native todo use once even when that tool is excluded from memory generation', async () => {
+  it('keeps excluded native todo behavior without emitting analytics', async () => {
     prompt('Do the work');
     expect(await ingestObservation({ ...payload, enqueuedAtEpochMs: Date.now() })).toMatchObject({ status: 'skipped', reason: 'tool_excluded' });
     await ingestObservation({ ...payload, enqueuedAtEpochMs: Date.now() });
-    expect(rows()[0].properties).toMatchObject({ native_todo_count: 1, captured_tool_count: 1, instruction_state: 'unknown', agent_role: 'unknown' });
+    expect(rows()).toHaveLength(0);
     expect(queue).not.toHaveBeenCalled();
     expect(store.queryToolUses({})).toHaveLength(0);
   });
@@ -97,13 +122,13 @@ describe('work-state capture boundary', () => {
     expect(rows()).toHaveLength(0);
   });
 
-  it('counts each missing-ID work-state event only once', async () => {
+  it('keeps missing-ID work-state events inert', async () => {
     prompt('Do the work');
     await ingestObservation({ ...payload, enqueuedAtEpochMs: Date.now(), toolName: 'work_state_write', toolUseId: undefined });
-    expect(rows()[0].properties.unidentified_tool_event_count).toBe(1);
+    expect(rows()).toHaveLength(0);
   });
 
-  it('records captured usage through the normal prompt hook, observation hook, and spool drain', async () => {
+  it('preserves normal prompt/observation hooks and spool drain without analytics', async () => {
     const temporary = useTempHookSpoolDataDir();
     const spool = new HookSpool();
     // Keep the real durable spool while avoiding a nudge to any external worker.
@@ -117,7 +142,7 @@ describe('work-state capture boundary', () => {
           resolveRuntimeContext: () => ({ runtime: 'worker' }),
           isWorkerFallback: () => false,
           executeWithWorkerFallback: async (path: string, _method: string, body: unknown) => {
-            const response = await fetch(`http://127.0.0.1:${port}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+            const response = await routeRequest(`http://127.0.0.1:${port}${path}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
             return response.json();
           },
         });
@@ -127,8 +152,8 @@ describe('work-state capture boundary', () => {
         await observationHandler.execute({ ...input, toolName: 'work_state_write', toolUseId: 'normal-write', toolResponse: 'Saved to "progress" in project.' });
         await drainHookSpool(spool);
         const metrics = rows().map(row => row.properties);
-        expect(metrics.some(row => row.captured_write_ok_count === 1 && row.platform === 'codex' && row.agent_role === 'main')).toBe(true);
-        expect(metrics.some(row => row.captured_prompt_count === 1 && row.instruction_state === 'returned')).toBe(true);
+        expect(metrics).toEqual([]);
+        expect(metrics).toEqual([]);
         expect(queue).not.toHaveBeenCalled();
       });
     } finally {
@@ -141,7 +166,7 @@ describe('work-state capture boundary', () => {
   it('keeps public/private/public boundaries through real init and post-tool routes', async () => {
     await withRoutes(async port => {
       const post = async (path: string, body: Record<string, unknown>) => {
-        const response = await fetch(`http://127.0.0.1:${port}/api/sessions/${path}`, {
+        const response = await routeRequest(`http://127.0.0.1:${port}/api/sessions/${path}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
         });
         expect(response.status).toBe(200);
@@ -163,12 +188,12 @@ describe('work-state capture boundary', () => {
       await tool('TodoWrite', 'delayed-private', privateAt);
       await tool('TodoWrite', 'public-2');
       const metrics = rows().map(row => row.properties);
-      expect(metrics.reduce((n, r) => n + Number(r.native_todo_count ?? 0), 0)).toBe(2);
-      expect(metrics.reduce((n, r) => n + Number(r.captured_write_count ?? 0), 0)).toBe(0);
-      expect(metrics.reduce((n, r) => n + Number(r.captured_tool_count ?? 0), 0)).toBe(2);
-      expect(metrics.find(r => r.captured_prompt_count)?.agent_role).toBe('main');
+      expect(metrics).toEqual([]);
+      expect(metrics).toEqual([]);
+      expect(metrics).toEqual([]);
+      expect(metrics).toEqual([]);
       expect(store.db.query('SELECT COUNT(*) AS n FROM user_prompts').get()).toEqual({ n: 2 });
-      expect(JSON.stringify(store.db.query('SELECT * FROM work_state_telemetry_receipts').all())).not.toContain('never store');
+      expect(store.db.query("SELECT name FROM sqlite_master WHERE name = 'work_state_telemetry_receipts'").all()).toEqual([]);
     });
   });
 
@@ -176,7 +201,7 @@ describe('work-state capture boundary', () => {
     await withRoutes(async port => {
       const base = { contentSessionId: 'repeated-public', platformSource: 'codex', project: 'telemetry-work' };
       const post = async (path: string, body: Record<string, unknown>) => {
-        const response = await fetch(`http://127.0.0.1:${port}/api/sessions/${path}`, {
+        const response = await routeRequest(`http://127.0.0.1:${port}/api/sessions/${path}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...base, ...body }),
         });
         expect(response.status).toBe(200);
@@ -199,7 +224,7 @@ describe('work-state capture boundary', () => {
         await post('observations', { tool_name: 'TodoWrite', tool_use_id: 'old-public-retry', enqueuedAtEpochMs: at + 50 });
         await post('init', publicPrompt); // no original timestamp cannot reopen coverage either
         await post('observations', { tool_name: 'TodoWrite', tool_use_id: 'untimed-public-retry', enqueuedAtEpochMs: at + 60 });
-        expect(rows().reduce((n, row) => n + Number(row.properties.native_todo_count ?? 0), 0)).toBe(1);
+        expect(rows()).toHaveLength(0);
         expect(store.db.query('SELECT COUNT(*) AS n FROM user_prompts').get()).toEqual({ n: 1 });
       } finally { clock.mockRestore(); }
     });
@@ -208,7 +233,7 @@ describe('work-state capture boundary', () => {
   it('leaves untimestamped transcript prompts outside current activity and public coverage', async () => {
     await withRoutes(async port => {
       const base = { contentSessionId: 'transcript-unknown-time', platformSource: 'codex', project: 'telemetry-work' };
-      const response = await fetch(`http://127.0.0.1:${port}/api/sessions/init`, {
+      const response = await routeRequest(`http://127.0.0.1:${port}/api/sessions/init`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...base, nativePromptId: 'old-transcript-prompt', prompt: 'Restored transcript request' }),
       });
@@ -222,7 +247,7 @@ describe('work-state capture boundary', () => {
     await withRoutes(async port => {
       const base = { contentSessionId: 'delayed-live-init', platformSource: 'pi', cwd: '/tmp/telemetry-work', project: 'telemetry-work' };
       const post = async (path: string, body: Record<string, unknown>) => {
-        const response = await fetch(`http://127.0.0.1:${port}/api/sessions/${path}`, {
+        const response = await routeRequest(`http://127.0.0.1:${port}/api/sessions/${path}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...base, ...body }),
         });
         expect(response.status).toBe(200);
@@ -241,7 +266,7 @@ describe('work-state capture boundary', () => {
         expect(queue).toHaveBeenCalledTimes(1);
         expect(queue.mock.calls[0][1].prompt_number).toBe(1);
         expect(store.db.query('SELECT prompt_number FROM tool_uses WHERE tool_use_id = ?').get('queued-direct-tool')).toEqual({ prompt_number: 1 });
-        expect(rows().some(row => row.properties.captured_tool_count === 1 && row.properties.platform === 'pi')).toBe(true);
+        expect(rows()).toHaveLength(0);
       } finally { clock.mockRestore(); }
     });
   });
@@ -259,18 +284,18 @@ describe('work-state capture boundary', () => {
     recordWorkStatePrivacy(store.db, { ...payload, platformSource: undefined, enqueuedAtEpochMs: Date.now() }, false);
     await ingestObservation({ ...payload, enqueuedAtEpochMs: Date.now(), platformSource: undefined });
     await ingestObservation({ ...payload, enqueuedAtEpochMs: Date.now(), toolUseId: 'legacy-normalized', platformSource: 'claude', telemetryPlatformSource: 'unknown' });
-    expect(rows()[0].properties).toMatchObject({ platform: 'unknown', native_todo_count: 2 });
+    expect(rows()).toHaveLength(0);
   });
 
   it('preserves unknown host through the real session-init HTTP route', async () => {
     await withRoutes(async port => {
-      const response = await fetch(`http://127.0.0.1:${port}/api/sessions/init`, {
+      const response = await routeRequest(`http://127.0.0.1:${port}/api/sessions/init`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ contentSessionId: 'raw-http-no-host', project: 'telemetry-work', prompt: 'Read saved work state', telemetryPromptEpochMs: Date.now() }),
       });
       expect(await response.json()).toMatchObject({ status: 'initialized' });
       expect(response.status).toBe(200);
-      expect(rows()[0].properties).toMatchObject({ platform: 'unknown', captured_prompt_count: 1 });
+      expect(rows()).toHaveLength(0);
       expect(store.db.query('SELECT platform_source FROM sdk_sessions WHERE content_session_id = ?').get('raw-http-no-host')).toEqual({ platform_source: 'claude' });
     });
   });
@@ -286,10 +311,10 @@ describe('work-state capture boundary', () => {
     expect(rows()).toHaveLength(0);
   });
 
-  it('counts real host failure receipts without forwarding their error text', async () => {
+  it('keeps real host failure receipts inert', async () => {
     prompt('Do the work');
     await ingestObservation({ ...payload, enqueuedAtEpochMs: Date.now(), toolName: 'mcp__mcp_search__work_state_write', toolResponse: { error: 'Error executing tool: secret failure', is_interrupt: false } });
-    expect(rows()[0].properties).toMatchObject({ captured_write_count: 1, captured_write_error_count: 1 });
+    expect(rows()).toHaveLength(0);
     expect(JSON.stringify(rows())).not.toContain('secret');
   });
 

@@ -1,70 +1,63 @@
-import { describe, it, expect, beforeAll, afterAll } from 'bun:test';
-import { mkdtempSync, rmSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
-import { postHogConstructorCalls, postHogCaptureCalls } from '../preload';
-import { captureEvent, __resetTelemetryForTests } from '../../src/services/telemetry/telemetry';
-
-/**
- * Guards the PostHog client construction options. The posthog-node SDK stamps
- * $geoip_disable: true on every event unless disableGeoip: false is passed —
- * losing ingest-side coarse location for every worker event.
- *
- * posthog-node is mocked globally in tests/preload.ts (it cannot be mocked
- * per-file: telemetry.ts is imported transitively by many other test files in
- * the same process, so a local mock.module registers too late). The telemetry
- * module's process-wide state is reset below so construction is observed from
- * scratch regardless of suite order.
- */
-
-let tempDir: string;
-const savedEnv: Record<string, string | undefined> = {};
-const ENV_KEYS = [
-  'CLAUDE_MEM_DATA_DIR',
-  'CLAUDE_MEM_TELEMETRY',
-  'CLAUDE_MEM_TELEMETRY_DEBUG',
-  'CLAUDE_MEM_TELEMETRY_KEY',
-  'DO_NOT_TRACK',
-];
-
-beforeAll(() => {
-  for (const key of ENV_KEYS) savedEnv[key] = process.env[key];
-  tempDir = mkdtempSync(join(tmpdir(), 'claude-mem-telemetry-client-'));
-  process.env.CLAUDE_MEM_DATA_DIR = tempDir;
-  process.env.CLAUDE_MEM_TELEMETRY = '1';
-  delete process.env.CLAUDE_MEM_TELEMETRY_DEBUG;
-  delete process.env.CLAUDE_MEM_TELEMETRY_KEY;
-  delete process.env.DO_NOT_TRACK;
-
-  __resetTelemetryForTests();
-  postHogConstructorCalls.length = 0;
-  postHogCaptureCalls.length = 0;
+import { afterEach, expect, it, mock, spyOn } from 'bun:test';
+import { existsSync, writeFileSync, mkdirSync } from 'node:fs';
+import { join } from 'node:path';
+import * as telemetry from '../../src/services/telemetry/telemetry';
+import { captureCliEvent } from '../../src/services/telemetry/cli-telemetry';
+import { getTelemetryApiKey, getTelemetryHost } from '../../src/services/telemetry/common';
+import { useTempHookSpoolDataDir } from '../helpers/temp-hook-spool';
+const calls: string[] = [];
+const hit = (kind: string) => () => { calls.push(kind); throw Error('forbidden ' + kind); };
+mock.module('posthog-node', () => ({ PostHog: class {
+  constructor() { hit('constructor')(); }
+  capture = hit('capture'); captureException = hit('exception');
+  flush = hit('flush'); shutdown = hit('shutdown');
+} }));
+afterEach(() => mock.restore());
+for (const debug of ['0', '1']) it('worker and CLI never construct/send even with opt-in, debug=' + debug, async () => {
+  const temporary = useTempHookSpoolDataDir();
+  const env = { ...process.env };
+  try {
+    process.env.CLAUDE_MEM_TELEMETRY = '1';
+    process.env.CLAUDE_MEM_TELEMETRY_ERRORS = '1';
+    process.env.CLAUDE_MEM_TELEMETRY_DEBUG = debug;
+    process.env.CLAUDE_MEM_TELEMETRY_HOST = 'https://synthetic.invalid';
+    process.env.CLAUDE_MEM_TELEMETRY_KEY = 'synthetic-key';
+    process.env.DO_NOT_TRACK = '0';
+    writeFileSync(join(temporary.dataDir, 'telemetry.json'), JSON.stringify({ enabled: true, installId: 'legacy', decidedAt: '' }));
+    const fetchSpy = spyOn(globalThis, 'fetch').mockImplementation(hit('fetch') as any);
+    const timer = spyOn(globalThis, 'setInterval').mockImplementation(hit('interval') as any);
+    const timeout = spyOn(globalThis, 'setTimeout').mockImplementation(hit('timeout') as any);
+    const stderr = spyOn(process.stderr, 'write').mockImplementation(() => true);
+    const listeners = ['uncaughtException', 'unhandledRejection'].map(name => process.listenerCount(name));
+    const payload = new Proxy({}, { get: hit('payload read'), ownKeys: hit('payload enumerate') as any });
+    telemetry.enableExceptionAutocaptureForWorker();
+    expect(telemetry.hasTelemetryConsent()).toBe(false);
+    for (let i = 0; i < 50; i++) {
+      telemetry.captureEvent('worker_started', payload, { person: true });
+      telemetry.captureException(payload, payload);
+      await captureCliEvent('hook_failed', payload, { person: true });
+    }
+    expect(telemetry.__errorBeforeSendForTests(payload)).toBeNull();
+    await telemetry.shutdownTelemetry();
+    telemetry.captureEvent('late_error', payload);
+    await captureCliEvent('worker_start_failed', payload);
+    await telemetry.shutdownTelemetry();
+    expect(getTelemetryHost()).toBe(''); expect(getTelemetryApiKey()).toBe('');
+    expect(calls).toEqual([]);
+    expect(fetchSpy).not.toHaveBeenCalled(); expect(timer).not.toHaveBeenCalled();
+    expect(timeout).not.toHaveBeenCalled(); expect(stderr).not.toHaveBeenCalled();
+    expect(['uncaughtException', 'unhandledRejection'].map(name => process.listenerCount(name))).toEqual(listeners);
+  } finally { mock.restore(); process.env = env; temporary.restore(); }
 });
-
-afterAll(() => {
-  for (const key of ENV_KEYS) {
-    if (savedEnv[key] === undefined) delete process.env[key];
-    else process.env[key] = savedEnv[key];
-  }
-  rmSync(tempDir, { recursive: true, force: true });
-  // Drop the client/consent state built under this file's env so later test
-  // files start from the same blank slate this file demanded.
-  __resetTelemetryForTests();
-});
-
-describe('PostHog client construction', () => {
-  it('constructs the client with disableGeoip: false so ingest-side geolocation works', () => {
-    captureEvent('test_event');
-
-    expect(postHogConstructorCalls.length).toBe(1);
-    expect(postHogConstructorCalls[0].options.disableGeoip).toBe(false);
-  });
-
-  it('reuses the client and queues the capture', () => {
-    captureEvent('test_event_2');
-
-    expect(postHogConstructorCalls.length).toBe(1);
-    expect(postHogCaptureCalls.length).toBe(2);
-    expect(postHogCaptureCalls[1].event).toBe('test_event_2');
-  });
+it('capture never bootstraps an install ID or inspects corrupt telemetry config', async () => {
+  const temporary = useTempHookSpoolDataDir();
+  try {
+    telemetry.captureEvent('install_complete'); await captureCliEvent('install_failed');
+    expect(existsSync(join(temporary.dataDir, 'telemetry.json'))).toBe(false);
+    mkdirSync(join(temporary.dataDir, 'telemetry.json'));
+    expect(() => telemetry.captureException(new Error('synthetic failure'))).not.toThrow();
+    await captureCliEvent('uninstall');
+    await telemetry.shutdownTelemetry();
+    expect(calls).toEqual([]);
+  } finally { temporary.restore(); }
 });

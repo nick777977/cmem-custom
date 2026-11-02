@@ -14,80 +14,16 @@ export type TelemetryConfig = {
 
 const TELEMETRY_CONFIG_FILENAME = 'telemetry.json';
 
-/**
- * DO_NOT_TRACK convention (consoledonottrack.com): the variable counts as
- * "set" when it has any non-empty value other than '0' or 'false'.
- */
-function isDoNotTrackSet(env: NodeJS.ProcessEnv): boolean {
-  const value = env.DO_NOT_TRACK;
-  if (value === undefined || value === '') return false;
-  return value !== '0' && value !== 'false';
-}
-
-/** Which layer of the precedence chain decided the consent outcome. */
-export type TelemetryConsentSource = 'DO_NOT_TRACK' | 'env' | 'config' | 'default';
-
-export type TelemetryConsentExplanation = {
-  enabled: boolean;
-  source: TelemetryConsentSource;
-};
-
-/**
- * Resolves whether telemetry is allowed AND which layer decided it.
- * Pure function — no I/O.
- *
- * Precedence (first match wins):
- * 1. DO_NOT_TRACK set (truthy) -> always off
- * 2. CLAUDE_MEM_TELEMETRY env: '0'/'false'/'off' -> off, '1'/'true'/'on' -> on
- * 3. telemetry.json config: enabled === true -> on, enabled === false -> off
- * 4. Default: on (opt-out — anonymous events only; see docs.claude-mem.ai/telemetry)
- */
+/** Fork policy is unconditional; legacy opt-in cannot enable a transport. */
+export type TelemetryConsentSource = 'fork-policy';
+export type TelemetryConsentExplanation = { enabled: boolean; source: TelemetryConsentSource };
 export function explainTelemetryConsent(
-  env: NodeJS.ProcessEnv,
-  config: TelemetryConfig | null
-): TelemetryConsentExplanation {
-  if (isDoNotTrackSet(env)) return { enabled: false, source: 'DO_NOT_TRACK' };
-
-  const override = env.CLAUDE_MEM_TELEMETRY?.toLowerCase();
-  if (override === '0' || override === 'false' || override === 'off') {
-    return { enabled: false, source: 'env' };
-  }
-  if (override === '1' || override === 'true' || override === 'on') {
-    return { enabled: true, source: 'env' };
-  }
-
-  if (config?.enabled === true) return { enabled: true, source: 'config' };
-  if (config?.enabled === false) return { enabled: false, source: 'config' };
-
-  return { enabled: true, source: 'default' };
+  _env: NodeJS.ProcessEnv, _config: TelemetryConfig | null
+): TelemetryConsentExplanation { return { enabled: false, source: 'fork-policy' }; }
+export function resolveTelemetryConsent(_env: NodeJS.ProcessEnv, _config: TelemetryConfig | null): boolean {
+  return false;
 }
-
-/**
- * Resolves whether telemetry is allowed. Pure function — no I/O.
- * Thin wrapper over explainTelemetryConsent.
- */
-export function resolveTelemetryConsent(
-  env: NodeJS.ProcessEnv,
-  config: TelemetryConfig | null
-): boolean {
-  return explainTelemetryConsent(env, config).enabled;
-}
-
-/**
- * Error-tracking kill-switch, INDEPENDENT of the analytics consent chain above.
- *
- * `CLAUDE_MEM_TELEMETRY_ERRORS=0` (or 'false'/'off') disables real exception
- * capture ($exception with redacted message/stack) WITHOUT touching analytics:
- * an operator who is fine with anonymous counters but not error text can opt out
- * of just the error path. Defaults ON whenever telemetry consent is on — error
- * capture is always additionally gated by the normal consent chain upstream, so
- * "consent off" already implies "no errors". Pure — no I/O.
- */
-export function isErrorTelemetryEnabled(env: NodeJS.ProcessEnv): boolean {
-  const value = env.CLAUDE_MEM_TELEMETRY_ERRORS?.toLowerCase();
-  if (value === '0' || value === 'false' || value === 'off') return false;
-  return true;
-}
+export function isErrorTelemetryEnabled(_env: NodeJS.ProcessEnv): boolean { return false; }
 
 /** Absolute path of telemetry.json inside the claude-mem data dir. */
 export function getTelemetryConfigPath(): string {

@@ -21,22 +21,9 @@ if (!process.env.CLAUDE_MEM_DATA_DIR) {
 }
 
 /**
- * Global posthog-node mock, registered via bunfig.toml [test].preload BEFORE
- * any test file or src module loads. It must be global, not per-file:
- *
- *  1. telemetry.ts imports PostHog at module top level, and many src modules
- *     (ResponseProcessor, SessionRoutes, SearchRoutes, worker-service, ...)
- *     transitively import telemetry.ts. The whole suite runs in one bun
- *     process, so a per-file mock.module registers too late once any earlier
- *     test file has touched those modules — the cached telemetry module keeps
- *     the real PostHog binding.
- *  2. Telemetry consent is default-on and the publishable key ships in the
- *     code, so without this mock a full-suite run constructs a REAL PostHog
- *     client and can flush fabricated test events into production analytics
- *     (flushAt: 20 / flushInterval: 10s vs a ~25s suite).
- *
- * Tests assert against these recorded calls — see
- * tests/telemetry/telemetry-client.test.ts.
+ * Defensive SDK mock for the broad upstream suite. TELEMETRY-04 removes the
+ * production imports/transports; retained instrumentation must never construct
+ * a client even with legacy opt-in. These counters support zero-call checks.
  */
 export type PostHogConstructorCall = { apiKey: string; options: Record<string, unknown> };
 export const postHogConstructorCalls: PostHogConstructorCall[] = [];

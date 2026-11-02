@@ -426,146 +426,19 @@ describe('buildBackfillEvents properties', () => {
   });
 });
 
-describe('runHistoricalBackfill gates', () => {
-  function seedHistoricalDb(): Database {
-    const db = makeDb();
-    const epoch = Date.now() - 10 * DAY_MS;
-    insertSession(db, { epoch, memId: 's-1' });
-    insertObs(db, { epoch: epoch + 1000, memId: 's-1' });
-    return db;
+
+describe('retired historical upload', () => {
+  for (const marker of [undefined, '{bad-json', '{"version":1}', '{"version":2}']) {
+    it('does not scan DB, send or rewrite markers: ' + marker, async () => {
+      if (marker !== undefined) writeFileSync(markerPath(), marker);
+      process.env.CLAUDE_MEM_TELEMETRY = '1';
+      process.env.CLAUDE_MEM_TELEMETRY_DEBUG = '1';
+      const db = new Proxy({} as Database, { get() { throw Error('DB must not be inspected'); } });
+      await runHistoricalBackfill(db); await runHistoricalBackfill(db);
+      expect(postHogConstructorCalls).toHaveLength(0); expect(postHogCaptureCalls).toHaveLength(0);
+      expect(existsSync(markerPath())).toBe(marker !== undefined);
+      if (marker !== undefined) expect(readFileSync(markerPath(), 'utf8')).toBe(marker);
+      expect(existsSync(join(tempDir, 'telemetry.json'))).toBe(false);
+    });
   }
-
-  it('(j) consent off: no client, no captures, no marker', async () => {
-    process.env.CLAUDE_MEM_TELEMETRY = '0';
-    await runHistoricalBackfill(seedHistoricalDb());
-    expect(postHogConstructorCalls.length).toBe(0);
-    expect(postHogCaptureCalls.length).toBe(0);
-    expect(existsSync(markerPath())).toBe(false);
-  });
-
-  it('(j) current-version marker: returns before doing anything', async () => {
-    writeFileSync(
-      markerPath(),
-      JSON.stringify({
-        completedAt: 'x',
-        throughDay: '2026-01-01',
-        eventCount: 1,
-        installId: 'i',
-        version: BACKFILL_VERSION,
-      })
-    );
-    await runHistoricalBackfill(seedHistoricalDb());
-    expect(postHogConstructorCalls.length).toBe(0);
-    expect(postHogCaptureCalls.length).toBe(0);
-  });
-
-  it('(j) legacy marker without a version re-runs and rewrites at the current version', async () => {
-    // A version-1 marker (the #2912 rollup, no `version` field) must not pin an
-    // existing install to the old payload — the enriched economics rollup has
-    // to reach the already-backfilled base. Re-send is idempotent via the
-    // deterministic per-(installId, event, day) uuids.
-    writeFileSync(
-      markerPath(),
-      JSON.stringify({ completedAt: 'x', throughDay: '2026-01-01', eventCount: 1, installId: 'i' })
-    );
-    await runHistoricalBackfill(seedHistoricalDb());
-    expect(postHogCaptureCalls.length).toBeGreaterThan(0);
-    expect(readMarker().version).toBe(BACKFILL_VERSION);
-  });
-
-  it('(j) older-version marker (< current) re-runs', async () => {
-    writeFileSync(
-      markerPath(),
-      JSON.stringify({
-        completedAt: 'x',
-        throughDay: '2026-01-01',
-        eventCount: 1,
-        installId: 'i',
-        version: BACKFILL_VERSION - 1,
-      })
-    );
-    await runHistoricalBackfill(seedHistoricalDb());
-    expect(postHogCaptureCalls.length).toBeGreaterThan(0);
-    expect(readMarker().version).toBe(BACKFILL_VERSION);
-  });
-
-  it('(j) debug mode: stderr dry-run, no send, no marker', async () => {
-    process.env.CLAUDE_MEM_TELEMETRY_DEBUG = '1';
-    const db = seedHistoricalDb();
-    const lines = await withStderrCapture(async () => {
-      await runHistoricalBackfill(db);
-    });
-    expect(lines.some(l => l.includes('[telemetry-backfill]'))).toBe(true);
-    expect(postHogConstructorCalls.length).toBe(0);
-    expect(postHogCaptureCalls.length).toBe(0);
-    expect(existsSync(markerPath())).toBe(false);
-  });
-
-  it('(j) debug mode on an EMPTY DB: still no marker (debug never latches)', async () => {
-    process.env.CLAUDE_MEM_TELEMETRY_DEBUG = '1';
-    const db = makeDb();
-    const lines = await withStderrCapture(async () => {
-      await runHistoricalBackfill(db);
-    });
-    expect(lines.some(l => l.includes('[telemetry-backfill]'))).toBe(true);
-    expect(postHogCaptureCalls.length).toBe(0);
-    expect(existsSync(markerPath())).toBe(false);
-  });
-
-  it('zero events (fresh install): writes the marker without sending', async () => {
-    await runHistoricalBackfill(makeDb());
-    expect(postHogConstructorCalls.length).toBe(0);
-    expect(postHogCaptureCalls.length).toBe(0);
-    expect(existsSync(markerPath())).toBe(true);
-    expect(readMarker().eventCount).toBe(0);
-    expect(readMarker().version).toBe(BACKFILL_VERSION);
-  });
-
-  it('(j) second invocation after success sends nothing', async () => {
-    const db = seedHistoricalDb();
-    await runHistoricalBackfill(db);
-    expect(existsSync(markerPath())).toBe(true);
-    const sentCount = postHogCaptureCalls.length;
-    expect(sentCount).toBeGreaterThan(0);
-    await runHistoricalBackfill(db);
-    expect(postHogCaptureCalls.length).toBe(sentCount);
-  });
-
-  it('(k) happy path: historicalMigration client, uuid + Date timestamps, marker with throughDay', async () => {
-    const expectedThroughBefore = utcDayString(Date.now() - 60 * HOUR_MS);
-    await runHistoricalBackfill(seedHistoricalDb());
-    const expectedThroughAfter = utcDayString(Date.now() - 60 * HOUR_MS);
-
-    expect(postHogConstructorCalls.length).toBe(1);
-    const options = postHogConstructorCalls[0].options;
-    expect(options.historicalMigration).toBe(true);
-    expect(options.flushAt).toBe(5000);
-    expect(options.maxBatchSize).toBe(5000);
-    expect(options.maxQueueSize).toBe(5000);
-    expect(options.disableGeoip).toBe(false);
-
-    // One active day + one install_inferred.
-    expect(postHogCaptureCalls.length).toBe(2);
-    for (const call of postHogCaptureCalls) {
-      expect(typeof call.uuid).toBe('string');
-      expect(call.uuid as string).toMatch(UUID_RE);
-      expect(call.timestamp instanceof Date).toBe(true);
-      expect(typeof call.distinctId).toBe('string');
-    }
-    expect(postHogCaptureCalls.map(c => c.event)).toContain('install_inferred');
-
-    expect(existsSync(markerPath())).toBe(true);
-    const marker = readMarker();
-    expect([expectedThroughBefore, expectedThroughAfter]).toContain(marker.throughDay as string);
-    expect(marker.eventCount).toBe(2);
-    expect(marker.installId).toBe(postHogCaptureCalls[0].distinctId as string);
-    expect(marker.version).toBe(BACKFILL_VERSION);
-  });
-
-  it('(k) an emitted client error prevents the marker (retry on next start)', async () => {
-    postHogMockBehavior.emitErrorOnShutdown = new Error('delivery failed');
-    await runHistoricalBackfill(seedHistoricalDb());
-    expect(postHogCaptureCalls.length).toBe(2);
-    expect(existsSync(markerPath())).toBe(false);
-  });
 });

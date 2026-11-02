@@ -1,5 +1,8 @@
+import * as projectIdentity from '../../src/utils/project-name';
 import { afterEach, beforeEach, describe, expect, it, spyOn } from 'bun:test';
 import { spoolWorkStateInstruction, spoolWorkStateMcpResult, workStateModelText } from '../../src/cli/work-state-telemetry';
+import * as spoolHooks from '../../src/cli/spool-hook-event';
+import { HookSpool } from '../../src/shared/hook-spool';
 import { settleHookSpoolNudges } from '../../src/cli/spool-hook-event';
 import { WORK_STATE_RULE } from '../../src/services/context/sections/WorkStateRenderer';
 import { useTempHookSpoolDataDir, spooledEntries } from '../helpers/temp-hook-spool';
@@ -12,13 +15,21 @@ import { HookStdoutError } from '../../src/shared/hook-io';
 import { sessionInitHandler, setSessionInitDependenciesForTesting } from '../../src/cli/handlers/session-init';
 
 let temporary: ReturnType<typeof useTempHookSpoolDataDir>;
+let spoolSpy: ReturnType<typeof spyOn>;
 let oldConsent: string | undefined;
 let oldDnt: string | undefined;
 let oldEnabled: string | undefined;
 const input = { sessionId: 'private-session', cwd: '/private-path', platform: 'codex' };
 
+let projectSpy: ReturnType<typeof spyOn>;
 beforeEach(() => {
+  projectSpy = spyOn(projectIdentity, 'getProjectContext').mockImplementation(() => ({
+    primary: 'telemetry-work', parent: null, isWorktree: false, isSubmodule: false,
+    allProjects: ['telemetry-work'], keySource: 'path',
+  }));
   temporary = useTempHookSpoolDataDir();
+  const spool = new HookSpool();
+  spoolSpy = spyOn(spoolHooks, 'spoolHookEvent').mockImplementation((kind: any, data: any) => spool.enqueue(kind, data));
   oldConsent = process.env.CLAUDE_MEM_TELEMETRY;
   oldDnt = process.env.DO_NOT_TRACK;
   oldEnabled = process.env.CLAUDE_MEM_WORK_STATE_ENABLED;
@@ -28,6 +39,8 @@ beforeEach(() => {
 });
 afterEach(async () => {
   await settleHookSpoolNudges();
+  projectSpy.mockRestore();
+  spoolSpy.mockRestore();
   temporary.restore();
   for (const [key, old] of [['CLAUDE_MEM_TELEMETRY', oldConsent], ['DO_NOT_TRACK', oldDnt], ['CLAUDE_MEM_WORK_STATE_ENABLED', oldEnabled]]) {
     if (old === undefined) delete process.env[key!]; else process.env[key!] = old;
@@ -35,6 +48,25 @@ afterEach(async () => {
 });
 
 describe('work-state hook receipts', () => {
+  it('retains the local diagnostic and nonblocking envelope on an unexpected hook failure', async () => {
+    const handler = spyOn(getEventHandler('context'), 'execute').mockRejectedValue(new Error('telemetry-04 synthetic hook failure'));
+    const chunks: string[] = [];
+    const diagnostics: string[] = [];
+    const output = spyOn(process.stdout, 'write').mockImplementation(((chunk: string, done?: () => void) => {
+      chunks.push(String(chunk)); done?.(); return true;
+    }) as any);
+    const stderr = spyOn(process.stderr, 'write').mockImplementation(((chunk: string) => {
+      diagnostics.push(String(chunk)); return true;
+    }) as any);
+    installFakeStdin(JSON.stringify({ session_id: 'synthetic-failure', cwd: temporary.dataDir }));
+    try {
+      expect(await hookCommand('codex', 'context', { skipExit: true })).toBe(0);
+      expect(chunks.join('')).not.toContain('workStateTelemetry');
+      expect(diagnostics.join('')).toContain('continuing without memory: telemetry-04 synthetic hook failure');
+      expect(spooledEntries('work_state_telemetry')).toHaveLength(0);
+    } finally { handler.mockRestore(); output.mockRestore(); stderr.mockRestore(); restoreStdin(); }
+  });
+
   it('forwards existing agent metadata with the prompt capture', async () => {
     let request: any;
     setSessionInitDependenciesForTesting({
@@ -73,8 +105,7 @@ describe('work-state hook receipts', () => {
       try {
         await hookCommand(platform, 'context', { skipExit: true });
         expect(chunks.join('')).not.toContain('workStateTelemetry');
-        const [receipt] = spooledEntries('work_state_telemetry');
-        expect(receipt.payload.state).toBe(platform === 'cursor' ? 'missing' : 'returned');
+        expect(spooledEntries('work_state_telemetry')).toHaveLength(0);
       } finally {
         handler.mockRestore();
         process.stdout.write = original;
@@ -110,27 +141,13 @@ describe('work-state hook receipts', () => {
     expect(workStateModelText({ injectSteps: [{ ephemeralMessage: WORK_STATE_RULE }] })).toBe(WORK_STATE_RULE);
   });
 
-  it('counts a complete returned block, including a cache-shaped return, but not a partial rule', () => {
-    spoolWorkStateInstruction(input, WORK_STATE_RULE + '\n\nStill open:\nprivate task');
-    spoolWorkStateInstruction(input, WORK_STATE_RULE.slice(0, -10));
-    const entries = spooledEntries('work_state_telemetry');
-    expect(entries.map(e => e.payload.state).sort()).toEqual(['missing', 'returned']);
-    expect(JSON.stringify(entries)).not.toContain('private task');
-    expect(entries[0].payload.agentRole).toBe('unknown');
-  });
-
-  it('keeps disabled, excluded and unknown context distinct', () => {
-    process.env.CLAUDE_MEM_WORK_STATE_ENABLED = 'false';
+  it('does not spool analytics for returned, missing, excluded, unknown or failed MCP output', () => {
+    spoolWorkStateInstruction(input, WORK_STATE_RULE);
     spoolWorkStateInstruction(input, '');
     spoolWorkStateInstruction(input, '', 'excluded');
     spoolWorkStateInstruction(input, '', 'unknown');
-    expect(spooledEntries('work_state_telemetry').map(e => e.payload.state).sort()).toEqual(['disabled', 'excluded', 'unknown']);
-  });
-
-  it('preserves unknown MCP attribution and spools pre-worker failures', () => {
-    spoolWorkStateMcpResult('work_state_write', { isError: true, content: [{ type: 'text', text: 'Service initializing' }] });
-    const [entry] = spooledEntries('work_state_telemetry');
-    expect(entry.payload).toMatchObject({ kind: 'mcp', platformSource: 'unknown', outcome: 'error', tool: 'write' });
+    spoolWorkStateMcpResult('work_state_write', { isError: true });
+    expect(spooledEntries('work_state_telemetry')).toHaveLength(0);
   });
 
   it('does not spool after telemetry opt-out', () => {

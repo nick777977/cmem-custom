@@ -71,6 +71,7 @@ function inReplayWindow(at: number | undefined): boolean {
 /** Content-free latest turn boundary; a missing or older boundary is not public evidence. */
 export function recordWorkStatePrivacy(db: Database, a: WorkStateAttribution, isPrivate: boolean): void {
   safely(() => {
+    if (!hasTelemetryConsent()) return;
     // Only a recent, timestamped public submission can reopen public coverage.
     // Untimestamped transcript replay must never clear a private boundary.
     if (!isPrivate && !inReplayWindow(a.enqueuedAtEpochMs)) return;

@@ -2,7 +2,6 @@ import * as p from '@clack/prompts';
 import { styleText } from 'node:util';
 import { randomUUID } from 'crypto';
 import { spawnSync } from 'child_process';
-import { loadTelemetryConfig, saveTelemetryConfig } from '../../services/telemetry/consent.js';
 import { captureCliEvent } from '../../services/telemetry/cli-telemetry.js';
 import { spawnHidden } from '../../shared/spawn.js';
 import { cpSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
@@ -2219,40 +2218,6 @@ export async function completeCmemTrialPairing(
 }
 
 /**
- * Final step of the install flow: tell the user telemetry is on by default
- * (opt-out) and let them decide. Asked ONCE — a telemetry.json with a recorded
- * enabled decision means the user already chose, and we never re-nag. An
- * installId-only config (written by the worker's ID bootstrap) does NOT count
- * as a decision. Respects DO_NOT_TRACK (skip entirely: they already answered),
- * CI, and non-TTY. See docs/public/telemetry.mdx for what is/isn't collected.
- */
-async function promptTelemetryOptIn(): Promise<void> {
-  if (!isInteractive) return;
-  if (process.env.CI) return;
-  const dnt = process.env.DO_NOT_TRACK;
-  if (dnt !== undefined && dnt !== '' && dnt !== '0' && dnt !== 'false') return;
-  const existing = loadTelemetryConfig();
-  if (existing?.enabled !== undefined) return;
-
-  p.log.message(styleText('dim', 
-    'Anonymous install ID only — no prompts, file paths, code, or project names, ever.\n'
-    + 'Details: https://docs.claude-mem.ai/telemetry · Change anytime: claude-mem telemetry disable',
-  ));
-  const consent = await p.confirm({
-    message: 'Share anonymized usage data with CMEM? It is on by default and helps us make the product better.',
-    initialValue: true,
-  });
-  if (p.isCancel(consent)) return;
-
-  saveTelemetryConfig({
-    enabled: consent === true,
-    installId: existing?.installId || randomUUID(),
-    decidedAt: new Date().toISOString(),
-  });
-  log.success(consent ? 'Thanks! Anonymized usage sharing is on.' : 'No problem — telemetry is off.');
-}
-
-/**
  * Whether an install still has an account question to answer.
  *
  * `--provider claude` and `--provider host` are exempt: they use the user's
@@ -3218,7 +3183,7 @@ async function runInstallCommandInner(options: InstallOptions, summary: InstallS
     `Memory injection starts on your second session in a project.`,
     cloudSyncConfigured
       ? 'Memory syncs across your signed-in CMEM Pro agents and devices.'
-      : `Everything stays in ${styleText('cyan', '~/.claude-mem')} on this machine. cmem.ai is contacted once, at signup, to create the sign-in link, with a numbers-only usage summary (observation counts and token totals, no prompts, paths, or project names); nothing else is sent to cmem.ai (telemetry is separate: npx claude-mem telemetry).`,
+      : `Everything stays in ${styleText('cyan', '~/.claude-mem')} on this machine. cmem.ai is contacted once, at signup, to create the sign-in link, with a numbers-only usage summary (observation counts and token totals, no prompts, paths, or project names); nothing else is sent to cmem.ai (remote telemetry is disabled by local fork policy).`,
     ...(cloudSyncConfigured ? [] : [`${PRO_TRIAL_PITCH}: ${styleText('underline', proTrialUrl('installer'))}`]),
     ``,
     `${styleText('dim', `Optional: ${'/learn-codebase'} ingests a whole repo up front (~5 min)   ·   How it works: /how-it-works`)}`,
@@ -3228,7 +3193,7 @@ async function runInstallCommandInner(options: InstallOptions, summary: InstallS
     p.note(nextSteps.join('\n'), 'Next Steps');
     // Deliberately the last interaction of the flow: consent is asked after
     // the product is installed and working, never as a gate in front of it.
-    await promptTelemetryOptIn();
+    // Remote telemetry is unavailable in this fork; no consent prompt or config write.
     if (workerFailedToStart) {
       p.outro(styleText('red', 'claude-mem installed, but the worker did not start.'));
       process.exitCode = 1;

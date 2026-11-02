@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 import { spoolHookEvent } from './spool-hook-event.js';
-import { resolveTelemetryConsent, loadTelemetryConfig } from '../services/telemetry/consent.js';
+import { resolveTelemetryConsent } from '../services/telemetry/consent.js';
 import { isSubagentEvent } from '../shared/subagent-predicate.js';
 import { isWorkStateEnabled } from '../shared/work-state-setting.js';
 import { loadFromFileOnce } from '../shared/hook-settings.js';
@@ -22,7 +22,7 @@ export function workStateModelText(output: unknown): string {
 
 export function spoolWorkStateInstruction(input: NormalizedHookInput, text: string, reason?: 'excluded' | 'unknown'): void {
   try {
-    if (!resolveTelemetryConsent(process.env, loadTelemetryConfig())) return;
+    if (!resolveTelemetryConsent(process.env, null)) return;
     const enabled = isWorkStateEnabled(process.env.CLAUDE_MEM_WORK_STATE_ENABLED ?? loadFromFileOnce().CLAUDE_MEM_WORK_STATE_ENABLED);
     const hasRule = text.includes(WORK_STATE_RULE);
     const state: InstructionState = reason ?? (hasRule ? 'returned' : !enabled ? 'disabled' : 'missing');
@@ -38,7 +38,7 @@ export function spoolWorkStateInstruction(input: NormalizedHookInput, text: stri
 export function spoolWorkStateMcpResult(name: string, result: unknown): void {
   try {
     const tool = workStateTool(name);
-    if (!tool || tool === 'native_todo' || !resolveTelemetryConsent(process.env, loadTelemetryConfig())) return;
+    if (!tool || tool === 'native_todo' || !resolveTelemetryConsent(process.env, null)) return;
     spoolHookEvent('work_state_telemetry', {
       kind: 'mcp', contentSessionId: mcpProcessId, platformSource: 'unknown',
       eventId: randomUUID(), tool, outcome: workStateOutcome(tool, result),

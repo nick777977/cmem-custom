@@ -70,14 +70,9 @@ interface LogContext {
   [key: string]: any;
 }
 
-/**
- * Optional error sink. The logger must NEVER import the telemetry client (that
- * would create an import cycle: telemetry → logger via instrument.ts → ...).
- * Instead worker/telemetry init injects a sink via logger.setErrorSink(); when
- * present, logger.error()/logger.failure() route their Error payload through it
- * (consent + rate-limit + kill-switch all enforced INSIDE the sink, i.e.
- * captureException). The sink is optional and swallow-all so logging keeps
- * working with telemetry disabled or uninstalled.
+/** Optional compatibility hook. Local file/stderr logging works without a sink.
+ * The local fork does not install a remote telemetry bridge. Sink exceptions
+ * must never prevent local diagnostics.
  */
 export type ErrorSink = (err: unknown, ctx?: Record<string, unknown>) => void;
 let errorSink: ErrorSink | null = null;
@@ -434,9 +429,8 @@ class Logger {
   }
 
   /**
-   * Installs (or clears, with null) the optional error sink. Called once by
-   * worker/telemetry init to bridge logged errors into captureException without
-   * the logger importing telemetry (no import cycle). Never throws.
+   * Installs (or clears, with null) an optional error sink. The worker does not
+   * install a telemetry sink in the local fork. Never throws.
    */
   setErrorSink(sink: ErrorSink | null): void {
     errorSink = sink;
@@ -448,7 +442,7 @@ class Logger {
   }
 
   /**
-   * Routes a logged Error through the optional error sink (captureException).
+   * Routes a logged Error through the optional compatibility sink.
    * Only fires when `data` is an actual Error so we never ship arbitrary log
    * payloads as exceptions. Swallow-all: the sink failing (or being absent)
    * must never break logging. `failure()` delegates to `error()`, so it is
@@ -458,11 +452,7 @@ class Logger {
   private routeErrorToSink(message: string, context?: LogContext, data?: any): void {
     try {
       if (!errorSink || !(data instanceof Error)) return;
-      // Pass the message as context so the sink can fingerprint on it too; the
-      // sink (captureException) scrubs everything through error-scrub /
-      // scrubProperties, so an unsafe message here cannot leak — but `message`
-      // is not whitelisted, so it is dropped by scrubProperties anyway. We pass
-      // only the Error itself; context is intentionally minimal.
+      // Preserve the existing callback shape: pass only the Error.
       errorSink(data);
     } catch {
       // Telemetry/error-sink must never break logging.

@@ -68,7 +68,7 @@ mock.module('../../src/shared/port-reclaim.js', () => portReclaim);
 // of sending it, and keep its durable markers in a throwaway data dir.
 const realCliTelemetrySnapshot = { ...realCliTelemetry };
 const cliTelemetry = {
-  captureCliEvent: mock(async (_event: string, _props?: Record<string, unknown>) => {}),
+  captureCliEvent: mock(realCliTelemetrySnapshot.captureCliEvent),
 };
 mock.module('../../src/services/telemetry/cli-telemetry.js', () => cliTelemetry);
 const TEST_DATA_DIR = mkdtempSync(join(tmpdir(), 'cmem-spawner-'));
@@ -141,6 +141,8 @@ function resetMocks(): void {
   // throwaway tree for every test (another suite file may have changed it).
   process.env.CLAUDE_MEM_DATA_DIR = TEST_DATA_DIR;
   rmSync(join(TEST_DATA_DIR, 'CAPTURE_BROKEN'), { force: true });
+  // Each scenario owns its synthetic Windows cooldown marker.
+  rmSync(join(TEST_DATA_DIR, '.worker-start-attempted'), { force: true });
 }
 
 describe('ensureWorkerStarted startup readiness', () => {
