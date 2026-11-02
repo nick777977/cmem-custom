@@ -649,9 +649,8 @@ ${err.stack ?? ""}
         this.log(2 /* WARN */, component, message, context, data);
       }
       /**
-       * Installs (or clears, with null) the optional error sink. Called once by
-       * worker/telemetry init to bridge logged errors into captureException without
-       * the logger importing telemetry (no import cycle). Never throws.
+       * Installs (or clears, with null) an optional error sink. The worker does not
+       * install a telemetry sink in the local fork. Never throws.
        */
       setErrorSink(sink) {
         errorSink = sink;
@@ -661,7 +660,7 @@ ${err.stack ?? ""}
         this.routeErrorToSink(message, context, data);
       }
       /**
-       * Routes a logged Error through the optional error sink (captureException).
+       * Routes a logged Error through the optional compatibility sink.
        * Only fires when `data` is an actual Error so we never ship arbitrary log
        * payloads as exceptions. Swallow-all: the sink failing (or being absent)
        * must never break logging. `failure()` delegates to `error()`, so it is
