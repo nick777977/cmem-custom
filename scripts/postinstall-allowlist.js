@@ -48,6 +48,8 @@ export const POSTINSTALL_ALLOWLIST = [
   'esbuild',
   '@biomejs/biome',
   'better-sqlite3',
+  'onnxruntime-node',
+  'msgpackr-extract',
 ];
 
 // The `allowScripts` package.json field maps each allowlisted package name to

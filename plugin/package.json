@@ -96,7 +96,9 @@
     "@derekstride/tree-sitter-sql": true,
     "esbuild": true,
     "@biomejs/biome": true,
-    "better-sqlite3": true
+    "better-sqlite3": true,
+    "onnxruntime-node": true,
+    "msgpackr-extract": true
   },
   "engines": {
     "node": ">=20.12.0",
