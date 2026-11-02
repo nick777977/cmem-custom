@@ -26,7 +26,8 @@ test or application execution occurred. Step 1's broader contract is not marked 
 
 ## 2. Pure compile boundary
 
-Session 02 implemented and checked the source boundary; **step 2 remains in progress**.
+Session 02 implemented and checked the source boundary. HOSTED-03 user launch now
+accepts it for source progression (A15); **release evidence remains pending**.
 See [BUILD-02 evidence](enterprise-local/handoffs/BUILD-02.md),
 [DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md) and
 [TASKS](enterprise-local/memory/TASKS.md). The historical first-patch contract in
@@ -53,11 +54,10 @@ AUDIT-CLOSURE is retained as a snapshot, not a current permission source.
   observed no install/lock/deploy/socket event, but Vite invoked net use and native/
   shell coverage is incomplete. Do not label this full no-egress acceptance.
 
-This declaration subtask is done; no repeat policy interview or compile is needed.
-Next launcher proposes explicit limited step-2 progression acceptance (P10) and
-HOSTED-03 implementation in the same session, retaining OS/no-egress acceptance in
-11 and clean dependency/artifact provenance in 10/12. This is not accepted/executed
-here: step 2 remains in progress. Graph edges/waves are unchanged.
+The declaration subtask is done. P10 was explicitly accepted as A15 by HOSTED-03:
+source progression may continue, with OS/no-egress acceptance retained in step 11
+and clean dependency/artifact provenance in 10/12. No release evidence passed through
+this disposition. Graph edges/waves are unchanged; no install is needed to close step 2.
 
 Worker self-contained runtime-hook fixture and full suites were not run. No services,
 AWS, runtime repair, registration, fresh acquisition or real user state were used.
@@ -71,13 +71,20 @@ no reinstall is needed to obtain a green guard.
 
 ## 3. Hosted setup and historical import removal
 
-Candidates: remove hosted intent/import route + clients; remove related browser setup,
-registration/trial UI and remote work-view actions with callers. Keep local memory API.
-Acceptance: legacy URLs/tokens cannot create a remote request; local capture/search
-still works; generated runtime closure has no reachable hosted client. Planned validation:
-adapt `tests/npx-cli/browser-setup*.test.ts`, `tests/worker/http/routes/setup-*.test.ts`,
-`tests/work-view/hosted-intent.test.ts`; replace hosted expectations with rejection tests.
-Rollback: revert paired caller/client change, preserving test database.
+**HOSTED-03 done-bounded**, source/tests `417483949`, generated `298d44742`.
+All legacy setup API methods return 410 after loopback checks. Worker scan/extractor/
+history-upload wiring and installer browser/checkout handoff removed; direct clients
+reject before credential/data/transport access. Viewer always opens local work, even
+with ?setup=1; retired UI source cannot dispatch. Local search/note utilities, viewer,
+capture/storage/retrieval and local DataRoutes /api/import receiver retained.
+
+Actual validation: 58 targeted synthetic tests PASS, including explicit zero-call
+transport/client negatives and local work/review/search regressions; one reviewed
+compile PASS; generated syntax/closure checks PASS; 16 input fingerprints unchanged.
+No dependency/trust/lock changes or runtime/service/acquisition. Full memory/Bedrock/
+OS-egress acceptance remains step 11. [Evidence, citations, generated delta and limits](enterprise-local/handoffs/HOSTED-03.md).
+Rollback: revert generated G then source/tests S; preserve local data and user baseline.
+This restores hosted capability, so do not run restored setup against real state.
 
 ## 4. Telemetry removal with diagnostics preserved
 

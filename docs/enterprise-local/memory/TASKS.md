@@ -12,10 +12,11 @@ This board does not grant permission or duplicate the dependency graph.
 | AUDIT-01 / 1 | done-bounded | Historical session; feat/cmem-light-local | None active | f9f2b2efe, AUDIT-CLOSURE; full dependency/runtime gates open |
 | USER-SETUP / 2 prerequisites | done-preserved | Session 02 coordinator; feat/cmem-light-local | None active | Exact 10 handoff hashes matched; inputs 49e4f65e1, bundles ce7ded4dc; provenance/limits in BUILD-02 |
 | DOC-HANDOFF-03 / coordination | done | Documentation session 2026-11-02; feat/cmem-light-local; entry 62e79cceb | None active | Evidence, A08/A09 and next launcher persisted; links/whitespace and 10 user-file hashes checked; docs commit follows entry (see Git log); USER-SETUP untouched |
-| BUILD-02 / 2 | review; release acceptance pending | Session 02 coordinator finished; feat/cmem-light-local; entry 4d773b4b7 | None active | 153a9953c compile boundary, 705cd1dc9 fixture; compile PASS, 6+21 PASS. Original drift FAIL now superseded by 8bc557532 guard PASS. OS-offline/provenance gates open; P10 proposed for next launch |
+| BUILD-02 / 2 | boundary accepted for source progression; release evidence pending | Session 02 coordinator finished; feat/cmem-light-local; entry 4d773b4b7 | None active | 153a9953c compile boundary, 705cd1dc9 fixture; compile PASS, 6+21 PASS. Original drift FAIL now superseded by 8bc557532 guard PASS. OS-offline/provenance gates open; P10 explicitly accepted as A15 in HOSTED-03 |
 | BUILD-02-TRUST / 2 | done-bounded; owner chose C subsequently | 2026-11-02 coordinator; feat/cmem-light-local; entry 66a4c961d; serial | None active | Historical review 6aa253dfb. Recommendation A not adopted; explicit C implemented below. No pending A/B/C question |
 | BUILD-02-TRUST-APPLY / 2 | done | 2026-11-02 coordinator; feat/cmem-light-local; entry 6aa253dfb; serial | None active; reservations released | 8bc557532: canonical/root/plugin npm = 30, actual guard PASS; five preserved input hashes and 26-name Bun pairing PASS. Evidence in handoffs/BUILD-02-TRUST-APPLY.md; docs commit follows source in Git log. No install/lifecycle/compile/runtime or step 3 |
-| HOSTED-03 / 3 | proposed; awaiting-user-launch | None; serial current branch | None | NEXT-SESSION includes explicit limited step-2 progression acceptance (P10), retained release gates, then E01/E02 hosted setup/history removal + targeted synthetic tests/compile. Not authorized or started by C task |
+| HOSTED-03 / 3 | done-bounded | 2026-11-02 coordinator; feat/cmem-light-local; entry f7df0cccd; serial | None active; reservations released. Written source/test/artifact scope recorded in 417483949/298d44742 and handoff; includes setup-data.ts, tests/fixtures/hosted-03-routes.ts and Windows work-view fixture adjustments. Documentation scope extended to ARCHITECTURE-LOCAL.md and SESSION-PROMPTS.md to retire stale active instructions. | Source/tests 417483949, generated 298d44742; 58 tests PASS, one compile PASS, 16 inputs unchanged; A15/A16 and handoffs/HOSTED-03.md. No acquisition/services/real state. |
+| CHROMA-07 / 7 | ready-unclaimed; awaiting user launch | None; serial current branch | None | NEXT-SESSION: pre-provisioned local Chroma/embedding integration, synthetic checks only; no downloads or actual runtime inferred from this proposal. |
 
 Normal statuses: ready-unclaimed -> claimed -> in-progress -> review -> done. Blocked
 names a specific condition and next independent action. Historical bounded completion
@@ -43,13 +44,14 @@ ownership from an old chat. User owns USER-SETUP until an explicit handoff.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed HOSTED-03
+## Minimal context for proposed CHROMA-07
 
-- AGENTS -> README -> STATE -> roadmap step 2/3/graph -> TASKS.
-- DECISIONS A14/P10; DEV-ENVIRONMENT current section; NEXT-SESSION launch authorization.
-- handoffs/BUILD-02-TRUST-APPLY.md; PATCH-SEQUENCE §3; EGRESS-INVENTORY E01/E02.
-- Only affected hosted source/callers and tests listed in the launcher. No full audit,
-  installed lifecycle review, setup rebuild or A/B/C re-interview.
+- AGENTS -> README -> STATE -> roadmap step 7/graph -> TASKS.
+- DECISIONS A06/A07/A09/A14/A15/A16; DEV-ENVIRONMENT current section; NEXT-SESSION.
+- HOSTED-03 handoff limits; PATCH-SEQUENCE §7; EGRESS-INVENTORY E08–E11 and the
+  corresponding existing AUDIT-CLOSURE notes only.
+- ChromaMcpManager/ChromaSync/settings/direct callers and affected tests; repository
+  artifact contracts if present. No real installed-user assets/config/database reads.
 
 No whole initial plan/WORKLOG/minified bundles/old chats. New tasks need their own
 similarly bounded context bundle from the coordinator, not repeated project discovery.

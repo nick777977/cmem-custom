@@ -25,7 +25,9 @@ Current prerequisite evidence: user-installed dependencies, successful existing 
 build and worker ready output on Node 22.23.4/npm 10.9.9/Bun 1.4.4; see
 [DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md). Session 02 pure compile and
 6+21 focused checks passed; owner-selected C fixes declaration consistency (guard PASS,
-30 entries). OS-offline/provenance acceptance remains pending
+30 entries). HOSTED-03 source/tests 417483949 and generated 298d44742 now pass
+58 targeted tests and one compile; 16 selected inputs unchanged. Step 2 boundary is
+accepted for source progression (A15). OS-offline/provenance acceptance remains pending
 ([BUILD-02](enterprise-local/handoffs/BUILD-02.md),
 [policy application](enterprise-local/handoffs/BUILD-02-TRUST-APPLY.md)). Active execution ownership
 is in [TASKS](enterprise-local/memory/TASKS.md); no dependency edges/waves changed.
@@ -33,8 +35,8 @@ is in [TASKS](enterprise-local/memory/TASKS.md); no dependency edges/waves chang
 | # | Step | Source | Size | Status |
 |---|---|---|:---:|---|
 | 1 | Close static audit and agree runtime/artifact contract | IP §6 P0/P1; §10; [inventory](EGRESS-INVENTORY.md) | S | idea |
-| 2 | Compile locally without install, marketplace sync or restart | IP §5.8 W8; [baseline](BASELINE.md#build-and-supply-chain-findings) | S | in progress; compile/focused/allowlist checks pass; OS-offline/provenance gates open; next-launch progression proposal P10 |
-| 3 | Local memory works without hosted setup/history import | IP §5.1 W1 | S | idea |
+| 2 | Compile locally without install, marketplace sync or restart | IP §5.8 W8; [baseline](BASELINE.md#build-and-supply-chain-findings) | S | boundary accepted for source progression; release evidence pending (A15); no shipped/full no-egress claim |
+| 3 | Local memory works without hosted setup/history import | IP §5.1 W1 | S | done-bounded; HOSTED-03, 58 targeted tests + compile PASS; full runtime remains step 11 |
 | 4 | Local diagnostics work without remote telemetry | IP §5.2 W2 | S | idea |
 | 5 | Local SQLite/Chroma works without cloud sync | IP §5.3 W3 | S | idea |
 | 6 | Observer uses only validated corporate Bedrock | IP §5.4 W4 | M | idea |

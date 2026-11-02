@@ -8,6 +8,20 @@ Session 01's [bounded closure](enterprise-local/AUDIT-CLOSURE.md) adds coverage,
 reachability/owning steps for every E-ID, E15/E16/E18 refinements and E19–E22.
 The source SHA is unchanged; dependency and runtime proof remain pending.
 
+## Current E01/E02 disposition (HOSTED-03)
+
+The table below remains the historical reconnaissance at its pinned SHA. E01/E02
+were rechecked on entry `f7df0cccdf31a9f3519af598b1209c4a51968333` and removed/inert
+at source `4174839497f8cc1247b864bd1c889e2a2b649738`; paired outputs
+`298d447423c2ebf7404ce79329683484902080b7`. WorkViewRoutes.ts:500 tombstones all
+setup methods with 410; worker-service.ts:581 no longer constructs setup clients;
+hosted-intent.ts:28 and setup/history-import.ts:39 cannot dispatch even with saved
+tokens. Installer browser caller and viewer funnel are disconnected. Local DataRoutes.ts:236
+/api/import is retained as a local receiver. 58 synthetic tests + one compile and
+artifact closure checks PASS; these are not OS-wide/runtime no-egress acceptance.
+Exact paths/lines, negative-call evidence and remaining remote steps:
+[HOSTED-03](enterprise-local/handoffs/HOSTED-03.md). E03–E22 status is unchanged.
+
 ## Reachable capability register
 
 | ID | Evidence / caller / trigger | Destination and payload / process | Policy and disposition | Dependency impact and future regression proof |

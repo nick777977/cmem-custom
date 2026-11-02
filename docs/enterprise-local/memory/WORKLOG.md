@@ -294,3 +294,59 @@ plus its docs. Reservations released; next task awaiting user launch. Documentat
 commit follows source (Git log). Final branch/clean status checked after commit.
 Rollback: revert 8bc557532 only to restore declarations (known drift FAIL returns),
 preserve baseline/dependencies/bundles/user data. No reset/clean/service action.
+
+## 2026-11-02 — HOSTED-03 (bounded step 3 completed)
+
+Explicit user launch accepted P10/A15: step 2 boundary accepted for source progression,
+release evidence pending in 11 and 10/12; no graph/wave changes or install to close it.
+Authorized step-3 source/tests, paired artifacts, logical commits, reviewed targeted
+synthetic checks and one compile; forbidden acquisition/services/AWS/real state/push/
+branches/worktrees/agents retained. Entry f7df0cccdf31a9f3519af598b1209c4a51968333,
+clean selected branch feat/cmem-light-local. Claimed TASKS, single coordinator serial.
+
+Rechecked only E01/E02 live chains/callers. Source/tests 417483949: setup API tombstones
+410 for every method/suffix behind loopback checks; inert direct HostedIntent and
+HistoryImport classes; no credentials/data/transport/replay/fallback. Worker no longer
+constructs scanner/upload clients. CLI browser funnel/pairing/checkout/restart handoff
+removed; actual terminal provider flow retained. App always mounts local WorkApp even
+for ?setup=1, no registration gate. UI compatibility page/source cannot launch hosted
+operations; search/note/count utilities and local import receiver retained. No memory
+schema, capture/retrieval/project/worktree/sharing/filter redesign. A16 records outcome.
+
+Read fixtures, root PostHog/fallback-readiness preload, subprocess/env/network behavior
+before checks. Synthetic HOME/config/data/temp/appdata under .scratch/enterprise-local/
+hosted-03; remote client mocks and explicit zero-call transport/credential/scanner/
+checkout/browser/EventSource assertions, including saved token/signed-in cases. Broad
+installer subprocess fixture replaced by static actual-caller regression; no installer
+or Codex-hook runtime acceptance claimed. Sandbox loopback EACCES required approved
+execution outside sandbox; no approval rejection. Initial Express wildcard/new test
+assertion corrected; Windows SQLite fixture finalization/unlink adapted, no production
+DB change. Final 58 PASS / 0 FAIL / 249 assertions, 11 files, exit 0. Existing local
+viewer work/evidence/review persistence/SSE/order/source-health and search/note checks pass.
+
+One reviewed npm.cmd run build:compile at source 417483949 PASS exit 0. Exact Node
+22.23.4/npm 10.9.9/Bun 1.4.4 version checks pass; process-local PATH, empty scratch npm
+configs/cache/offline mode and unchanged BUILD-02 Node guard. 9 Node inits, 5 spawns,
+one execFileSync/exec/execFile; local esbuild/tsc/Vite/generators and Vite net use query.
+No Node socket/acquisition/deploy event; OS/native/shell coverage remains incomplete.
+All 16 input/sentinel hashes unchanged, including npm/Bun trust/manifests/locks/compiler
+sentinels. No acquisition/version/graph/trust change or exhaustive installed-tree claim.
+
+Generated commit 298d44742 pairs worker CJS/map and My Work outputs. 199 pre-existing
+tracked outputs: 188 unchanged, 3 modified, 8 deleted (obsolete setup/main assets), one
+new UI main JS. Classic viewer/other bundles unchanged. Worker/UI syntax and mapped
+hosted closure checks PASS; local DataRoutes /api/import intentionally retained after
+an overbroad scratch substring assertion was corrected. Generated worker whitespace
+warning in emitted dependency text retained, not claimed clean. Source/test whitespace
+PASS. No second compile. Source/artifact commits disabled Git hooks/signing per-command.
+
+Exact SHA-pinned paths/lines, commands, hashes, resolved failures, remaining risks and
+rollback in handoffs/HOSTED-03.md. STATE/TASKS/DECISIONS/DEV-ENVIRONMENT/README/AGENTS/
+SESSION-PROMPTS and affected roadmap/PATCH-SEQUENCE/EGRESS/ARCHITECTURE contracts updated.
+Reservations released. NEXT-SESSION now proposes only CHROMA-07, pre-provisioned local
+assets without downloads; step 7 not begun. No full memory/Chroma/Bedrock/OS-egress or
+clean provenance/reproducibility/release acceptance asserted. No install/download,
+services/worker/plugin/MCP start, AWS/live inference, real settings/data/credentials,
+push, new branch/worktree or subagent. Rollback G then S; preserve baseline and all data.
+Final docs links/whitespace, graph/wave identity, SHA citations/fingerprints and Git
+scope/status checked at closure; docs commit follows source/artifact commits in Git log.

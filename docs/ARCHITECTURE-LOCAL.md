@@ -3,6 +3,18 @@
 Evidence baseline: [BASELINE.md](BASELINE.md). Current code and target design are
 separate below. No runtime correctness or absence of egress has been demonstrated.
 
+## Implemented hosted boundary (2026-11-02)
+
+HOSTED-03 source `417483949` and generated `298d44742` disconnect E01/E02:
+WorkViewRoutes.ts:500 tombstones all legacy setup APIs; worker-service.ts:581 keeps
+local work/viewer wiring without setup clients; App.tsx:98 always mounts local work.
+Direct compatibility clients and UI actions reject without reading credentials or
+sending requests. Stale setup state no longer gates retained local refresh/copy.
+Local counts/search/note utilities, local import receiver, SQLite canonical/Chroma
+derived data and project/worktree/sharing/filter/capture/retrieval semantics retained.
+58 targeted synthetic tests and one compile pass; full network/runtime acceptance
+and inference enforcement are pending. [Evidence and exact paths](enterprise-local/handoffs/HOSTED-03.md).
+
 ## Current structure — VERIFIED IN CHECKOUT
 
 - `plugin/hooks/hooks.json`: lifecycle hooks call the on-PATH launcher, a Bash-based

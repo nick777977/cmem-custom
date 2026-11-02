@@ -192,7 +192,7 @@ Alternatives B/C, per-permission evidence, local hashes, risks and rollback:
 not a new run. Setup/source/lock hashes unchanged. Root-lock/provenance, OS-offline
 and full runtime acceptance remain separate pending gates; step 2 is not complete.
 
-## Current BUILD-02-TRUST-APPLY: selected C, guard PASS
+## Historical BUILD-02-TRUST-APPLY: selected C, guard PASS
 
 Source `8bc557532108bc68fb516f6fce9549dd1b9a7b6e`; entry `6aa253dfb`, clean worktree.
 Explicit user choice C retained root ONNX/msgpackr entries and added the same two
@@ -212,6 +212,37 @@ Exact diff/commands/hashes/limits/rollback and next proposal:
 [BUILD-02-TRUST-APPLY](handoffs/BUILD-02-TRUST-APPLY.md). C settles declarations only,
 not npm 10 selective enforcement, enterprise acquisition sources or permission to run
 scripts. OS-offline, clean root-lock/dependency provenance and runtime acceptance stay
-open. Step 2 is not fully complete/shipped. NEXT-SESSION proposes one implementation
-session HOSTED-03 with explicit limited step-2 progression acceptance (P10); it has
-not been launched. No toolchain upgrade/reinstall or further policy choice is needed.
+open. At that session close HOSTED-03 was proposed; its later explicit launch and
+actual results are recorded below. No toolchain upgrade/reinstall or further policy
+choice is needed. Step 2 has no shipped/full release acceptance.
+
+## Current HOSTED-03 environment and results
+
+Source/tests `4174839497f8cc1247b864bd1c889e2a2b649738`; generated
+`298d447423c2ebf7404ce79329683484902080b7`. Entry `f7df0cccd` was clean.
+User explicitly accepted P10/A15: tested compile boundary is sufficient for source
+progression; release evidence remains pending in steps 10/11/12. No edge/wave change.
+
+Exact existing Node 22.23.4/npm 10.9.9/Bun 1.4.4 verified; process-local PATH only.
+58 tests / 249 assertions PASS, 0 FAIL, exit 0; one reviewed build:compile PASS exit 0.
+Synthetic HOME/config/data/temp/appdata and isolated npm config/cache/offline mode
+under .scratch/enterprise-local/hosted-03. Inspected tests mock remote clients; HTTP
+fixtures bind ephemeral loopback only. Sandbox denied loopback with EACCES; the same
+isolated checks passed outside sandbox with approved execution. No worker/service/
+plugin or agent job started. Windows fixture SQLite finalization/unlink fixes only;
+no production DB change. No automatic approval rejection.
+
+Compile reused the unchanged BUILD-02 Node guard: 9 Node initializations, 5 spawns,
+one execFileSync, exec and execFile; local generators/esbuild/tsc/Vite and net use.
+No Node socket or forbidden acquisition/deploy child. OS/native/shell coverage remains
+incomplete. Worker/UI syntax and mapped hosted closure checks PASS. Generated worker
+diff has an emitted trailing-whitespace warning; bytes preserved, not hand-formatted.
+
+All 16 selected inputs/sentinels unchanged, including existing ignored root lock,
+root/viewer installed lock metadata, compiler files, npm/Bun policy and manifests.
+199 pre-existing tracked outputs: 188 unchanged, 3 modified, 8 removed; one new UI JS.
+Only worker CJS/map and My Work outputs committed as G. No dependency installation,
+download/update, lock resolution, trust/version change, services, AWS, real state or
+push. Installed-tree/provenance/reproducibility and full memory/Chroma/Bedrock acceptance
+remain unproved. Exact commands, hashes, generated delta, failures resolved and rollback:
+[HOSTED-03](handoffs/HOSTED-03.md). Next proposed task: CHROMA-07, no acquisition implied.

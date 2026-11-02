@@ -1,9 +1,11 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after owner
-choice C / BUILD-02-TRUST-APPLY (guard PASS, source `8bc557532`). Next proposed session
-is HOSTED-03 with explicit limited step-2 progression acceptance (P10). Read current
-STATE/TASKS/DEV-ENVIRONMENT; Sessions 01/02 below are historical templates, not work to repeat.
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after
+HOSTED-03 (source/tests `417483949`, generated `298d44742`; 58 tests + compile PASS).
+P10 is accepted as A15 for source progression; release evidence stays pending.
+One next proposed task is CHROMA-07, pre-provisioned local Chroma/embedding assets,
+without downloads. STATE/TASKS/DEV-ENVIRONMENT own current context. Sessions 01/02
+below are historical templates; do not repeat baseline/trust/hosted implementation.
 
 Copy one prompt into a fresh session in this repository. These templates do not
 authorize later work or create chats/agents automatically. The user launches each
@@ -35,7 +37,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `AGENTS.md` | Current authorization and invariants; always read |
 | `docs/enterprise-local/README.md` | Navigation; do not automatically read every linked file |
 | `docs/enterprise-local/memory/STATE.md` | Current progress and next task; always read |
-| `docs/enterprise-local/memory/DECISIONS.md` | Accepted decisions including A14/C; historical alternatives and proposed P10 progression |
+| `docs/enterprise-local/memory/DECISIONS.md` | Accepted A14/C, A15/P10 progression and A16 hosted retirement; historical alternatives retained |
 | `docs/BASELINE.md` | Baseline SHA, scripts, locks, limits |
 | `docs/EGRESS-INVENTORY.md` | E01–E22 and Session 01 refinements; update, do not recreate |
 | `docs/ARCHITECTURE-LOCAL.md` | Current/target architecture and discrepancies |
@@ -45,7 +47,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | One proposed HOSTED-03 implementation launcher, including explicit limited acceptance of step-2 progression and retained release gates |
+| `docs/enterprise-local/NEXT-SESSION.md` | One proposed CHROMA-07 launcher; HOSTED-03 complete and release gates retained |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/memory/TASKS.md` | Single active ownership/file-reservation board and session-close/coordinator protocol |
 
