@@ -12,8 +12,11 @@ const projectRoot = path.resolve(__dirname, '../..');
 // A build overwrites the working tree (#4728) and renames hashed My Work assets,
 // so the syntax check runs on the committed blobs, extracted from HEAD.
 const committedPluginRoot = mkdtempSync(path.join(tmpdir(), 'committed-plugin-'));
-execFileSync('sh', ['-c', `git archive HEAD plugin | tar -x -C "${committedPluginRoot}"`], { cwd: projectRoot });
 afterAll(() => rmSync(committedPluginRoot, { recursive: true, force: true }));
+// Native argument arrays also work on Windows without a Git/MSYS shell or pipe.
+const archivePath = path.join(committedPluginRoot, 'plugin.tar');
+execFileSync('git', ['archive', '--format=tar', `--output=${archivePath}`, 'HEAD', 'plugin'], { cwd: projectRoot });
+execFileSync('tar', ['-xf', archivePath, '-C', committedPluginRoot], { cwd: projectRoot });
 
 const committedPluginScripts = execFileSync(
   'git',
