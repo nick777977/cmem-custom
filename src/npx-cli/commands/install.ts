@@ -58,9 +58,7 @@ import {
 } from '../cmem-memory-credentials.js';
 import { parseTeamBrainTeamRef, type TeamBrainTeamRef } from '../../shared/teambrain.js';
 import { relayedLine } from '../../shared/relayed-text.js';
-import { endSetupSession, INITIAL_SETUP_STATE, readSetupState, startSetupSession, writeSetupState } from '../../shared/setup-state.js';
 import { intentCredentialHeaders, readIntentCredentials } from '../../shared/intent-credentials.js';
-import { runBrowserSetup, settingsChangesNeedingRestart, shouldUseBrowserSetup, waitForBackgroundWorkToFinish, type BrowserSetupOutcome } from '../install/browser-setup.js';
 
 function getSetting<K extends keyof SettingsDefaults>(key: K): SettingsDefaults[K] {
   return SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH)[key];
@@ -2666,36 +2664,6 @@ function describeWorkerStart(result: WorkerStartResult): string {
   }
 }
 
-/** Finish Setup's local tool ids (setup-data.ts SETUP_TOOLS) and the installer IDE each one is. */
-const FINISH_SETUP_LOCAL_TOOL_IDES: Record<string, string> = { 'claude-code': 'claude-code', codex: 'codex-cli' };
-
-function readSettingsSnapshot(): string {
-  return existsSync(USER_SETTINGS_PATH) ? readFileSync(USER_SETTINGS_PATH, 'utf8') : '';
-}
-
-/**
- * On The Go in the browser funnel: starts the sign-in pairing, carrying any
- * earlier hosted-intent installation identity. The checkout that completes it is the
- * funnel's next step (completeCmemTrialPairing, funnel Phase 8).
- */
-async function startOnTheGoPairing(version: string): Promise<InstallerOAuthPairing> {
-  const spinner = isInteractive ? p.spinner() : null;
-  spinner?.start('Starting CMEM Pro sign-in…');
-  const pairing = await startInstallerOAuthPairing();
-  if (!pairing) {
-    await captureCliEvent('installer_oauth_start_failed', {
-      version,
-      outcome: lastOAuthStartFailure() ?? 'network',
-      interactive: isInteractive,
-      phase: 'enrollment',
-    });
-    spinner?.stop(styleText('red', 'Could not start the CMEM Pro sign-in.'));
-    throw new Error(lastOAuthStartErrorMessage() ?? 'Could not start the CMEM Pro sign-in. Run npx claude-mem install again when cmem.ai is reachable.');
-  }
-  spinner?.stop('CMEM Pro sign-in ready; checkout continues in the browser.');
-  return pairing;
-}
-
 /**
  * Whether the installer leaves the worker for the user to start. A fresh
  * non-interactive install skips it, but an update or reinstall must not: the
@@ -3006,92 +2974,8 @@ async function runInstallCommandInner(options: InstallOptions, summary: InstallS
     log.info('Claude Code: leaving native auto-memory enabled unless you explicitly opt in to disabling it.');
   }
 
-  // Browser funnel (GUI mode): the worker starts before any login or provider
-  // question, the setup page opens, and the terminal waits on the worker's
-  // setup state with no time limit. Login happens only if the page picks On
-  // The Go. Everything else keeps the terminal flow below unchanged.
+  // Hosted browser setup is retired. The retained terminal flow owns provider setup.
   let oauthPairing: InstallerOAuthPairing | null = null;
-  // On The Go's pairing, held for the checkout hand-off (funnel Phase 8):
-  // completeCmemTrialPairing(onTheGoPairing) runs when the page asks for checkout.
-  let onTheGoPairing: InstallerOAuthPairing | null = null;
-  let browserProvider: ProviderId = (getSetting('CLAUDE_MEM_PROVIDER') as ProviderId) || 'claude';
-  let browserOutcome: BrowserSetupOutcome | null = null;
-  let settingsBeforeBrowserSetup: string | null = null;
-  if (shouldUseBrowserSetup({
-    interactive: isInteractive,
-    provider: options.provider,
-    noAutoStart: options.noAutoStart,
-    runtime: selectedRuntime,
-    setupComplete: readSetupState().status === 'complete',
-  })) {
-    startSetupSession();
-    try {
-      // Mark this GUI setup before the worker's first refresh tick: its scan uses hosted extraction,
-      // so existing prompts must not launch a local agent while the browser is still opening.
-      writeSetupState({ ...INITIAL_SETUP_STATE });
-      settingsBeforeBrowserSetup = readSettingsSnapshot();
-      await runTasks([{
-        title: 'Starting worker daemon',
-        task: async (message) => {
-          workerStartResult = await startInstallWorker(version, summary, message);
-          return describeWorkerStart(workerStartResult);
-        },
-      }]);
-      if ((workerStartResult as WorkerStartResult) === 'dead') {
-        log.warn('The setup page needs the worker, which did not start. Continuing setup here in the terminal.');
-      } else {
-        browserOutcome = await runBrowserSetup({
-          workerBaseUrl: `http://127.0.0.1:${getSetting('CLAUDE_MEM_WORKER_PORT')}`,
-          openBrowser,
-          log,
-          applyChoice: async (choice, state) => {
-            if (choice.branch === 'home') {
-              // At Home: the existing local branch (logged-in Claude SDK account, no claude-mem login).
-              options.provider = 'claude';
-              options.providerSource = 'browser';
-              browserProvider = await promptProvider(options, null, version);
-              await promptClaudeModel(options, false);
-              return 'home-ready';
-            }
-            if (state.alreadyPro) {
-              log.info('On The Go: keeping your existing CMEM Pro configuration.');
-              return 'go-kept-existing-pro';
-            }
-            onTheGoPairing = await startOnTheGoPairing(version);
-            return 'go-awaiting-checkout';
-          },
-          // On The Go checkout: the existing pairing → /api/pro/trial/claim (inline login, then Stripe) path, unchanged.
-          checkout: {
-            run: async () => {
-              // A pairing whose checkout failed or was cancelled is not reused; the next ask starts a fresh one.
-              if (!onTheGoPairing) onTheGoPairing = await startOnTheGoPairing(version);
-              const pairing: InstallerOAuthPairing = onTheGoPairing;
-              const delivered = await completeCmemTrialPairing(pairing, version);
-              if (!delivered) { onTheGoPairing = null; return false; }
-              browserProvider = activateBrowserEnrollment(delivered) ?? browserProvider;
-              return true;
-            },
-            reopen: () => {
-              const pairing = onTheGoPairing as InstallerOAuthPairing | null;
-              if (pairing) openBrowser(pairing.checkoutUrl);
-            },
-          },
-        });
-      }
-    } finally {
-      // Preserve saved choices and errors, but release the local-work pause on every hand-off exit.
-      endSetupSession();
-    }
-  }
-
-  // Finish Setup's picked local tools that this run did not install yet are set up now, the same way.
-  const pickedTools = (browserOutcome as BrowserSetupOutcome | null)?.state.tools ?? [];
-  const newlyPickedIDEs = pickedTools.map((tool) => FINISH_SETUP_LOCAL_TOOL_IDES[tool]).filter((ide): ide is string => Boolean(ide) && !selectedIDEs.includes(ide!));
-  if (newlyPickedIDEs.length) {
-    // Failures land on summary.failedIDEs, the same list the summary reads.
-    await setupIDEs(newlyPickedIDEs, summary, options.dshProfile);
-    selectedIDEs = [...selectedIDEs, ...newlyPickedIDEs];
-  }
 
   // The terminal flow: non-TTY (agent-run) installs, --provider, --no-auto-start,
   // the server runtime, and machines that already finished the funnel.
@@ -3137,7 +3021,7 @@ async function runInstallCommandInner(options: InstallOptions, summary: InstallS
     }
     return selectedProvider;
   };
-  const selectedProvider = browserOutcome ? browserProvider : await terminalAccountAndProvider();
+  const selectedProvider = await terminalAccountAndProvider();
   const cloudSyncConfigured = [
     getSetting('CLAUDE_MEM_CLOUD_SYNC_TOKEN'),
     getSetting('CLAUDE_MEM_CLOUD_SYNC_USER_ID'),
@@ -3168,15 +3052,6 @@ async function runInstallCommandInner(options: InstallOptions, summary: InstallS
             ? `Skipped (--no-auto-start)`
             : `Skipped (non-TTY)`;
         }
-        // The browser funnel started the worker already. It reads the provider and model live, so it restarts only
-        // for settings it reads at boot (cloud sync after On The Go's checkout), and never while it is extracting
-        // goals, work and rules or importing history: the restart waits for that work, however long it takes.
-        if (browserOutcome) {
-          const needRestart = settingsChangesNeedingRestart(settingsBeforeBrowserSetup ?? '', readSettingsSnapshot());
-          if (!needRestart.length) return describeWorkerStart(workerStartResult);
-          message('Waiting for the worker to finish its setup work before it restarts...');
-          await waitForBackgroundWorkToFinish({ workerBaseUrl: `http://127.0.0.1:${getSetting('CLAUDE_MEM_WORKER_PORT')}`, log: { info: message, warn: message } });
-        }
         const port = Number(getSetting('CLAUDE_MEM_WORKER_PORT'));
         const marketplaceScriptPath = join(marketplaceDirectory(), 'plugin', 'scripts', 'worker-service.cjs');
         const cacheScriptPath = join(pluginCacheDirectory(version), 'scripts', 'worker-service.cjs');
@@ -3204,13 +3079,6 @@ async function runInstallCommandInner(options: InstallOptions, summary: InstallS
   // persisted account-backed provider skips login and must not claim it. A
   // persisted claude/host provider holds no claude-mem account at all, so it
   // reports "not required" rather than a kept account.
-  const browserAccountStatus = browserOutcome?.checkoutPaid
-    ? `CMEM Pro ${PRO_TRIAL_LABEL} active`
-    : browserOutcome?.stage === 'go-awaiting-checkout'
-    ? 'CMEM Pro sign-in started (checkout not completed)'
-    : browserOutcome?.stage === 'go-kept-existing-pro'
-      ? 'Kept existing CMEM Pro account'
-      : null;
   const accountStatus = oauthPairing
     ? 'OAuth login complete'
     : options.provider === 'host'
@@ -3225,7 +3093,7 @@ async function runInstallCommandInner(options: InstallOptions, summary: InstallS
     `Plugin dir:  ${styleText('cyan', marketplaceDir)}`,
     `IDEs:        ${styleText('cyan', selectedIDEs.join(', '))}`,
   ];
-  summaryLines.push(`Account:     ${styleText('cyan', browserAccountStatus ?? accountStatus)}`);
+  summaryLines.push(`Account:     ${styleText('cyan', accountStatus)}`);
   summaryLines.push(`Cloud sync:  ${styleText('cyan', cloudSyncConfigured ? 'ON (CMEM Pro)' : 'OFF (local)')}`);
   if (autoMemoryStatus === 'disabled') {
     summaryLines.push(`Auto-memory: ${styleText('cyan', 'disabled')} (CLAUDE_CODE_DISABLE_AUTO_MEMORY=1)`);

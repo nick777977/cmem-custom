@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { MotionConfig } from 'motion/react'
 import { InboxIcon, ListChecksIcon, UsersIcon } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -30,9 +30,7 @@ import { sampleSource } from '@/live/sample-source'
 import { sendUsageReport, usageReport } from '@/live/usage'
 import type { WorkDataSource } from '@/live/work-data-source'
 
-/** `setup` is the install funnel (`?setup=1`): a full page outside the nav that becomes My Work when it completes. */
-type Page = 'setup' | 'work' | 'rules'
-type NavPage = Exclude<Page, 'setup'>
+type NavPage = 'work' | 'rules'
 /** MY FOCUS sits above these: its areas, Other and Suggested (focus-nav.tsx). Past focus is at the bottom of the rail. */
 const PAGES: { id: NavPage; label: string; icon: typeof InboxIcon; section: string }[] = [
   { id: 'work', label: 'My Work', icon: InboxIcon, section: 'Monitor' },
@@ -97,27 +95,14 @@ setActiveWorkDataSource(ACTIVE_SOURCE)
 const REPORTS_USAGE = ACTIVE_SOURCE === localSource
 let openReported = false
 
-const SetupPage = lazy(() => import('@/setup/setup-page'))
 export default function App() {
-  // Only the explicit installer handoff opens setup. Missing state on an
-  // existing installation must never lock My Work behind checkout.
-  const [page, setPage] = useState<Page>(() => new URLSearchParams(window.location.search).get('setup') === '1' ? 'setup' : 'work')
-  // One count for the page the viewer opened on. StrictMode runs effects twice in development; the flag keeps it to one.
+  // Old ?setup=1 links open local work; registration is never a prerequisite.
   useEffect(() => {
     if (!REPORTS_USAGE || openReported) return
     openReported = true
-    sendUsageReport(usageReport(page, null))
-  }, [page])
-  if (page !== 'setup') return <WorkApp />
-  const finishSetup = () => {
-    const url = new URL(window.location.href)
-    url.searchParams.delete('setup')
-    window.history.replaceState(null, '', url)
-    window.scrollTo(0, 0)
-    if (REPORTS_USAGE) sendUsageReport(usageReport('work', 'setup'))
-    setPage('work')
-  }
-  return <MotionConfig reducedMotion="user"><Suspense fallback={null}><SetupPage onComplete={finishSetup} /></Suspense></MotionConfig>
+    sendUsageReport(usageReport('work', null))
+  }, [])
+  return <WorkApp />
 }
 
 /** Reads the active source once and subscribes to its live feed, then renders the app. A failed load says so plainly instead of showing anything made up. */
