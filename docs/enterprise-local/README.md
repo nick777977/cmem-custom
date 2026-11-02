@@ -8,8 +8,10 @@ traffic. Local persistence does not imply offline inference.
 
 Use **Node.js 22.23.4, npm 10.9.9, Bun 1.4.4** for this fork. User-provided logs
 show successful dependency preparation/build and worker:start returning ready;
-Session 02 pure compile and focused checks now pass; lifecycle drift, OS-offline proof
-and full memory acceptance remain pending. See [BUILD-02](handoffs/BUILD-02.md).
+Session 02 pure compile and focused checks pass; owner-selected C now restores
+lifecycle declaration consistency (guard PASS). OS-offline/provenance and full memory
+acceptance remain pending. See [BUILD-02](handoffs/BUILD-02.md) and the current
+[policy application](handoffs/BUILD-02-TRUST-APPLY.md).
 See [DEV-ENVIRONMENT.md](DEV-ENVIRONMENT.md) for evidence, warnings, preserved setup and
 limitations. Other attempted Node versions were unsuccessful for the user; this is
 not a complete compatibility matrix. Do not reinstall/update by default.

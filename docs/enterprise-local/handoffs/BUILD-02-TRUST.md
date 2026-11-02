@@ -1,4 +1,9 @@
-# BUILD-02-TRUST: lifecycle policy review, owner choice pending
+# BUILD-02-TRUST: historical lifecycle policy review
+
+Historical snapshot at the source SHA below. Subsequently the owner explicitly chose
+**C**, applied in `8bc557532`; the guard now passes with 30 entries. Recommendation A
+and pending-choice statements below are preserved review history, not active instructions.
+Current result and rollback: [BUILD-02-TRUST-APPLY](BUILD-02-TRUST-APPLY.md).
 
 Date: 2026-11-02. Branch: `feat/cmem-light-local`; single coordinator, serial.
 Inspected repository source SHA: `66a4c961da95d21526d00c44cad26199b8eda59e`

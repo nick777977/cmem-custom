@@ -1,75 +1,69 @@
 # Current handoff
 
-Updated: 2026-11-02 after BUILD-02-TRUST review. Roadmap step 2 remains **in progress**,
-with policy selection/application, OS-offline and provenance gates open.
-Branch: `feat/cmem-light-local`. Review entry/source SHA:
-`66a4c961da95d21526d00c44cad26199b8eda59e`; subsequent docs commit is in Git log.
-Source/test commits remain `153a9953c` / `705cd1dc9`; no source delta in this review.
-Historical audit source remains `d7c2da3e5f9397b394dbc6b6966f4b261b489f7b`; no re-audit.
+Updated: 2026-11-02 after BUILD-02-TRUST-APPLY. Branch `feat/cmem-light-local`.
+Current source commit: `8bc557532108bc68fb516f6fce9549dd1b9a7b6e`; docs commit follows
+in Git log. Entry was `6aa253dfb`, clean. Single coordinator, serial.
 
-## Completed / evidence
+## Goal and preserved behavior
 
-- USER-SETUP preserved exactly against all 10 recorded SHA-256 hashes, separately:
-  `49e4f65e1` inputs/generator/trust/manifests/lock; `ce7ded4dc` four bundles/maps.
-  User-reported prior build/start remains distinct from agent checks.
-- `153a9953c`: build -> build:compile; explicit preparation commands own viewer ci
-  and plugin lock resolution. Viewer preflights local tsc/Vite without repair.
-  Existing viewer, targets, source generators and verification retained.
-- Exact existing Node **22.23.4**, npm **10.9.9**, Bun **1.4.4** found locally;
-  default PATH was different. Use process-local paths in DEV-ENVIRONMENT.
-- Agent `npm.cmd run build:compile`: **PASS**, including bundle/distribution/template/
-  attribution checks. 199 tracked output hashes unchanged; 15 input/sentinel hashes
-  unchanged, including locks and trust JSON. No new generated delta to commit.
-- Six inert boundary fixtures **PASS**; 21 committed-bundle syntax checks **PASS**.
-  `705cd1dc9` fixes their MSYS-dependent extraction with native git/tar.
-- Full evidence, commands, source lines/hashes, initial harness/fixture failures,
-  subprocess trace and rollback: [BUILD-02](../handoffs/BUILD-02.md).
-- **BUILD-02-TRUST review complete, no policy applied.** Exact npm 10.9.9 local
-  implementation and release-tagged Bun 1.4.4 docs distinguish their semantics.
-  Canonical/plugin npm maps = 28 names; root = 30 (only ONNX/msgpackr extras).
-  JSON/plugin/lock Bun trust already agree as 26-name sets. Narrow local script review
-  covers every JSON name with hashes/missing-input limits. No lifecycle execution.
-  [BUILD-02-TRUST](../handoffs/BUILD-02-TRUST.md) contains evidence/options/rollback.
+A Windows Claude Code fork keeps memory in local SQLite/FTS5 and persistent Chroma,
+with local embeddings and viewer. Remove hosted onboarding/registration, telemetry,
+cloud sync and runtime downloads; retain only approved corporate Bedrock/auth traffic
+for observer inference. Preserve capture/retrieval, project/worktree identity, sharing
+and filtering semantics. SQLite is canonical; Chroma is derived. No redesign/migration.
 
-## Current limits
+## Completed evidence
 
-Allowlist guard actually **FAILS** (exit 1) on preserved root onnxruntime-node and
-msgpackr-extract additions absent from the canonical list. Not introduced by the
-compile patch; not rerun in the review. No trust expansion/removal or guard weakening.
-Recommendation **A**, pending owner choice: remove only the two root npm map extras;
-preserve JSON/generator/plugin/lock byte-for-byte and prohibit lifecycle execution.
-Alternative B additionally revokes ONNX Bun trust in paired input/output/lock; C
-broadens canonical npm permission (not recommended). P09 remains proposed, not accepted.
+- User setup preserved in `49e4f65e1` (inputs/trust/generator/manifests/lock) and
+  `ce7ded4dc` (four bundles/maps), after exact ten-file fingerprints matched.
+- `153a9953c` separates pure compile from explicit viewer/plugin-lock preparation.
+  Existing exact Node 22.23.4/npm 10.9.9/Bun 1.4.4 paths are in DEV-ENVIRONMENT.
+- Session 02 agent compile PASS, 6 boundary + 21 syntax checks PASS; 199 tracked
+  outputs and 15 selected inputs/sentinels unchanged. Not replayed for trust declarations.
+  [Detailed historical evidence](../handoffs/BUILD-02.md).
+- Historical lifecycle review in `6aa253dfb`: npm/Bun semantics and narrow local
+  script evidence. Recommendation A was not adopted; no further A/B/C question.
+- **Owner explicitly selected C**, implemented `8bc557532`: add ONNX/msgpackr to
+  canonical and plugin npm allowScripts, retain root entries. Actual reviewed guard
+  **PASS exit 0**, canonical/root/plugin = 30 true entries. Generator/format/preserved
+  plugin fields and 26-name JSON/plugin/lock Bun pairing PASS; five preserved input
+  hashes unchanged. Only two declaration files changed; no install/compile/runtime.
+  [Current evidence/rollback](../handoffs/BUILD-02-TRUST-APPLY.md), accepted A14.
 
-npm 10 ignores both trust fields as lifecycle filters; explicit ignore-scripts is needed
-for separately authorized acquisition. Bun's explicit list replaces defaults and is an
-active capability if install is run without suppression. Preserving it does not approve
-execution. ONNX's inspected default Windows requirements are empty; Linux/CUDA can
-download NuGet assets. msgpackr native tests can fall back to node-gyp; SQL grammar uses
-npx --yes and CLI installer downloads GitHub binaries. None was run. Missing root
-tree-sitter manifest and CLI version differences remain explicit static-review limits.
+## Open limits, kept separate from the completed declaration fix
 
-Compile used synthetic HOME/config/data and isolated npm config/cache plus offline npm
-mode, child trace and Node-socket tripwire. No installer/lock/deploy/runtime-repair
-command or Node socket event observed. Vite invoked `net use` for Windows mapped-path
-normalization. No OS-wide network/process capture: **full no-egress remains UNKNOWN**.
-No exhaustive installed-tree hash, clean build/root-lock provenance or full dependency
-closure proof. Worker self-contained runtime-hook fixture and full suites NOT RUN.
-No worker/MCP/plugin/service execution, AWS, downloads, installed user settings/data,
-push or step 3. Existing user worker/process state remains UNKNOWN and untouched.
+Roadmap step 2 remains **in progress**, not shipped/full acceptance. Compile has no
+observed install/lock/deploy/Node socket event, but native/OS-wide traffic enforcement
+and capture are incomplete. Clean root-lock/dependency/artifact provenance and full
+reproducibility remain unproved. No worker/Claude Code memory/SQLite/Chroma/viewer/
+Bedrock runtime acceptance has run. The user-reported prior worker ready is separate.
+
+npm 10 does not enforce allowScripts as a selective lifecycle filter. C expands the
+name-based declaration for supporting npm versions; no installation/lifecycle execution
+was approved or run. Bun trust/setup remain unchanged. Enterprise acquisition sources,
+Python/model assets, actual native closure and release evidence stay pending.
+
+No services/worker/MCP/plugin start/restart, AWS/live inference, real settings/data/
+credentials, push, new branch/worktree/subagent or step 3 ran. No active reservations.
 
 ## One next task
 
-**Owner selects A/B/C from BUILD-02-TRUST**, then **BUILD-02-TRUST-APPLY** only,
-serial; no active reservations. [NEXT-SESSION](../NEXT-SESSION.md) is a self-contained
-launcher with an explicit selection slot; no default/elapsed-time consent. Read AGENTS
--> README -> STATE -> roadmap step 2/graph -> TASKS -> DECISIONS P09/A13 ->
-DEV-ENVIRONMENT current sections -> BUILD-02-TRUST -> PATCH-SEQUENCE §2.
-No repeat audit/baseline/compile without a new reason. For recommended A, one root
-manifest delta plus direct reviewed guard and static trust/hash comparisons suffice;
-JSON/generator/plugin/lock must stay unchanged. No dependency resolution/install.
-Root-input reproducibility/OS-offline/runtime work stays separate; no step 3.
+**HOSTED-03**, awaiting explicit user launch of [NEXT-SESSION](../NEXT-SESSION.md).
+That single launcher first explicitly accepts the existing compile boundary for source
+progression (proposed P10), carrying OS/no-egress proof to 11 and root/dependency/artifact
+provenance to 10/12; then implements step 3 in the same session. This avoids another
+review-only/compile-replay session. It has not been authorized/executed by this task.
+No graph edges/waves change and no release evidence is declared passed.
 
-Preserve viewer and upstream capture/retrieval/project/worktree/sharing/filter semantics,
-SQLite canonical / Chroma derived. Close every session via TASKS, STATE, WORKLOG,
-DECISIONS, affected contracts/environment and one fresh NEXT-SESSION prompt.
+Scope: E01/E02 hosted setup/history upload and their CLI/viewer callers. Keep local
+memory and viewer; use affected synthetic negative/regression tests, then one authorized
+compile because application source actually changed. Do not reinstall, rerun the full
+audit, repeat the trust interview or require Codex-hook fixture execution to edit Claude
+Code hosted paths. Acceptance: hosted operations cannot send requests; relevant local
+paths pass regressions; source/generated output paired; durable evidence and rollback.
+Chroma offline integration remains step 7, full end-to-end/network acceptance step 11.
+
+Context: AGENTS -> README -> STATE -> roadmap step 2/3/graph -> TASKS -> DECISIONS
+A14/P10 -> DEV-ENVIRONMENT current section -> BUILD-02-TRUST-APPLY -> PATCH-SEQUENCE §3
+-> EGRESS-INVENTORY E01/E02 and affected source/tests only. Do not reread whole history.
+Close STATE/TASKS/WORKLOG/DECISIONS/affected contracts/environment/NEXT-SESSION every time.

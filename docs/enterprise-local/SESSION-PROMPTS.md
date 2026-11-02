@@ -1,7 +1,8 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after Session 02
-compile/checks. Next is BUILD-02-TRUST, still within step 2. Read current
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after owner
+choice C / BUILD-02-TRUST-APPLY (guard PASS, source `8bc557532`). Next proposed session
+is HOSTED-03 with explicit limited step-2 progression acceptance (P10). Read current
 STATE/TASKS/DEV-ENVIRONMENT; Sessions 01/02 below are historical templates, not work to repeat.
 
 Copy one prompt into a fresh session in this repository. These templates do not
@@ -19,8 +20,9 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 - The 2026-10-30 agent planning/audit sessions performed no application implementation,
   installs/builds/tests/AWS. Later user setup/build/start evidence and dirty source
   delta are recorded in DEV-ENVIRONMENT (Node 22.23.4/npm 10.9.9/Bun 1.4.4).
-  Session 02 compile and 6+21 focused checks now pass; lifecycle-policy/offline/
-  provenance and runtime acceptance remain pending. See handoffs/BUILD-02.md.
+  Session 02 compile and 6+21 focused checks pass; selected C declaration alignment
+  also passes. OS-offline/provenance and runtime acceptance remain pending.
+  See handoffs/BUILD-02.md and handoffs/BUILD-02-TRUST-APPLY.md.
 - Preserve local browser viewer and current memory capture/storage/retrieval semantics,
   including project/worktree identity, sharing and optional query filters. Imperfect
   separation is deferred. No identity/schema migration, DLP or memory redesign.
@@ -33,7 +35,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `AGENTS.md` | Current authorization and invariants; always read |
 | `docs/enterprise-local/README.md` | Navigation; do not automatically read every linked file |
 | `docs/enterprise-local/memory/STATE.md` | Current progress and next task; always read |
-| `docs/enterprise-local/memory/DECISIONS.md` | Accepted A01–A07, superseded/proposed decisions |
+| `docs/enterprise-local/memory/DECISIONS.md` | Accepted decisions including A14/C; historical alternatives and proposed P10 progression |
 | `docs/BASELINE.md` | Baseline SHA, scripts, locks, limits |
 | `docs/EGRESS-INVENTORY.md` | E01–E22 and Session 01 refinements; update, do not recreate |
 | `docs/ARCHITECTURE-LOCAL.md` | Current/target architecture and discrepancies |
@@ -43,8 +45,8 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | Active BUILD-02-TRUST launcher: bounded lifecycle consistency/policy review |
-| `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, historical setup fingerprints now committed, Session 02 checks and remaining guard drift |
+| `docs/enterprise-local/NEXT-SESSION.md` | One proposed HOSTED-03 implementation launcher, including explicit limited acceptance of step-2 progression and retained release gates |
+| `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/memory/TASKS.md` | Single active ownership/file-reservation board and session-close/coordinator protocol |
 
 Keep durable results in tracked docs, disposable output in `.scratch/enterprise-local/`.

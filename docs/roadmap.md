@@ -24,14 +24,16 @@ Source abbreviations below: IP = [preserved initial plan](enterprise-local/sourc
 Current prerequisite evidence: user-installed dependencies, successful existing upstream
 build and worker ready output on Node 22.23.4/npm 10.9.9/Bun 1.4.4; see
 [DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md). Session 02 pure compile and
-6+21 focused checks passed; policy/offline/provenance acceptance remains pending
-([BUILD-02](enterprise-local/handoffs/BUILD-02.md)). Active execution ownership
+6+21 focused checks passed; owner-selected C fixes declaration consistency (guard PASS,
+30 entries). OS-offline/provenance acceptance remains pending
+([BUILD-02](enterprise-local/handoffs/BUILD-02.md),
+[policy application](enterprise-local/handoffs/BUILD-02-TRUST-APPLY.md)). Active execution ownership
 is in [TASKS](enterprise-local/memory/TASKS.md); no dependency edges/waves changed.
 
 | # | Step | Source | Size | Status |
 |---|---|---|:---:|---|
 | 1 | Close static audit and agree runtime/artifact contract | IP §6 P0/P1; §10; [inventory](EGRESS-INVENTORY.md) | S | idea |
-| 2 | Compile locally without install, marketplace sync or restart | IP §5.8 W8; [baseline](BASELINE.md#build-and-supply-chain-findings) | S | in progress; compile/checks pass, lifecycle-policy/offline/provenance gates open |
+| 2 | Compile locally without install, marketplace sync or restart | IP §5.8 W8; [baseline](BASELINE.md#build-and-supply-chain-findings) | S | in progress; compile/focused/allowlist checks pass; OS-offline/provenance gates open; next-launch progression proposal P10 |
 | 3 | Local memory works without hosted setup/history import | IP §5.1 W1 | S | idea |
 | 4 | Local diagnostics work without remote telemetry | IP §5.2 W2 | S | idea |
 | 5 | Local SQLite/Chroma works without cloud sync | IP §5.3 W3 | S | idea |
@@ -66,7 +68,7 @@ selection is a research task with known constraints, not permission to download.
 
 | # | Question | Type | Owner | Blocks |
 |---|---|---|---|---|
-| D1 | Which artifact mirror/source and lifecycle execution are approved? | grilling | human | 2, 7, 12 |
+| D1 | Which artifact mirror/source and lifecycle execution are approved? A14/C settles two npm declarations only; acquisition/execution still pending | grilling | human | 2, 7, 12 |
 | D2 | What capture content may persist locally and reach Bedrock? | grilling | human | 8, 11 |
 | D5 | Is private plugin loading allowed and how is upstream disabled in a test session? | grilling | human | 9, 11 |
 | D7 | Approved AWS Region/model or inference profile and profile conventions? No secrets. | grilling | human | 6, 11 |

@@ -44,16 +44,20 @@ AUDIT-CLOSURE is retained as a snapshot, not a current permission source.
   and 15 input/sentinel hashes unchanged; no generated delta.
 - [x] 6 inert boundary fixtures and 21 committed-bundle syntax checks PASS.
   `705cd1dc9` replaces the latter fixture's MSYS shell pipeline with native git/tar.
-- [ ] Allowlist consistency/policy: root's preserved onnxruntime-node/msgpackr-extract
-  entries differ from the canonical list. Actual guard FAIL exit 1. No automatic
-  trust expansion/removal or weakened check. **BUILD-02-TRUST** review is complete:
-  [policy options/evidence](enterprise-local/handoffs/BUILD-02-TRUST.md), P09 recommends
-  removing only root extras while preserving Bun JSON/plugin/lock. Owner choice and
-  BUILD-02-TRUST-APPLY remain pending; no reconciliation applied or new guard PASS.
+- [x] Allowlist consistency: owner explicitly selected C (A14); `8bc557532` adds
+  onnxruntime-node/msgpackr-extract to canonical/plugin maps, preserving root setup.
+  Actual guard **PASS exit 0**, 30 matching entries. Guard/generator/JSON/Bun trust/lock
+  unchanged; plugin delta only allowScripts. [Application evidence and rollback](enterprise-local/handoffs/BUILD-02-TRUST-APPLY.md).
 - [ ] OS-offline/complete child-traffic evidence, clean source/dependency closure,
   root-lock provenance and full reproducibility remain open. Node instrumentation
   observed no install/lock/deploy/socket event, but Vite invoked net use and native/
   shell coverage is incomplete. Do not label this full no-egress acceptance.
+
+This declaration subtask is done; no repeat policy interview or compile is needed.
+Next launcher proposes explicit limited step-2 progression acceptance (P10) and
+HOSTED-03 implementation in the same session, retaining OS/no-egress acceptance in
+11 and clean dependency/artifact provenance in 10/12. This is not accepted/executed
+here: step 2 remains in progress. Graph edges/waves are unchanged.
 
 Worker self-contained runtime-hook fixture and full suites were not run. No services,
 AWS, runtime repair, registration, fresh acquisition or real user state were used.
@@ -61,8 +65,9 @@ Retain viewer and memory/project/worktree semantics. Steps 3+ are not started he
 
 Rollback: revert `153a9953c` for build wiring (then do not run the restored acquiring
 build); `705cd1dc9` is an independent test-only revert. No generated delta to undo.
-Keep user baseline commits/dependencies/data. Dependency-policy/pinning work is a
-separate concern after review; no reinstall merely to obtain a green guard.
+Keep user baseline commits/dependencies/data. For C rollback, revert `8bc557532` only;
+the old root drift returns. Acquisition-source approval/pinning is still separate;
+no reinstall is needed to obtain a green guard.
 
 ## 3. Hosted setup and historical import removal
 

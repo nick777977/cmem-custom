@@ -161,7 +161,10 @@ Worker self-contained runtime-hook test, full suites, live memory/inference and
 OS-offline evidence remain pending. Do not use build-and-sync, worker commands,
 preparation commands or real user state as compile checks.
 
-## Current BUILD-02-TRUST review (no execution)
+## Historical BUILD-02-TRUST review (no execution)
+
+Snapshot only: the later owner choice/application is recorded in the current section
+below. Pending recommendation A and guard FAIL here describe that earlier review.
 
 Review source/entry `66a4c961da95d21526d00c44cad26199b8eda59e`; clean entry status,
 same branch and baseline. Read-only local package/toolchain implementation inspection
@@ -188,3 +191,27 @@ Alternatives B/C, per-permission evidence, local hashes, risks and rollback:
 [BUILD-02-TRUST](handoffs/BUILD-02-TRUST.md). Actual guard remains Session 02 FAIL,
 not a new run. Setup/source/lock hashes unchanged. Root-lock/provenance, OS-offline
 and full runtime acceptance remain separate pending gates; step 2 is not complete.
+
+## Current BUILD-02-TRUST-APPLY: selected C, guard PASS
+
+Source `8bc557532108bc68fb516f6fce9549dd1b9a7b6e`; entry `6aa253dfb`, clean worktree.
+Explicit user choice C retained root ONNX/msgpackr entries and added the same two
+names to canonical and plugin allowScripts. Node 22.23.4 was invoked directly from
+the exact toolchain path above (`--version` and reviewed guard); PATH unchanged.
+Actual guard **PASS exit 0**, reporting 26 plugin direct dependencies and matching
+30-entry canonical/root/plugin maps. This supersedes Session 02's drift failure.
+
+Inline Node built-in-only checks **PASS**: map/generator formatting, plugin fields
+unchanged outside allowScripts, 26-name JSON/plugin/lock Bun pairing, five preserved
+input SHA-256 fingerprints. Root manifest, guard, generator, trust JSON and Bun lock
+unchanged. Dependencies/versions/bundles/setup preserved; no generator/full compile,
+install, lock resolution, lifecycle, native load, service/runtime or AWS execution.
+Compile/6+21 prior checks were not replayed for this declaration-only change.
+
+Exact diff/commands/hashes/limits/rollback and next proposal:
+[BUILD-02-TRUST-APPLY](handoffs/BUILD-02-TRUST-APPLY.md). C settles declarations only,
+not npm 10 selective enforcement, enterprise acquisition sources or permission to run
+scripts. OS-offline, clean root-lock/dependency provenance and runtime acceptance stay
+open. Step 2 is not fully complete/shipped. NEXT-SESSION proposes one implementation
+session HOSTED-03 with explicit limited step-2 progression acceptance (P10); it has
+not been launched. No toolchain upgrade/reinstall or further policy choice is needed.

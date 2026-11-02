@@ -242,3 +242,55 @@ setup bytes changed. Git line-ending normalization notice for STATE is not a fai
 One local docs commit follows this entry (see Git log), with hooks/signing disabled for
 this command to avoid unreviewed execution. Final status is checked after commit.
 Rollback: revert only this docs concern; no runtime/data state exists to undo.
+
+## 2026-11-02 — BUILD-02-TRUST-APPLY, explicit owner choice C
+
+User explicitly requested C after concrete discussion of the two root allowScripts
+entries: preserve them and align canonical/plugin declarations. Authorized edits,
+local logical commits, durable memory and one next prompt; no repeated choice question.
+Entry 6aa253dfb0ed3b90ab3339e73c7e6f2fe03a94e2, feat/cmem-light-local, clean status/index.
+Claimed serial BUILD-02-TRUST-APPLY before edits. No agents/worktrees or user WIP.
+
+Source commit 8bc557532108bc68fb516f6fce9549dd1b9a7b6e changes exactly two files:
+scripts/postinstall-allowlist.js adds onnxruntime-node/msgpackr-extract;
+plugin/package.json adds those two true allowScripts entries. Root remains unchanged.
+Generator already uses allowScriptsMap, so no broad generator/compile execution was
+needed to pair the generated declaration; exact map/serialization were checked directly.
+No package/version/override/integrity/lock/dependency graph changes.
+
+Exact existing Node executable 22.23.4 invoked directly (--version PASS and reviewed
+scripts/check-postinstall-allowlist.js): actual guard PASS exit 0, 26 plugin direct
+deps and 30 matching canonical/root/plugin permissions. No hooks/dependency scripts
+or package import. Inline built-in-only Node assertions PASS: exact map equality,
+plugin fields unchanged outside allowScripts against git show previous manifest,
+generator formatting and 26-name JSON/plugin/lock Bun pairing. Five input fingerprints
+(root manifest, guard, generator, trust JSON, Bun lock) unchanged. Seven final source/
+input hashes recorded/rechecked in handoffs/BUILD-02-TRUST-APPLY.md. Source staged
+whitespace/diff checks PASS. Source commit disabled hooks/signing for that command only.
+No automatic approval rejection occurred.
+
+A14 accepts C and supersedes pending P09/A recommendation. Historical review retained
+with a superseded-status banner, not rewritten as if it recommended C. STATE/TASKS/
+DECISIONS/DEV-ENVIRONMENT/PATCH-SEQUENCE/README/session index/roadmap current evidence
+updated. This declaration subtask is done; no further policy interview or setup replay.
+Step 2 remains in progress: no OS-wide no-egress or clean artifact/root-lock provenance
+is claimed. Compile/6+21 historical passes were not rerun for declaration-only changes.
+No installer/lifecycle/native-load/lock resolution/build/service/worker/MCP/plugin/AWS/
+live inference/real state/credentials/push/step 3 execution occurred.
+
+Prepared one proposed HOSTED-03 implementation launcher. It explicitly asks the next
+user launch to accept P10: tested compile boundary sufficient for source progression,
+with OS/runtime no-egress proof retained in 11 and clean dependency/artifact provenance
+in 10/12. This gate disposition is proposed, not silently accepted here; acquisition
+policy still applies before acquisition. Graph edges/waves unchanged. Then the same
+session removes E01/E02 hosted setup/history-upload paths and CLI/viewer callers,
+runs inspected synthetic negative/local regression tests and one compile justified by
+changed app source. Completion criteria, bounded context/permissions and stop are explicit.
+Next intended wave partner is step 7 local Chroma/model; no downloads implied.
+
+Session-close docs relative-link and whitespace checks PASS; final source/input hashes
+and roadmap graph/wave preservation checked. Git scope contains only this source concern
+plus its docs. Reservations released; next task awaiting user launch. Documentation
+commit follows source (Git log). Final branch/clean status checked after commit.
+Rollback: revert 8bc557532 only to restore declarations (known drift FAIL returns),
+preserve baseline/dependencies/bundles/user data. No reset/clean/service action.
