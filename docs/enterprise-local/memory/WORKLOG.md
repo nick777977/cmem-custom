@@ -400,3 +400,49 @@ links valid; S line citations rechecked, source/generated worktree clean, all 16
 fingerprints still unchanged. Roadmap dependency graph and execution waves identical
 to entry after CRLF normalization. Documentation whitespace PASS. Docs commit follows
 S/G in Git history; no further compile/test or next-increment execution.
+
+## 2026-11-02 — TELEMETRY-04 Node dispatch retired
+
+Explicit step-4 launch, one serial coordinator, clean entry 1f41cec12. Required bounded
+context read and claims/extensions recorded before edits/compile/retaining outputs.
+S 0abd4180b1971802d7939acba04d46960c4e8c14 removes worker PostHog, CLI fetch and the
+independent historical backfill client/job; fixed policy defeats legacy opt-in.
+Compatible capture/error/shutdown/buffer entrypoints inert; no telemetry timer,
+autocapture, payload buckets, worker logger bridge/stats/backfill, installer prompt
+or analytics spool/receipt writes. Local diagnostics and memory/viewer semantics
+retained. SDK declaration pruning remains step 10; no unrelated source enforcement.
+
+Reviewed synthetic tests, exact Node 22.23.4/npm 10.9.9/Bun 1.4.4, isolated HOME/config/
+data/temp/npm/offline env. Final latest results 206 PASS / zero FAIL / 728 assertions,
+18 files. Real local logger and hook-error diagnostic, actual route handlers without
+HTTP listener, durable synthetic capture/private/replay/filter/timing regressions.
+Lifecycle/providers/identity mocked; real CLI sink exercised by spawner spy. Fixed
+stale default-on expectation, incomplete synthetic request, exitCode restoration and
+test-owned Windows cooldown leakage. Initial guard blocked 16 Git identity lookups;
+no child executed. Corrected affected reruns have empty guarded operation traces.
+No worker/service/MCP/plugin/Python/model or real user state used.
+
+One reviewed build:compile PASS at S; BUILD-02 guard unchanged. 16 inputs unchanged vs
+CHROMA-07 and pre/post; nine Node inits, five spawns, one execFileSync/exec/execFile,
+known Vite net use query. No observed Node socket/acquisition/deploy event; native /
+shell coverage incomplete. G 6bb7c6995ea47e92ae0176bc88eac75bae871290: 14 modified,
+178/192 unchanged, no added/deleted tracked outputs; UI unchanged. Five CJS/map pairs,
+request-groups.mjs and three logger mapping-only deltas (paired JS/source lists unchanged).
+Generated syntax and ten available map closures PASS, no PostHog dependency in them,
+retired worker collectors absent, Chroma refusal retained. Known emitted-worker
+whitespace warning retained; source/test/docs whitespace checked separately.
+
+Initial local Git index write denied by sandbox; authorized escalation succeeded.
+No automatic approval rejection. No acquisition, machine registration, services,
+AWS/live inference, real settings/credentials/memory, push, new branch/worktree or
+agents. Rollback G then S restores remote telemetry; preserve all data/setup.
+[Handoff](../handoffs/TELEMETRY-04.md) retains exact S citations, hashes and limits.
+A18, STATE/TASKS/WORKLOG/contracts/environment/current launchers updated; reservations
+released. Graph/waves unchanged. Next proposed launch WINDOWS-09 / step 9 (remaining
+wave-4 increment), no execution now; D5/actual registration and release gates open.
+
+Session-close checks PASS: 15 changed/new Markdown files, 87 relative links valid;
+source matches S, all 16 input hashes still unchanged, roadmap graph/waves identical
+to entry after newline normalization. Documentation whitespace PASS. Source/generated
+commits recorded above; documentation commit follows in Git. No further build/test or
+next-increment execution.

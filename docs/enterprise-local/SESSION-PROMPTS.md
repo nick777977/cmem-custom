@@ -1,12 +1,12 @@
 # Session prompts and bounded handoffs
 
 Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), updated 2026-11-02 after
-CHROMA-07 (source 8fa997979, generated b8734d9b2; 127 tests + one compile PASS).
-Local activation is blocked pending approved artifact/API evidence U1/D9; no Python smoke.
-P10/A15 source progression accepted; release gates stay in 10/11/12. One proposed next
-task: TELEMETRY-04, remove Node remote telemetry and retain local diagnostics.
+TELEMETRY-04 (S 0abd4180b / G 6bb7c6995; 206 tests + one compile PASS).
+E03/E04 Node dispatch retired; local diagnostics retained. Chroma activation remains
+blocked by U1/D9; D11 open. A15 release gates stay 10/11/12. One proposed next task:
+WINDOWS-09 / step 9, deterministic private Windows paths and bootstrap refusal.
 STATE/TASKS/DEV-ENVIRONMENT own current context; templates below are historical.
-Do not repeat baseline/trust/hosted/Chroma implementation.
+Do not repeat baseline/trust/hosted/Chroma/telemetry implementation.
 
 Copy one prompt into a fresh session in this repository. These templates do not
 authorize later work or create chats/agents automatically. The user launches each

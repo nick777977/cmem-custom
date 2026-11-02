@@ -18,7 +18,10 @@ removed; local activation blocked pending approved artifact/API evidence U1/D9.
 127 tests and one compile passed; no actual Python/model process or installed-asset
 inspection. See docs/enterprise-local/handoffs/CHROMA-07.md for exact limits/rollback.
 D11 stays open. These launches do not authorize further runtime/acquisition work.
-Next proposed task is TELEMETRY-04 in NEXT-SESSION/STATE; await explicit user launch.
+TELEMETRY-04 source 0abd4180b/generated 6bb7c6995 is done-bounded: E03/E04 Node
+telemetry removed; 206 tests and one compile PASS, 16 inputs unchanged. Local diagnostics
+retained; SDK pruning is step 10, Python E11 and full runtime gates remain open.
+Next proposed task is WINDOWS-09 in NEXT-SESSION/STATE; await explicit user launch.
 No install/update/download, service/worker/MCP/plugin start/restart/registration, AWS,
 real user state, push or subagents inferred. Existing node_modules or installed
 Python/model alone never authorizes execution or inspection of user assets.

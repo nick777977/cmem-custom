@@ -1,63 +1,49 @@
 # Current handoff
 
-Updated: 2026-11-02 after CHROMA-07. Branch feat/cmem-light-local.
-Source/tests **8fa9979797b5478ec8b36eebd6c52533112aec83**; paired generated **b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf**.
-Documentation commit follows in Git. Entry 46c12bfe7 was clean.
+Updated: 2026-11-02 after TELEMETRY-04. Branch feat/cmem-light-local.
+Source/tests **0abd4180b1971802d7939acba04d46960c4e8c14**; paired generated **6bb7c6995ea47e92ae0176bc88eac75bae871290**.
+Entry 1f41cec12 clean; documentation commit follows in Git.
 One coordinator, serial; no active work or reservations.
 
 ## Goal and retained behavior
 
-Retain local viewer, canonical SQLite/FTS5 and local Chroma derived index; approved
-corporate Bedrock/auth is the intended sole remote inference exception. Preserve
-capture/retrieval, project/worktree identity, sharing/filter semantics. No migration,
-isolation redesign or new SQLite-only product mode (D11 remains open).
+Local viewer, canonical SQLite/FTS5 and local Chroma derived index; approved corporate
+Bedrock/auth is the intended remote inference exception. Preserve capture/retrieval,
+project/worktree identity, sharing/filter defaults. No migration/isolation redesign.
 
-## Completed boundaries
+## Completed bounded work
 
-- Preserved setup 49e4f65e1/ce7ded4dc; pure compile 153a9953c, fixture 705cd1dc9;
-  A14/C 8bc557532 declaration alignment. No baseline/trust replay needed.
-- A15: step 2 boundary accepted for source progression; release evidence pending.
-  OS/runtime remains 11; closure/provenance/reproducibility remains 10/12.
-- HOSTED-03 source 417483949 / generated 298d44742, E01/E02 retired; 58 targeted
-  tests and one compile PASS. [Prior evidence](../handoffs/HOSTED-03.md).
-- CHROMA-07 **source refusal done-bounded; activation pending U1/D9** (A17).
-  Manager uvx resolution/prewarm/cache sweep/certificate acquisition and HTTP launch
-  removed. Remote/unknown modes and vendor embeddings reject, including legacy config
-  and direct tool overrides. New absolute local executable setting has no discovery /
-  repair/fallback. Every launch refuses pending approved artifact/API evidence before
-  store/lock/process/transport. Merely setting a path cannot enable it. Default
-  embedding name certifies no offline behavior. D11 unselected; error remains explicit.
-- Actual checks: **127 PASS, 0 FAIL, 383 assertions**, ten isolated test files;
-  **one compile PASS**, exact Node 22.23.4/npm 10.9.9/Bun 1.4.4. Mocks/synthetic
-  state only; no Python/model process. 16 inputs unchanged vs HOSTED-03 and before /
-  after compile. 192 outputs: 177 unchanged, 15 paired modifications, zero added/deleted;
-  UI unchanged. [Exact source lines/checks/rollback](../handoffs/CHROMA-07.md).
+- Baseline/setup, A14/C declaration consistency and A15 source progression accepted.
+  No replay needed; OS/runtime gates stay in 11, closure/provenance/reproducibility 10/12.
+- HOSTED-03 S 417483949 / G 298d44742: E01/E02 retired; 58 tests + one compile PASS.
+- CHROMA-07 S 8fa997979 / G b8734d9b2: source refusal done-bounded, local activation
+  pending approved artifact/API U1/D9. 127 tests + one compile PASS; no real Python/model.
+  [Exact Chroma limits](../handoffs/CHROMA-07.md). D11 stays open; no SQLite-only mode.
+- TELEMETRY-04 S 0abd4180b / G 6bb7c6995: **E03/E04 Node sinks/jobs removed**.
+  Worker/CLI/backfill transport inert, legacy opt-in cannot enable it; no autocapture,
+  payload buffers, telemetry timers/flush, installer prompt or analytics spool/receipts.
+  Local file/stderr diagnostics, optional sink API and memory/viewer behavior retained.
+  **206 tests / 728 assertions PASS, zero FAIL, 18 isolated files; one compile PASS**.
+  Exact Node 22.23.4/npm 10.9.9/Bun 1.4.4; synthetic state and mocked lifecycle only.
+  16 input sentinels unchanged vs CHROMA-07/pre/post; 14 generated modifications,
+  178/192 unchanged, no additions/deletions, UI unchanged. [Evidence/rollback](../handoffs/TELEMETRY-04.md).
 
 ## Open limits
 
-No approved Python/Chroma/MCP/native/model paths or offline API supplied. U1/D9 remain
-UNKNOWN; no model hashes, supported telemetry flag or compatibility invented. Activation
-needs explicit artifact/read permission, resolved graph/hashes/licenses, real local-only
-model/telemetry API and existing-collection compatibility, then separately authorized
-runtime smoke. Internal Node launch description is not a Python API/approval manifest.
-Step 10's finalized step-7 contract prerequisite remains open; graph/waves unchanged.
-
-D11 remains open; no new successful SQLite-only fallback policy. Existing callers'
-error/unavailability handling retained. No full capture -> SQLite -> Chroma query /
-restart -> viewer -> Bedrock acceptance or real settings/credentials/memory access.
-Compile Node instrumentation observed no socket/acquisition/deploy event; native/shell
-coverage incomplete (Vite net use query observed). Generated-worker whitespace warning
-retained. Installed-tree/native/Python/model provenance and reproducibility unproved.
-No acquisition/lock resolution, services/worker/MCP/plugin start/registration, AWS,
-real user state, push, new branch/worktree or agents.
+No actual runtime/full memory/Chroma/Bedrock smoke or OS-wide no-egress evidence.
+Node compile instrumentation has native/shell limits; known Vite net use query and
+emitted-worker whitespace warning retained. posthog-node declarations/tree retained
+for step 10; installed dependency/native/Python/model provenance remains unproved.
+Chroma artifact/API/telemetry contract U1/D9, D11 and step-10 prerequisite remain open.
+No acquisition/install/update, service/worker/MCP/plugin start/registration, AWS,
+real user settings/credentials/memory, push, new branch/worktree or agents.
+Roadmap graph/waves unchanged; E05+ work not started by TELEMETRY-04.
 
 ## One next task
 
-**TELEMETRY-04 / roadmap step 4**, awaiting explicit launch of
-[NEXT-SESSION](../NEXT-SESSION.md): remove Node remote telemetry, retain local diagnostics.
-Only E03/E04 and direct callers/tests; do not activate Chroma, acquire artifacts,
-repeat baseline/trust/hosted/Chroma work or start step 5/6/9.
-Read AGENTS -> README -> STATE -> roadmap step 4/graph -> TASKS -> relevant decisions /
-current environment -> CHROMA-07 limits -> PATCH-SEQUENCE section 4 -> E03/E04 and
-corresponding audit notes. Close STATE/TASKS/WORKLOG/DECISIONS/contracts/environment /
-NEXT-SESSION again.
+**WINDOWS-09 / roadmap wave 4, step 9**, awaiting explicit user launch of
+[NEXT-SESSION](../NEXT-SESSION.md). Deterministic private Windows launcher/hook/MCP
+paths and refusal of runtime acquisition/repair. D5/actual registration remains gated.
+Read AGENTS -> README -> STATE -> roadmap step 9/graph -> TASKS -> relevant decisions /
+current environment -> TELEMETRY-04 and CHROMA-07 limits -> PATCH-SEQUENCE section 9 ->
+E12/E13/E14/E21 and audit notes. No baseline/trust/hosted/Chroma/telemetry replay.

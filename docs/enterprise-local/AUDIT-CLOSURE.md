@@ -29,6 +29,11 @@ the newly exposed build, background inference, spool and post-storage boundaries
 within the two-pass / 45-minute ceiling. No subagents, initial-plan reread, dependency
 tree scan, network, application scripts, tests or installed-user-data inspection.
 
+Current E03/E04 override: TELEMETRY-04 S 0abd4180b / G 6bb7c6995 retires Node
+worker/CLI/backfill dispatch and jobs, preserving local diagnostics; 206 tests + one
+compile PASS. Historical E03/E04 rows below remain audit evidence. Python E11 and
+OS/runtime/provenance gates unchanged. [Evidence/limits](handoffs/TELEMETRY-04.md).
+
 ## Coverage and limits
 
 `reviewed-static` means a source path exists under its stated trigger, not observed

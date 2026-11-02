@@ -25,6 +25,14 @@ index/lock/mutation/teardown logic retained with synthetic lifecycle tests. 127 
 one compile PASS; no actual Python/model or full memory smoke. U1/D9/D11 open.
 [Contract/limits](enterprise-local/handoffs/CHROMA-07.md).
 
+## Implemented Node telemetry boundary (2026-11-02)
+
+TELEMETRY-04 S 0abd4180b / G 6bb7c6995 removes E03/E04 worker/CLI/backfill
+transports and jobs; compatible inert instrumentation cannot be enabled by legacy
+settings/env. Local logger and normal memory/viewer behavior retained. SDK pruning
+stays step 10; Python telemetry/Chroma U1/D9, D11 and actual runtime gates unchanged.
+206 targeted tests / one compile PASS. [Evidence](enterprise-local/handoffs/TELEMETRY-04.md).
+
 ## Current structure — VERIFIED IN CHECKOUT
 
 - `plugin/hooks/hooks.json`: lifecycle hooks call the on-PATH launcher, a Bash-based

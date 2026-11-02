@@ -1,61 +1,64 @@
-# Next session: TELEMETRY-04 — retain local diagnostics without remote telemetry
+# Next session: WINDOWS-09 — deterministic private Windows plugin paths
 
-Updated: 2026-11-02 after CHROMA-07 source 8fa997979 / generated b8734d9b2.
-Replaces the completed bounded step-7 launcher. One proposed task only; do not begin
-from this document. Next independent serial increment is roadmap wave 4 / step 4.
+Updated: 2026-11-02 after TELEMETRY-04 S 0abd4180b / G 6bb7c6995.
+Replaces the completed step-4 launcher. Proposed only; await explicit user launch.
+Roadmap wave 4's remaining independent increment is step 9. No graph/wave changes.
 
-Local Chroma activation remains blocked pending approved artifact/API evidence U1/D9.
-No actual Python/model smoke; D11 remains open. Graph/waves stay solely in roadmap.
+TELEMETRY-04: 206 tests / 728 assertions, one compile PASS; 16 inputs unchanged.
+Node E03/E04 sinks/jobs removed, local diagnostics retained. CHROMA-07 local activation
+still blocked by U1/D9; Python E11 unverified, D11 open. Release gates stay 10/11/12.
 
 ## Copyable prompt
 
 ~~~text
 Продолжаем в C:/0/ai/claude/claude-mem-custom/cmem-light,
-ветка feat/cmem-light-local. Выполни TELEMETRY-04, roadmap step 4: убрать Node remote
-telemetry, сохранив локальные diagnostics/logging и memory/viewer behavior.
-Один coordinator, serial, без subagents/branches/worktrees.
+ветка feat/cmem-light-local. Выполни WINDOWS-09, roadmap wave 4 / step 9:
+детерминированные private Windows launcher/hook/MCP paths без runtime acquisition,
+upstream/global cache fallback и self-repair compile. Один coordinator, serial,
+без agents/branches/worktrees. Не запускать другие roadmap steps.
 
-CHROMA-07 source 8fa997979 / generated b8734d9b2: 127 tests PASS, один compile PASS,
-16 inputs unchanged. Удалены manager uvx/acquisition/remote mode; local launches
-явно блокируются до approved artifact/API evidence U1/D9. Не активируй Chroma,
-не читай установленный Python/model/cache и реальные settings/data. D11 открыт.
-Не повторяй baseline/trust/hosted/Chroma implementation. A15 принят; OS/process-wide
-no-egress/full runtime остаются 11, closure/provenance/reproducibility — 10/12.
-Не меняй dependency graph/waves и не объявляй release gates пройденными.
+Начни AGENTS -> README -> STATE -> docs/roadmap.md step 9/graph -> TASKS -> DECISIONS
+A06/A07/A09/A14/A15/A17/A18 -> DEV-ENVIRONMENT current -> TELEMETRY-04 / CHROMA-07
+handoff limits -> PATCH-SEQUENCE section 9 -> E12/E13/E14/E21 и AUDIT-CLOSURE notes.
+Проверь branch/status/HEAD; claim точных файлов до edits. Не повторяй baseline/trust/
+hosted/Chroma/telemetry implementation. Сохрани user WIP и установленное дерево.
 
-Начни AGENTS -> README -> STATE -> docs/roadmap.md step 4/graph -> TASKS -> DECISIONS
-A06/A07/A09/A14/A15/A16/A17 -> DEV-ENVIRONMENT current section -> CHROMA-07 handoff
-limits -> PATCH-SEQUENCE section 4 -> EGRESS-INVENTORY E03/E04 и соответствующие
-AUDIT-CLOSURE notes. Проверь branch/status/HEAD; claim точных файлов до edits.
+Разрешаю bounded step-9 source/test changes в launcher, CLI bootstrap/preflight,
+tree-sitter runtime acquisition и прямых callers; нужные hook/MCP/source generators,
+paired generated outputs, логические local commits и targeted checks с existing dev
+dependencies. Retain compatibility and local diagnostics; missing executable/artifact
+must fail clearly without discovery/download/install/repair/fallback. Private identity
+не меняет project/worktree memory identity. Учитывай D5: не придумывай одобрение private
+registration/installation; unresolved identity/policy оформить как конкретный blocker
+с reviewable вариантами, продолжая независимую source refusal работу.
 
-Разрешаю step-4 source/test изменения в src/services/telemetry/ и прямых callers,
-нужные serial worker/logger/settings integrations, paired generated outputs,
-логические local commits и targeted checks с existing dev dependencies. Проверь
-прямые Node telemetry sinks/error/flush/shutdown paths и legacy settings/env;
-сохрани local diagnostics/API compatibility, без remote fallback. Cloud sync,
-Bedrock enforcement, bootstrap/packaging и viewer network — другие steps.
-
-Перед тестами прочитай fixtures/subprocess/env/network behavior. Только mocks и
-synthetic HOME/config/data под .scratch/enterprise-local/telemetry-04; zero-call
-negative assertions для constructors/capture/error/flush/shutdown/transport,
-включая ошибки и legacy opt-in. Реальный remote telemetry/Python/worker/service/
-MCP/plugin и full smoke не разрешены.
+PowerShell preflight/install/verify/uninstall/rollback tooling — только source и
+synthetic dry-run, без actual registration/PATH/registry/marketplace или существующей
+установки. Перед checks прочитай fixtures/subprocess/env/network behavior. Только mocks
+и synthetic HOME/config/data под .scratch/enterprise-local/windows-09; real worker,
+service, MCP/plugin и OS smoke запрещены. Unicode/spaces/coexistence/missing-file checks
+должны оставаться fixtures, не использовать installed launcher/cache/assets.
 
 После application source изменений разрешаю один reviewed build:compile: точные
 Node 22.23.4/npm 10.9.9/Bun 1.4.4, existing inputs, process-local PATH, synthetic
-HOME/config/data, isolated npm config/cache/offline mode, проверенный BUILD-02
-harness. Missing inputs -> clear failure; no auto-repair. Сверь source/generated,
-locks/trust/dependency/compiler sentinels. Node tripwires не доказывают OS-wide no-egress.
+HOME/config/data, isolated npm config/cache/offline mode, reviewed BUILD-02 harness.
+Сверь source/generated и locks/trust/dependency/compiler sentinels. Missing inputs ->
+clear failure, no repair. Если step-9 generator change требует нового manifest identity,
+заранее отдели ожидаемый declared manifest delta от запрещённой lock resolution;
+не скрывай drift и не меняй dependency graph ради compile.
 
-Запрещены downloads/install/update/lock resolution/new graph, preparation/
-build-and-sync/dev/runtime repair, services/worker/MCP/plugin start/restart/registration,
-AWS/live inference, real settings/credentials/memory, push, agents/branches/worktrees.
-SQLite canonical/Chroma derived и capture/retrieval/project/worktree/sharing/filter
-семантику не менять. Сохрани user WIP и установленное дерево.
+Запрещены downloads/install/update/lock resolution/new dependency graph, preparation/
+build-and-sync/dev, actual services/worker/MCP/plugin start/restart/registration,
+machine PATH/registry effects, AWS/live inference, real settings/credentials/memory,
+installed Python/model/cache inspection, push, agents/branches/worktrees.
+Chroma не активировать. SQLite canonical/Chroma derived и capture/retrieval/project/
+worktree/sharing/filter semantics не менять. A15 release gates остаются открытыми.
 
-Completion: E03/E04 Node dispatch inert across actual direct callers/failure paths;
-local diagnostics regressions фактически проверены; source/generated paired; inputs
-preserved; logical commits и rollback. Обнови STATE/TASKS/WORKLOG/DECISIONS/affected
-contracts/DEV-ENVIRONMENT/NEXT-SESSION. После bounded step 4 остановись и предложи
-один следующий prompt по roadmap; full memory/Chroma/Bedrock acceptance не заявляй.
+Completion: source entrypoints/generators use deterministic Windows-local resolution,
+runtime acquisition/repair cannot dispatch including missing/stale/legacy failure paths;
+retained local behavior tested with fixtures; source/generated paired, preservation
+evidence and rollback. Если закончен только bounded refusal подэтап — точно укажи
+что остаётся, не объявляй full step-9 install acceptance. Обнови STATE/TASKS/WORKLOG/
+DECISIONS/affected contracts/DEV-ENVIRONMENT/NEXT-SESSION и остановись. Не заявляй
+full memory/Chroma/Bedrock/OS no-egress/release acceptance.
 ~~~

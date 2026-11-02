@@ -37,7 +37,7 @@ is in [TASKS](enterprise-local/memory/TASKS.md); no dependency edges/waves chang
 | 1 | Close static audit and agree runtime/artifact contract | IP §6 P0/P1; §10; [inventory](EGRESS-INVENTORY.md) | S | idea |
 | 2 | Compile locally without install, marketplace sync or restart | IP §5.8 W8; [baseline](BASELINE.md#build-and-supply-chain-findings) | S | boundary accepted for source progression; release evidence pending (A15); no shipped/full no-egress claim |
 | 3 | Local memory works without hosted setup/history import | IP §5.1 W1 | S | done-bounded; HOSTED-03, 58 targeted tests + compile PASS; full runtime remains step 11 |
-| 4 | Local diagnostics work without remote telemetry | IP §5.2 W2 | S | idea |
+| 4 | Local diagnostics work without remote telemetry | IP §5.2 W2 | S | done-bounded; TELEMETRY-04 S 0abd4180b / G 6bb7c6995, 206 tests + one compile PASS; E03/E04 Node dispatch inert, runtime evidence remains 11 |
 | 5 | Local SQLite/Chroma works without cloud sync | IP §5.3 W3 | S | idea |
 | 6 | Observer uses only validated corporate Bedrock | IP §5.4 W4 | M | idea |
 | 7 | Chroma starts and retrieves from pre-provisioned local assets | IP §5.5 W5 | M | source refusal done-bounded (CHROMA-07); activation/contract pending U1/D9; 127 tests + compile PASS; no runtime acceptance |

@@ -17,7 +17,40 @@ This board does not grant permission or duplicate the dependency graph.
 | BUILD-02-TRUST-APPLY / 2 | done | 2026-11-02 coordinator; feat/cmem-light-local; entry 6aa253dfb; serial | None active; reservations released | 8bc557532: canonical/root/plugin npm = 30, actual guard PASS; five preserved input hashes and 26-name Bun pairing PASS. Evidence in handoffs/BUILD-02-TRUST-APPLY.md; docs commit follows source in Git log. No install/lifecycle/compile/runtime or step 3 |
 | HOSTED-03 / 3 | done-bounded | 2026-11-02 coordinator; feat/cmem-light-local; entry f7df0cccd; serial | None active; reservations released. Written source/test/artifact scope recorded in 417483949/298d44742 and handoff; includes setup-data.ts, tests/fixtures/hosted-03-routes.ts and Windows work-view fixture adjustments. Documentation scope extended to ARCHITECTURE-LOCAL.md and SESSION-PROMPTS.md to retire stale active instructions. | Source/tests 417483949, generated 298d44742; 58 tests PASS, one compile PASS, 16 inputs unchanged; A15/A16 and handoffs/HOSTED-03.md. No acquisition/services/real state. |
 | CHROMA-07 / 7 | done-bounded source refusal; activation pending U1/D9 | 2026-11-02 coordinator; feat/cmem-light-local; entry 46c12bfe7; serial | None active; reservations released. Historical exact scope below and S/G. | Source 8fa997979, generated b8734d9b2; 127 tests / 383 assertions + one compile PASS; 16 inputs unchanged. A17, handoffs/CHROMA-07.md. No approved artifact/API or real Python smoke. |
-| TELEMETRY-04 / 4 | ready-unclaimed; awaiting user launch | None; serial current branch | None | NEXT-SESSION: E03/E04 Node telemetry removal, retain local diagnostics; no runtime/acquisition inferred. |
+| TELEMETRY-04 / 4 | done-bounded | Coordinator finished; feat/cmem-light-local; serial; entry 1f41cec12 | None active; all reservations released | S 0abd4180b / G 6bb7c6995; 206 tests / 728 assertions + one compile PASS; 16 inputs unchanged. A18, handoffs/TELEMETRY-04.md. No runtime/acquisition. |
+| WINDOWS-09 / 9 | ready-unclaimed; awaiting user launch | None; serial selected branch | None | NEXT-SESSION; wave 4 deterministic Windows paths/bootstrap refusal; D5/actual registration gated. |
+
+## TELEMETRY-04 reservation history — all released
+
+Claimed 2026-11-02 at clean 1f41cec12dd1c7f4e2a3ec70cd6aab1edf4140d4.
+Source: src/services/telemetry/; src/services/worker-service.ts; src/utils/logger.ts;
+src/cli/work-state-telemetry.ts; src/npx-cli/{index.ts,commands/telemetry.ts,commands/install.ts}.
+Tests: tests/telemetry/; tests/fixtures/telemetry-04-*.ts; tests/npx-cli/telemetry-*.test.ts;
+tests/utils/logger-*.test.ts (only if expectations require adjustment).
+Disposable checks: .scratch/enterprise-local/telemetry-04/.
+Documentation: AGENTS.md; docs/{roadmap.md,PATCH-SEQUENCE.md,EGRESS-INVENTORY.md,ARCHITECTURE-LOCAL.md};
+docs/enterprise-local/{README.md,AUDIT-CLOSURE.md,DEV-ENVIRONMENT.md,NEXT-SESSION.md,
+SESSION-PROMPTS.md,handoffs/TELEMETRY-04.md,memory/STATE.md,memory/TASKS.md,
+memory/DECISIONS.md,memory/WORKLOG.md}.
+Completed: S/G and checks in handoff; no active ownership. Historical claims below.
+
+Validation reservation extension before edits: tests/services/worker-spawner.test.ts,
+tests/preload.ts and bunfig.toml (mock evidence/comments only). Spawner tests will
+delegate their capture spy to the real inert CLI boundary; retain mocked lifecycle.
+
+Compile reservation (serial, before single reviewed build:compile): tracked generated
+outputs under plugin/, openclaw/dist/ and dist/dsh-lib/ are fingerprinted; expected
+deltas are plugin/scripts/*.cjs{,.map}, plugin/sqlite/SessionStore.js{,.map} and
+plugin/skills/request-progress/scripts/request-groups.mjs from shared logger/CLI imports.
+UI/manifests/locks/hooks and other generated files must stay unchanged; review and
+explicitly extend scope before retaining an unexpected delta. No generator source,
+manifest, lock or trust edits. No installed asset inspection beyond the approved
+16 build input/compiler sentinels. Generated entrypoints will not be executed.
+
+Post-compile review extension before retaining/staging: plugin/sqlite/observations/
+files.js.map. Like server-service.cjs.map and SessionStore.js.map, its paired JS is
+unchanged; only logger source line/name mappings move after comment cleanup. Review
+these source lists and preserve compiler-emitted bytes; no SQLite behavior edit.
 
 Normal statuses: ready-unclaimed -> claimed -> in-progress -> review -> done. Blocked
 names a specific condition and next independent action. Historical bounded completion
@@ -78,12 +111,12 @@ SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed TELEMETRY-04
+## Minimal context for proposed WINDOWS-09
 
 - AGENTS -> README -> STATE -> roadmap step 4/graph -> TASKS.
-- DECISIONS A06/A07/A09/A14/A15/A16/A17; current environment; NEXT-SESSION.
-- CHROMA-07 handoff limits; PATCH-SEQUENCE section 4; E03/E04 and corresponding
-  existing AUDIT-CLOSURE notes, then telemetry/direct caller/tests after a new claim.
+- DECISIONS A06/A07/A09/A14/A15/A16/A17/A18; current environment; NEXT-SESSION.
+- TELEMETRY-04 and CHROMA-07 handoff limits; PATCH-SEQUENCE section 9;
+  E12/E13/E14/E21 and corresponding AUDIT-CLOSURE notes, then direct callers after claim.
 
 No whole-history or baseline/trust/hosted/Chroma replay. No real user state or runtime
 starts. Parallelism requires explicit user request; the board grants no permission.

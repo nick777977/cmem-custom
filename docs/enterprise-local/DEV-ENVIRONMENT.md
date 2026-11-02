@@ -270,3 +270,20 @@ hash/compatibility/telemetry flag invented. Actual runtime/no-egress stays 11; c
 provenance/reproducibility stays 10/12. Exact contract, checks, initial fixture/checker
 failures resolved, Git sandbox escalation, evidence hashes and rollback:
 [CHROMA-07](handoffs/CHROMA-07.md). Next proposed task: TELEMETRY-04.
+
+## TELEMETRY-04 current validation — 2026-11-02
+
+S 0abd4180b1971802d7939acba04d46960c4e8c14; G 6bb7c6995ea47e92ae0176bc88eac75bae871290. Existing exact Node 22.23.4/npm 10.9.9/Bun 1.4.4 verified; no toolchain/dependency change.
+206 tests / 728 assertions PASS, zero FAIL, 18 isolated Bun files; one reviewed
+build:compile PASS. Synthetic HOME/config/data/npm config/cache/offline env; SDK /
+network/subprocess tripwires and mocked lifecycle, direct handlers without listeners.
+Local logs and hook failure diagnostics checked. Initial synthetic-request /
+Windows cooldown / identity-mock fixture issues resolved; details in handoff.
+16 inputs unchanged against CHROMA-07 and pre/post compile; 14/192 generated changes,
+178 unchanged, zero added/deleted, UI unchanged. Five CJS/map pairs, request-groups
+and three logger map-only changes. No PostHog SDK in ten available map closures.
+Node guard: 9 inits, 5 spawns, one execFileSync/exec/execFile, including Vite net use;
+no socket/acquisition/deploy event observed, not OS/native/shell no-egress proof.
+Known generated-worker whitespace retained. No acquisition, real state/assets,
+services, Python/model, AWS or push. E11/U1/D9/D11 and release gates remain open.
+[Commands, hashes, limits and rollback](handoffs/TELEMETRY-04.md).

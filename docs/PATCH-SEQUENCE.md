@@ -88,10 +88,12 @@ This restores hosted capability, so do not run restored setup against real state
 
 ## 4. Telemetry removal with diagnostics preserved
 
-Candidates: remove worker sink/jobs/logger exception bridge; remove CLI sink/commands;
-defer shared package pruning to step 10. Acceptance: useful local logs, no upload or
-flush on boot/capture/error/exit. Planned validation: targeted `tests/telemetry/`, CLI
-tests and later process-tree traffic. Rollback: revert source concern only.
+Done-bounded: TELEMETRY-04 S 0abd4180b / G 6bb7c6995 removes worker/CLI/backfill
+transports, worker bridge/jobs and telemetry buffer/timers. Compatible APIs and
+status/enable/disable command remain inert; legacy opt-in cannot enable transport.
+Local diagnostics and existing memory/viewer behavior retained. 206 tests / 728
+assertions + one compile PASS; 16 inputs unchanged. SDK dependency pruning stays 10,
+OS/process-tree runtime acceptance 11. [Evidence/rollback G then S](enterprise-local/handoffs/TELEMETRY-04.md).
 
 ## 5. Cloud removal with local indexing intact
 

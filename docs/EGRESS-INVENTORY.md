@@ -33,7 +33,19 @@ tokens. Installer browser caller and viewer funnel are disconnected. Local DataR
 /api/import is retained as a local receiver. 58 synthetic tests + one compile and
 artifact closure checks PASS; these are not OS-wide/runtime no-egress acceptance.
 Exact paths/lines, negative-call evidence and remaining remote steps:
-[HOSTED-03](enterprise-local/handoffs/HOSTED-03.md). E03–E22 status is unchanged.
+[HOSTED-03](enterprise-local/handoffs/HOSTED-03.md). E03/E04 are superseded by TELEMETRY-04 below; E05+ status is unchanged.
+
+## TELEMETRY-04 superseding E03/E04 status (2026-11-02)
+
+Source 0abd4180b1971802d7939acba04d46960c4e8c14, generated 6bb7c6995ea47e92ae0176bc88eac75bae871290:
+worker telemetry.ts:1, CLI cli-telemetry.ts:2 and independent backfill.ts:478 under
+src/services/telemetry/ are inert without SDK/fetch/config or flush. Worker start
+(:639) and background initialization (:920) have no telemetry bridge/jobs; legacy
+consent cannot override fork policy (consent.ts:20). Local logs retained. 206 tests +
+one compile PASS; bounded Node closure, not OS-wide/Python E11/runtime acceptance.
+[Exact paths/evidence/rollback](enterprise-local/handoffs/TELEMETRY-04.md).
+The register below retains historical pinned-source findings; E03/E04 are retired
+by this superseding status. SDK declaration/tree pruning remains step 10.
 
 ## Reachable capability register
 
