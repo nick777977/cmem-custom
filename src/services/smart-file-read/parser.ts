@@ -1,21 +1,10 @@
 
-import { execFileSync } from "node:child_process";
-import { writeFileSync, mkdtempSync, mkdirSync, rmSync, existsSync, statSync, openSync, closeSync, readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { tmpdir } from "node:os";
-import { createRequire } from "node:module";
-import { logger } from "../../utils/logger.js";
-import { resolveDataDir } from "../../shared/paths.js";
 import { resolveTreeSitterBinPath } from "./tree-sitter-bin-path.js";
 import { detectLanguage } from "./language-map.js";
 
 // Lives in tree-sitter-bin-path.ts so the file-context hook can check for the
 // CLI without bundling the parser; re-exported for existing importers.
 export { resolveTreeSitterBinPath };
-
-const _require = typeof __filename !== 'undefined'
-  ? createRequire(__filename)
-  : createRequire(import.meta.url);
 
 export interface CodeSymbol {
   name: string;
@@ -67,33 +56,8 @@ const GRAMMAR_PACKAGES: Record<string, string> = {
   markdown: "@tree-sitter-grammars/tree-sitter-markdown",
 };
 
-const GRAMMAR_SUBDIR: Record<string, string> = {
-  markdown: "tree-sitter-markdown",
-};
-
-function resolveGrammarPath(language: string): string | null {
-  const pkg = GRAMMAR_PACKAGES[language];
-  if (!pkg) return null;
-
-  const subdir = GRAMMAR_SUBDIR[language];
-  if (subdir) {
-    try {
-      const rootPkgPath = _require.resolve(pkg + "/package.json");
-      const resolved = join(dirname(rootPkgPath), subdir);
-      if (existsSync(join(resolved, "src"))) return resolved;
-    } catch {
-      // [ANTI-PATTERN IGNORED]: grammar package not installed is expected for unsupported languages
-    }
-    return null;
-  }
-
-  try {
-    const packageJsonPath = _require.resolve(pkg + "/package.json");
-    return dirname(packageJsonPath);
-  } catch {
-    // [ANTI-PATTERN IGNORED]: grammar package not installed is expected for unsupported languages; caller falls back to user grammars or a symbol-less folded view
-    return null;
-  }
+export function requireApprovedGrammar(language: string): void {
+  throw new Error('LOCAL_GRAMMAR_UNAPPROVED: approved bundle-local grammar/native/query closure is unavailable; no module/cache lookup, build or query fallback.');
 }
 
 const QUERIES: Record<string, string> = {
@@ -330,137 +294,6 @@ const QUERIES: Record<string, string> = {
 `,
 };
 
-function getQueryKey(language: string): string {
-  switch (language) {
-    case "javascript":
-      return "js";
-    case "typescript":
-    case "tsx":
-      return "jsts";
-    case "python": return "python";
-    case "go": return "go";
-    case "rust": return "rust";
-    case "ruby": return "ruby";
-    case "java": return "java";
-    case "c": return "c";
-    case "cpp": return "cpp";
-    case "kotlin": return "kotlin";
-    case "swift": return "swift";
-    case "php": return "php";
-    case "lua": return "lua";
-    case "scala": return "scala";
-    case "bash": return "bash";
-    case "haskell": return "haskell";
-    case "zig": return "zig";
-    case "css": return "css";
-    case "scss": return "scss";
-    case "toml": return "toml";
-    case "yaml": return "yaml";
-    case "sql": return "sql";
-    case "markdown": return "markdown";
-    default: return "generic";
-  }
-}
-
-let queryTmpDir: string | null = null;
-const queryFileCache = new Map<string, string>();
-
-function getQueryFile(queryKey: string): string {
-  if (queryFileCache.has(queryKey)) return queryFileCache.get(queryKey)!;
-
-  if (!queryTmpDir) {
-    queryTmpDir = mkdtempSync(join(tmpdir(), "smart-read-queries-"));
-  }
-
-  const filePath = join(queryTmpDir, `${queryKey}.scm`);
-  writeFileSync(filePath, QUERIES[queryKey]);
-  queryFileCache.set(queryKey, filePath);
-  return filePath;
-}
-
-// `tree-sitter query -p <grammar-dir>` implies --rebuild (#3926): the CLI
-// recompiles the grammar from source on EVERY invocation, so each smart_outline
-// / smart_search / smart_unfold call paid a full C compile before it could match
-// a single node. Building the grammar once and passing the artifact with
-// `-l <lib> --lang-name <language>` turns the same call into a library load.
-// Grammar libraries live in the data dir, not in node_modules: a plugin update
-// replaces node_modules wholesale, and writing into a package directory that the
-// installer owns is not ours to do.
-const GRAMMAR_LIB_DIR = join(resolveDataDir(), "tree-sitter-libs");
-
-// dlopen does not care about the suffix, but the platform-native one keeps the
-// directory readable and matches what `tree-sitter build` emits elsewhere.
-const GRAMMAR_LIB_EXTENSION = process.platform === "win32"
-  ? ".dll"
-  : process.platform === "darwin" ? ".dylib" : ".so";
-
-// A grammar is `src/parser.c` plus an optional external scanner. Both are
-// generated artifacts shipped in the npm package, so their mtimes are the
-// cheapest available proxy for "this grammar changed".
-const GRAMMAR_SOURCE_FILES = ["parser.c", "scanner.c", "scanner.cc"];
-
-// Languages whose artifact could not be built or would not bind. Falling back to
-// `-p` per call is correct but slow, so the decision is remembered rather than
-// re-derived for every file batch.
-const grammarLibOptOut = new Set<string>();
-
-/** @internal — test-only: clear the build opt-out set so a prior failure does
- *  not permanently poison subsequent test cases running in the same process. */
-export function _resetGrammarLibOptOut(): void {
-  grammarLibOptOut.clear();
-}
-
-function newestGrammarSourceMtime(grammarPath: string): number {
-  let newest = 0;
-  for (const file of GRAMMAR_SOURCE_FILES) {
-    try {
-      const stats = statSync(join(grammarPath, "src", file));
-      if (stats.mtimeMs > newest) newest = stats.mtimeMs;
-    } catch {
-      // [ANTI-PATTERN IGNORED]: an absent scanner is the normal case for most
-      // grammars; only parser.c is guaranteed to exist.
-    }
-  }
-  return newest;
-}
-
-/**
- * Compile `grammarPath` into a reusable dynamic library, or return null when the
- * caller should stay on the `--grammar-path` path.
- *
- * A library older than the grammar sources is rebuilt: a plugin update ships new
- * grammar packages, and silently querying with the previous grammar would return
- * wrong symbols instead of an error.
- */
-function ensureGrammarLib(language: string, grammarPath: string): string | null {
-  if (grammarLibOptOut.has(language)) return null;
-
-  const libPath = join(GRAMMAR_LIB_DIR, `${language}${GRAMMAR_LIB_EXTENSION}`);
-
-  try {
-    // Deliberately re-stated per call instead of memoized: four stats cost
-    // nothing next to the process spawn they guard, and a memo would pin a
-    // long-lived MCP server to the grammar that was current at boot.
-    const needsBuild = !existsSync(libPath)
-      || statSync(libPath).mtimeMs < newestGrammarSourceMtime(grammarPath);
-
-    if (needsBuild) {
-      mkdirSync(GRAMMAR_LIB_DIR, { recursive: true });
-      execFileSync(resolveTreeSitterBinPath(), ["build", "-o", libPath, grammarPath], {
-        encoding: "utf-8",
-        timeout: 120000,
-        stdio: ["pipe", "pipe", "pipe"],
-      });
-    }
-
-    return libPath;
-  } catch (error) {
-    logger.debug('WORKER', `tree-sitter build failed for ${language}; falling back to --grammar-path`, undefined, error instanceof Error ? error : undefined);
-    grammarLibOptOut.add(language);
-    return null;
-  }
-}
-
 interface RawCapture {
   tag: string;
   startRow: number;
@@ -473,48 +306,6 @@ interface RawCapture {
 interface RawMatch {
   pattern: number;
   captures: RawCapture[];
-}
-
-function runQuery(queryFile: string, sourceFile: string, grammarPath: string, language: string): RawMatch[] {
-  const result = runBatchQuery(queryFile, [sourceFile], grammarPath, language);
-  return result.get(sourceFile) || [];
-}
-
-function execQuery(execArgs: string[], sourceFileCount: number): string | null {
-  // Native capture output can exceed execFileSync's fixed pipe buffer for a
-  // language batch. Spool stdout to an owned file so valid matches survive.
-  const outputDir = mkdtempSync(join(tmpdir(), "smart-read-query-output-"));
-  const outputPath = join(outputDir, "captures.txt");
-  let outputFd: number | undefined;
-  try {
-    outputFd = openSync(outputPath, "w");
-    execFileSync(resolveTreeSitterBinPath(), execArgs, { encoding: "utf-8", timeout: 30000, stdio: ["pipe", outputFd, "pipe"] });
-    return readFileSync(outputPath, "utf-8");
-  } catch (error) {
-    logger.debug('WORKER', `tree-sitter query failed for ${sourceFileCount} file(s)`, undefined, error instanceof Error ? error : undefined);
-    return null;
-  } finally {
-    if (outputFd !== undefined) closeSync(outputFd);
-    rmSync(outputDir, { recursive: true, force: true });
-  }
-}
-
-function runBatchQuery(queryFile: string, sourceFiles: string[], grammarPath: string, language: string): Map<string, RawMatch[]> {
-  if (sourceFiles.length === 0) return new Map();
-
-  const libPath = ensureGrammarLib(language, grammarPath);
-  if (libPath) {
-    const output = execQuery(["query", "-l", libPath, "--lang-name", language, queryFile, ...sourceFiles], sourceFiles.length);
-    if (output !== null) return parseMultiFileQueryOutput(output);
-
-    // The artifact exists but will not bind — a grammar whose language function
-    // is not named after our language key would fail here on every call. Drop
-    // back to --grammar-path permanently rather than paying two spawns per batch.
-    grammarLibOptOut.add(language);
-  }
-
-  const output = execQuery(["query", "-p", grammarPath, queryFile, ...sourceFiles], sourceFiles.length);
-  return output === null ? new Map() : parseMultiFileQueryOutput(output);
 }
 
 function parseMultiFileQueryOutput(output: string): Map<string, RawMatch[]> {
@@ -1073,96 +864,13 @@ function buildSymbols(matches: RawMatch[], lines: string[], language: string): {
 }
 
 export function parseFile(content: string, filePath: string): FoldedFile {
-  const language = detectLanguage(filePath);
-  const lines = content.split("\n");
-
-  const grammarPath = resolveGrammarPath(language);
-  if (!grammarPath) {
-    return {
-      filePath, language, symbols: [], imports: [],
-      totalLines: lines.length, foldedTokenEstimate: 50,
-    };
-  }
-
-  const queryFile = getQueryFile(getQueryKey(language));
-
-  const ext = filePath.slice(filePath.lastIndexOf(".")) || ".txt";
-  const tmpDir = mkdtempSync(join(tmpdir(), "smart-src-"));
-  const tmpFile = join(tmpDir, `source${ext}`);
-  writeFileSync(tmpFile, content);
-
-  try {
-    const matches = runQuery(queryFile, tmpFile, grammarPath, language);
-    const result = buildSymbols(matches, lines, language);
-
-    const folded = formatFoldedView({
-      filePath, language,
-      symbols: result.symbols, imports: result.imports,
-      totalLines: lines.length, foldedTokenEstimate: 0,
-    });
-
-    return {
-      filePath, language,
-      symbols: result.symbols, imports: result.imports,
-      totalLines: lines.length,
-      foldedTokenEstimate: Math.ceil(folded.length / 4),
-    };
-  } finally {
-    rmSync(tmpDir, { recursive: true, force: true });
-  }
+  throw new Error("LOCAL_GRAMMAR_UNAPPROVED: approved bundle-local grammar/native/query closure is unavailable; no module/cache lookup, build or query fallback.");
 }
 
 export function parseFilesBatch(
   files: Array<{ absolutePath: string; relativePath: string; content: string }>
 ): Map<string, FoldedFile> {
-  const results = new Map<string, FoldedFile>();
-
-  const languageGroups = new Map<string, typeof files>();
-  for (const file of files) {
-    const language = detectLanguage(file.relativePath);
-    if (!languageGroups.has(language)) languageGroups.set(language, []);
-    languageGroups.get(language)!.push(file);
-  }
-
-  for (const [language, groupFiles] of languageGroups) {
-    const grammarPath = resolveGrammarPath(language);
-    if (!grammarPath) {
-      for (const file of groupFiles) {
-        const lines = file.content.split("\n");
-        results.set(file.relativePath, {
-          filePath: file.relativePath, language, symbols: [], imports: [],
-          totalLines: lines.length, foldedTokenEstimate: 50,
-        });
-      }
-      continue;
-    }
-
-    const queryFile = getQueryFile(getQueryKey(language));
-
-    const absolutePaths = groupFiles.map(f => f.absolutePath);
-    const batchResults = runBatchQuery(queryFile, absolutePaths, grammarPath, language);
-
-    for (const file of groupFiles) {
-      const lines = file.content.split("\n");
-      const matches = batchResults.get(file.absolutePath) || [];
-      const symbolResult = buildSymbols(matches, lines, language);
-
-      const folded = formatFoldedView({
-        filePath: file.relativePath, language,
-        symbols: symbolResult.symbols, imports: symbolResult.imports,
-        totalLines: lines.length, foldedTokenEstimate: 0,
-      });
-
-      results.set(file.relativePath, {
-        filePath: file.relativePath, language,
-        symbols: symbolResult.symbols, imports: symbolResult.imports,
-        totalLines: lines.length,
-        foldedTokenEstimate: Math.ceil(folded.length / 4),
-      });
-    }
-  }
-
-  return results;
+  throw new Error("LOCAL_GRAMMAR_UNAPPROVED: approved bundle-local grammar/native/query closure is unavailable; no module/cache lookup, build or query fallback.");
 }
 
 export function formatFoldedView(file: FoldedFile): string {
