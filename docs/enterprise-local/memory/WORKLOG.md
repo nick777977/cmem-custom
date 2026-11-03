@@ -700,3 +700,49 @@ Rollback H/S/B in reverse with paired host outputs; old 09/09B/09C history prese
 Documentation closure PASS: 14 Markdown files/114 relative links/32 pinned-SHA line
 assertions; balanced fences/whitespace, unchanged graph/seven historical handoffs,
 application/harness/outputs match H. Final docs commit follows; all claims released.
+
+## WINDOWS-09E — common mock admission/teardown failures (2026-11-03)
+
+Explicit serial same-step9 launch; clean entry b9e683b75ed43c154a274c66fd599a200f666de8,
+feat/cmem-light-local. AGENTS/README/STATE/roadmap step9+graph/TASKS/09D exact gaps/
+PATCH9/VALIDATION/LLM-PROFILES/current environment read; exact board claim before edits.
+No agents/branches/worktrees/other steps or historical audit/check replay.
+
+H98a6d019c468e63e9d78dbcd643e6f062e117a36 changes only existing common harness/test:
+validate admission/handles, capture sync launch/completion errors, preserve original
+primary and phase-tagged cleanup failures, independently bound stop/release attempts.
+Release is attempted after failed/timed-out stop. Missing members fail and available
+members still run. Async launch rejected; rejected completion drained. Unknown launch
+ownership is never described as OS cleanup. Native-kind remains BLOCKED before launch;
+callbacks/timers not native admission/egress/DNS/release evidence. No nominal adapter.
+
+Reviewed fixtures/preload/import-free override, process/network/listener/fetch guard,
+synthetic env, copied-artifact hashes and confined cleanup before execution. Existing
+Bun1.4.4+38afee6c8 verified; one affected-file run 16 PASS/337 assertions, 0 FAIL,
+zero forbidden tripwire events. Admission/malformed handle/sync refusal/rejected
+completion/startup/result/deadline/output failure plus 25 stop/release combinations,
+including both cleanup timeouts with primary failure. No retry. Synthetic allowlist
+state only windows-09e scratch. No real user state/assets or actual child under test.
+
+No application/generated delta, compile/typecheck or dependency/toolchain change.
+09D B855ef7d6e/S236dd661c/H2935e19d0 and one compile/19-input/869-source/192-output
+preservation evidence retained, not rerun. All 09/09B/09C commits/handoffs preserved.
+One initial rg glob and two guessed fixture Get-Content paths failed read-only;
+located exact upstream fixture with rg, inspected but did not execute it. Git index
+write sandbox-denied then authorized .git escalation succeeded, hooks/signing off.
+No auto-review rejection or push. git diff --check PASS.
+
+A25 and affected contracts/current STATE/TASKS/README/environment/prompts updated;
+exact command/hash/source citations/remaining gaps/rollback in handoffs/WINDOWS-09E.md.
+Native OS substrate/API/artifact, pre-execution host/interpreter and actual protocol
+contracts remain absent. No native runtime/V3-V6/CI/provision/upload/auth/inference/
+AWS/acquisition/registration/PATH/registry/real data. Planner source-only BLOCKED D5,
+CI manual-only BLOCKED D12, U1/D9 activation blocked, D11/A15 steps10/11/12 open.
+Provider/native-login and memory/viewer semantics preserved, no step6 work or
+SQLite-only success bypass; roadmap graph unchanged. Claims released. One next prompt
+WINDOWS-09F remaining source: concrete OS substrate/API and artifact-interface review,
+not actual V3. Documentation closure follows H; no source edits after V1.
+
+Documentation closure PASS: 14 Markdown files/121 relative links/18 H-pinned source
+line assertions; balanced fences/whitespace, source/tests stable, tracked preservation
+scope and roadmap graph unchanged. Final local docs commit follows, hooks/signing off.

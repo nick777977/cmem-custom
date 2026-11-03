@@ -183,7 +183,13 @@ Claude/Bedrock/API/Codex ChatGPT/OpenAI-compatible and native-provider login fil
 preserved. Unbound host templates and explicit interpreter paths do not authorize
 login or interpreter execution. Step6 role/model/auth/fallback policy remains open;
 no provider run or local MCP protocol success is claimed.
-[Current source evidence](handoffs/WINDOWS-09D.md).
+[Historical source evidence](handoffs/WINDOWS-09D.md).
+
+WINDOWS-09E H98a6d019c changes only common mock harness/tests. Admission and cleanup
+failure handling supplies V1 evidence; no provider/native-login implementation, model/
+auth routing, local MCP tool or application behavior changed. No auth/inference/MCP
+process or real credentials/state read. Native remains BLOCKED; step6 stays open.
+[Current bounded evidence](handoffs/WINDOWS-09E.md).
 
 Inspected source **48feeab567995de81d501b74007694b5ee95a880**, static only:
 

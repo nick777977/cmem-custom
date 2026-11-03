@@ -61,8 +61,16 @@ PASS, root same three TS2345. 19 inputs/869 source sentinels/192 outputs unchang
 across compile; eight canonical outputs paired in B, no generated follow-up commit.
 Host loading/envelope/runtime approval remains unproved; native-kind still BLOCKED.
 Common harness launch/stop/release failure source and concrete OS/artifact/protocol
-prerequisites remain. See docs/enterprise-local/handoffs/WINDOWS-09D.md; next WINDOWS-09E source-only
-continuation awaits explicit launch. Do not activate this partial candidate.
+prerequisites remain. See docs/enterprise-local/handoffs/WINDOWS-09D.md.
+WINDOWS-09E H98a6d019c closes the common mock admission/teardown failure slice:
+validated inputs/handles, preserved primary/cleanup failures, independent bounded
+release attempt after failed/timed-out stop. Sync launch failure leaves ownership
+unknown; callbacks/timers are not OS cleanup/egress proof. 16 V1 tests/337 assertions
+PASS, zero forbidden tripwire events; no application changes, compile/typecheck or
+actual child. Prior 09D compile evidence preserved. Native-kind remains BLOCKED.
+See docs/enterprise-local/handoffs/WINDOWS-09E.md; next WINDOWS-09F remaining-source
+OS substrate/API and artifact-interface review awaits explicit launch. Do not activate
+this partial candidate or propose actual V3 before all concrete prerequisites exist.
 Provider adapters and selected-provider login support must not
 be pruned as a side effect of launcher/bootstrap removal.
 Actual compiled-process smoke/CI/provider execution remains separately scoped.

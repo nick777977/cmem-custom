@@ -6,7 +6,17 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
-Latest **WINDOWS-09D** (2026-11-03): B855ef7d6e/S236dd661c/H2935e19d0. Exact
+Latest **WINDOWS-09E** (2026-11-03): H98a6d019c, harness/tests only. Existing Bun
+1.4.4+38afee6c8 verified; Node22.23.4/npm10.9.9 baseline retained, not re-executed.
+One affected-file V1 run: 16 PASS/337 assertions, zero forbidden process/network/
+listener/fetch events. Synthetic allowlist state only windows-09e scratch; no real
+assets/state or application/generated child. No compile/typecheck replay, install,
+dependency resolution or toolchain change. 09D one-compile/19-input/869-source/192-output
+evidence below preserved, not repeated. Native remains BLOCKED, V3-V6/CI NOT RUN;
+step9 partial. Next WINDOWS-09F remaining-source OS substrate/API and artifact-interface
+review. [Actual checks, limits and rollback](handoffs/WINDOWS-09E.md).
+
+Earlier **WINDOWS-09D** (2026-11-03): B855ef7d6e/S236dd661c/H2935e19d0. Exact
 existing Node22.23.4/npm10.9.9/Bun1.4.4 verified, no install/update/resolution. 20 V1
 tests/433 assertions PASS; zero process/network/listener/fetch tripwire events.
 Authored-source VM/extracted installer bodies/copied-artifact mocks only; no emitted

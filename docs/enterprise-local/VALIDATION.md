@@ -1,7 +1,7 @@
 # Build, runtime and CI evidence contract
 
 Accepted validation plan, 2026-11-02, A20. V3-V6 remain planned/not run; bounded
-WINDOWS-09/09B/09C/09D V1/V2 results and harness/CI source are distinguished below.
+WINDOWS-09/09B/09C/09D V1/V2 and 09E V1 results and harness/CI source are distinguished below.
 Execution needs the applicable user launch and isolated assets/permissions. This file
 owns validation levels and pass criteria; [roadmap](../roadmap.md) alone owns dependency
 edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
@@ -20,6 +20,7 @@ edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
 | WINDOWS-09C source/harness | 20 V1 tests / 234 assertions, one compile/viewer PASS; root same three errors; MCP pair emitted plus seven canonical host outputs; 19 inputs/868 source sentinels stable across compile | Refusal only; host interpreter/loading, independent helpers, native OS boundary and artifacts/specs remain; no V3/readiness |
 | WINDOWS-09D source/harness | B855ef7d6e/S236dd661c/H2935e19d0; 20 V1 tests/433 assertions, one compile/viewer PASS; root same three errors; 19 inputs/869 source sentinels/192 outputs stable across compile, eight canonical outputs paired in B | Literal interpreter rendering and unbound host templates are not pre-execution approval or host loading/envelope proof; native/artifact/protocol prerequisites and common harness teardown failures remain |
 | Fork-specific CI and actual process smoke | Source authored; runtime/CI NOT RUN, native adapter and D12 pending | Manual-only workflow unconditionally blocks; no green CI or V3 evidence |
+| WINDOWS-09E common mock harness | H98a6d019c, 16 V1 tests/337 assertions PASS; no application/generated change, compile/typecheck NOT RUN | Sync launch ownership unknown; independent stop/release and preserved failures are mock orchestration, not native ownership/egress/cleanup proof |
 
 These are real tests and real compilation, not mere source review. Worker bundles are
 compiled by esbuild; the viewer also invokes its TypeScript/Vite build. This is not a
@@ -121,10 +122,24 @@ bind an interpreter as tested host lifecycle. Four wrappers have no env-node she
 Paths/realpath identity never approve runtime version/hash/ABI. 20 tests/433 assertions,
 one compile/viewer PASS, root baseline FAIL; all compile input/source/output sentinels
 stable, so no redundant postcompile test replay. Native-kind still unconditionally
-BLOCKED. Next source-only runner work must cover launch ownership uncertainty and
-release assertions after failed/timed-out stop; current mocks cannot prove OS cleanup.
+BLOCKED. At 09D, launch ownership uncertainty and release after failed/timed-out stop
+remained source gaps; 09E below addresses mock orchestration, without OS cleanup proof.
+
+WINDOWS-09E H98a6d019c addresses that common mock failure gap: case/handle validation,
+sync launch refusal, completion/startup/result/deadline/output errors and independent
+bounded stop/release with all errors retained. Release is attempted even after stop
+failure/timeout; invalid/missing callbacks fail. Sync launch without a handle means
+ownership unknown, not released. Separate per-stage timers do not preempt synchronous
+JS, cancel pending callbacks or bound native startup/live streams. 16 V1 tests/337
+assertions PASS; no actual child, compile/typecheck or application/generated change.
+Native-kind at scripts/enterprise-local/compiled-smoke.mjs:146 (H) remains unconditionally
+BLOCKED. No callback/native label approves OS ownership, inherited egress/DNS denial
+or owned-tree/listener/handle/boundary cleanup. Next remaining source reviews concrete
+OS substrate/API and artifact-interface inputs; actual V3 cannot be proposed before
+approved immutable artifacts, implemented native adapter/OS boundary, permissions
+and cleanup readiness. [Exact evidence/gaps/rollback](handoffs/WINDOWS-09E.md).
 MCP initialize/list-tools and worker lifecycle success specs remain unimplemented,
-not conditionally green. [Current exact evidence/gaps](handoffs/WINDOWS-09D.md).
+not conditionally green. [Current exact evidence/gaps](handoffs/WINDOWS-09E.md).
 
 Required cases, selected according to implemented features:
 

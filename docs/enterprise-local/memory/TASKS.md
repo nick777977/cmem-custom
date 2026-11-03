@@ -23,7 +23,26 @@ This board does not grant permission or duplicate the dependency graph.
 | WINDOWS-09B / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry e27548d545 | None active; reservations released | Launcher e9c8038ca, bootstrap 8bbf2830c, S e3d91a505 / H bbc3847e9 / G 62a468f6d. 19 tests/112 assertions, one compile/viewer PASS, root three known errors. handoffs/WINDOWS-09B.md; V3/CI NOT RUN. |
 | WINDOWS-09C / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry 59c709482 | None active; all released | Host 2d8688e78/CLI 4945a916e/utilities c9978be26/S bc3275b4c/H abfce3963/G 4ac6ad868. 20 tests/234 assertions, one compile/viewer PASS; root same baseline. handoffs/WINDOWS-09C.md. No V3/CI. |
 | WINDOWS-09D / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry 8b39d1f86 | None active; all released | B855ef7d6e/S236dd661c/H2935e19d0; 20 tests/433 assertions, one compile/viewer PASS, root baseline FAIL; 19 inputs/869 source sentinels/192 outputs unchanged across compile. handoffs/WINDOWS-09D.md. No V3/CI. |
-| WINDOWS-09E / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: common harness admission/teardown failure source; native remains BLOCKED. No runtime launch. |
+| WINDOWS-09E / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry b9e683b75 | None active; all released | H98a6d019c, 16 V1 tests/337 assertions PASS, zero tripwire events; no application/generated delta or compile/typecheck. handoffs/WINDOWS-09E.md. No V3/CI. |
+| WINDOWS-09F / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: concrete native OS substrate/API and artifact-interface remaining-source review; no adapter until reviewed concrete contract. Native BLOCKED. |
+
+## WINDOWS-09E reservation history — all released
+
+Claimed at clean b9e683b75ed43c154a274c66fd599a200f666de8 after branch/status/HEAD
+recheck and before edits; explicit 2026-11-03 user launch.
+One coordinator, serial, no agents/branches/worktrees or other steps. Harness:
+scripts/enterprise-local/compiled-smoke.mjs; tests/enterprise-local/compiled-smoke.test.ts.
+Reuse existing copied-artifact mocks and dependencies. Scratch only
+.scratch/enterprise-local/windows-09e/ (reviewed guard/run scripts and synthetic state).
+No application/generator/output edits, compile/typecheck or real child execution planned.
+Docs: AGENTS.md; docs/{roadmap,PATCH-SEQUENCE}.md; docs/enterprise-local/
+{README,VALIDATION,LLM-PROFILES,DEV-ENVIRONMENT,NEXT-SESSION,SESSION-PROMPTS}.md;
+memory/{STATE,TASKS,WORKLOG,DECISIONS}.md; handoffs/WINDOWS-09E.md.
+Completed H98a6d019c: validate admission/owned handle, preserve primary plus independent
+bounded stop/release failures. Sync launch failure means ownership unknown, never
+OS cleanup success. 16 V1 tests/337 assertions PASS; native absent/BLOCKED, historical
+commits preserved. No application/generator/output edit or compile/typecheck; docs
+closure follows H. All reservations released; next WINDOWS-09F is unclaimed.
 
 ## WINDOWS-09D reservation history — all released
 
@@ -221,15 +240,16 @@ SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed WINDOWS-09E
+## Minimal context for proposed WINDOWS-09F
 
 - AGENTS -> README -> STATE -> roadmap step 9/graph/checkpoints -> TASKS.
-- DECISIONS A19/A20/A24 and preserved invariants; current environment; NEXT-SESSION.
-- LLM-PROFILES and VALIDATION V1-V3/CI; PLAN-ADAPT-05/current environment;
-  TELEMETRY-04 and CHROMA-07 limits; PATCH-SEQUENCE section 9;
-  E12/E13/E14/E21 and corresponding AUDIT-CLOSURE notes, then direct callers after claim.
+- DECISIONS A19/A20/A24/A25 and preserved invariants; current environment; NEXT-SESSION.
+- LLM-PROFILES scope/auth/MCP and VALIDATION V1-V3/CI; current environment;
+  PATCH-SEQUENCE section9 and 09E exact native/host/artifact/protocol prerequisites.
+- No previous audit/check replay; inspect only bounded native-interface source and
+  official API references needed to assess concrete guarantees after exact claim.
 
-Read handoffs/WINDOWS-09D.md first for completed refusal/harness source and exact gaps;
+Read handoffs/WINDOWS-09E.md first for completed mock failure source and exact gaps;
 do not repeat its checks/audit by default. Current NEXT-SESSION owns one bounded launch.
 
 No whole-history or baseline/trust/hosted/Chroma replay. No real user state or runtime

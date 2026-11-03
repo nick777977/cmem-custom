@@ -60,7 +60,7 @@ independent helper APIs, native OS adapter and artifact/spec prerequisites remai
 [Exact evidence/gaps/rollback](handoffs/WINDOWS-09C.md). Next proposed launch:
 **WINDOWS-09D remaining source**, subsequently completed within the boundary below.
 
-Latest **WINDOWS-09D**: host/source/eight paired outputs B855ef7d6e, final source
+Earlier **WINDOWS-09D**: host/source/eight paired outputs B855ef7d6e, final source
 S236dd661c, tests/harness H2935e19d0. Explicit literal interpreter rendering, unbound
 structured host commands, shell exit1, no bare node or /bin/sh/Qoder wrapper hosting.
 Independent installer/runtime/diagnostic operations refuse; dormant bootstrap removed,
@@ -68,8 +68,16 @@ native-provider login files preserved. 20 V1 tests/433 assertions, one compile/v
 PASS; root same three TS2345. 19 inputs/869 source sentinels/192 outputs unchanged
 across compile; no generated follow-up commit. No real host envelope/loading proof,
 native adapter/artifacts/admission/cleanup/protocol specs remain blocked; step9 partial.
-[Exact evidence/gaps/rollback](handoffs/WINDOWS-09D.md). Next single task:
-**WINDOWS-09E remaining source — harness admission/teardown failure paths**.
+[Historical evidence/gaps/rollback](handoffs/WINDOWS-09D.md).
+
+Latest **WINDOWS-09E H98a6d019c**: common mock runner validates admission/handles,
+retains primary plus cleanup failures and attempts bounded release after failed/
+timed-out stop. Sync launch refusal means ownership unknown, never OS cleanup success.
+16 V1 tests/337 assertions PASS, zero forbidden tripwire events. No application or
+generated changes, compile/typecheck or real child; 09D evidence preserved. Native
+remains BLOCKED; step9 partial. [Exact evidence/gaps/rollback](handoffs/WINDOWS-09E.md).
+Next single task: **WINDOWS-09F remaining source — concrete native OS substrate/API
+and artifact-interface review**. No actual V3 prompt until all concrete prerequisites exist.
 
 ## Reading order
 

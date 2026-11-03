@@ -211,7 +211,7 @@ canonical host outputs regenerated. Native-kind adapter explicitly BLOCKED; no V
 APIs and native OS adapter/artifact/spec prerequisites. Full step9 remains partial.
 [Exact evidence/gaps/rollback](enterprise-local/handoffs/WINDOWS-09C.md).
 
-Latest **WINDOWS-09D** B855ef7d6e/S236dd661c/H2935e19d0: literal absolute
+Earlier **WINDOWS-09D** B855ef7d6e/S236dd661c/H2935e19d0: literal absolute
 interpreter source rendering, canonical structured commands unbound/empty, shell
 exit1, no bare node, /bin/sh or Qoder wrapper hosting. Independent installer helpers
 and diagnostics refuse; private runtime/bootstrap/probe bodies/imports retired.
@@ -221,6 +221,16 @@ paired in B, no generated follow-up commit. Host binding/runtime approval and na
 OS/artifact/protocol prerequisites remain; **WINDOWS-09E remaining source** owns common
 harness admission/teardown failures. No registration, actual V3 or full step9 closure.
 [Exact evidence/gaps/rollback](enterprise-local/handoffs/WINDOWS-09D.md).
+
+Latest **WINDOWS-09E H98a6d019c** closes common mock admission/teardown failure
+source: validate inputs/handle, retain primary and cleanup errors, attempt bounded
+release after failed/timed-out stop. Sync launch failure leaves ownership unknown;
+callbacks/timers prove no native ownership/egress/cleanup. 16 V1 tests/337 assertions
+PASS; no application/generated delta, compile/typecheck or actual child. 09D compile
+and preservation evidence unchanged. Native-kind still BLOCKED; full step9 open.
+Next **WINDOWS-09F remaining source** reviews concrete native OS substrate/API and
+artifact-interface prerequisites; no nominal adapter or actual V3 before readiness.
+[Exact evidence/gaps/rollback](enterprise-local/handoffs/WINDOWS-09E.md). Graph unchanged.
 
 Private ID and bundle-local launcher/MCP/hooks; remove upstream/global cache fallback,
 Bash Setup/runtime install/update/self-repair compile. Local PowerShell preflight /

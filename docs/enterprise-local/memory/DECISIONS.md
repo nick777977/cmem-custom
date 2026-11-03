@@ -91,6 +91,23 @@ one compile/viewer PASS; root three baseline TS2345. 19 inputs/869 source sentin
 A19/A20/U1/D9/D11/D12/A15 retained, no graph/identity/protocol/lock/trust changes.
 [Evidence, source citations, limitations and rollback](../handoffs/WINDOWS-09D.md).
 
+### A25 — WINDOWS-09E common mock failure handling (2026-11-03)
+
+Explicit serial harness/test-only launch. H98a6d019c validates case/handle admission,
+captures sync launch/completion failures and retains primary plus independent bounded
+stop/release errors. Release is attempted after failed/timed-out stop; missing cleanup
+members fail. Sync launch failure leaves ownership unknown and cleanup unproved.
+Callbacks and JS timers do not prove OS ownership, cancellation, live stream bounds,
+inherited egress/DNS denial or native resource release. Native-kind remains BLOCKED;
+no nominal adapter/approval manifest or image-name/PID/global-port kill introduced.
+16 V1 tests/337 assertions PASS, zero forbidden tripwire events; no application/
+generated delta, compile/typecheck replay or actual child. All 09/09B/09C/09D evidence
+preserved. Step9 partial; concrete OS substrate/API, immutable artifact and host/protocol
+contracts remain prerequisites. Next WINDOWS-09F reviews those concrete remaining-source
+inputs, not actual V3. A19/A20/U1/D9/D11/D12/A15 and D5 proposals unchanged; no graph,
+provider/native-login, identity/memory/viewer, locks/trust/toolchain change.
+[Exact evidence, source citations, limitations and rollback](../handoffs/WINDOWS-09E.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |
