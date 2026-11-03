@@ -5,7 +5,7 @@ import path from 'node:path';
 import { compiledEntries, deadlines, leafCases, refusalCases, wrapperRefusalCases, prepareCopiedBundle, runCase, syntheticEnvironment } from '../../scripts/enterprise-local/compiled-smoke.mjs';
 
 const workspace = process.cwd();
-const task = path.resolve('.scratch/enterprise-local/windows-09d');
+const task = path.resolve('.scratch/enterprise-local/windows-09e');
 mkdirSync(task, { recursive: true });
 const root = mkdtempSync(path.join(task, 'orchestration-'));
 afterAll(() => {
@@ -29,6 +29,10 @@ function mockProcess(output: object | Promise<object>, cleanupFails = false) {
     };
   } } };
 }
+async function failureOf(spec: any, adapter: any): Promise<any> {
+  try { await runCase(spec, adapter); } catch (error) { return error; }
+  throw new Error('Expected harness failure');
+}
 describe('compiled-entrypoint orchestration (MOCK ONLY, V1)', () => {
   it('builds an env allowlist with no ambient auth/model/profile inheritance', () => {
     const env = syntheticEnvironment(root, tools);
@@ -51,6 +55,137 @@ describe('compiled-entrypoint orchestration (MOCK ONLY, V1)', () => {
   it('requires an explicit process boundary (no native/default adapter)', async () => {
     await expect(runCase({}, undefined)).rejects.toThrow('APPROVED_PROCESS_ADAPTER_REQUIRED');
     await expect(runCase({}, { kind: 'native', launch() { throw Error('must not launch'); } })).rejects.toThrow('NATIVE_OS_BOUNDARY_NOT_IMPLEMENTED');
+  });
+  it('rejects invalid admission inputs before any launch', async () => {
+    const spec = leafCases(fixture('invalid admission'), 3)[0];
+    let launches = 0;
+    const adapter = { kind: 'mock', launch() { launches++; throw Error('must not launch'); } };
+    const invalid = [null, {}, { ...spec, executable: 'node' }, { ...spec, cwd: '.' },
+      { ...spec, args: [1] }, { ...spec, env: { KEY: 1 } }, { ...spec, stdin: null },
+      { ...spec, expected: { exit: NaN } }, { ...spec, expected: { exit: 0, stdout: 1 } }];
+    for (const key of ['runMs', 'cleanupMs', 'maxOutputBytes']) {
+      for (const value of [0, -1, NaN, Infinity, 1.5, deadlines[key] + 1]) invalid.push({ ...spec, [key]: value });
+    }
+    for (const input of invalid) await expect(runCase(input, adapter)).rejects.toThrow('INVALID_');
+    expect(launches).toBe(0);
+  });
+  it('reports unknown ownership on sync launch refusal without claiming OS cleanup', async () => {
+    const spec = leafCases(fixture('sync launch refusal'), 3)[0];
+    const primary = new Error('sync admission refused');
+    const error = await failureOf(spec, { kind: 'mock', launch() { throw primary; } });
+    expect(error).toBeInstanceOf(AggregateError);
+    expect(error.primaryError).toBe(primary);
+    expect(error.errors).toEqual([primary]);
+    expect(error.cleanupFailures).toEqual([]);
+    expect(error.ownership).toBe('unknown');
+    expect(error.cleanup).toBe('unproved');
+  });
+  it('validates malformed handles and independently captures/attempts available cleanup', async () => {
+    const spec = { ...leafCases(fixture('malformed handles'), 3)[0], cleanupMs: 5 };
+    for (const value of [null, undefined, 42, 'handle']) {
+      const error = await failureOf(spec, { kind: 'mock', launch: () => value });
+      expect(error.message).toContain('INVALID_OWNED_HANDLE');
+      expect(error.ownership).toBe('unknown');
+      expect(error.cleanup).toBe('unproved');
+    }
+    const events: string[] = [];
+    const handle: any = {
+      completion: null,
+      stopOwnedTree() { events.push('stop'); },
+      assertReleased() { events.push('release'); },
+    };
+    let error = await failureOf(spec, { kind: 'mock', launch: () => handle });
+    expect(error.message).toContain('INVALID_OWNED_HANDLE: completion');
+    expect(events).toEqual(['stop', 'release']);
+    expect(error.ownership).toBe('returned-unverified');
+    for (const missing of ['stopOwnedTree', 'assertReleased']) {
+      events.length = 0;
+      const malformed = { ...handle, completion: Promise.reject(new Error('drained completion')), [missing]: null };
+      error = await failureOf(spec, { kind: 'mock', launch: () => malformed });
+      expect(error.cleanupFailures[0].phase).toBe(missing === 'stopOwnedTree' ? 'stop' : 'release');
+      expect(events).toEqual([missing === 'stopOwnedTree' ? 'release' : 'stop']);
+    }
+    events.length = 0;
+    const getterFailure = new Error('stop getter failed');
+    const poisoned = { ...handle, get stopOwnedTree() { throw getterFailure; } };
+    error = await failureOf(spec, { kind: 'mock', launch: () => poisoned });
+    expect(error.cleanupFailures[0].error).toBe(getterFailure);
+    expect(events).toEqual(['release']);
+    error = await failureOf(spec, { kind: 'mock', launch: () => Promise.reject(new Error('async launch is invalid')) });
+    expect(error.message).toContain('async launch');
+    expect(error.ownership).toBe('unknown');
+  });
+  it('preserves primary and both cleanup failures, including non-Error rejection values', async () => {
+    const spec = leafCases(fixture('combined failures'), 3)[0];
+    const primary = new Error('completion rejected');
+    const stop = new Error('stop rejected');
+    const release = new Error('release rejected');
+    const events: string[] = [];
+    const error = await failureOf(spec, { kind: 'mock', launch: () => ({
+      completion: Promise.reject(primary),
+      stopOwnedTree() { events.push('stop'); return Promise.reject(stop); },
+      assertReleased() { events.push('release'); throw release; },
+    }) });
+    expect(error.errors).toEqual([primary, stop, release]);
+    expect(error.primaryError).toBe(primary);
+    expect(error.cleanupFailures.map((f: any) => f.phase)).toEqual(['stop', 'release']);
+    expect(events).toEqual(['stop', 'release']);
+    expect(error.cleanup).toBe('unproved');
+    const undefinedFailure = await failureOf(spec, mockProcess(Promise.reject(undefined)).adapter);
+    expect(undefinedFailure.primaryFailed).toBe(true);
+    expect(undefinedFailure.errors).toEqual([undefined]);
+  });
+  it('keeps startup/result/output/deadline failures when both cleanup waits time out', async () => {
+    const spec = { ...leafCases(fixture('primary timeout matrix'), 3)[0], runMs: 5, cleanupMs: 5, maxOutputBytes: 4 };
+    for (const [output, code] of [
+      [{ exit: 1, stdout: '', stderr: '' }, 'UNEXPECTED_PROCESS_EXIT'],
+      [{ exit: 0, stdout: '', stderr: '', signal: 'SIGTERM' }, 'UNEXPECTED_PROCESS_EXIT'],
+      [{ exit: 0, stdout: '123', stderr: '45' }, 'OUTPUT_LIMIT'],
+      [{ exit: 0, stdout: null, stderr: '' }, 'INVALID_PROCESS_RESULT'],
+      [null, 'INVALID_PROCESS_RESULT'],
+      [new Promise(() => {}), 'PROCESS_DEADLINE'],
+    ] as const) {
+      const events: string[] = [];
+      const error = await failureOf(spec, { kind: 'mock', launch: () => ({
+        completion: Promise.resolve(output),
+        stopOwnedTree() { events.push('stop'); return new Promise(() => {}); },
+        assertReleased() { events.push('release'); return new Promise(() => {}); },
+      }) });
+      expect(error.primaryError.message).toBe(code);
+      expect(error.errors.map((e: Error) => e.message)).toEqual([code, 'CLEANUP_DEADLINE', 'RELEASE_DEADLINE']);
+      expect(events).toEqual(['stop', 'release']);
+    }
+  });
+  it('attempts release after every stop failure/timeout and retains release failure/timeout', async () => {
+    const spec = { ...leafCases(fixture('cleanup matrix'), 3)[0], cleanupMs: 5 };
+    for (const stopMode of ['ok', 'throw', 'reject', 'timeout', 'false']) {
+      for (const releaseMode of ['ok', 'throw', 'reject', 'timeout', 'false']) {
+        const events: string[] = [];
+        const callback = (phase: string, mode: string) => () => {
+          events.push(phase);
+          if (mode === 'throw') throw new Error(`${phase} failed`);
+          if (mode === 'reject') return Promise.reject(new Error(`${phase} rejected`));
+          if (mode === 'timeout') return new Promise(() => {});
+          if (mode === 'false') return false;
+        };
+        const adapter = { kind: 'mock', launch: () => ({
+          completion: Promise.resolve({ exit: 0, stdout: '3\n', stderr: '' }),
+          stopOwnedTree: callback('stop', stopMode), assertReleased: callback('release', releaseMode),
+        }) };
+        if (stopMode === 'ok' && releaseMode === 'ok') {
+          expect(await runCase(spec, adapter)).toMatchObject({ level: 'V1', substituted: true, readiness: false });
+        } else {
+          const error = await failureOf(spec, adapter);
+          expect(error.primaryFailed).toBe(false);
+          expect(error.cleanupFailures.map((f: any) => f.phase)).toEqual([
+            ...(stopMode === 'ok' ? [] : ['stop']), ...(releaseMode === 'ok' ? [] : ['release']),
+          ]);
+          if (stopMode === 'timeout') expect(error.message).toContain('CLEANUP_DEADLINE');
+          if (releaseMode === 'timeout') expect(error.message).toContain('RELEASE_DEADLINE');
+        }
+        expect(events).toEqual(['stop', 'release']);
+      }
+    }
   });
   it('runs copied entrypoint specs through mocks and always releases ownership', async () => {
     for (const spec of leafCases(fixture('mock-success'), 1)) {

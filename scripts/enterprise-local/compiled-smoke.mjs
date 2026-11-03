@@ -42,7 +42,7 @@ export function syntheticEnvironment(root, tools) {
  * cleanup verifies descendants/reparse points and the process boundary is empty.
  */
 export function prepareCopiedBundle({ workspace, sandbox, hashes, tools }) {
-  const taskRoot = realpathSync(path.join(workspace, '.scratch', 'enterprise-local', 'windows-09d'));
+  const taskRoot = realpathSync(path.join(workspace, '.scratch', 'enterprise-local', 'windows-09e'));
   descendant(taskRoot, path.resolve(sandbox));
   const parent = realpathSync(path.dirname(sandbox));
   if (parent !== taskRoot) descendant(taskRoot, parent);
@@ -115,32 +115,94 @@ function bounded(promise, ms, label) {
   return Promise.race([promise, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(label)), ms); })]).finally(() => clearTimeout(timer));
 }
 
-/** Required adapter contract: launch returns synchronously an owned process-tree
- * handle (never throws after creating an unowned child). Completion captures both
- * streams within maxOutputBytes. stopOwnedTree and assertReleased target only that
- * OS-owned tree, including on timeout/exit/error; no image-name or global port kill.
- * A separately approved native adapter/OS egress boundary is required for actual V3.
- * This session tests with mocks only, and supplies no production security bypass.
+function validateSpec(spec) {
+  if (!spec || typeof spec.id !== 'string' || !spec.id ||
+      typeof spec.executable !== 'string' || !path.isAbsolute(spec.executable) ||
+      typeof spec.cwd !== 'string' || !path.isAbsolute(spec.cwd) ||
+      !Array.isArray(spec.args) || !spec.args.every(arg => typeof arg === 'string') ||
+      !spec.env || typeof spec.env !== 'object' || Array.isArray(spec.env) ||
+      !Object.values(spec.env).every(value => typeof value === 'string') ||
+      typeof spec.stdin !== 'string' || !spec.expected || !Number.isInteger(spec.expected.exit) ||
+      spec.expected.exit < 0 || spec.expected.exit > 255) throw new Error('INVALID_CASE_SPEC');
+  for (const key of ['runMs', 'cleanupMs', 'maxOutputBytes']) {
+    if (!Number.isSafeInteger(spec[key]) || spec[key] <= 0 || spec[key] > deadlines[key]) throw new Error(`INVALID_CASE_LIMIT: ${key}`);
+  }
+  for (const key of ['stdout', 'stderr', 'stderrCode', 'systemMessageCode']) {
+    if (key in spec.expected && typeof spec.expected[key] !== 'string') throw new Error(`INVALID_EXPECTATION: ${key}`);
+  }
+}
+
+/** Mock orchestration only. A returned object is an unverified ownership claim,
+ * not native admission. Capture cleanup methods independently, even on malformed
+ * handles; attempt release after stop failure/timeout. Sync launch refusal (or no
+ * usable handle) leaves ownership UNKNOWN, never inferred released. Timers bound
+ * asynchronous waits, not synchronous JS or cancellation of a pending callback.
+ * Native atomic admission/OS egress/DNS/descendant and release proof is absent.
  */
 export async function runCase(spec, adapter) {
   if (!adapter || !['mock', 'native'].includes(adapter.kind) || typeof adapter.launch !== 'function') throw new Error('BLOCKED: APPROVED_PROCESS_ADAPTER_REQUIRED');
   // There is no implemented OS-owned-tree/egress/DNS adapter. A caller-supplied
   // label or a method returning true cannot certify that boundary.
   if (adapter.kind === 'native') throw new Error('BLOCKED: NATIVE_OS_BOUNDARY_NOT_IMPLEMENTED');
-  const owned = adapter.launch(spec);
+  validateSpec(spec); // No launch on invalid inputs; not an OS/security approval.
+  let owned, stop, release, primaryError;
+  let primaryFailed = false;
+  let ownership = 'unknown';
+  const cleanupFailures = [];
+  const capture = (method, phase) => {
+    try {
+      const callback = owned[method];
+      if (typeof callback !== 'function') throw new Error(`INVALID_OWNED_HANDLE: ${method}`);
+      return callback.bind(owned);
+    } catch (error) { cleanupFailures.push({ phase, error }); }
+  };
   try {
-    const result = await bounded(owned.completion, spec.runMs, 'PROCESS_DEADLINE');
-    if (result.signal || result.exit !== spec.expected.exit) throw new Error('UNEXPECTED_PROCESS_EXIT');
+    owned = adapter.launch(spec);
+    if (!owned || typeof owned !== 'object') throw new Error('INVALID_OWNED_HANDLE');
+    ownership = 'returned-unverified';
+    stop = capture('stopOwnedTree', 'stop');
+    release = capture('assertReleased', 'release');
+    if (typeof owned.then === 'function') {
+      // Async launch cannot transfer ownership synchronously; drain rejection only.
+      Promise.resolve(owned).catch(() => {});
+      ownership = 'unknown';
+      throw new Error('INVALID_OWNED_HANDLE: async launch');
+    }
+    const completion = owned.completion;
+    if (!completion || typeof completion.then !== 'function') throw new Error('INVALID_OWNED_HANDLE: completion');
+    // Consume completion even when cleanup methods are malformed/rejected.
+    const pending = Promise.resolve(completion);
+    if (cleanupFailures.length) {
+      pending.catch(() => {});
+      throw new Error('INVALID_OWNED_HANDLE: cleanup');
+    }
+    const result = await bounded(pending, spec.runMs, 'PROCESS_DEADLINE');
+    if (!result || !Number.isInteger(result.exit) || typeof result.stdout !== 'string' || typeof result.stderr !== 'string') throw new Error('INVALID_PROCESS_RESULT');
     if (Buffer.byteLength(result.stdout) + Buffer.byteLength(result.stderr) > spec.maxOutputBytes) throw new Error('OUTPUT_LIMIT');
+    if (result.signal || result.exit !== spec.expected.exit) throw new Error('UNEXPECTED_PROCESS_EXIT');
     for (const key of ['stdout', 'stderr']) if (key in spec.expected && result[key] !== spec.expected[key]) throw new Error(`UNEXPECTED_${key.toUpperCase()}`);
     if (spec.expected.stderrCode && !result.stderr.startsWith(`cmem-light: ${spec.expected.stderrCode}:`)) throw new Error('MISSING_CONTROLLED_REFUSAL');
     if (spec.expected.systemMessageCode) {
       const parsed = JSON.parse(result.stdout);
       if (typeof parsed.systemMessage !== 'string' || !parsed.systemMessage.includes(`${spec.expected.systemMessageCode}:`) || !result.stderr.includes(`${spec.expected.systemMessageCode}:`)) throw new Error('MISSING_CONTROLLED_REFUSAL');
     }
-    return { status: 'PASS', level: 'V1', substituted: true, id: spec.id, evidence: spec.evidence, readiness: false };
-  } finally {
-    await bounded(Promise.resolve().then(() => owned.stopOwnedTree()), spec.cleanupMs, 'CLEANUP_DEADLINE');
-    await bounded(Promise.resolve().then(() => owned.assertReleased()), spec.cleanupMs, 'OWNED_RESOURCES_REMAIN');
+  } catch (error) {
+    primaryFailed = true;
+    primaryError = error;
   }
+  for (const [phase, callback, label] of [['stop', stop, 'CLEANUP_DEADLINE'], ['release', release, 'RELEASE_DEADLINE']]) {
+    if (!callback) continue; // Missing/throwing members already recorded separately.
+    try {
+      const result = await bounded(Promise.resolve().then(callback), spec.cleanupMs, label);
+      if (result === false) throw new Error(phase === 'release' ? 'OWNED_RESOURCES_REMAIN' : 'STOP_NOT_CONFIRMED');
+    } catch (error) { cleanupFailures.push({ phase, error }); }
+  }
+  if (primaryFailed || cleanupFailures.length) {
+    const failures = [...(primaryFailed ? [{ phase: 'primary', error: primaryError }] : []), ...cleanupFailures];
+    const failure = new AggregateError(failures.map(item => item.error),
+      failures.map(item => `${item.phase}: ${String(item.error)}`).join('; '));
+    Object.assign(failure, { primaryFailed, primaryError, cleanupFailures, ownership, cleanup: 'unproved' });
+    throw failure;
+  }
+  return { status: 'PASS', level: 'V1', substituted: true, id: spec.id, evidence: spec.evidence, readiness: false };
 }
