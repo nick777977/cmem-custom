@@ -21,7 +21,33 @@ This board does not grant permission or duplicate the dependency graph.
 | PLAN-ADAPT-05 / coordination, steps 6/10/11/12 | done; documentation only | Coordinator finished; feat/cmem-light-local; entry 48feeab56 clean | None active; reservations released | A19/A20, LLM-PROFILES/VALIDATION, updated roadmap/prompts; 19 Markdown files / 123 links / 15 source citations checked; no source/runtime/CI change. handoffs/PLAN-ADAPT-05.md; docs commit follows in Git. |
 | WINDOWS-09 / 9 | done-bounded partial source; full step open | Coordinator finished; feat/cmem-light-local; serial; entry 7d5f83cac | None active; reservations released | S0d0a4b176/G004588740/Hf2c722fad; 17 tests/53 assertions + one compile/viewer PASS, root three baseline errors; handoffs/WINDOWS-09.md. V3/CI NOT RUN. |
 | WINDOWS-09B / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry e27548d545 | None active; reservations released | Launcher e9c8038ca, bootstrap 8bbf2830c, S e3d91a505 / H bbc3847e9 / G 62a468f6d. 19 tests/112 assertions, one compile/viewer PASS, root three known errors. handoffs/WINDOWS-09B.md; V3/CI NOT RUN. |
-| WINDOWS-09C / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: remaining E13 templates/E12 Setup/E14 utilities/E21 grammar/native adapter source. No runtime launch. |
+| WINDOWS-09C / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry 59c709482 | None active; all released | Host 2d8688e78/CLI 4945a916e/utilities c9978be26/S bc3275b4c/H abfce3963/G 4ac6ad868. 20 tests/234 assertions, one compile/viewer PASS; root same baseline. handoffs/WINDOWS-09C.md. No V3/CI. |
+| WINDOWS-09D / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: interpreter/loading, independent helpers and native OS adapter/artifact/spec prerequisites. No runtime launch. |
+
+## WINDOWS-09C reservation history — all released
+
+Claimed after branch/status/HEAD recheck, before source edits. E13 canonical source
+src/build/hook-shell-template.ts and scripts/build-hooks.js; paired plugin/hooks/
+{hooks,codex-hooks,qoder-hooks}.json, plugin/.mcp.json; direct wrappers plugin/scripts/
+{bun-runner.js,version-check.js,worker-wrapper.cjs,qoder-hook-launcher.cjs} and their
+generator source under scripts/ (extend exact paths before editing once traced).
+E12 direct src/npx-cli/{index.ts,commands/{runtime,doctor,install}.ts}; E14
+src/launcher/install-launcher.ts; E21 src/services/smart-file-read/parser.ts.
+Tests tests/enterprise-local/windows-09c.test.ts and compiled-smoke.test.ts;
+scripts/enterprise-local/compiled-smoke.mjs (contract review; adapter only if bounded).
+Disposable state/evidence .scratch/enterprise-local/windows-09c/ only.
+Serial emission lane: all tracked plugin/, openclaw/dist/, dist/dsh-lib outputs
+fingerprinted; retain only reviewed paired deltas, extend reservation before any
+unexpected output. Manifests/locks/trust/compiler/identity are preservation sentinels,
+not edit targets. No provider/native-login/Chroma/viewer/identity semantics changes.
+Docs: AGENTS.md, docs/{roadmap,PATCH-SEQUENCE}.md, docs/enterprise-local/
+{README,LLM-PROFILES,VALIDATION,DEV-ENVIRONMENT,NEXT-SESSION,SESSION-PROMPTS}.md,
+memory/{STATE,TASKS,WORKLOG,DECISIONS}.md and handoffs/WINDOWS-09C.md.
+No application runtime, native adapter execution, CI dispatch or D5 registration.
+Retained source edits were the exact reserved paths; no new source generator path
+was needed. CLI direct runtime/doctor bodies included; no provider implementation
+reserved or edited. Canonical seven outputs paired in 2d8688e78, compile MCP pair
+in G. All other tracked outputs unchanged. Documentation closure follows G.
 
 ## WINDOWS-09B reservation history — all released
 
@@ -174,15 +200,15 @@ SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed WINDOWS-09C
+## Minimal context for proposed WINDOWS-09D
 
 - AGENTS -> README -> STATE -> roadmap step 9/graph/checkpoints -> TASKS.
-- DECISIONS A06/A07/A09/A14/A15/A16/A17/A18/A19/A20/A21/A22; current environment; NEXT-SESSION.
+- DECISIONS A06/A07/A09/A14/A15/A16/A17/A18/A19/A20/A21/A22/A23; current environment; NEXT-SESSION.
 - LLM-PROFILES and VALIDATION V1-V3/CI; PLAN-ADAPT-05/current environment;
   TELEMETRY-04 and CHROMA-07 limits; PATCH-SEQUENCE section 9;
   E12/E13/E14/E21 and corresponding AUDIT-CLOSURE notes, then direct callers after claim.
 
-Read handoffs/WINDOWS-09B.md first for completed refusal/harness source and exact gaps;
+Read handoffs/WINDOWS-09C.md first for completed refusal/harness source and exact gaps;
 do not repeat its checks/audit by default. Current NEXT-SESSION owns one bounded launch.
 
 No whole-history or baseline/trust/hosted/Chroma replay. No real user state or runtime

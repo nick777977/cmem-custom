@@ -1,7 +1,7 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), WINDOWS-09C remaining source after
-bounded WINDOWS-09B closure (2026-11-03). A19/A20 supersede Bedrock-only:
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), WINDOWS-09D remaining source after
+bounded WINDOWS-09C closure (2026-11-03). A19/A20 supersede Bedrock-only:
 retain explicit user-configured LLM adapters/roles; add real compiled-process/CI
 checkpoints without claiming mock/compile as full runtime proof. Contracts:
 [LLM-PROFILES](LLM-PROFILES.md), [VALIDATION](VALIDATION.md).
@@ -13,7 +13,11 @@ PASS; root three baseline TS2345. Full step 9 incomplete, actual V3/CI NOT RUN.
 WINDOWS-09B S e3d91a505/H bbc3847e9/G 62a468f6d: 19 tests/112 assertions,
 compile/viewer PASS, root same baseline; explicit-root launcher/bootstrap/CLI parser
 refusal slice only. [Exact remaining source gaps](handoffs/WINDOWS-09B.md).
-Next single task: WINDOWS-09C remaining host templates/Setup/grammar/native-adapter source.
+WINDOWS-09C S bc3275b4c/H abfce3963/G 4ac6ad868: 20 tests/234 assertions,
+one compile/viewer PASS, root same baseline. Host/Setup/CLI/signup/installer/grammar
+refusal source; native-kind BLOCKED. [Current exact gaps](handoffs/WINDOWS-09C.md).
+Next single task: WINDOWS-09D interpreter/loading, independent helpers and native
+OS adapter/artifact/spec source prerequisites. No runtime proposal before readiness.
 Actual runtime/CI/provider execution still requires a scoped user launch.
 STATE/TASKS own current context. Session 01 and completed templates are historical;
 future templates below are adapted planning aids, never independent authorization.

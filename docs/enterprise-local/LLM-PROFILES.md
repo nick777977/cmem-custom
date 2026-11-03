@@ -167,6 +167,13 @@ host are separate and must not be inherited by observer/refresh accidentally. Th
 existence is neither permission to connect nor a reason to remove local memory tools.
 Actual shipped child/network closure is still a step-10/11 proof, not established here.
 
+WINDOWS-09C S bc3275b4c retires plugin signup/bootstrap callers and gates legacy
+host/CLI startup; retained provider/native-login implementation files are unchanged.
+This does not implement profile role/model/auth/fallback policy or remove local MCP
+tools. Parser grammar use explicitly refuses pending approved assets. No provider
+login, auth reads, inference or actual MCP process was run; step 6 remains open.
+[Bounded evidence and limitations](handoffs/WINDOWS-09C.md).
+
 ## Evidence and implementation economy
 
 Inspected source **48feeab567995de81d501b74007694b5ee95a880**, static only:

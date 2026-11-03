@@ -42,14 +42,23 @@ three unchanged baseline TS2345. Harness mock-only; CI source manual-only BLOCKE
 Historical first slice; later WINDOWS-09B result follows.
 [Evidence, open gaps and rollback](handoffs/WINDOWS-09.md). No actual V3/runtime/CI run.
 
-Latest **WINDOWS-09B** (closure 2026-11-03): explicit-root protocol-3 launcher refusal,
+Earlier **WINDOWS-09B** (closure 2026-11-03): explicit-root protocol-3 launcher refusal,
 automatic runtime/install entrypoint refusal, parser CLI PATH/module fallback removed.
 S e3d91a505 / H bbc3847e9 / G 62a468f6d; 19 tests/112 assertions and one compile/viewer
 PASS; root three unchanged TS2345. 19 inputs unchanged, four paired output sets changed,
 UI/identity/locks/trust/generators preserved. Full step 9 remains partial: host templates,
 Setup/version-check, old utilities/grammar paths and native adapter still open.
-[Exact evidence/gaps/rollback](handoffs/WINDOWS-09B.md). Next proposed launch is
-**WINDOWS-09C remaining source**, not V3. No activation/runtime/CI permission inferred.
+[Historical evidence/gaps/rollback](handoffs/WINDOWS-09B.md).
+
+Latest **WINDOWS-09C**: S bc3275b4c/H abfce3963/G 4ac6ad868. Canonical host/
+Setup/wrappers and CLI command roots refuse; plugin signup/bootstrap, legacy native
+installer runners and grammar module/build/query fallback retired. 20 V1 tests /
+234 assertions, one compile/viewer PASS; root same three baseline TS2345. 19 inputs
+unchanged across compile, 868 source sentinels unchanged; MCP pair emitted, seven
+canonical host outputs regenerated. No V3/readiness. Host interpreter/loading,
+independent helper APIs, native OS adapter and artifact/spec prerequisites remain.
+[Exact evidence/gaps/rollback](handoffs/WINDOWS-09C.md). Next proposed launch:
+**WINDOWS-09D remaining source**, not runtime/CI/registration.
 
 ## Reading order
 

@@ -41,9 +41,20 @@ root has the same three TS2345. 19 inputs/866 tracked source sentinels unchanged
 compile, eight paired outputs changed. Full step 9 is NOT complete: E13 host templates,
 E12 Setup/version-check/old helpers, E14 utilities, E21 grammar loading/build and native
 V3 adapter remain. CI skeleton stays manual-only BLOCKED D12. See
-docs/enterprise-local/handoffs/WINDOWS-09B.md; next WINDOWS-09C remaining source awaits
-explicit launch. Existing templates can bypass this launcher; do not activate this
-partial candidate. Provider adapters and selected-provider login support must not
+docs/enterprise-local/handoffs/WINDOWS-09B.md (historical gaps, superseded below).
+WINDOWS-09C host 2d8688e78/CLI 4945a916e/utilities c9978be26/S bc3275b4c/
+H abfce3963/G 4ac6ad868: canonical host/Setup/wrappers and direct CLI roots refuse,
+plugin signup/bootstrap and native grammar build/query fallback retired. Legacy
+installer utilities now refuse without native runners. 20 tests/234 assertions,
+one compile/viewer PASS; root same three baseline errors. 19 inputs unchanged across
+compile (only intentional generator delta vs 09B), 868 source sentinels unchanged;
+MCP CJS/map changed during compile plus seven canonical outputs regenerated earlier.
+Native-kind adapter is BLOCKED, no V3. Full step9 remains partial: host interpreter/
+loading, independent helper APIs, native OS-owned-tree/egress/DNS/cleanup adapter and
+artifact/spec prerequisites remain. See docs/enterprise-local/handoffs/WINDOWS-09C.md;
+next WINDOWS-09D
+remaining source awaits explicit launch. Do not activate this partial candidate.
+Provider adapters and selected-provider login support must not
 be pruned as a side effect of launcher/bootstrap removal.
 Actual compiled-process smoke/CI/provider execution remains separately scoped.
 No install/update/download, service/worker/MCP/plugin start/restart/registration, AWS,

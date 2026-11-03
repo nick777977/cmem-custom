@@ -53,6 +53,24 @@ readiness, D5 selection, D12 runner, SQLite-only mode or step-6 provider policy 
 A19/A20/U1/D9/D11/A15 gates preserved. No graph/wave change or new dependency/identity
 manifest/lock delta. [Evidence, exact gaps and rollback](../handoffs/WINDOWS-09B.md).
 
+### A23 — WINDOWS-09C bounded source continuation (accepted 2026-11-03)
+
+Explicit serial source/mock/typecheck/one-compile launch, no runtime/CI/registration/
+acquisition/user-state/agent/worktree scope. Host 2d8688e78, CLI 4945a916e, utilities
+c9978be26, S bc3275b4c/H abfce3963/G 4ac6ad868. Canonical hosts/Setup/wrappers,
+direct CLI command roots and plugin signup/bootstrap refuse. Legacy installer native
+runners and grammar module/build/query fallback removed; parser explicitly refuses
+without approved closure. No invented artifact approval or symbol-less success.
+Native-kind adapter unconditionally BLOCKED before launch; only mocks produce V1,
+never V3 by label. 20 V1 tests/234 assertions, one compile/viewer PASS; root three
+unchanged baseline TS2345. 19 inputs/868 source sentinels unchanged across compile;
+vs 09B only intentional build-hooks input delta. MCP pair emitted, seven canonical
+host outputs paired earlier. Host interpreter/loading, independent helper APIs,
+native OS adapter and artifact/spec prerequisites remain WINDOWS-09D source work.
+Step9 partial; D5 options proposed, D12 blocked, A19/A20/U1/D9/D11/A15 preserved.
+No graph, identity/protocol, lock/trust, provider/native-login or memory/viewer change.
+[Evidence, exact gaps and rollback](../handoffs/WINDOWS-09C.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

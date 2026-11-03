@@ -6,7 +6,31 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
-Latest **WINDOWS-09B**: S e3d91a505/H bbc3847e9/G 62a468f6d; exact existing
+Latest **WINDOWS-09C** (2026-11-03): S bc3275b4c/H abfce3963/G 4ac6ad868;
+host/generator 2d8688e78, CLI 4945a916e, installer utilities c9978be26. Exact existing
+Node22.23.4/npm10.9.9/Bun1.4.4 verified. 20 isolated source/mock tests / 234 assertions
+PASS; ten affected copied-artifact mock cases repeated after G PASS / 107 assertions,
+not thirty unique tests. Zero process/network/listener/fetch tripwire events.
+One reviewed build:compile PASS, unchanged BUILD-02 guard; 9 Node inits/5 spawns/
+one execFileSync/exec/execFile, local compilers/generators/Vite net use only. No Node
+socket event, not OS/native/shell no-egress proof. Final viewer --noEmit PASS;
+root FAIL exit2, same three TS2345 ChromaMcpManager227/842 and ChromaSync385, full
+diagnostic bytes equal 09B. No Chroma workaround, toolchain/dependency/lock change.
+
+Synthetic env/state only under .scratch/enterprise-local/windows-09c, ambient env
+cleared, process-local exact PATH, empty npm configs/cache/offline. No installed
+user assets/settings/auth read. 19 input/compiler sentinels unchanged across compile;
+vs 09B only intentional scripts/build-hooks.js delta, 18 preserved. 868 source/config
+sentinels unchanged across compile. 192 outputs: 190 unchanged/MCP CJS-map pair
+modified; seven host configs/wrappers paired earlier from canonical source. UI,
+worker, protocol-3 launcher/preflight, identity/locks/trust/provider/native-login
+implementations preserved. Native-kind adapter blocked before launch. V3-V6/CI
+NOT RUN; no actual generated process, auth/inference/AWS/acquisition/registration.
+[Exact commands/hashes/limits/rollback](handoffs/WINDOWS-09C.md). Full step9 remains
+partial; next WINDOWS-09D remaining source. No application/harness/generator edit
+after compile. A15 10/11/12 and U1/D9/D11/D12 remain open.
+
+Earlier **WINDOWS-09B**: S e3d91a505/H bbc3847e9/G 62a468f6d; exact existing
 Node 22.23.4/npm 10.9.9/Bun 1.4.4 verified, no install/update. 19 reviewed inert/mock
 tests/112 assertions PASS; affected nine copied-artifact mock tests rerun after
 compile PASS (57 assertions; repeated cases, not 28 unique tests). Zero forbidden

@@ -599,3 +599,49 @@ closure PASS: 14 Markdown files/106 relative links/39 source-SHA line assertions
 balanced fences/whitespace; dependency graph and six historical contracts unchanged.
 Application/harness/generated worktree matches G, no application edit or compile
 rerun. Docs commit follows G. All reservations released.
+
+## WINDOWS-09C — 2026-11-03
+
+Explicit serial same-step source continuation. Clean entry 59c7094820cb623496c478d06ad845e89b0f7e4a,
+feat/cmem-light-local; TASKS claim before edits. No agents/branches/worktrees/other steps.
+Host/generator 2d8688e78, CLI/signup 4945a916e, legacy installer utilities c9978be26,
+final application S bc3275b4c, harness H abfce3963, generated G 4ac6ad868. Docs follow G.
+
+Canonical host/Setup/standalone wrappers now refuse without application loading or
+cache/global launcher/cwd discovery. Direct CLI command roots/plugin signup/bootstrap
+refuse; legacy installer native runners removed. Parser module grammar resolution,
+native build/query and fallback removed; explicit LOCAL_GRAMMAR_UNAPPROVED instead
+of empty-symbol success. Provider/native-login implementations and memory/viewer
+semantics preserved. Native-kind adapter BLOCKED before launch, no nominal V3 proof.
+
+Final 20 V1 tests / 234 assertions PASS, zero forbidden tripwire operations; ten
+copied-artifact mock cases repeated after G PASS / 107 assertions, not thirty unique
+tests. Root --noEmit FAIL exit2, precisely three unchanged baseline TS2345; full
+text identical to 09B. Viewer PASS. One reviewed exact-toolchain build:compile PASS
+with unchanged BUILD-02 guard (9 Node inits/5 spawns/one execFileSync/exec/execFile,
+no Node socket event). 19 inputs/868 source sentinels unchanged across compile;
+only intentional build-hooks input change vs 09B, 18 preserved. 190/192 outputs
+unchanged, only MCP CJS/map pair emitted; seven canonical host outputs paired earlier.
+No source/harness/generator edits after compile. Five changed scripts parsed without
+evaluation; map lacks sourcesContent. No actual generated process/CI/provider run.
+
+Synthetic allowlist env/state only windows-09c scratch, empty npm configs/cache/offline;
+no acquisition/lock resolution/auth/real state/assets/AWS/registration/PATH or registry
+mutation. Git index sandbox denial resolved through authorized escalation; local
+logical commits hooks/signing disabled, no automatic-review rejection or push.
+PowerShell planner/CI unchanged, BLOCKED D5/D12; no redundant completed checks.
+
+Remaining: host interpreter/loading, independent installer/diagnostic helpers, native
+OS-owned-tree/egress/DNS/startup-failure/timeout/cleanup adapter and exact artifacts/
+MCP-worker specs. Full step9 partial, V3-V6 NOT RUN; U1/D9/D11/A15 10/11/12 preserved.
+Rollback G/H/S/utilities/CLI/host commits in reverse, paired candidate, no unsafe
+intermediate activation. Exact lines/hashes/commands/limits: handoffs/WINDOWS-09C.md.
+
+Shared STATE/TASKS/WORKLOG/DECISIONS/contracts/DEV-ENVIRONMENT/NEXT-SESSION updated;
+reservations released. One next prompt WINDOWS-09D remaining source, not actual V3.
+No runtime proposal until approved artifacts/native OS boundary/permissions/cleanup
+are ready. Roadmap dependency graph unchanged.
+
+Documentation closure PASS: 14 Markdown files / 107 relative links / 21 pinned-SHA
+line assertions, balanced fences/whitespace; graph and six historical handoffs
+unchanged. Application/harness/outputs match G. All reservations released.

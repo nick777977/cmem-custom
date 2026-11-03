@@ -1,7 +1,7 @@
 # Build, runtime and CI evidence contract
 
 Accepted validation plan, 2026-11-02, A20. V3-V6 remain planned/not run; bounded
-WINDOWS-09/WINDOWS-09B V1/V2 results and harness/CI source are distinguished below.
+WINDOWS-09/09B/09C V1/V2 results and harness/CI source are distinguished below.
 Execution needs the applicable user launch and isolated assets/permissions. This file
 owns validation levels and pass criteria; [roadmap](../roadmap.md) alone owns dependency
 edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
@@ -17,6 +17,7 @@ edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
 | Previous user build/start | User-reported build and worker ready; preserved separately | Current source/artifact, full memory/Chroma/provider acceptance |
 | WINDOWS-09 source/harness | 17 V1 tests / 53 assertions, compile/viewer typecheck PASS; root three unchanged baseline TS2345 | No actual generated process, readiness or complete private path proof |
 | WINDOWS-09B source/harness | 19 V1 tests / 112 assertions, one compile/viewer PASS; root same three errors; eight paired outputs changed, 19 inputs preserved | Explicit-root refusal is not a global boundary around remaining host templates/Setup/grammar; no V3/readiness |
+| WINDOWS-09C source/harness | 20 V1 tests / 234 assertions, one compile/viewer PASS; root same three errors; MCP pair emitted plus seven canonical host outputs; 19 inputs/868 source sentinels stable across compile | Refusal only; host interpreter/loading, independent helpers, native OS boundary and artifacts/specs remain; no V3/readiness |
 | Fork-specific CI and actual process smoke | Source authored; runtime/CI NOT RUN, native adapter and D12 pending | Manual-only workflow unconditionally blocks; no green CI or V3 evidence |
 
 These are real tests and real compilation, not mere source review. Worker bundles are
@@ -97,7 +98,18 @@ another root and present-but-unapproved bundle. Mock-only tests against copied G
 hashes PASS; no native adapter or actual process. Stale entry is not runtime hash/
 version integrity evidence. Other missing/stale/MCP/worker cases, OS boundary and
 owned-tree cleanup implementation remain. The adapter's native kind label alone is
-not approval/enforcement. [Exact latest results and source gaps](handoffs/WINDOWS-09B.md).
+not approval/enforcement. [Historical 09B results/gaps](handoffs/WINDOWS-09B.md).
+
+WINDOWS-09C H abfce3963 uses task scratch windows-09c, copies eight exact hashed
+outputs and adds twelve wrapper root-required/missing/unapproved negative specs.
+Its 20 tests remain V1 (ten copied-artifact mock tests repeated after G). Source
+gates exercise mocked fs/process; installer/CLI bodies are inspected without importing
+installer state. Native-kind adapters now unconditionally reject before launch with
+NATIVE_OS_BOUNDARY_NOT_IMPLEMENTED. Only mocks can report PASS/V1/substituted; no
+native label or self-attested callbacks produce V3. Native OS admission/descendant
+ownership/egress/DNS/startup-failure/timeout/cleanup implementation, approved immutable
+inputs and MCP/worker lifecycle specs still required. No generated process executed.
+[Latest evidence and exact gaps](handoffs/WINDOWS-09C.md).
 
 Required cases, selected according to implemented features:
 
