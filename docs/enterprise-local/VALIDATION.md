@@ -1,7 +1,7 @@
 # Build, runtime and CI evidence contract
 
 Accepted validation plan, 2026-11-02, A20. V3-V6 remain planned/not run; bounded
-WINDOWS-09/09B/09C V1/V2 results and harness/CI source are distinguished below.
+WINDOWS-09/09B/09C/09D V1/V2 results and harness/CI source are distinguished below.
 Execution needs the applicable user launch and isolated assets/permissions. This file
 owns validation levels and pass criteria; [roadmap](../roadmap.md) alone owns dependency
 edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
@@ -18,6 +18,7 @@ edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
 | WINDOWS-09 source/harness | 17 V1 tests / 53 assertions, compile/viewer typecheck PASS; root three unchanged baseline TS2345 | No actual generated process, readiness or complete private path proof |
 | WINDOWS-09B source/harness | 19 V1 tests / 112 assertions, one compile/viewer PASS; root same three errors; eight paired outputs changed, 19 inputs preserved | Explicit-root refusal is not a global boundary around remaining host templates/Setup/grammar; no V3/readiness |
 | WINDOWS-09C source/harness | 20 V1 tests / 234 assertions, one compile/viewer PASS; root same three errors; MCP pair emitted plus seven canonical host outputs; 19 inputs/868 source sentinels stable across compile | Refusal only; host interpreter/loading, independent helpers, native OS boundary and artifacts/specs remain; no V3/readiness |
+| WINDOWS-09D source/harness | B855ef7d6e/S236dd661c/H2935e19d0; 20 V1 tests/433 assertions, one compile/viewer PASS; root same three errors; 19 inputs/869 source sentinels/192 outputs stable across compile, eight canonical outputs paired in B | Literal interpreter rendering and unbound host templates are not pre-execution approval or host loading/envelope proof; native/artifact/protocol prerequisites and common harness teardown failures remain |
 | Fork-specific CI and actual process smoke | Source authored; runtime/CI NOT RUN, native adapter and D12 pending | Manual-only workflow unconditionally blocks; no green CI or V3 evidence |
 
 These are real tests and real compilation, not mere source review. Worker bundles are
@@ -110,6 +111,20 @@ native label or self-attested callbacks produce V3. Native OS admission/descenda
 ownership/egress/DNS/startup-failure/timeout/cleanup implementation, approved immutable
 inputs and MCP/worker lifecycle specs still required. No generated process executed.
 [Latest evidence and exact gaps](handoffs/WINDOWS-09C.md).
+
+WINDOWS-09D H2935e19d0 uses only windows-09d scratch and extends wrapper negative
+specs to 28 interpreter/root cases. Authored-source V1 exercises explicit/missing/
+relative/UNC/stale interpreter inputs and independent helper refusal, with no emitted
+application evaluation. Canonical Claude/Qoder/MCP commands are empty/unbound;
+Codex/Setup shell entries exit1. Do not register these templates or treat failure to
+bind an interpreter as tested host lifecycle. Four wrappers have no env-node shebang.
+Paths/realpath identity never approve runtime version/hash/ABI. 20 tests/433 assertions,
+one compile/viewer PASS, root baseline FAIL; all compile input/source/output sentinels
+stable, so no redundant postcompile test replay. Native-kind still unconditionally
+BLOCKED. Next source-only runner work must cover launch ownership uncertainty and
+release assertions after failed/timed-out stop; current mocks cannot prove OS cleanup.
+MCP initialize/list-tools and worker lifecycle success specs remain unimplemented,
+not conditionally green. [Current exact evidence/gaps](handoffs/WINDOWS-09D.md).
 
 Required cases, selected according to implemented features:
 

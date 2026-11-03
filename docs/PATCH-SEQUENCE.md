@@ -201,7 +201,7 @@ old helpers, E14 utilities, E21 grammar module/build paths and native adapter. O
 templates can bypass new launcher; no activation or full step-9/V3/CI claim.
 [Exact limits/rollback](enterprise-local/handoffs/WINDOWS-09B.md). Graph unchanged.
 
-Latest **WINDOWS-09C**: S bc3275b4c/H abfce3963/G 4ac6ad868. Canonical host/
+Earlier **WINDOWS-09C**: S bc3275b4c/H abfce3963/G 4ac6ad868. Canonical host/
 Setup/wrappers, direct CLI roots and plugin signup/bootstrap refuse; E14 native
 installer runners and E21 grammar module/build/query fallback retired. 20 V1 tests /
 234 assertions, one compile/viewer PASS; root same three baseline errors. 19 inputs
@@ -210,6 +210,17 @@ canonical host outputs regenerated. Native-kind adapter explicitly BLOCKED; no V
 **WINDOWS-09D remaining source** owns host interpreter/loading, independent helper
 APIs and native OS adapter/artifact/spec prerequisites. Full step9 remains partial.
 [Exact evidence/gaps/rollback](enterprise-local/handoffs/WINDOWS-09C.md).
+
+Latest **WINDOWS-09D** B855ef7d6e/S236dd661c/H2935e19d0: literal absolute
+interpreter source rendering, canonical structured commands unbound/empty, shell
+exit1, no bare node, /bin/sh or Qoder wrapper hosting. Independent installer helpers
+and diagnostics refuse; private runtime/bootstrap/probe bodies/imports retired.
+20 V1 tests/433 assertions, one compile/viewer PASS; root same three TS2345. 19 inputs/
+869 source sentinels/192 outputs unchanged across compile; eight canonical outputs
+paired in B, no generated follow-up commit. Host binding/runtime approval and native
+OS/artifact/protocol prerequisites remain; **WINDOWS-09E remaining source** owns common
+harness admission/teardown failures. No registration, actual V3 or full step9 closure.
+[Exact evidence/gaps/rollback](enterprise-local/handoffs/WINDOWS-09D.md).
 
 Private ID and bundle-local launcher/MCP/hooks; remove upstream/global cache fallback,
 Bash Setup/runtime install/update/self-repair compile. Local PowerShell preflight /

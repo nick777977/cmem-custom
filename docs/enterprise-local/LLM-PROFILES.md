@@ -176,6 +176,15 @@ login, auth reads, inference or actual MCP process was run; step 6 remains open.
 
 ## Evidence and implementation economy
 
+WINDOWS-09D B855ef7d6e/S236dd661c/H2935e19d0 also refuses independent installer
+provider selection/default credential validation, browser/settings/worker-stop and
+plugin signup response admission. Dormant bootstrap imports retired; existing
+Claude/Bedrock/API/Codex ChatGPT/OpenAI-compatible and native-provider login files
+preserved. Unbound host templates and explicit interpreter paths do not authorize
+login or interpreter execution. Step6 role/model/auth/fallback policy remains open;
+no provider run or local MCP protocol success is claimed.
+[Current source evidence](handoffs/WINDOWS-09D.md).
+
 Inspected source **48feeab567995de81d501b74007694b5ee95a880**, static only:
 
 | Path:line | Finding |

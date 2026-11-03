@@ -52,8 +52,17 @@ MCP CJS/map changed during compile plus seven canonical outputs regenerated earl
 Native-kind adapter is BLOCKED, no V3. Full step9 remains partial: host interpreter/
 loading, independent helper APIs, native OS-owned-tree/egress/DNS/cleanup adapter and
 artifact/spec prerequisites remain. See docs/enterprise-local/handoffs/WINDOWS-09C.md;
-next WINDOWS-09D
-remaining source awaits explicit launch. Do not activate this partial candidate.
+WINDOWS-09D B855ef7d6e/S236dd661c/H2935e19d0: explicit literal interpreter source
+rendering, canonical structured commands unbound/empty, shell exit1; bare node,
+/bin/sh/Qoder wrapper hosting and env-node shebangs removed. Independent installer/
+diagnostic helpers refuse, private bootstrap/runtime bodies/imports retired. Provider
+native login implementations preserved. 20 V1 tests/433 assertions, one compile/viewer
+PASS, root same three TS2345. 19 inputs/869 source sentinels/192 outputs unchanged
+across compile; eight canonical outputs paired in B, no generated follow-up commit.
+Host loading/envelope/runtime approval remains unproved; native-kind still BLOCKED.
+Common harness launch/stop/release failure source and concrete OS/artifact/protocol
+prerequisites remain. See docs/enterprise-local/handoffs/WINDOWS-09D.md; next WINDOWS-09E source-only
+continuation awaits explicit launch. Do not activate this partial candidate.
 Provider adapters and selected-provider login support must not
 be pruned as a side effect of launcher/bootstrap removal.
 Actual compiled-process smoke/CI/provider execution remains separately scoped.

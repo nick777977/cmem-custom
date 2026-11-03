@@ -645,3 +645,58 @@ are ready. Roadmap dependency graph unchanged.
 Documentation closure PASS: 14 Markdown files / 107 relative links / 21 pinned-SHA
 line assertions, balanced fences/whitespace; graph and six historical handoffs
 unchanged. Application/harness/outputs match G. All reservations released.
+
+## WINDOWS-09D — interpreter/direct-helper source continuation (2026-11-03)
+
+Explicit source-only step9 launch; clean entry 8b39d1f86aff635ae1660a12fa79c656a513db71,
+feat/cmem-light-local, one coordinator, serial; TASKS claim before edits. No agents,
+branches/worktrees/other steps. B855ef7d6e host source/generator/eight paired outputs;
+S236dd661c independent installer/private runtime/diagnostic retirement; H2935e19d0
+V1 tests/refusal specs. No tracked delta from the one compile, no generated follow-up.
+
+Bare node, POSIX /bin/sh, Qoder wrapper hosting and env-node shebangs removed.
+Canonical structured commands intentionally empty/unbound; Codex/Setup exit1. Source
+renderer accepts explicit literal absolute paths; authored JS realpath checks always
+refuse, never approve executable version/hash/ABI or host loading. No fake manifest,
+private ID/registration choice or successful host envelope. Independent installer
+IDE/marketplace/settings/browser/provider-prompt/worker-stop and signup response
+admission refuse before callbacks/default state. Dormant bootstrap/runtime/probe
+bodies/imports removed, native-provider implementations/adapters unchanged.
+
+20 V1 tests/433 assertions PASS, zero forbidden tripwire operations; authored JS VM,
+extracted installer declarations and copied-artifact mocks only. Root --noEmit FAIL
+exit2 with exactly baseline TS2345 ChromaMcpManager227/842, ChromaSync385, full log
+bytes equal09C; viewer PASS. One reviewed exact Node22.23.4/npm10.9.9/Bun1.4.4
+build:compile PASS with unchanged BUILD-02 guard; 9 Node inits/5 spawns/one
+execFileSync/exec/execFile (known compiler/Vite/net use), no Node socket event.
+19 input/compiler sentinels, 869 source/config sentinels and 192 outputs unchanged
+across compile; vs09C only intentional build-hooks input change. Eight canonical
+outputs paired in B before compile; no CJS/map change. No source/harness/generator
+edits or redundant tests after compile. Four wrappers parsed without evaluation.
+Not OS/native/shell-wide no-egress or installed-tree provenance proof.
+
+All synthetic allowlist state under windows-09d scratch, empty npm configs/isolated
+cache/offline/process-local PATH. No actual generated process/hook/MCP/worker/service/
+listener, native/CI/provision/upload/push, acquisition/resolution/auth/inference/AWS,
+real settings/assets, registration or machine mutation. Git index sandbox denial
+resolved with authorized escalation, local commits hooks/signing off; no automatic
+review rejection. One V1 assertion-order issue (Bun toMatchObject changed the target),
+a pre-command PowerShell parser error and a JSONL summary parser error corrected;
+no runtime/dependency repair. Source checks passed before the single compile.
+
+Native-kind still rejected before launch. Exact missing source includes OS-owned-tree
+pre-execution admission/descendant identity/egress/DNS/cleanup, approved immutable
+runtime/artifact/host binding and concrete MCP/worker lifecycle specs. Common mock
+runner launch outside try and skipped release assertion after failed/timed-out stop
+remain a useful next source slice: WINDOWS-09E admission/teardown failures, not a
+nominal native adapter or actual V3 prompt. D5 options proposed, D12 CI manual-only
+BLOCKED; U1/D9 activation blocked, D11 open; V3-V6 NOT RUN, V4 needs approved Chroma.
+A19/A20, viewer/memory semantics and A15 10/11/12 preserved. Graph unchanged.
+
+Exact commands/hashes/source lines/gaps/rollback in handoffs/WINDOWS-09D.md. Shared
+STATE/TASKS/DECISIONS/contracts/environment/NEXT-SESSION updated; reservations released.
+Rollback H/S/B in reverse with paired host outputs; old 09/09B/09C history preserved.
+
+Documentation closure PASS: 14 Markdown files/114 relative links/32 pinned-SHA line
+assertions; balanced fences/whitespace, unchanged graph/seven historical handoffs,
+application/harness/outputs match H. Final docs commit follows; all claims released.

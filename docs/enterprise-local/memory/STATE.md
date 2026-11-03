@@ -1,73 +1,67 @@
 # Current handoff
 
-Updated 2026-11-03 after WINDOWS-09C. Branch feat/cmem-light-local; clean entry
-59c7094820cb623496c478d06ad845e89b0f7e4a. One coordinator; reservations released.
-[Exact source evidence/checks/gaps/rollback](../handoffs/WINDOWS-09C.md).
+Updated 2026-11-03 after WINDOWS-09D. Branch feat/cmem-light-local; clean entry
+8b39d1f86aff635ae1660a12fa79c656a513db71. One coordinator, serial; claims released.
+[Exact source/checks/gaps/rollback](../handoffs/WINDOWS-09D.md).
 
 ## Latest bounded result
 
-Host/generator 2d8688e78, CLI/signup 4945a916e, installer utilities c9978be26,
-final application source **S bc3275b4c**, harness **H abfce3963**, generated
-**G 4ac6ad868**. Documentation follows G. Full step 9 remains partial.
+Host/generator/eight paired outputs **B 855ef7d6e**, final application source
+**S 236dd661c**, tests/harness **H 2935e19d0**. One compile at H emitted no tracked
+delta; no separate generated commit. Documentation follows H. Full step 9 partial.
 
-Canonical Claude/Codex/MCP/Setup commands and four standalone wrappers now refuse
-without application load, cache/global launcher/cwd discovery, bootstrap or repair.
-Explicit CLAUDE_MEM_BUNDLE_ROOT is a path input only; present files never approve
-runtime or provenance. Hooks retain nonblocking exit/empty stdout with diagnostics;
-Setup/MCP fail. Original compiled protocol-3 launcher/ensure-launcher bytes unchanged.
-All non-help/version CLI dispatch refuses before dynamic command imports; direct
-runtime/doctor command bodies and plugin signup/bootstrap helpers refuse. E14 native
-probe/compile/registry/codesign/placement/cleanup implementations removed. Parser
-module grammar resolution/native build/query fallback removed; parser calls explicitly
-throw LOCAL_GRAMMAR_UNAPPROVED, without symbol-less success/test bypass.
+Bare host node, POSIX /bin/sh and Qoder root-to-wrapper hosting removed. Structured
+Claude/Qoder/MCP templates have empty commands: intentionally unbound/non-runnable,
+never registered or claimed successful. Codex/Setup shell forms exit 1. Literal
+absolute interpreter source rendering rejects relative/UNC/traversal/substitution
+inputs. Authored JS checks explicit matching interpreter/root but always refuses;
+these post-load checks are not pre-execution artifact approval. Standalone wrappers
+have no env-node shebang. Real host behavior/quoting/loading remains untested.
+Protocol-3 launcher/preflight and its nonblocking envelope bytes unchanged; authored
+JS opt-out/exit0 remains, but unbound templates cannot promise that host envelope.
 
-20 V1 source/mock tests / 234 assertions PASS; ten affected copied-artifact mock
-cases repeated after G PASS / 107 assertions (not thirty unique tests). No emitted
-application evaluated or executed. Native-kind adapter rejected before launch;
-only mocks can report V1/substituted, never V3. Zero forbidden tripwire operations.
-One build:compile PASS; viewer --noEmit PASS. Root --noEmit FAIL: exactly three
-unchanged TS2345, ChromaMcpManager 227/842 and ChromaSync 385; diagnostic bytes match
-09B. 19 inputs unchanged across compile; vs 09B only intentional build-hooks generator
-delta, 18 preserved. 868 source/config sentinels unchanged across compile.
-192 outputs: 190 unchanged, MCP CJS/map pair changed. Seven canonical host outputs
-were regenerated before compile; total entry-to-G generated/config delta nine files.
-Manifests/locks/trust/compiler/identity/provider/native-login/UI preserved.
-No source/generator/harness edits after compile. Do not replay completed checks.
+Independent IDE/marketplace/settings/browser/provider-prompt/worker-stop and signup
+response helpers refuse before defaults/callbacks/state. Dead installer bootstrap,
+private runtime launch/embedding and diagnostic probe bodies/imports retired.
+Independent diagnostics return required failure, never presence-based approval.
+Provider/native-login implementation files preserved; step-6 routing remains open.
+
+20 V1 tests/433 assertions PASS, zero forbidden tripwire events. VM authored source,
+extracted installer declarations and copied-artifact mocks only; no emitted app
+executed. One exact-tool build:compile PASS; viewer --noEmit PASS. Root FAIL exit2:
+same three TS2345 ChromaMcpManager227/842, ChromaSync385, log bytes equal 09C.
+19 inputs/869 source-config sentinels/192 outputs unchanged across compile; only
+intentional build-hooks input delta vs09C. Eight canonical outputs paired in B.
+No source/generator/harness edits after compile. No redundant postcompile replay.
 
 ## Remaining same-step source gaps
 
-- Inert templates still use host node and POSIX /bin/sh. Explicit absolute interpreter
-  and supported host substitution/quoting/runtime version/hash/refusal contract remain.
-  D5 private namespace vs explicit unpacked-path options remain proposed; no registration.
-- Independent legacy helper exports remain behind refused command roots: installer
-  IDE tasks/marketplace/settings/browser/provider prompt/worker-stop utilities;
-  private runtime helpers and diagnostic exports. Exact paths/lines in 09C handoff.
-  Trace direct consumers only; preserve selected-provider native login implementations.
-- Native V3 adapter absent. Requires atomic OS-owned-tree admission before execution,
-  inherited OS egress/DNS denial, startup-failure/timeout/output bounds and verifiable
-  owned-tree/listener/handle/boundary cleanup. Native kind/self-attestation is no proof.
-- Approved runtime/grammar/native/query artifacts and real MCP initialize/list-tools /
-  worker lifecycle specs remain prerequisites. No artifact approval manifest invented.
+- Approved immutable runtime version/hash/ABI/closure and actual supported host
+  binding/quoting/loading contract absent. Literal rendering is not execution
+  admission; unbound templates are not an activation candidate. Both D5 concrete
+  options (private registered namespace / absolute unpacked path) remain proposed.
+- Native OS adapter absent and unconditionally BLOCKED before launch. Need atomic
+  pre-execution owned-tree admission, descendant/PID-reuse handling, inherited OS
+  egress/DNS denial, startup/output/deadline bounds and verifiable every-path owned
+  tree/listener/handle/boundary cleanup. Native labels/callbacks are not proof.
+- Common mock runner still launches outside try and skips release assertion when
+  stop fails/times out. Next source-only task is its admission/teardown state machine
+  and honest fault coverage; it cannot certify or enable native execution.
+- Approved grammar/native/query/Chroma artifacts and concrete MCP initialize/
+  list-tools / worker lifecycle specs absent. No fake protocol success or manifest.
 
 PowerShell planner unchanged/source-only BLOCKED D5; fork CI unchanged/manual-only/
-unconditional BLOCKED D12. No actual generated process, hook/worker/MCP/service/
-listener, CI execution/provision/upload, installed assets/real state, auth/inference/
-AWS, acquisition or push. Initial sandbox Git denial resolved through authorized local
-index-write escalation, hooks/signing disabled; no automatic-review rejection.
-
-A19/A20 retained Claude/Bedrock/API/native-login/Codex ChatGPT/OpenAI-compatible
-implementations preserved. Step 6 role/model/auth/fallback enforcement unimplemented.
-Viewer and identity/sharing/filter/capture/retrieval semantics not redesigned; SQLite
-canonical, Chroma derived. U1/D9 activation blocked, D11 open; no SQLite-only success.
-V3/V4/V5/V6 NOT RUN, V4 needs approved Chroma assets. A15 steps 10/11/12 remain open.
-Earlier WINDOWS-09 S0d0a4b176/G004588740/Hf2c722fad and WINDOWS-09B launcher
-e9c8038ca/bootstrap 8bbf2830c/S e3d91a505/H bbc3847e9/G 62a468f6d preserved.
+unconditional BLOCKED D12. No actual generated process/hook/worker/MCP/service/
+listener/CI/provision/upload/auth/inference/AWS/acquisition/registration/PATH/registry/
+real state/assets/agents/worktrees/push. Local Git escalation only, hooks/signing off.
+No automatic-review rejection. U1/D9 activation blocked, D11 open, V3-V6 NOT RUN;
+V4 requires approved Chroma assets. A19/A20 preserved, A15 10/11/12 open.
+Viewer/SQLite canonical/Chroma derived/identity/sharing/filter/capture/retrieval
+semantics unchanged. All 09/09B/09C commits and historical handoffs preserved.
 
 ## One next task
 
-**WINDOWS-09D remaining source**, same step 9, awaiting explicit
-[NEXT-SESSION](../NEXT-SESSION.md) launch. Finish explicit interpreter/direct-helper
-source boundary and native adapter prerequisites. Do not propose actual V3 until
-approved immutable artifacts, implemented OS boundary/ownership, launch permissions
-and cleanup contract are ready. No other step or runtime/acquisition/CI/registration/
-user-state/agent/worktree permission inferred.
+**WINDOWS-09E remaining source — common harness admission/teardown failure paths**,
+awaiting explicit [NEXT-SESSION](../NEXT-SESSION.md) launch. Same step 9, same runner/
+tests, no broader audit. No actual V3 prompt until approved immutable artifacts,
+implemented native OS boundary/adapter, permissions and cleanup readiness all exist.

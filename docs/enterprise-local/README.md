@@ -50,7 +50,7 @@ UI/identity/locks/trust/generators preserved. Full step 9 remains partial: host 
 Setup/version-check, old utilities/grammar paths and native adapter still open.
 [Historical evidence/gaps/rollback](handoffs/WINDOWS-09B.md).
 
-Latest **WINDOWS-09C**: S bc3275b4c/H abfce3963/G 4ac6ad868. Canonical host/
+Earlier **WINDOWS-09C**: S bc3275b4c/H abfce3963/G 4ac6ad868. Canonical host/
 Setup/wrappers and CLI command roots refuse; plugin signup/bootstrap, legacy native
 installer runners and grammar module/build/query fallback retired. 20 V1 tests /
 234 assertions, one compile/viewer PASS; root same three baseline TS2345. 19 inputs
@@ -58,7 +58,18 @@ unchanged across compile, 868 source sentinels unchanged; MCP pair emitted, seve
 canonical host outputs regenerated. No V3/readiness. Host interpreter/loading,
 independent helper APIs, native OS adapter and artifact/spec prerequisites remain.
 [Exact evidence/gaps/rollback](handoffs/WINDOWS-09C.md). Next proposed launch:
-**WINDOWS-09D remaining source**, not runtime/CI/registration.
+**WINDOWS-09D remaining source**, subsequently completed within the boundary below.
+
+Latest **WINDOWS-09D**: host/source/eight paired outputs B855ef7d6e, final source
+S236dd661c, tests/harness H2935e19d0. Explicit literal interpreter rendering, unbound
+structured host commands, shell exit1, no bare node or /bin/sh/Qoder wrapper hosting.
+Independent installer/runtime/diagnostic operations refuse; dormant bootstrap removed,
+native-provider login files preserved. 20 V1 tests/433 assertions, one compile/viewer
+PASS; root same three TS2345. 19 inputs/869 source sentinels/192 outputs unchanged
+across compile; no generated follow-up commit. No real host envelope/loading proof,
+native adapter/artifacts/admission/cleanup/protocol specs remain blocked; step9 partial.
+[Exact evidence/gaps/rollback](handoffs/WINDOWS-09D.md). Next single task:
+**WINDOWS-09E remaining source — harness admission/teardown failure paths**.
 
 ## Reading order
 

@@ -6,7 +6,26 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
-Latest **WINDOWS-09C** (2026-11-03): S bc3275b4c/H abfce3963/G 4ac6ad868;
+Latest **WINDOWS-09D** (2026-11-03): B855ef7d6e/S236dd661c/H2935e19d0. Exact
+existing Node22.23.4/npm10.9.9/Bun1.4.4 verified, no install/update/resolution. 20 V1
+tests/433 assertions PASS; zero process/network/listener/fetch tripwire events.
+Authored-source VM/extracted installer bodies/copied-artifact mocks only; no emitted
+application executed. Root --noEmit FAIL exit2, exactly three baseline TS2345 at
+ChromaMcpManager227/842, ChromaSync385, diagnostic bytes equal09C; viewer PASS.
+One reviewed build:compile PASS with unchanged BUILD-02 guard; 9 Node inits/5 spawns/
+one execFileSync/exec/execFile, local compilers/generators/Vite net use, no Node socket
+event. Not native/shell/OS-wide no-egress. 19 inputs/869 source sentinels/192 tracked
+outputs unchanged across compile; no emitted tracked delta/new generated commit.
+Eight canonical outputs paired in B before compile, only intentional build-hooks input
+delta vs09C; manifests/locks/trust/compiler/identity/protocol/UI/provider files preserved.
+Synthetic allowlist state exclusively windows-09d scratch; empty npm configs/isolated
+cache/offline, process-local PATH, no real state/assets read. No postcompile source/
+generator/harness edits or redundant test replay. Unbound host templates are not
+runtime-ready, native BLOCKED; V3-V6/CI NOT RUN. Step9 partial, U1/D9/D11/D12/A15
+10/11/12 open. [Exact evidence/limits/rollback](handoffs/WINDOWS-09D.md). Next:
+WINDOWS-09E remaining source, common harness admission/teardown failures only.
+
+Earlier **WINDOWS-09C** (2026-11-03): S bc3275b4c/H abfce3963/G 4ac6ad868;
 host/generator 2d8688e78, CLI 4945a916e, installer utilities c9978be26. Exact existing
 Node22.23.4/npm10.9.9/Bun1.4.4 verified. 20 isolated source/mock tests / 234 assertions
 PASS; ten affected copied-artifact mock cases repeated after G PASS / 107 assertions,

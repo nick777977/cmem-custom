@@ -22,7 +22,28 @@ This board does not grant permission or duplicate the dependency graph.
 | WINDOWS-09 / 9 | done-bounded partial source; full step open | Coordinator finished; feat/cmem-light-local; serial; entry 7d5f83cac | None active; reservations released | S0d0a4b176/G004588740/Hf2c722fad; 17 tests/53 assertions + one compile/viewer PASS, root three baseline errors; handoffs/WINDOWS-09.md. V3/CI NOT RUN. |
 | WINDOWS-09B / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry e27548d545 | None active; reservations released | Launcher e9c8038ca, bootstrap 8bbf2830c, S e3d91a505 / H bbc3847e9 / G 62a468f6d. 19 tests/112 assertions, one compile/viewer PASS, root three known errors. handoffs/WINDOWS-09B.md; V3/CI NOT RUN. |
 | WINDOWS-09C / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry 59c709482 | None active; all released | Host 2d8688e78/CLI 4945a916e/utilities c9978be26/S bc3275b4c/H abfce3963/G 4ac6ad868. 20 tests/234 assertions, one compile/viewer PASS; root same baseline. handoffs/WINDOWS-09C.md. No V3/CI. |
-| WINDOWS-09D / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: interpreter/loading, independent helpers and native OS adapter/artifact/spec prerequisites. No runtime launch. |
+| WINDOWS-09D / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry 8b39d1f86 | None active; all released | B855ef7d6e/S236dd661c/H2935e19d0; 20 tests/433 assertions, one compile/viewer PASS, root baseline FAIL; 19 inputs/869 source sentinels/192 outputs unchanged across compile. handoffs/WINDOWS-09D.md. No V3/CI. |
+| WINDOWS-09E / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: common harness admission/teardown failure source; native remains BLOCKED. No runtime launch. |
+
+## WINDOWS-09D reservation history — all released
+
+Claimed after clean branch/status/HEAD recheck, before edits. Source:
+src/build/hook-shell-template.ts; scripts/build-hooks.js; src/npx-cli/commands/
+{install,runtime,doctor}.ts. Only their direct consumers inspected; native provider
+login implementations and adapters excluded. Paired canonical outputs: plugin/.mcp.json,
+plugin/hooks/{hooks,codex-hooks,qoder-hooks}.json; plugin/scripts/{bun-runner.js,
+version-check.js,worker-wrapper.cjs,qoder-hook-launcher.cjs}. Tests:
+tests/enterprise-local/windows-09d.test.ts, compiled-smoke.test.ts; harness
+scripts/enterprise-local/compiled-smoke.mjs (scratch-root and refusal specs only;
+native remains BLOCKED). One compile integration lane: fingerprint all tracked
+plugin/openclaw/dist/dist/dsh-lib outputs; retain only reviewed paired changes,
+extend claim before retaining any unexpected delta. No manifests/locks/trust/identity/
+provider/viewer source changes. Scratch exclusively .scratch/enterprise-local/windows-09d.
+Docs: AGENTS.md; docs/{roadmap,PATCH-SEQUENCE}.md; docs/enterprise-local/{README,
+LLM-PROFILES,VALIDATION,DEV-ENVIRONMENT,NEXT-SESSION,SESSION-PROMPTS}.md,
+memory/{STATE,TASKS,WORKLOG,DECISIONS}.md and handoffs/WINDOWS-09D.md.
+Native OS substrate/artifact contract absent: document exact source gaps, no nominal
+adapter or runtime activation. Existing 09/09B/09C commits preserved.
 
 ## WINDOWS-09C reservation history — all released
 
@@ -200,15 +221,15 @@ SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed WINDOWS-09D
+## Minimal context for proposed WINDOWS-09E
 
 - AGENTS -> README -> STATE -> roadmap step 9/graph/checkpoints -> TASKS.
-- DECISIONS A06/A07/A09/A14/A15/A16/A17/A18/A19/A20/A21/A22/A23; current environment; NEXT-SESSION.
+- DECISIONS A19/A20/A24 and preserved invariants; current environment; NEXT-SESSION.
 - LLM-PROFILES and VALIDATION V1-V3/CI; PLAN-ADAPT-05/current environment;
   TELEMETRY-04 and CHROMA-07 limits; PATCH-SEQUENCE section 9;
   E12/E13/E14/E21 and corresponding AUDIT-CLOSURE notes, then direct callers after claim.
 
-Read handoffs/WINDOWS-09C.md first for completed refusal/harness source and exact gaps;
+Read handoffs/WINDOWS-09D.md first for completed refusal/harness source and exact gaps;
 do not repeat its checks/audit by default. Current NEXT-SESSION owns one bounded launch.
 
 No whole-history or baseline/trust/hosted/Chroma replay. No real user state or runtime

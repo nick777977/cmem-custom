@@ -71,6 +71,26 @@ Step9 partial; D5 options proposed, D12 blocked, A19/A20/U1/D9/D11/A15 preserved
 No graph, identity/protocol, lock/trust, provider/native-login or memory/viewer change.
 [Evidence, exact gaps and rollback](../handoffs/WINDOWS-09C.md).
 
+### A24 — WINDOWS-09D interpreter/direct-helper source continuation (2026-11-03)
+
+Explicit serial source/mock/typecheck/one-compile launch, no runtime/CI/registration/
+acquisition/user-state/agent/worktree scope. B855ef7d6e pairs source/generator with
+eight canonical outputs; S236dd661c retires independent installer/private runtime/
+diagnostic operations and dormant bootstrap; H2935e19d0 adds source/mock refusals.
+No bare node, /bin/sh selection or Qoder root-to-wrapper hosting. Canonical structured
+commands intentionally unbound/empty; shell entries exit1. Literal absolute path
+rendering and post-load realpath checks always refuse and do not approve interpreter
+execution/version/hash/ABI. No real host loading/envelope claim, D5 options unselected.
+Signup response admission refuses so direct helper imports no longer load gateway/
+TeamBrain settings; retained provider/native-login implementations remain untouched.
+Native adapter still BLOCKED, with exact OS/artifact/admission/cleanup gaps. Common
+runner launch/stop/release failure handling needs remaining source (WINDOWS-09E),
+never a nominal native label or self-attested success. 20 V1 tests/433 assertions,
+one compile/viewer PASS; root three baseline TS2345. 19 inputs/869 source sentinels/
+192 outputs unchanged across compile; no new generated commit. Step9 partial,
+A19/A20/U1/D9/D11/D12/A15 retained, no graph/identity/protocol/lock/trust changes.
+[Evidence, source citations, limitations and rollback](../handoffs/WINDOWS-09D.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |
