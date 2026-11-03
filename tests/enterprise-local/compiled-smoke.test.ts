@@ -2,10 +2,10 @@ import { afterAll, describe, expect, it } from 'bun:test';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync } from 'node:fs';
 import path from 'node:path';
-import { deadlines, leafCases, prepareCopiedBundle, runCase, syntheticEnvironment } from '../../scripts/enterprise-local/compiled-smoke.mjs';
+import { deadlines, leafCases, refusalCases, prepareCopiedBundle, runCase, syntheticEnvironment } from '../../scripts/enterprise-local/compiled-smoke.mjs';
 
 const workspace = process.cwd();
-const task = path.resolve('.scratch/enterprise-local/windows-09');
+const task = path.resolve('.scratch/enterprise-local/windows-09b');
 mkdirSync(task, { recursive: true });
 const root = mkdtempSync(path.join(task, 'orchestration-'));
 afterAll(() => {
@@ -92,5 +92,19 @@ describe('compiled-entrypoint orchestration (MOCK ONLY, V1)', () => {
       stopOwnedTree: () => new Promise(() => {}), assertReleased() { throw new Error('still owned'); },
     }) };
     await expect(runCase(spec, stuck)).rejects.toThrow('CLEANUP_DEADLINE');
+  });
+  it('defines missing/stale/unapproved specs against actual copied launcher paths (mocks only)', async () => {
+    const f = fixture('refusal specs');
+    const specs = refusalCases(f);
+    expect(specs.map((s: any) => s.expected.stderrCode)).toEqual(['LOCAL_BUNDLE_ROOT_REQUIRED', 'LOCAL_BUNDLE_MISSING', 'LOCAL_BUNDLE_STALE', 'PRIVATE_LAUNCH_POLICY_PENDING']);
+    for (const spec of specs) {
+      expect(spec.args[0]).toBe(path.join(f.bundle, 'scripts', names[0]));
+      const output = { exit: 1, stdout: '', stderr: `cmem-light: ${spec.expected.stderrCode}: synthetic refusal\n` };
+      const mock = mockProcess(output);
+      expect(await runCase(spec, mock.adapter)).toMatchObject({ level: 'V1', substituted: true, readiness: false });
+      expect(mock.events.slice(-2)).toEqual(['stop-owned-tree', 'assert-released']);
+      await expect(runCase(spec, mockProcess({ ...output, exit: 0 }).adapter)).rejects.toThrow('UNEXPECTED_PROCESS_EXIT');
+      await expect(runCase(spec, mockProcess({ ...output, stderr: 'different failure' }).adapter)).rejects.toThrow('MISSING_CONTROLLED_REFUSAL');
+    }
   });
 });

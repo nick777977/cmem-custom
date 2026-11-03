@@ -41,7 +41,7 @@ export function syntheticEnvironment(root, tools) {
  * cleanup verifies descendants/reparse points and the process boundary is empty.
  */
 export function prepareCopiedBundle({ workspace, sandbox, hashes, tools }) {
-  const taskRoot = realpathSync(path.join(workspace, '.scratch', 'enterprise-local', 'windows-09'));
+  const taskRoot = realpathSync(path.join(workspace, '.scratch', 'enterprise-local', 'windows-09b'));
   descendant(taskRoot, path.resolve(sandbox));
   const parent = realpathSync(path.dirname(sandbox));
   if (parent !== taskRoot) descendant(taskRoot, parent);
@@ -76,6 +76,22 @@ export function leafCases(fixture, launcherProtocol) {
   ];
 }
 
+/** Future compiled-process refusal cases, authored/tested with mocks only.
+ * Never modify copied artifacts to fabricate stale-runtime acceptance evidence.
+ * Stale here means an executing entry from a different explicit root; approved
+ * runtime version/hash rejection still awaits the artifact contract.
+ */
+export function refusalCases(fixture) {
+  const args = [path.join(fixture.bundle, 'scripts', 'claude-mem-launcher.cjs'), 'status'];
+  const base = { executable: fixture.tools.node, cwd: fixture.sandbox, stdin: '', args, ...deadlines, evidence: 'controlled-refusal' };
+  return [
+    { ...base, id: 'launcher-root-required', env: fixture.env, code: 'LOCAL_BUNDLE_ROOT_REQUIRED' },
+    { ...base, id: 'launcher-missing-bundle', env: { ...fixture.env, CLAUDE_MEM_BUNDLE_ROOT: path.join(fixture.sandbox, 'missing bundle') }, code: 'LOCAL_BUNDLE_MISSING' },
+    { ...base, id: 'launcher-stale-entry', env: { ...fixture.env, CLAUDE_MEM_BUNDLE_ROOT: fixture.sandbox }, code: 'LOCAL_BUNDLE_STALE' },
+    { ...base, id: 'launcher-unapproved-bundle', env: { ...fixture.env, CLAUDE_MEM_BUNDLE_ROOT: fixture.bundle }, code: 'PRIVATE_LAUNCH_POLICY_PENDING' },
+  ].map(({ code, ...spec }) => ({ ...spec, expected: { exit: 1, stdout: '', stderrCode: code } }));
+}
+
 function bounded(promise, ms, label) {
   let timer;
   return Promise.race([promise, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(label)), ms); })]).finally(() => clearTimeout(timer));
@@ -96,6 +112,7 @@ export async function runCase(spec, adapter) {
     if (result.signal || result.exit !== spec.expected.exit) throw new Error('UNEXPECTED_PROCESS_EXIT');
     if (Buffer.byteLength(result.stdout) + Buffer.byteLength(result.stderr) > spec.maxOutputBytes) throw new Error('OUTPUT_LIMIT');
     for (const key of ['stdout', 'stderr']) if (key in spec.expected && result[key] !== spec.expected[key]) throw new Error(`UNEXPECTED_${key.toUpperCase()}`);
+    if (spec.expected.stderrCode && !result.stderr.startsWith(`cmem-light: ${spec.expected.stderrCode}:`)) throw new Error('MISSING_CONTROLLED_REFUSAL');
     if (spec.expected.systemMessageCode) {
       const parsed = JSON.parse(result.stdout);
       if (typeof parsed.systemMessage !== 'string' || !parsed.systemMessage.includes(`${spec.expected.systemMessageCode}:`) || !result.stderr.includes(`${spec.expected.systemMessageCode}:`)) throw new Error('MISSING_CONTROLLED_REFUSAL');
