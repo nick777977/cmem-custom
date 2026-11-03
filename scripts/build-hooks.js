@@ -299,7 +299,7 @@ function applyCanonicalExecEntry(parsed, dottedPath, expected, filePath, writeMo
 export function verifyClaudeCodeRuntimeHooksAreExecForm(parsed, execEntries, ensureLauncherExecHook, filePath) {
   const manifestLauncherArgs = Object.values(execEntries)
     .map(({ entry }) => entry)
-    .filter((entry) => entry.command === 'claude-mem')
+    .filter((entry) => entry.command === 'node')
     .map((entry) => entry.args);
   for (const [event, groups] of Object.entries(parsed.hooks ?? {})) {
     if (SHELL_FORM_HOOK_EVENTS.has(event)) continue;
@@ -308,7 +308,7 @@ export function verifyClaudeCodeRuntimeHooksAreExecForm(parsed, execEntries, ens
         const location = `${event}.${groupIndex}.${hookIndex}`;
         const hasShell = Object.prototype.hasOwnProperty.call(entry, 'shell');
         const hasArgs = Array.isArray(entry.args);
-        const isLauncher = entry.command === 'claude-mem';
+        const isLauncher = entry.command === 'node';
         const isManifestLauncher = isLauncher && manifestLauncherArgs
           .some((launcherArgs) => isDeepStrictEqual(entry.args, launcherArgs));
         const isEnsureLauncher = entry.command === ensureLauncherExecHook.command
@@ -327,7 +327,7 @@ export function verifyClaudeCodeRuntimeHooksAreExecForm(parsed, execEntries, ens
   }
 }
 
-async function verifyShellTemplateCanonical() {
+export async function verifyShellTemplateCanonical() {
   console.log('\n📋 Verifying Rule A shell templates match the canonical generator...');
 
   // Compile src/build/hook-shell-template.ts in-memory and import it. The build
@@ -343,7 +343,7 @@ async function verifyShellTemplateCanonical() {
   });
   const moduleSource = bundled.outputFiles[0].text;
   const dataUrl = 'data:text/javascript;base64,' + Buffer.from(moduleSource).toString('base64');
-  const { buildShellCommand, buildCodexWindowsCommand, buildExecHook, buildEnsureLauncherExecHook } = await import(dataUrl);
+  const { buildShellCommand, buildCodexWindowsCommand, buildExecHook, buildEnsureLauncherExecHook, standaloneRefusalWrappers } = await import(dataUrl);
 
   const manifest = shellTemplateManifest(buildShellCommand, buildCodexWindowsCommand, buildExecHook, buildEnsureLauncherExecHook);
 
@@ -351,6 +351,12 @@ async function verifyShellTemplateCanonical() {
   // generator change, rewrite the committed launcher strings from the same
   // manifest the verifier checks, so the two can never drift.
   const writeMode = process.argv.includes('--write-shell-templates');
+
+  for (const [filePath, expected] of Object.entries(standaloneRefusalWrappers())) {
+    if (fs.readFileSync(filePath, 'utf8') === expected) continue;
+    if (!writeMode) throw new Error(`Private refusal wrapper differs from canonical source: ${filePath}`);
+    fs.writeFileSync(filePath, expected);
+  }
 
   for (const [filePath, spec] of Object.entries(manifest)) {
     const parsed = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
@@ -420,11 +426,11 @@ async function verifyShellTemplateCanonical() {
     }
   }
 
-  // Rule C safety net (bun-runner.js fixBrokenScriptPath) must stay documented.
+  // Legacy wrappers are now generated refusal gates, not path repair facilities.
   const bunRunner = fs.readFileSync('plugin/scripts/bun-runner.js', 'utf-8');
-  if (!bunRunner.includes('function fixBrokenScriptPath')) {
+  if (!bunRunner.includes('PRIVATE_LAUNCH_POLICY_PENDING') || bunRunner.includes('fixBrokenScriptPath')) {
     throw new Error(
-      'plugin/scripts/bun-runner.js is missing fixBrokenScriptPath — it is the Rule C runtime safety net behind Rule A. Do not remove it.'
+      'plugin/scripts/bun-runner.js must preserve private refusal without path repair.'
     );
   }
 
@@ -1180,11 +1186,11 @@ async function buildHooks() {
     }
     const bundledMcp = JSON.parse(fs.readFileSync('plugin/.mcp.json', 'utf-8'));
     const mcpSearchCommand = bundledMcp.mcpServers?.['mcp-search']?.args?.join(' ') ?? '';
-    if (!mcpSearchCommand.includes('.codex/plugins/cache/claude-mem-local/claude-mem')) {
-      throw new Error('plugin/.mcp.json mcp-search launcher must include Codex cache fallback for hosts that do not inject PLUGIN_ROOT');
+    if (!mcpSearchCommand.includes('CLAUDE_MEM_BUNDLE_ROOT')) {
+      throw new Error('plugin/.mcp.json must require the explicit private bundle root');
     }
-    if (!mcpSearchCommand.includes('plugins/cache/thedotmack/claude-mem')) {
-      throw new Error('plugin/.mcp.json mcp-search launcher must include Claude cache fallback for hosts that do not inject PLUGIN_ROOT');
+    if (mcpSearchCommand.includes('plugins/cache') || !mcpSearchCommand.includes('PRIVATE_LAUNCH_POLICY_PENDING')) {
+      throw new Error('plugin/.mcp.json must refuse without cache fallback or application loading');
     }
     console.log('✓ All required distribution files present');
 
