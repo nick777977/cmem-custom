@@ -1,4 +1,8 @@
 /**
+ * WINDOWS-09B: ensure/PATH/removal entrypoints below now refuse before inspecting
+ * options or host state. Historical pure/probe/compile helpers remain for review;
+ * they are not an approved private installer. D5 remains unresolved.
+ *
  * Puts the `claude-mem` hook launcher on PATH (plan-17 #3605, Phase 3).
  *
  * ONE ensure flow — protocol check → compile → place → PATH setup — shared by
@@ -239,59 +243,7 @@ export function ensureLocalBinOnShellPath(options: {
   logger: LauncherInstallLogger;
   host?: LauncherHostEnvironment;
 }): ShellPathSetupOutcome {
-  const { purposeLabel, logger } = options;
-  const host = options.host ?? currentLauncherHostEnvironment();
-  const localBinDirectory = posixPath.join(host.homeDirectory, '.local', 'bin');
-
-  const currentPath = host.environmentVariables.PATH ?? '';
-  if (currentPath.split(':').includes(localBinDirectory)) return 'already-on-path';
-
-  const { path: configFile, shell } = detectShellConfigFile(
-    host.homeDirectory,
-    host.environmentVariables.SHELL ?? '',
-    host.platform,
-  );
-  const binPathLiteral = '$HOME/.local/bin';
-  const exportLine = shellPathExportLine(shell, localBinDirectory);
-
-  let existingContent = '';
-  if (existsSync(configFile)) {
-    try {
-      existingContent = readFileSync(configFile, 'utf-8');
-    } catch (error: unknown) {
-      // [ANTI-PATTERN IGNORED]: surfaced through the caller's logger; the append below still runs.
-      logger.warn(`Could not read ${configFile}: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  } else {
-    try {
-      mkdirSync(posixPath.dirname(configFile), { recursive: true });
-    } catch (error: unknown) {
-      // [ANTI-PATTERN IGNORED]: surfaced through the caller's logger; the write below reports the real failure.
-      logger.warn(`Could not create ${posixPath.dirname(configFile)}: ${error instanceof Error ? error.message : String(error)}`);
-    }
-  }
-
-  let outcome: ShellPathSetupOutcome;
-  if (existingContent.includes(localBinDirectory) || existingContent.includes(binPathLiteral)) {
-    logger.info(`${purposeLabel} PATH already configured in ${configFile}`);
-    outcome = 'rc-file-already-configured';
-  } else {
-    try {
-      const trailingNewline = existingContent.length === 0 || existingContent.endsWith('\n') ? '' : '\n';
-      const appendedBlock = `${trailingNewline}\n${shellPathSetupMarkerComment(purposeLabel)}\n${exportLine}\n`;
-      writeFileSync(configFile, existingContent + appendedBlock, 'utf-8');
-      logger.success(`Added ${purposeLabel} to PATH in ${configFile}`);
-      outcome = 'rc-file-updated';
-    } catch (error: unknown) {
-      // [ANTI-PATTERN IGNORED]: surfaced through the caller's logger together with the manual remediation command.
-      logger.warn(`Could not update ${configFile}: ${error instanceof Error ? error.message : String(error)}`);
-      logger.info(`Run manually: echo '${exportLine}' >> ${configFile}`);
-      return 'rc-file-update-failed';
-    }
-  }
-
-  host.environmentVariables.PATH = `${localBinDirectory}:${currentPath}`;
-  return outcome;
+  throw new Error('PRIVATE_INSTALL_POLICY_PENDING: D5 registration/ownership policy is unresolved; automatic compile, placement, PATH/registry changes and removal are disabled.');
 }
 
 // ---------------------------------------------------------------------------
@@ -455,31 +407,7 @@ export function ensureDirectoryOnWindowsUserPath(options: {
   host?: LauncherHostEnvironment;
   runPowerShell?: PowerShellRunner;
 }): WindowsPathSetupOutcome {
-  const { directory, logger } = options;
-  const host = options.host ?? currentLauncherHostEnvironment();
-  const runPowerShell = options.runPowerShell ?? runPowerShellHidden;
-
-  const powerShellResult = runPowerShell(WINDOWS_USER_PATH_APPEND_SCRIPT, {
-    [LAUNCHER_DIRECTORY_ENVIRONMENT_VARIABLE]: directory,
-  });
-  const printedStatusWord = powerShellResult.stdout.trim();
-  let outcome: WindowsPathSetupOutcome;
-  if (powerShellResult.status === 0 && printedStatusWord === 'present') {
-    outcome = 'already-on-user-path';
-  } else if (powerShellResult.status === 0 && printedStatusWord === 'added') {
-    logger.success(`Added ${directory} to your user Path (open a new terminal to pick it up)`);
-    outcome = 'user-path-updated';
-  } else {
-    const failureDetail = powerShellResult.spawnErrorMessage
-      ?? (powerShellResult.stderr.trim()
-        || `exit ${powerShellResult.status}${printedStatusWord ? `, printed "${printedStatusWord}"` : ''}`);
-    logger.warn(`Could not update the user Path: ${failureDetail}`);
-    logger.info(`Add ${directory} to your user Path (Settings → System → About → Advanced system settings → Environment Variables).`);
-    return 'user-path-update-failed';
-  }
-  const currentProcessPath = host.environmentVariables.PATH ?? '';
-  host.environmentVariables.PATH = appendDirectoryToWindowsPathValue(currentProcessPath, directory).updatedPathValue;
-  return outcome;
+  throw new Error('PRIVATE_INSTALL_POLICY_PENDING: D5 registration/ownership policy is unresolved; automatic compile, placement, PATH/registry changes and removal are disabled.');
 }
 
 // ---------------------------------------------------------------------------
@@ -718,99 +646,7 @@ export function ensureLauncherOnPath(options: {
   runCodesign?: LauncherCodesignRunner;
   runPowerShell?: PowerShellRunner;
 }): LauncherEnsureResult {
-  const { logger, invocationContext } = options;
-  const host = options.host ?? currentLauncherHostEnvironment();
-  const platformPath = pathModuleFor(host.platform);
-  const binDirectory = resolveLauncherBinDirectory(host);
-  const binaryPath = resolveLauncherBinaryPath(host);
-
-  const runPathSetup = (binaryWasJustPlaced: boolean) => {
-    if (host.platform !== 'win32') return ensureLocalBinOnShellPath({ purposeLabel: 'claude-mem', logger, host });
-    if (!binaryWasJustPlaced && invocationContext === 'session-start-self-heal') return null;
-    return ensureDirectoryOnWindowsUserPath({ directory: binDirectory, logger, host, runPowerShell: options.runPowerShell });
-  };
-
-  const existingBinary = inspectExistingLauncherBinary(binaryPath);
-  if (existingBinary.kind === 'foreign') {
-    logger.warn(`${binaryPath} exists and is not the claude-mem hook launcher (${existingBinary.reason}); not replacing`);
-    return { status: 'foreign-binary-kept', binaryPath, pathSetupOutcome: null };
-  }
-  if (existingBinary.kind === 'launcher') {
-    if (existingBinary.protocol === LAUNCHER_PROTOCOL
-      || (existingBinary.protocol > LAUNCHER_PROTOCOL && invocationContext === 'session-start-self-heal')) {
-      return { status: 'already-current', binaryPath, pathSetupOutcome: runPathSetup(false) };
-    }
-    if (existingBinary.protocol > LAUNCHER_PROTOCOL) {
-      logger.warn(`${binaryPath} speaks launcher protocol ${existingBinary.protocol}, newer than this installer's ${LAUNCHER_PROTOCOL}; leaving it in place`);
-      return { status: 'newer-protocol-kept', binaryPath, pathSetupOutcome: runPathSetup(false) };
-    }
-  }
-
-  const launcherBundlePath = platformPath.join(options.pluginRoot, 'scripts', 'claude-mem-launcher.cjs');
-  if (!existsSync(launcherBundlePath)) {
-    throw new Error(`launcher bundle missing at ${launcherBundlePath}`);
-  }
-
-  const bunPath = options.resolveBunPath();
-  if (!bunPath) {
-    return { status: 'bun-not-found', binaryPath, pathSetupOutcome: null };
-  }
-  // A launcher compiled with Bun < 1.2.16 ignores BUN_BE_BUN, so its
-  // no-bun-on-PATH fallback would re-exec itself forever (#4933).
-  const bunVersion = (options.readBunVersion ?? readBunVersionFromExecutable)(bunPath);
-  if (bunVersion !== null && !bunVersionHonoursBunBeBun(bunVersion)) {
-    throw new Error(`Bun ${bunVersion} at ${bunPath} is older than ${MINIMUM_BUN_VERSION_FOR_BUN_BE_BUN}, which the claude-mem launcher needs; run \`bun upgrade\` (or update Bun with your version manager), then \`npx claude-mem install\``);
-  }
-
-  const compileBunPath = resolveCompileBunPath(bunPath, host.platform, options.runPowerShell ?? runPowerShellHidden);
-
-  mkdirSync(binDirectory, { recursive: true });
-  removeStalePlacementLeftovers(binDirectory, platformPath);
-  // Compile beside the target, then rename over it, so two concurrent
-  // sessions each move a complete file into place.
-  const executableSuffix = host.platform === 'win32' ? '.exe' : '';
-  const temporaryOutfilePath = platformPath.join(binDirectory, `.claude-mem-${process.pid}.tmp${executableSuffix}`);
-  const runCompile = options.runCompile ?? runBunCompile;
-  const runCodesign = options.runCodesign ?? runAdhocCodesign;
-  try {
-    const compileResult = runCompile(
-      compileBunPath,
-      buildLauncherCompileArguments(launcherBundlePath, temporaryOutfilePath),
-      binDirectory,
-    );
-    if (compileResult.status !== 0 || !existsSync(temporaryOutfilePath)) {
-      throw new Error(`bun build --compile failed (exit ${compileResult.status}): ${compileResult.stderr.trim().split('\n').pop() ?? ''}`);
-    }
-    if (host.platform !== 'win32') chmodSync(temporaryOutfilePath, 0o755);
-    // Best effort: when signing is unavailable or fails (no codesign on the
-    // machine, odd filesystem), probe anyway and report through the existing
-    // errors — the probe, not the signing, decides whether the binary runs.
-    let codesignFailure: string | null = null;
-    if (host.platform === 'darwin') {
-      const codesignResult = runCodesign(temporaryOutfilePath);
-      if (codesignResult.status !== 0) {
-        codesignFailure = `codesign --force --sign - failed (exit ${codesignResult.status}): ${codesignResult.stderr.trim().split('\n').pop() ?? ''}`;
-        logger.warn(`${codesignFailure}; the launcher may not start on macOS versions that enforce valid code signatures`);
-      }
-    }
-    // Verified before the move: after it, a concurrent session may already
-    // have renamed its own build over the target.
-    const compiledProbe = probeCompiledLauncher(temporaryOutfilePath, host.platform);
-    if (compiledProbe.protocol !== LAUNCHER_PROTOCOL) {
-      const probeFailure = compiledProbe.failure ? ` (--version ${compiledProbe.failure})` : '';
-      // An unusable signature is the usual reason the probe cannot run the
-      // binary (macOS SIGKILLs it on exec), and its stderr is the actionable
-      // half: the protocol message alone reads like a broken build.
-      const signFailure = codesignFailure ? `; ${codesignFailure}` : '';
-      throw new Error(`compiled launcher printed protocol ${compiledProbe.protocol}, expected ${LAUNCHER_PROTOCOL}${probeFailure}${signFailure}`);
-    }
-    moveCompiledLauncherIntoPlace(temporaryOutfilePath, binaryPath, binDirectory, host.platform);
-  } finally {
-    rmSync(temporaryOutfilePath, { force: true });
-  }
-  logger.success(`claude-mem launcher installed at ${binaryPath} (protocol ${LAUNCHER_PROTOCOL})`);
-
-  return { status: 'installed', binaryPath, pathSetupOutcome: runPathSetup(true) };
+  throw new Error('PRIVATE_INSTALL_POLICY_PENDING: D5 registration/ownership policy is unresolved; automatic compile, placement, PATH/registry changes and removal are disabled.');
 }
 
 // ---------------------------------------------------------------------------
@@ -829,30 +665,5 @@ export interface LauncherRemovalResult {
  * files and the Windows user Path are never edited; the hint says what to remove.
  */
 export function removeInstalledLauncher(host: LauncherHostEnvironment = currentLauncherHostEnvironment()): LauncherRemovalResult {
-  const binaryPath = resolveLauncherBinaryPath(host);
-  let removedBinaryPath: string | null = null;
-  if (probeLauncherVersion(binaryPath).protocol !== null) {
-    rmSync(binaryPath, { force: true });
-    removedBinaryPath = binaryPath;
-  }
-
-  let pathCleanupHint: string | null = null;
-  if (host.platform === 'win32') {
-    const binDirectory = resolveLauncherBinDirectory(host);
-    if (removedBinaryPath) {
-      pathCleanupHint = `${binDirectory} is still on your user Path; remove it in Environment Variables if you no longer need it.`;
-    }
-  } else {
-    const { path: configFile, shell } = detectShellConfigFile(
-      host.homeDirectory,
-      host.environmentVariables.SHELL ?? '',
-      host.platform,
-    );
-    const markerComment = shellPathSetupMarkerComment('claude-mem');
-    if (existsSync(configFile) && readFileSync(configFile, 'utf-8').includes(markerComment)) {
-      const exportLine = shellPathExportLine(shell, posixPath.join(host.homeDirectory, '.local', 'bin'));
-      pathCleanupHint = `${configFile} still has the "${markerComment}" PATH line (${exportLine}); remove it if nothing else in ~/.local/bin needs it.`;
-    }
-  }
-  return { removedBinaryPath, pathCleanupHint };
+  throw new Error('PRIVATE_INSTALL_POLICY_PENDING: D5 registration/ownership policy is unresolved; automatic compile, placement, PATH/registry changes and removal are disabled.');
 }

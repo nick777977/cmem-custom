@@ -15,6 +15,7 @@ import { loadClaudeMemEnv, saveClaudeMemEnv } from '../../shared/EnvManager.js';
 import { ensureWorkerStarted, getLastWorkerBootFailure, type WorkerStartResult } from '../../services/worker-spawner.js';
 import { formatHostForUrl } from '../../shared/worker-utils.js';
 import {
+  refuseAutomaticPluginSetup,
   ensureBun,
   ensureUv,
   installPluginDependencies,
@@ -2648,38 +2649,7 @@ export function shouldSkipWorkerAutostart(input: {
 }
 
 export async function runInstallCommand(options: InstallOptions = {}): Promise<void> {
-  const summary = createInstallSummary();
-  try {
-    await runInstallCommandInner(options, summary);
-    clearLastInstallError();
-  } catch (error: unknown) {
-    const err = error instanceof Error ? error : new Error(String(error));
-    if (err instanceof InstallAbortError) {
-      // err.category.id is OUR taxonomy id (error-taxonomy.ts), never a message.
-      await captureCliEvent('install_failed', {
-        error_category: err.category.id,
-        interactive: isInteractive,
-        install_method: detectInstallMethod(),
-        claude_code_version: detectClaudeCodeVersion(),
-      }, { person: true });
-      // Flush whatever warnings accrued before the abort, then print the
-      // remediation headline and exit non-zero. ABORT must never reach the
-      // "Installation Complete" path.
-      flushSummary(summary, (line) => (isInteractive ? p.log.message(line) : console.error(`  ${line}`)));
-      const headline = `Installation Aborted: ${err.category.id}`;
-      if (isInteractive) {
-        p.log.error(headline);
-        p.log.error(err.remediation);
-        p.outro(styleText('red', 'claude-mem installation aborted.'));
-      } else {
-        console.error(`\n  ${headline}`);
-        console.error(`  ${err.remediation}`);
-        console.error(`  ${err.message}`);
-      }
-      process.exit(1);
-    }
-    throw error;
-  }
+  refuseAutomaticPluginSetup();
 }
 
 async function runInstallCommandInner(options: InstallOptions, summary: InstallSummary): Promise<void> {
@@ -3313,26 +3283,5 @@ async function runRepairCommandInner(summary: InstallSummary): Promise<void> {
 }
 
 export async function runRepairCommand(): Promise<void> {
-  const summary = createInstallSummary();
-  try {
-    await runRepairCommandInner(summary);
-    clearLastInstallError();
-  } catch (error: unknown) {
-    const err = error instanceof Error ? error : new Error(String(error));
-    if (err instanceof InstallAbortError) {
-      flushSummary(summary, (line) => (isInteractive ? p.log.message(line) : console.error(`  ${line}`)));
-      const headline = `Repair Aborted: ${err.category.id}`;
-      if (isInteractive) {
-        p.log.error(headline);
-        p.log.error(err.remediation);
-        p.outro(styleText('red', 'claude-mem repair aborted.'));
-      } else {
-        console.error(`\n  ${headline}`);
-        console.error(`  ${err.remediation}`);
-        console.error(`  ${err.message}`);
-      }
-      process.exit(1);
-    }
-    throw error;
-  }
+  refuseAutomaticPluginSetup();
 }

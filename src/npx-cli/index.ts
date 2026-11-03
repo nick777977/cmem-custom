@@ -2,6 +2,7 @@ import { parseArgs, styleText } from 'node:util';
 import { readPluginVersion } from './utils/paths.js';
 import type { InstallOptions } from './commands/install.js';
 import { resolveInstallerProviderChoice } from './installer-provider-choice.js';
+import { refuseAutomaticPluginSetup } from './install/setup-runtime.js';
 
 const args = process.argv.slice(2);
 const firstArg = args[0]?.toLowerCase() ?? '';
@@ -15,72 +16,11 @@ const command =
     : firstArg;
 
 function printHelp(): void {
-  const version = readPluginVersion();
-
-  console.log(`
-${styleText('bold', 'claude-mem')} v${version} — persistent memory for AI coding assistants
-
-${styleText('bold', 'Install Commands')} (no Bun required):
-  ${styleText('cyan', 'npx claude-mem')}                     Interactive install
-  ${styleText('cyan', 'npx claude-mem install')}              Interactive install (also puts the claude-mem hook launcher on PATH)
-  ${styleText('cyan', 'npx claude-mem install --ide <id>')}   Install for specific IDE
-  ${styleText('cyan', 'npx claude-mem install --ide dsh --dsh-profile <name>')}   Install DeepSeek Harness (default profile: web)
-  ${styleText('cyan', 'npx claude-mem install --provider claude|codex|gemini|openrouter|host')}   Set LLM provider (optional non-interactively; a fresh install defaults to claude). codex, gemini and openrouter need a cmem.ai sign-in in a browser, on either runtime; claude and host need no claude-mem account
-  ${styleText('cyan', 'npx claude-mem install --model <id>')}   Set Claude or Codex model (when provider=claude|codex)
-  ${styleText('cyan', 'npx claude-mem install --no-auto-start')}   Skip worker auto-start at the end
-  ${styleText('cyan', 'npx claude-mem install --disable-auto-memory')}   Explicitly disable Claude Code native auto-memory
-  ${styleText('cyan', 'npx claude-mem install --runtime worker|server')}   Select runtime non-interactively (server prints the docker compose command for pg+redis without running it, and provisions a hook API key only when CLAUDE_MEM_SERVER_DATABASE_URL is set; otherwise set CLAUDE_MEM_SERVER_DATABASE_URL before running npx claude-mem server keys rotate once Postgres is up)
-  ${styleText('cyan', 'npx claude-mem install --runtime server --server-url <url>')}   Point the server runtime at a specific base URL
-  ${styleText('cyan', 'npx claude-mem repair')}                Repair runtime (re-runs Bun/uv setup and bun install in plugin cache)
-  ${styleText('cyan', 'npx claude-mem prune [--dry-run] [--keep <n>]')}   Remove superseded plugin cache versions (keeps newest 2 + live worker + registered install)
-  ${styleText('cyan', 'npx claude-mem update')}               Update to latest version (refreshes the hook launcher)
-  ${styleText('cyan', 'npx claude-mem uninstall')}            Remove plugin, configs and the hook launcher
-  ${styleText('cyan', 'npx claude-mem version')}              Print version
-
-${styleText('bold', 'Runtime Commands')} (requires Bun, delegates to installed plugin):
-  ${styleText('cyan', 'npx claude-mem start')}                Start worker service
-  ${styleText('cyan', 'npx claude-mem stop')}                 Stop worker service
-  ${styleText('cyan', 'npx claude-mem restart')}              Restart worker service
-  ${styleText('cyan', 'npx claude-mem status')}               Show worker status
-  ${styleText('cyan', 'npx claude-mem doctor')}               Diagnose install/runtime health (bun, uv, hook launcher, worker)
-  ${styleText('cyan', 'npx claude-mem telemetry status|enable|disable')}   Show local fork telemetry policy (always disabled)
-  ${styleText('cyan', 'npx claude-mem server start')}         Start server service
-  ${styleText('cyan', 'npx claude-mem server stop')}          Stop server service
-  ${styleText('cyan', 'npx claude-mem server restart')}       Restart server service
-  ${styleText('cyan', 'npx claude-mem server status')}        Show server status
-  ${styleText('cyan', 'npx claude-mem server api-key create|list|revoke')}   Manage API keys
-  ${styleText('cyan', 'npx claude-mem worker start|stop|restart|status')}    Worker compatibility aliases
-  ${styleText('cyan', 'npx claude-mem search <query>')}       Search observations
-  ${styleText('cyan', 'npx claude-mem mcp')}                    Start the stdio MCP server
-  ${styleText('cyan', 'npx claude-mem hook cursor <event>')}    Run Cursor hook forwarding
-  ${styleText('cyan', 'npx claude-mem adopt [--dry-run] [--branch <name>]')}    Stamp merged worktrees into parent project
-  ${styleText('cyan', 'npx claude-mem cleanup [--dry-run]')}    Run one-time v12.4.3 pollution cleanup (or preview counts)
-  ${styleText('cyan', 'npx claude-mem project merge <from> <into> [--dry-run]')}    Fold one project's memory into another (non-destructive, syncs)
-  ${styleText('cyan', 'npx claude-mem backup run|status|list')}   Manage local DB snapshots
-  ${styleText('cyan', 'npx claude-mem restore <file>')}       Restore the DB from a snapshot
-  ${styleText('cyan', 'npx claude-mem transcript watch')}     Start transcript watcher
-  ${styleText('cyan', 'npx claude-mem antigravity-cli install|status|uninstall')}   Manage Antigravity CLI hooks + MCP config
-  ${styleText('cyan', 'npx claude-mem kimi install|status|uninstall')}   Manage Kimi Code CLI hooks + MCP config
-  ${styleText('cyan', 'npx claude-mem t3code status|uninstall [--settings <path>]')}   Inspect or disable T3 Code provider plugins
-  ${styleText('cyan', 'npx claude-mem pi install|status|uninstall')}   Manage the native Pi extension
-
-${styleText('bold', 'TeamBrain')} (one shared brain for your team; your own memory stays private):
-  ${styleText('cyan', 'npx claude-mem teambrain start')}                Create a team on cmem.ai
-  ${styleText('cyan', 'npx claude-mem teambrain join <invite-link>')}   Join a team, then choose which projects to share
-  ${styleText('cyan', 'npx claude-mem teambrain status|share|leave')}   Check your teams, change what you share, or leave
-
-${styleText('bold', 'Claude Code Hooks')}:
-  Each hook runs ${styleText('cyan', 'claude-mem hook claude-code <event>')} directly, with no shell.
-  That ${styleText('cyan', 'claude-mem')} is a small launcher the installer places on PATH:
-  ~/.local/bin (macOS/Linux) or %LOCALAPPDATA%\\claude-mem\\bin (Windows).
-  Hook error 'Executable not found in $PATH: "claude-mem"'? Run ${styleText('cyan', 'npx claude-mem install')},
-  restart your terminal or IDE, then check ${styleText('cyan', 'npx claude-mem doctor')}.
-
-${styleText('bold', 'IDE Identifiers')}:
-  claude-code, cursor, grok-bot, opencode, openclaw, omp, hermes, pi, dsh,
-  windsurf, codex-cli, t3code (aliases: t3, t3-code), kimi, copilot-cli, antigravity, goose,
-  roo-code, warp
-`);
+  console.log('cmem-light private bundle CLI v' + readPluginVersion());
+  console.log('help | version: local metadata only.');
+  console.log('install/update/upgrade/repair: LOCAL_RUNTIME_UNAPPROVED; no automatic bootstrap, signup, download, login or registration.');
+  console.log('Private runtime/loading policy is pending. Do not activate legacy runtime/IDE commands or register this partial candidate.');
+  console.log('Existing selected-provider Claude/Bedrock/API/login, Codex ChatGPT login and compatible adapters are retained; profile enforcement is separate step 6 work.');
 }
 
 function parseInstallOptions(argv: string[]): InstallOptions {
@@ -149,6 +89,9 @@ async function main(): Promise<void> {
     printHelp();
     return;
   }
+
+  // Refuse before dynamically importing installer, auth, IDE or user-state code.
+  if (['', 'install', 'repair', 'update', 'upgrade'].includes(command)) refuseAutomaticPluginSetup();
 
   switch (command) {
     case '':
