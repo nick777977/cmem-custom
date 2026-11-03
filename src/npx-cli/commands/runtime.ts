@@ -141,196 +141,79 @@ async function spawnBunServerWithEmbedder(command: string, extraArgs: string[] =
 }
 
 export function runServerStartCommand(): void {
-  void spawnBunServerWithEmbedder('start');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runServerStopCommand(): void {
-  spawnBunServerCommand('stop');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runServerRestartCommand(): void {
-  void spawnBunServerWithEmbedder('restart');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runServerStatusCommand(): void {
-  spawnBunServerCommand('status');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 // Phase 10 — start the BullMQ generation worker (no HTTP). Use this in
 // Compose to scale generation horizontally while a single (or multiple)
 // HTTP-only server replicas serve writes/reads.
 export function runServerWorkerStartCommand(): void {
-  void spawnBunServerWithEmbedder('worker', ['start']);
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runStartCommand(): void {
-  spawnBunWorkerCommand('start');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runStopCommand(): void {
-  spawnBunWorkerCommand('stop');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runRestartCommand(): void {
-  spawnBunWorkerCommand('restart');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runStatusCommand(): void {
-  spawnBunWorkerCommand('status');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runServerApiKeyCommand(extraArgs: string[] = []): void {
-  spawnBunWorkerCommand('server', ['api-key', ...extraArgs]);
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runAdoptCommand(extraArgs: string[] = []): void {
-  const pluginRoot = pluginRootOrExit();
-  const bunPath = resolveBunOrExit();
-  const workerScript = workerServiceScriptPath(pluginRoot);
-
-  if (!existsSync(workerScript)) {
-    console.error(styleText('red', `Worker script not found at: ${workerScript}`));
-    console.error('The installation may be corrupted. Try: npx claude-mem install');
-    process.exit(1);
-  }
-
-  const userCwd = process.cwd();
-  spawnPlugin(bunPath, [workerScript, 'adopt', '--cwd', userCwd, ...extraArgs], pluginRoot);
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runProjectCommand(extraArgs: string[] = []): void {
-  spawnBunWorkerCommand('project', extraArgs);
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runCleanupCommand(extraArgs: string[] = []): void {
-  spawnBunWorkerCommand('cleanup', extraArgs);
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runMcpCommand(): void {
-  const mcpScript = packagePluginScriptPath('mcp-server.cjs');
-  if (!existsSync(mcpScript)) {
-    console.error(styleText('red', `MCP server script not found at: ${mcpScript}`));
-    process.exit(1);
-  }
-
-  const child = spawnHidden(process.execPath, [mcpScript], {
-    stdio: 'inherit',
-    cwd: npmPackageRootDirectory(),
-    env: sanitizeEnv(process.env),
-  });
-
-  child.on('error', (error) => {
-    console.error(styleText('red', `Failed to start MCP server: ${error.message}`));
-    process.exit(1);
-  });
-
-  child.on('close', (exitCode) => {
-    process.exit(exitCode ?? 0);
-  });
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runHookCommand(extraArgs: string[] = []): void {
-  const workerScript = packagePluginScriptPath('worker-service.cjs');
-  if (!existsSync(workerScript)) {
-    console.error(styleText('red', `Worker script not found at: ${workerScript}`));
-    process.exit(1);
-  }
-
-  const bunPath = resolveBunOrExit();
-  const child = spawnHidden(bunPath, [workerScript, 'hook', ...extraArgs], {
-    stdio: 'inherit',
-    cwd: process.cwd(),
-    env: sanitizeEnv(process.env),
-  });
-
-  child.on('error', (error) => {
-    console.error(styleText('red', `Failed to start Cursor hook forwarding: ${error.message}`));
-    process.exit(1);
-  });
-
-  child.on('close', (exitCode) => {
-    process.exit(exitCode ?? 0);
-  });
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export async function runSearchCommand(queryParts: string[]): Promise<void> {
-  pluginRootOrExit();
-
-  const query = queryParts.join(' ').trim();
-  if (!query) {
-    console.error(styleText('red', 'Usage: npx claude-mem search <query>'));
-    process.exit(1);
-  }
-
-  const searchUrl = buildWorkerUrl(`/api/search?query=${encodeURIComponent(query)}`);
-
-  let response: Response;
-  try {
-    response = await fetch(searchUrl);
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    if (isConnectionRefusedError(error)) {
-      console.error(styleText('red', 'Worker is not running.'));
-      console.error(`Start it with: ${styleText('bold', 'npx claude-mem start')}`);
-      process.exit(1);
-    }
-    console.error(styleText('red', `Search failed: ${message}`));
-    process.exit(1);
-  }
-
-  if (!response.ok) {
-    if (response.status === 404) {
-      console.error(styleText('red', 'Search endpoint not found. Is the worker running?'));
-      console.error(`Try: ${styleText('bold', 'npx claude-mem start')}`);
-      process.exit(1);
-    }
-    console.error(styleText('red', `Search failed: HTTP ${response.status}`));
-    process.exit(1);
-  }
-
-  let data: unknown;
-  try {
-    data = await response.json();
-  } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : String(error);
-    console.error(styleText('red', `Search failed: invalid JSON response (${message})`));
-    process.exit(1);
-  }
-
-  // /api/search answers in the MCP tool shape: print its rendered text.
-  const content = (data as { content?: unknown } | null)?.content;
-  if (Array.isArray(content)) {
-    console.log(content
-      .filter((block): block is { type: 'text'; text: string } => block?.type === 'text' && typeof block.text === 'string')
-      .map(block => block.text)
-      .join('\n\n'));
-    if ((data as { isError?: unknown }).isError === true) {
-      process.exit(1);
-    }
-  } else if (typeof data === 'object' && data !== null) {
-    console.log(JSON.stringify(data, null, 2));
-  } else {
-    console.log(data);
-  }
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 export function runTranscriptWatchCommand(): void {
-  const pluginRoot = pluginRootOrExit();
-  const bunPath = resolveBunOrExit();
-
-  const transcriptWatcherPath = join(pluginRoot, 'scripts', 'transcript-watcher.cjs');
-
-  if (!existsSync(transcriptWatcherPath)) {
-    spawnBunWorkerCommand('transcript', ['watch']);
-    return;
-  }
-
-  spawnPlugin(bunPath, [transcriptWatcherPath, 'watch'], pluginRoot, 'transcript watcher');
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }
 
 // The worker script runs from the plugin root, so the directory the user ran
 // this in travels as --cwd, as it does for adopt. Another checkout is chosen
 // with --source, which resolves against this directory.
 export function runMemoryIngestCommand(extraArgs: string[] = []): void {
-  spawnBunWorkerCommand('memory', ['ingest', '--cwd', process.cwd(), ...extraArgs]);
+  throw new Error('LOCAL_RUNTIME_UNAPPROVED: private CLI runtime/diagnostics require approved explicit inputs; no host discovery, connection, spawn or repair.');
 }

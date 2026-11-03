@@ -91,7 +91,7 @@ async function main(): Promise<void> {
   }
 
   // Refuse before dynamically importing installer, auth, IDE or user-state code.
-  if (['', 'install', 'repair', 'update', 'upgrade'].includes(command)) refuseAutomaticPluginSetup();
+  if (!['help', '--help', '-h', 'version', '--version', '-v'].includes(command)) refuseAutomaticPluginSetup();
 
   switch (command) {
     case '':
