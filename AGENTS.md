@@ -33,10 +33,17 @@ WINDOWS-09 partial source S0d0a4b176 / G004588740, harness Hf2c722fad: SessionSt
 compile/PATH-repair and tree-sitter helper acquisition removed; preflight always blocked.
 17 targeted tests/53 assertions, one compile and viewer typecheck PASS; root typecheck
 has three unchanged baseline TS2345. 19 inputs unchanged; four paired outputs changed.
-Remaining E12/E13/private resolvers, installer E14/parser E21 fallbacks and native V3
-adapter are NOT complete. CI skeleton is manual-only BLOCKED D12, not a runnable lane.
-See handoffs/WINDOWS-09.md. Next is WINDOWS-09B source continuation in NEXT-SESSION/STATE;
-await explicit launch. Provider adapters and selected-provider login support must not
+Later WINDOWS-09B launcher e9c8038ca / bootstrap 8bbf2830c / final source e3d91a505 /
+harness bbc3847e9 / generated 62a468f6d: explicit-root launcher refuses without a child;
+setup-runtime and four launcher install/PATH/removal entries refuse; parser CLI
+module/PATH fallback removed. 19 tests/112 assertions and one compile/viewer PASS;
+root has the same three TS2345. 19 inputs/866 tracked source sentinels unchanged across
+compile, eight paired outputs changed. Full step 9 is NOT complete: E13 host templates,
+E12 Setup/version-check/old helpers, E14 utilities, E21 grammar loading/build and native
+V3 adapter remain. CI skeleton stays manual-only BLOCKED D12. See
+docs/enterprise-local/handoffs/WINDOWS-09B.md; next WINDOWS-09C remaining source awaits
+explicit launch. Existing templates can bypass this launcher; do not activate this
+partial candidate. Provider adapters and selected-provider login support must not
 be pruned as a side effect of launcher/bootstrap removal.
 Actual compiled-process smoke/CI/provider execution remains separately scoped.
 No install/update/download, service/worker/MCP/plugin start/restart/registration, AWS,

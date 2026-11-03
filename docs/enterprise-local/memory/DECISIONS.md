@@ -38,6 +38,21 @@ WINDOWS-09B; step 9 not complete. D5 proposals in [handoff](../handoffs/WINDOWS-
 are not selected; D12 CI remains blocked. No provider pruning or A19/A20 weakening.
 No graph/wave change, runtime permission, new SQLite-only mode or release acceptance.
 
+### A22 — WINDOWS-09B bounded source continuation (accepted launch 2026-11-02; closed 2026-11-03)
+
+Explicit serial source/mock/typecheck/one-compile launch; user resumed exact pending
+Git/document closure on 2026-11-03, no new runtime scope. Launcher e9c8038ca,
+bootstrap 8bbf2830c, final source S e3d91a505 / H bbc3847e9 / G 62a468f6d.
+Explicit CLAUDE_MEM_BUNDLE_ROOT and protocol 3 define only static path/refusal input,
+not private ID/loading or artifact approval. Setup/runtime and launcher-install
+mutation entrypoints refuse; parser CLI module/PATH fallback removed. 19 V1 tests,
+one compile/viewer PASS; root three unchanged baseline errors. E13 host templates,
+E12 Setup/old helpers, E14 utilities, E21 grammar loading/build and native V3 adapter
+remain same-step source work (WINDOWS-09C). No full step 9, global launch perimeter,
+readiness, D5 selection, D12 runner, SQLite-only mode or step-6 provider policy claim.
+A19/A20/U1/D9/D11/A15 gates preserved. No graph/wave change or new dependency/identity
+manifest/lock delta. [Evidence, exact gaps and rollback](../handoffs/WINDOWS-09B.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

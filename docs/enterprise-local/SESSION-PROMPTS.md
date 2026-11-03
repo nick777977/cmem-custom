@@ -1,7 +1,7 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), WINDOWS-09B after the partial
-WINDOWS-09 source/compile/harness increment (2026-11-02). A19/A20 supersede Bedrock-only:
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), WINDOWS-09C remaining source after
+bounded WINDOWS-09B closure (2026-11-03). A19/A20 supersede Bedrock-only:
 retain explicit user-configured LLM adapters/roles; add real compiled-process/CI
 checkpoints without claiming mock/compile as full runtime proof. Contracts:
 [LLM-PROFILES](LLM-PROFILES.md), [VALIDATION](VALIDATION.md).
@@ -10,7 +10,10 @@ Existing TELEMETRY-04 S 0abd4180b / G 6bb7c6995 and its 206 tests/one compile ar
 unchanged. Chroma activation U1/D9 and D11 remain open; Bedrock live access unavailable.
 WINDOWS-09 S0d0a4b176/G004588740/Hf2c722fad: 17 tests/53 assertions, compile/viewer
 PASS; root three baseline TS2345. Full step 9 incomplete, actual V3/CI NOT RUN.
-Next single task: WINDOWS-09B remaining private paths/bootstrap/refusal source.
+WINDOWS-09B S e3d91a505/H bbc3847e9/G 62a468f6d: 19 tests/112 assertions,
+compile/viewer PASS, root same baseline; explicit-root launcher/bootstrap/CLI parser
+refusal slice only. [Exact remaining source gaps](handoffs/WINDOWS-09B.md).
+Next single task: WINDOWS-09C remaining host templates/Setup/grammar/native-adapter source.
 Actual runtime/CI/provider execution still requires a scoped user launch.
 STATE/TASKS own current context. Session 01 and completed templates are historical;
 future templates below are adapted planning aids, never independent authorization.

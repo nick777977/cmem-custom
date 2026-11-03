@@ -188,8 +188,18 @@ repair and tree-sitter helper acquisition removed; diagnostic preflight always b
 17 tests/53 assertions + one compile/viewer typecheck PASS; root has three unchanged
 baseline TS2345. Mock harness/PowerShell planner/manual BLOCKED CI source authored;
 actual V3/CI NOT RUN. E12/E13/private resolvers, remaining installer E14/parser E21
-fallbacks and native process adapter remain **WINDOWS-09B**. No full step-9 closure.
+fallbacks and native process adapter were assigned to **WINDOWS-09B** below. No full step-9 closure.
 [Evidence and rollback](enterprise-local/handoffs/WINDOWS-09.md).
+
+Later **WINDOWS-09B** (2026-11-03 closure), S e3d91a505/H bbc3847e9/G 62a468f6d:
+explicit-root launcher always refuses, no discovery/child; automatic setup/runtime
+and four launcher install/PATH/removal entries refuse; parser CLI module/PATH fallback
+removed. 19 V1 tests/112 assertions, one compile/viewer PASS; root same three errors.
+19 inputs preserved; eight paired outputs changed, all generators/configs/UI unchanged.
+**WINDOWS-09C remaining source**: E13 templates/wrappers, E12 Setup/version-check/
+old helpers, E14 utilities, E21 grammar module/build paths and native adapter. Old
+templates can bypass new launcher; no activation or full step-9/V3/CI claim.
+[Exact limits/rollback](enterprise-local/handoffs/WINDOWS-09B.md). Graph unchanged.
 
 Private ID and bundle-local launcher/MCP/hooks; remove upstream/global cache fallback,
 Bash Setup/runtime install/update/self-repair compile. Local PowerShell preflight /

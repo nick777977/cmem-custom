@@ -1,7 +1,7 @@
 # Build, runtime and CI evidence contract
 
 Accepted validation plan, 2026-11-02, A20. V3-V6 remain planned/not run; bounded
-WINDOWS-09 V1/V2 results and newly authored harness/CI source are distinguished below.
+WINDOWS-09/WINDOWS-09B V1/V2 results and harness/CI source are distinguished below.
 Execution needs the applicable user launch and isolated assets/permissions. This file
 owns validation levels and pass criteria; [roadmap](../roadmap.md) alone owns dependency
 edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
@@ -16,6 +16,7 @@ edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
 | TELEMETRY-04 | 206 tests / 728 assertions + one real compile PASS | Full worker/MCP/host process-tree lifecycle or provider auth correctness |
 | Previous user build/start | User-reported build and worker ready; preserved separately | Current source/artifact, full memory/Chroma/provider acceptance |
 | WINDOWS-09 source/harness | 17 V1 tests / 53 assertions, compile/viewer typecheck PASS; root three unchanged baseline TS2345 | No actual generated process, readiness or complete private path proof |
+| WINDOWS-09B source/harness | 19 V1 tests / 112 assertions, one compile/viewer PASS; root same three errors; eight paired outputs changed, 19 inputs preserved | Explicit-root refusal is not a global boundary around remaining host templates/Setup/grammar; no V3/readiness |
 | Fork-specific CI and actual process smoke | Source authored; runtime/CI NOT RUN, native adapter and D12 pending | Manual-only workflow unconditionally blocks; no green CI or V3 evidence |
 
 These are real tests and real compilation, not mere source review. Worker bundles are
@@ -90,6 +91,13 @@ copied generated hashes, explicit env allowlist and three leaf specs. Its orches
 was tested with mocks labelled V1/substituted. No native adapter/default spawn is supplied;
 owned-tree/OS-egress implementation and missing/stale/MCP/worker cases remain continuation
 work. Actual V3 NOT RUN. [Exact commands/deadlines/ownership](handoffs/WINDOWS-09.md).
+WINDOWS-09B H bbc3847e9 reuses that fixture under task scratch windows-09b and adds
+four non-hook launcher specs: missing explicit root, missing bundle, stale entry from
+another root and present-but-unapproved bundle. Mock-only tests against copied G
+hashes PASS; no native adapter or actual process. Stale entry is not runtime hash/
+version integrity evidence. Other missing/stale/MCP/worker cases, OS boundary and
+owned-tree cleanup implementation remain. The adapter's native kind label alone is
+not approval/enforcement. [Exact latest results and source gaps](handoffs/WINDOWS-09B.md).
 
 Required cases, selected according to implemented features:
 

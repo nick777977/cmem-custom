@@ -39,8 +39,17 @@ WINDOWS-09 partial source: S0d0a4b176 / G004588740; harness Hf2c722fad. SessionS
 compile/PATH repair and parser-helper acquisition removed, blocked local preflight.
 17 tests / 53 assertions, one compile and viewer typecheck PASS; root typecheck has
 three unchanged baseline TS2345. Harness mock-only; CI source manual-only BLOCKED D12.
-Private resolver/bootstrap completion remains **WINDOWS-09B**, next proposed source task.
+Historical first slice; later WINDOWS-09B result follows.
 [Evidence, open gaps and rollback](handoffs/WINDOWS-09.md). No actual V3/runtime/CI run.
+
+Latest **WINDOWS-09B** (closure 2026-11-03): explicit-root protocol-3 launcher refusal,
+automatic runtime/install entrypoint refusal, parser CLI PATH/module fallback removed.
+S e3d91a505 / H bbc3847e9 / G 62a468f6d; 19 tests/112 assertions and one compile/viewer
+PASS; root three unchanged TS2345. 19 inputs unchanged, four paired output sets changed,
+UI/identity/locks/trust/generators preserved. Full step 9 remains partial: host templates,
+Setup/version-check, old utilities/grammar paths and native adapter still open.
+[Exact evidence/gaps/rollback](handoffs/WINDOWS-09B.md). Next proposed launch is
+**WINDOWS-09C remaining source**, not V3. No activation/runtime/CI permission inferred.
 
 ## Reading order
 

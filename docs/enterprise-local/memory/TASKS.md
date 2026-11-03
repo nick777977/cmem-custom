@@ -1,6 +1,6 @@
 # Shared execution board
 
-Updated: 2026-11-02. Single place for active ownership and file reservations.
+Updated: 2026-11-03. Single place for active ownership and file reservations.
 Dependencies/waves remain solely in [roadmap](../../roadmap.md); decisions in
 [DECISIONS](DECISIONS.md); current resumable handoff in [STATE](STATE.md).
 This board does not grant permission or duplicate the dependency graph.
@@ -20,7 +20,33 @@ This board does not grant permission or duplicate the dependency graph.
 | TELEMETRY-04 / 4 | done-bounded | Coordinator finished; feat/cmem-light-local; serial; entry 1f41cec12 | None active; all reservations released | S 0abd4180b / G 6bb7c6995; 206 tests / 728 assertions + one compile PASS; 16 inputs unchanged. A18, handoffs/TELEMETRY-04.md. No runtime/acquisition. |
 | PLAN-ADAPT-05 / coordination, steps 6/10/11/12 | done; documentation only | Coordinator finished; feat/cmem-light-local; entry 48feeab56 clean | None active; reservations released | A19/A20, LLM-PROFILES/VALIDATION, updated roadmap/prompts; 19 Markdown files / 123 links / 15 source citations checked; no source/runtime/CI change. handoffs/PLAN-ADAPT-05.md; docs commit follows in Git. |
 | WINDOWS-09 / 9 | done-bounded partial source; full step open | Coordinator finished; feat/cmem-light-local; serial; entry 7d5f83cac | None active; reservations released | S0d0a4b176/G004588740/Hf2c722fad; 17 tests/53 assertions + one compile/viewer PASS, root three baseline errors; handoffs/WINDOWS-09.md. V3/CI NOT RUN. |
-| WINDOWS-09B / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: remaining E12/E13/private paths/E14 installer/E21 parser fallback and native adapter source; no runtime/CI. |
+| WINDOWS-09B / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry e27548d545 | None active; reservations released | Launcher e9c8038ca, bootstrap 8bbf2830c, S e3d91a505 / H bbc3847e9 / G 62a468f6d. 19 tests/112 assertions, one compile/viewer PASS, root three known errors. handoffs/WINDOWS-09B.md; V3/CI NOT RUN. |
+| WINDOWS-09C / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: remaining E13 templates/E12 Setup/E14 utilities/E21 grammar/native adapter source. No runtime launch. |
+
+## WINDOWS-09B reservation history — all released
+
+Claimed after branch/status/HEAD recheck, before edits. No agents/branches/worktrees.
+Source: src/launcher/{claude-mem-launcher.ts,local-preflight.ts,install-launcher.ts,
+launcher-protocol.ts}; protocol bump is an explicit launcher contract delta, not a
+plugin identity/manifest/lock delta.
+src/npx-cli/{index.ts,commands/install.ts,commands/doctor.ts,install/setup-runtime.ts};
+doctor.ts is the direct parser diagnostic caller, reserved before its update.
+src/services/smart-file-read/tree-sitter-bin-path.ts.
+Tests/harness: tests/enterprise-local/{windows-09b.test.ts,compiled-smoke.test.ts};
+scripts/enterprise-local/compiled-smoke.mjs; .scratch/enterprise-local/windows-09b/.
+Serial compile integration: fingerprint all tracked plugin/, openclaw/dist/,
+dist/dsh-lib outputs; expected launcher/preflight/worker/MCP CJS/map pairs and ignored
+NPX CLI. Extend reservation before retaining any other emitted change. No manifest,
+lock, trust, generator or identity change planned. Existing E13 host templates and
+native V3 adapter may remain next source work; no runtime activation claim.
+Docs: AGENTS.md; docs/{roadmap.md,PATCH-SEQUENCE.md,EGRESS-INVENTORY.md};
+docs/enterprise-local/{README.md,VALIDATION.md,DEV-ENVIRONMENT.md,NEXT-SESSION.md,
+SESSION-PROMPTS.md,handoffs/WINDOWS-09B.md,memory/STATE.md,memory/TASKS.md,
+memory/DECISIONS.md,memory/WORKLOG.md}. Completed bounded source/tests/G above;
+all expected eight emitted outputs retained, no reservation extension needed.
+No generator/manifest/lock/trust/private identity change; protocol bumped explicitly.
+Exact remaining source gaps and rollback in handoffs/WINDOWS-09B.md. Current next
+context is WINDOWS-09C/NEXT-SESSION; no active owner/reservations after closure.
 
 ## WINDOWS-09 reservation history — all released
 
@@ -148,15 +174,15 @@ SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed WINDOWS-09B
+## Minimal context for proposed WINDOWS-09C
 
 - AGENTS -> README -> STATE -> roadmap step 9/graph/checkpoints -> TASKS.
-- DECISIONS A06/A07/A09/A14/A15/A16/A17/A18/A19/A20; current environment; NEXT-SESSION.
+- DECISIONS A06/A07/A09/A14/A15/A16/A17/A18/A19/A20/A21/A22; current environment; NEXT-SESSION.
 - LLM-PROFILES and VALIDATION V1-V3/CI; PLAN-ADAPT-05/current environment;
   TELEMETRY-04 and CHROMA-07 limits; PATCH-SEQUENCE section 9;
   E12/E13/E14/E21 and corresponding AUDIT-CLOSURE notes, then direct callers after claim.
 
-Read handoffs/WINDOWS-09.md first for completed refusal/harness source and exact gaps;
+Read handoffs/WINDOWS-09B.md first for completed refusal/harness source and exact gaps;
 do not repeat its checks/audit by default. Current NEXT-SESSION owns one bounded launch.
 
 No whole-history or baseline/trust/hosted/Chroma replay. No real user state or runtime

@@ -17,7 +17,7 @@ remain separate removals; E10 local embeddings remains local. Source findings be
 keep their pinned historical lines; target policy cells for E06/E07/E20/E12 are updated.
 [LLM contract](enterprise-local/LLM-PROFILES.md), [validation](enterprise-local/VALIDATION.md).
 
-## Current E14/E21 bounded delta (WINDOWS-09)
+## Earlier E14/E21 bounded delta (WINDOWS-09)
 
 Source 0d0a4b176e12945f6ade3088456d73436f38649d / generated 004588740:
 SessionStart ensure-launcher no longer compiles or changes PATH; every local preflight
@@ -28,7 +28,24 @@ PATH/module fallback remain open**, alongside E12/E13. No global no-acquisition 
 17 V1 tests and one compile/viewer typecheck PASS; root has three unchanged baseline
 errors. Hf2c722fad mock harness and manual BLOCKED CI source are not V3/runtime proof.
 [Exact source lines, preservation, gaps](enterprise-local/handoffs/WINDOWS-09.md).
-Next source task WINDOWS-09B; historical rows below retain original source citations.
+That session proposed WINDOWS-09B, subsequently implemented below. Historical rows
+retain original source citations.
+
+## Current E12/E13/E14/E21 boundary (WINDOWS-09B)
+
+At source e3d91a50505849fba6f509d9eca7d4a3ce9416b7, launcher protocol 3 requires an
+explicit local root and always refuses before worker/runtime launch. Setup-runtime
+acquisition/discovery removed; default/install/update/repair CLI and four launcher
+install/PATH/removal entrypoints refuse. Parser CLI PATH/module fallback removed;
+direct doctor caller reports refusal. Paired G62a468f6d; 19 V1 tests and one compile/
+viewer PASS, root unchanged baseline FAIL. No runtime/OS-egress acceptance.
+
+E13 legacy host templates/cache/global wrappers, E12 Setup/version-check and old
+bootstrap helpers, E14 historical utilities and E21 parser grammar module/native
+build fallback remain. These paths can bypass the new launcher. No global
+no-acquisition claim or private registration/identity selection. Retain A19 native
+provider login/adapters; profile enforcement stays step 6. Next same-step source
+task WINDOWS-09C. [Exact S path/lines, evidence and rollback](enterprise-local/handoffs/WINDOWS-09B.md).
 
 ## Current E08–E11 disposition (CHROMA-07)
 

@@ -540,3 +540,62 @@ Closure validation PASS: 14 Markdown files/99 relative links/14 exact source-SHA
 line assertions, fences/whitespace; dependency graph unchanged, five historical
 contracts/handoffs unchanged. Source/generated/harness bytes match S/G/H; documentation
 commit follows, no additional application edit or compile. Reservations released.
+
+## WINDOWS-09B — launch 2026-11-02, closure/resume 2026-11-03
+
+Clean entry e27548d5450c7f91ea64004db851152a73a8a0db, feat/cmem-light-local;
+explicit serial source/mock/typecheck/one-compile launch, no agents/worktrees.
+Exact file reservation before source edits, direct callers only, no general audit.
+Implemented launcher e9c8038ca / bootstrap 8bbf2830c / final source S e3d91a505;
+source tests/harness H bbc3847e9 and paired outputs G 62a468f6d.
+
+Protocol-3 launcher requires explicit CLAUDE_MEM_BUNDLE_ROOT, checks executing
+entry/siblings and always refuses missing/stale/unapproved launch; no child/runtime/
+cache/PATH/host-settings discovery. Version and hook opt-out preserved. SessionStart
+preflight still blocked. Setup-runtime acquisition/discovery/marker APIs retired;
+CLI default/install/update/repair refuse before auth/installer imports, direct wrappers
+also refuse. Launcher shell/Windows PATH/ensure/removal entries refuse before option
+reads. Parser CLI module/PATH fallback removed using existing local version/hash
+verifier; doctor direct caller reports unavailable. No private ID/registration/artifact
+approval policy guessed, no provider/native-login or memory/viewer semantic redesign.
+
+Actual V1: 19 PASS/0 FAIL/112 assertions in two reviewed files. Ten source cases and
+nine mock harness cases; latter rerun after compile against actual copied G hashes,
+9 PASS/57 assertions (not added as new tests). Tripwires zero forbidden operations.
+Reviewed root/viewer --noEmit: viewer PASS, root FAIL exactly three known TS2345,
+ChromaMcpManager 227/842, ChromaSync 385, text identical to prior WINDOWS-09 log.
+No source type weakening/Chroma edit or baseline overlay. One reviewed exact-tool
+build:compile PASS with unchanged BUILD-02 guard, allowlist/synthetic env/state under
+.scratch/enterprise-local/windows-09b, empty isolated npm configs/cache/offline.
+19 input/compiler sentinels unchanged vs previous and pre/post compile; 866 selected
+tracked source/config files unchanged across compile. 192 outputs, 184 unchanged,
+eight expected paired outputs modified, none added/deleted. Generators/configs/UI/
+identity/manifests/locks/trust unchanged; explicit protocol delta only. Generated
+syntax/closure/preservation PASS without evaluation. Nine Node inits/five spawns,
+one execFileSync/exec/execFile incl. known Vite net use, no Node socket event;
+not OS/native/shell-wide no-egress/provenance proof. No application source edit after
+compile. No test/typecheck/compile rerun after resume; checkout/fingerprints preserved.
+
+Full step 9 remains open. E13 templates/global/cache/on-PATH wrappers can bypass this
+launcher; E12 Setup/version-check and old installer helpers remain; E14 historical
+utilities and E21 grammar module/build/query fallback remain. Native V3 ownership/
+egress/DNS/startup-failure/timeout/cleanup adapter not authored or run. PowerShell
+planner unchanged source-only BLOCKED D5, fork CI unchanged manual-only BLOCKED D12;
+upstream trigger review only, no CI/publish/provision/upload. No actual generated
+hook/worker/MCP/service/listener/Chroma/Python/model processes, real settings/assets/
+credentials, auth/inference/AWS/acquisition/push. A19/A20/U1/D9/D11/A15 gates preserved.
+V1 PASS; V2 compile/viewer PASS with root baseline FAIL; V3-V6 NOT RUN.
+
+Git add initially failed sandbox .git/index.lock permission, before any commit.
+Authorized escalation created five local commits, hooks/signing disabled, no auto-
+review rejection or push/history rewrite. Rollback G/H/S/bootstrap/launcher reverse,
+source and outputs as paired candidate; restores unsafe legacy behavior, not runtime
+approval. Exact source citations/hashes/limits in handoffs/WINDOWS-09B.md.
+
+Shared STATE/TASKS/DECISIONS/contracts/DEV-ENVIRONMENT/NEXT-SESSION updated; all
+reservations released. One next prompt: WINDOWS-09C remaining source of step 9,
+not a V3 launch or another step. D5 concrete options remain proposed. Documentation
+closure PASS: 14 Markdown files/106 relative links/39 source-SHA line assertions,
+balanced fences/whitespace; dependency graph and six historical contracts unchanged.
+Application/harness/generated worktree matches G, no application edit or compile
+rerun. Docs commit follows G. All reservations released.

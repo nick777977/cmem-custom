@@ -1,12 +1,32 @@
 # Development baseline and user-provided execution evidence
 
-Updated: 2026-11-02. Supersedes the pre-install assumption in the 2026-10-30 launcher.
+Updated: 2026-11-03. Supersedes the pre-install assumption in the 2026-10-30 launcher.
 This is not full runtime acceptance. Session 02 subsequently ran authorized step-2
 compile/targeted checks; see the current section below and [BUILD-02](handoffs/BUILD-02.md).
 
 ## Preferred local toolchain
 
-Latest session **WINDOWS-09**: S0d0a4b176/G004588740/Hf2c722fad; exact baseline verified,
+Latest **WINDOWS-09B**: S e3d91a505/H bbc3847e9/G 62a468f6d; exact existing
+Node 22.23.4/npm 10.9.9/Bun 1.4.4 verified, no install/update. 19 reviewed inert/mock
+tests/112 assertions PASS; affected nine copied-artifact mock tests rerun after
+compile PASS (57 assertions; repeated cases, not 28 unique tests). Zero forbidden
+process/network/listener operations. One reviewed build:compile PASS with unchanged
+BUILD-02 guard; viewer --noEmit PASS; root FAIL with exactly three baseline TS2345
+(ChromaMcpManager 227/842, ChromaSync 385), text matches WINDOWS-09. No new overlay.
+19 inputs unchanged across compile and vs previous; 866 selected tracked source/
+config sentinels unchanged across compile. 184/192 outputs unchanged, four expected
+CJS/map pairs changed. Generators, manifests/locks/trust/identity/UI unchanged;
+protocol 2 -> 3 explicitly separate from identities/locks. All synthetic env/state
+under .scratch/enterprise-local/windows-09b; same exact tool paths/allowlist/guard,
+empty isolated npm configs/cache/offline. Nine Node inits/five spawns, one
+execFileSync/exec/execFile including known Vite net use, no Node socket event;
+not native/shell/OS-wide no-egress. No actual generated process/CI/model/auth/user
+state or installed asset inspection beyond the 19 approved sentinels. Closure
+resumed 2026-11-03 at identical checkout/fingerprints, no test/compile reruns.
+[Exact commands/hashes/limits/rollback](handoffs/WINDOWS-09B.md). Full step 9 open;
+next WINDOWS-09C remaining source. Root typecheck and A15 release gates remain open.
+
+Earlier **WINDOWS-09**: S0d0a4b176/G004588740/Hf2c722fad; exact baseline verified,
 no install/update. 17 reviewed inert/mock tests / 53 assertions PASS, four expected
 PowerShell planner refusals plus parser PASS, one reviewed pure compile PASS. Viewer
 typecheck PASS; root FAIL (three baseline TS2345, same entry Git-source overlay).
