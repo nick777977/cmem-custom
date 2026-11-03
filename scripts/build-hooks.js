@@ -243,6 +243,7 @@ export function shellTemplateManifest(buildShellCommand, buildCodexWindowsComman
     },
     'plugin/.mcp.json': {
       kind: 'mcp',
+      interpreter: '', // Unbound: host must reject before starting any interpreter.
       command: buildShellCommand({
         // The mcp Node launcher derives its module target from requireFile, so
         // no trailingCommand is needed (it is ignored for this host).
@@ -254,6 +255,20 @@ export function shellTemplateManifest(buildShellCommand, buildCodexWindowsComman
           '$HOME/.codex/plugins/cache/thedotmack/claude-mem',
         ],
       }),
+    },
+    'plugin/hooks/qoder-hooks.json': {
+      kind: 'hooks', commands: {},
+      execEntries: Object.fromEntries([
+        ['SessionStart.0.0', 'context'], ['UserPromptSubmit.0.0', 'session-init'],
+        ['PreToolUse.0.0', 'file-context'], ['PostToolUse.0.0', 'observation'], ['Stop.0.0', 'summarize'],
+      ].map(([location, action]) => [location, {
+        entry: { type: 'command', ...buildExecHook(['hook', 'qoder', action]),
+          timeout: action === 'context' ? 180 : action === 'summarize' ? 30 : 15,
+          ...(action === 'context' ? { statusMessage: 'Loading claude-mem context' } : {}),
+          env: { CLAUDE_MEM_CODEX_HOOK: '1' } },
+        ...(action === 'context' ? { groupMatcher: 'startup|resume|clear|compact|new' }
+          : action === 'file-context' ? { groupMatcher: 'Bash|Read|Glob|Grep|memory_search|memory|mcp__.+__(read|view|cat)(_file|_files)?|mcp__.+__memory_search' } : {}),
+      }])),
     },
   };
 }
@@ -297,10 +312,7 @@ function applyCanonicalExecEntry(parsed, dottedPath, expected, filePath, writeMo
  * Windows console flash (#3559, #3521, #3396).
  */
 export function verifyClaudeCodeRuntimeHooksAreExecForm(parsed, execEntries, ensureLauncherExecHook, filePath) {
-  const manifestLauncherArgs = Object.values(execEntries)
-    .map(({ entry }) => entry)
-    .filter((entry) => entry.command === 'node')
-    .map((entry) => entry.args);
+  const manifestEntries = Object.values(execEntries).map(({ entry }) => entry);
   for (const [event, groups] of Object.entries(parsed.hooks ?? {})) {
     if (SHELL_FORM_HOOK_EVENTS.has(event)) continue;
     groups.forEach((group, groupIndex) => {
@@ -308,9 +320,8 @@ export function verifyClaudeCodeRuntimeHooksAreExecForm(parsed, execEntries, ens
         const location = `${event}.${groupIndex}.${hookIndex}`;
         const hasShell = Object.prototype.hasOwnProperty.call(entry, 'shell');
         const hasArgs = Array.isArray(entry.args);
-        const isLauncher = entry.command === 'node';
-        const isManifestLauncher = isLauncher && manifestLauncherArgs
-          .some((launcherArgs) => isDeepStrictEqual(entry.args, launcherArgs));
+        const isLauncher = manifestEntries.some(expected => entry.command === expected.command);
+        const isManifestLauncher = manifestEntries.some(expected => isDeepStrictEqual(entry, expected));
         const isEnsureLauncher = entry.command === ensureLauncherExecHook.command
           && isDeepStrictEqual(entry.args, ensureLauncherExecHook.args);
         if (hasShell || !hasArgs || !(isManifestLauncher || isEnsureLauncher)) {
@@ -362,15 +373,20 @@ export async function verifyShellTemplateCanonical() {
     const parsed = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     let dirty = false;
     if (spec.kind === 'mcp') {
-      const actual = parsed.mcpServers?.['mcp-search']?.args?.[1] ?? '';
-      if (actual !== spec.command) {
+      if (parsed.mcpServers?.['mcp-search']?.command !== spec.interpreter) {
+        if (!writeMode) throw new Error(`Unbound MCP interpreter differs from canonical source: ${filePath}`);
+        parsed.mcpServers['mcp-search'].command = spec.interpreter;
+        dirty = true;
+      }
+      const actual = parsed.mcpServers?.['mcp-search']?.args;
+      if (!isDeepStrictEqual(actual, ['-e', spec.command])) {
         if (!writeMode) {
           throw new Error(
             `Hand-edited shell string detected in ${filePath} (mcp-search). It no longer matches src/build/hook-shell-template.ts. ` +
             `Regenerate via \`node scripts/build-hooks.js --write-shell-templates\` after an intentional generator change.`
           );
         }
-        parsed.mcpServers['mcp-search'].args[1] = spec.command;
+        parsed.mcpServers['mcp-search'].args = ['-e', spec.command];
         dirty = true;
       }
     } else {

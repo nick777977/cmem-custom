@@ -8,7 +8,7 @@
           {
             "type": "command",
             "shell": "bash",
-            "command": "/bin/sh -c 'node -e '\\''var p=require('\\''\\'\\'''\\''node:path'\\''\\'\\'''\\''),f=require('\\''\\'\\'''\\''node:fs'\\''\\'\\'''\\''),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='\\''\\'\\'''\\''LOCAL_BUNDLE_ROOT_REQUIRED'\\''\\'\\'''\\'';if(r&&p.isAbsolute(r)){c='\\''\\'\\'''\\''LOCAL_BUNDLE_MISSING'\\''\\'\\'''\\'';try{var root=f.realpathSync(r),entry=p.join(r,'\\''\\'\\'''\\''scripts'\\''\\'\\'''\\'','\\''\\'\\'''\\''claude-mem-launcher.cjs'\\''\\'\\'''\\'');if(root!==p.resolve(r)){c='\\''\\'\\'''\\''LOCAL_BUNDLE_STALE'\\''\\'\\'''\\'';}else if(f.statSync(entry).isFile()){c='\\''\\'\\'''\\''PRIVATE_LAUNCH_POLICY_PENDING'\\''\\'\\'''\\'';}}catch(e){c='\\''\\'\\'''\\''LOCAL_BUNDLE_MISSING'\\''\\'\\'''\\'';}}process.stderr.write('\\''\\'\\'''\\''cmem-light: '\\''\\'\\'''\\''+c+'\\''\\'\\'''\\'': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n'\\''\\'\\'''\\'');process.exit(1);'\\'''",
+            "command": "exit 1",
             "timeout": 300
           }
         ]
@@ -20,10 +20,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 60,
             "async": true
@@ -35,10 +35,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 60
           }
@@ -49,10 +49,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 180
           }
@@ -64,10 +64,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 15
           }
@@ -80,10 +80,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "if(process.env.CLAUDE_MEM_DISABLE_TOOL_HOOKS==='1'||process.env.CLAUDE_MEM_DISABLE_OBSERVATION==='1')process.exit(0);var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "if(process.env.CLAUDE_MEM_DISABLE_TOOL_HOOKS==='1'||process.env.CLAUDE_MEM_DISABLE_OBSERVATION==='1')process.exit(0);var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 120,
             "async": true
@@ -97,10 +97,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "if(process.env.CLAUDE_MEM_DISABLE_TOOL_HOOKS==='1'||process.env.CLAUDE_MEM_DISABLE_OBSERVATION==='1')process.exit(0);var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "if(process.env.CLAUDE_MEM_DISABLE_TOOL_HOOKS==='1'||process.env.CLAUDE_MEM_DISABLE_OBSERVATION==='1')process.exit(0);var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 120,
             "async": true
@@ -114,10 +114,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "if(process.env.CLAUDE_MEM_DISABLE_TOOL_HOOKS==='1'||process.env.CLAUDE_MEM_DISABLE_FILE_CONTEXT==='1')process.exit(0);var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "if(process.env.CLAUDE_MEM_DISABLE_TOOL_HOOKS==='1'||process.env.CLAUDE_MEM_DISABLE_FILE_CONTEXT==='1')process.exit(0);var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 15
           }
@@ -129,10 +129,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 120,
             "async": true
@@ -145,10 +145,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "timeout": 30,
             "async": true
@@ -161,10 +161,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node",
+            "command": "",
             "args": [
               "-e",
-              "var p=require('node:path'),f=require('node:fs'),r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_BUNDLE_ROOT_REQUIRED';if(r&&p.isAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
+              "var p=require('node:path'),f=require('node:fs'),n=process.env.CLAUDE_MEM_NODE_EXECUTABLE,r=process.env.CLAUDE_MEM_BUNDLE_ROOT,c='LOCAL_INTERPRETER_ABSOLUTE_REQUIRED',valid=false;function localAbsolute(v){return typeof v==='string'&&p.isAbsolute(v)&&p.resolve(v)===v&&!/^[\\\\/]{2}/.test(v);}if(localAbsolute(n)){c='LOCAL_INTERPRETER_MISSING';try{if(f.realpathSync(n)!==n||f.realpathSync(process.execPath)!==n){c='LOCAL_INTERPRETER_STALE';}else{valid=true;c='LOCAL_BUNDLE_ROOT_REQUIRED';}}catch(e){c='LOCAL_INTERPRETER_MISSING';}}if(valid&&localAbsolute(r)){c='LOCAL_BUNDLE_MISSING';try{var root=f.realpathSync(r),entry=p.join(r,'scripts','claude-mem-launcher.cjs');if(root!==p.resolve(r)){c='LOCAL_BUNDLE_STALE';}else if(f.statSync(entry).isFile()){c='PRIVATE_LAUNCH_POLICY_PENDING';}}catch(e){c='LOCAL_BUNDLE_MISSING';}}process.stderr.write('cmem-light: '+c+': private host entry disabled; approved runtime/loading/assets required. Memory readiness is not established.\\n');process.exit(0);"
             ],
             "async": true
           }
