@@ -222,7 +222,7 @@ OS/artifact/protocol prerequisites remain; **WINDOWS-09E remaining source** owns
 harness admission/teardown failures. No registration, actual V3 or full step9 closure.
 [Exact evidence/gaps/rollback](enterprise-local/handoffs/WINDOWS-09D.md).
 
-Latest **WINDOWS-09E H98a6d019c** closes common mock admission/teardown failure
+Earlier **WINDOWS-09E H98a6d019c** closes common mock admission/teardown failure
 source: validate inputs/handle, retain primary and cleanup errors, attempt bounded
 release after failed/timed-out stop. Sync launch failure leaves ownership unknown;
 callbacks/timers prove no native ownership/egress/cleanup. 16 V1 tests/337 assertions
@@ -231,6 +231,17 @@ and preservation evidence unchanged. Native-kind still BLOCKED; full step9 open.
 Next **WINDOWS-09F remaining source** reviews concrete native OS substrate/API and
 artifact-interface prerequisites; no nominal adapter or actual V3 before readiness.
 [Exact evidence/gaps/rollback](enterprise-local/handoffs/WINDOWS-09E.md). Graph unchanged.
+
+Latest **WINDOWS-09F aebc55e99** completes the bounded source/Microsoft API review
+at R1ca61590d: JOB_LIST closes the create-then-assign initial-thread gap; jobs alone
+do not provide egress/DNS or broker/cleanup isolation. Concrete AppContainer/WFP,
+stream/wait/accounting primitives and missing artifact/ABI/crash/release inputs are
+mapped in [the review](enterprise-local/handoffs/WINDOWS-09F.md). No adapter or code
+edit/test/compile/runtime/CI. Full step9 BLOCKED: unbound host/loading activation,
+approved native/runtime contract and actual execution scope absent. Owner's practical
+local-install priority does not revoke the explicit preserved refusals/bans. No more
+generic audit/review/mock loop; next useful source is local host binding after concrete
+scope/inputs. Graph unchanged; no other step executed or artificial completion.
 
 Private ID and bundle-local launcher/MCP/hooks; remove upstream/global cache fallback,
 Bash Setup/runtime install/update/self-repair compile. Local PowerShell preflight /

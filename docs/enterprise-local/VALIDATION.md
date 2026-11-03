@@ -21,6 +21,7 @@ edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
 | WINDOWS-09D source/harness | B855ef7d6e/S236dd661c/H2935e19d0; 20 V1 tests/433 assertions, one compile/viewer PASS; root same three errors; 19 inputs/869 source sentinels/192 outputs stable across compile, eight canonical outputs paired in B | Literal interpreter rendering and unbound host templates are not pre-execution approval or host loading/envelope proof; native/artifact/protocol prerequisites and common harness teardown failures remain |
 | Fork-specific CI and actual process smoke | Source authored; runtime/CI NOT RUN, native adapter and D12 pending | Manual-only workflow unconditionally blocks; no green CI or V3 evidence |
 | WINDOWS-09E common mock harness | H98a6d019c, 16 V1 tests/337 assertions PASS; no application/generated change, compile/typecheck NOT RUN | Sync launch ownership unknown; independent stop/release and preserved failures are mock orchestration, not native ownership/egress/cleanup proof |
+| WINDOWS-09F OS API review | aebc55e99, V0 source/Microsoft API feasibility at R1ca61590d; no source/generated changes; V1-V6/CI NOT RUN | JOB_LIST/AppContainer/WFP/stream/release primitives are candidate design evidence, not approved artifacts/ABI, native enforcement, DNS/crash/cleanup proof or a working host binding |
 
 These are real tests and real compilation, not mere source review. Worker bundles are
 compiled by esbuild; the viewer also invokes its TypeScript/Vite build. This is not a
@@ -139,7 +140,20 @@ OS substrate/API and artifact-interface inputs; actual V3 cannot be proposed bef
 approved immutable artifacts, implemented native adapter/OS boundary, permissions
 and cleanup readiness. [Exact evidence/gaps/rollback](handoffs/WINDOWS-09E.md).
 MCP initialize/list-tools and worker lifecycle success specs remain unimplemented,
-not conditionally green. [Current exact evidence/gaps](handoffs/WINDOWS-09E.md).
+not conditionally green. [Historical exact evidence/gaps](handoffs/WINDOWS-09E.md).
+
+WINDOWS-09F aebc55e99 completes the bounded Microsoft API review: JOB_LIST assigns
+before initial-thread execution, while job membership alone does not establish
+network/DNS/broker isolation. Dynamic WFP filter teardown and job kill-on-close
+have no reviewed joint crash-order guarantee; OS termination/cancel requests are
+not release barriers. Exact primitive/order/error/artifact/ABI/evidence gaps are
+in [WINDOWS-09F](handoffs/WINDOWS-09F.md). This is V0 only; no native adapter, approval
+manifest, source delta or actual V1-V6/CI run. Full step9 remains BLOCKED; a source
+review cannot make deliberately unbound/exit1 host commands function. No further
+generic review/mock-hardening loop is required; next useful source is concrete
+local host binding after scope/inputs. Actual V3 still requires approved immutable
+artifacts, implemented native adapter/OS boundary, permissions and cleanup readiness.
+No all-path cleanup success, MCP lifecycle spec or worker success inferred.
 
 Required cases, selected according to implemented features:
 

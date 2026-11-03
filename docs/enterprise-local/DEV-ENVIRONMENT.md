@@ -6,7 +6,17 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
-Latest **WINDOWS-09E** (2026-11-03): H98a6d019c, harness/tests only. Existing Bun
+Latest **WINDOWS-09F** (2026-11-03): aebc55e99, source/official Microsoft API review
+only at R1ca61590d. No application/harness/generated/workflow/toolchain/dependency
+change or tool-version probing. V1/V2/V3-V6/CI NOT RUN; no compile/typecheck/test
+replay, native execution, installed-asset read, registration/firewall/DNS/registry
+operation or real state. Research web fetches are not application egress evidence.
+Node22.23.4/npm10.9.9/Bun1.4.4 baseline retained; 09D compile/preservation and 09E
+mock evidence unchanged. Review complete; full step9 BLOCKED on concrete host/native/
+artifact/execution inputs. No more generic review loop; next source host binding
+awaits scope/inputs. [Concrete API evidence/limits](handoffs/WINDOWS-09F.md).
+
+Earlier **WINDOWS-09E** (2026-11-03): H98a6d019c, harness/tests only. Existing Bun
 1.4.4+38afee6c8 verified; Node22.23.4/npm10.9.9 baseline retained, not re-executed.
 One affected-file V1 run: 16 PASS/337 assertions, zero forbidden process/network/
 listener/fetch events. Synthetic allowlist state only windows-09e scratch; no real

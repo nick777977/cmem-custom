@@ -39,7 +39,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | not started; reuse existing adapters; split PROFILE-06A/06B if needed |
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17 | M | source refusal done-bounded, S 8fa997979 / G b8734d9b2, 127 tests + compile PASS; activation/contract U1/D9 open |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | not started; retain identity/sharing/filter/capture/retrieval behavior |
-| 9 | Deterministic Windows private paths and early compiled-entrypoint validation | IP W6; A20/A21/A22/A23/A24/A25 | M | partial WINDOWS-09E H98a6d019c: common mock admission/teardown failures addressed, 16 V1 tests/337 assertions PASS; no compile/typecheck/application delta, 09D B855ef7d6e/S236dd661c/H2935e19d0 evidence preserved; concrete native OS substrate/API/artifact/host-binding/protocol prerequisites remain; V3 NOT RUN |
+| 9 | Deterministic Windows private paths and early compiled-entrypoint validation | IP W6; A20/A21/A22/A23/A24/A25/A26 | M | WINDOWS-09F API/source review complete aebc55e99; full step BLOCKED: unbound host activation/D5, approved artifacts/native ABI/DNS/crash-release contract and actual execution scope absent. 09E mock/09D compile evidence preserved, no new source/test/build/runtime; V3 NOT RUN. No more generic review loops; next useful source is working local host binding after concrete scope/inputs. |
 | 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | not started; preserve needed SDK/Codex/API adapters, prune proved-unused closures only |
 | 11 | Exact-artifact local E2E, egress and selected-profile acceptance | IP P6/P7; A20 | M | not started; mock/offline checks independent of Bedrock availability; live rows separately gated |
 | 12 | Verified Windows bundle, SBOM, install/rollback and profile runbook | IP P8; A19/A20 | S | not started; deployment requires the intended profile's actual live evidence |
@@ -174,7 +174,11 @@ own concrete reviewed scope and cleanup/evidence contract.
 Remaining major blocks: 5/6/7 activation/8/9 completion/10/11/12. This is not exactly eight chats:
 step 6 and runtime/CI/artifact gates can need bounded continuations or separate permission
 launches. Avoid extra sessions for repeated audits; do not collapse unmet runtime gates
-to preserve a session estimate. Next single launcher is [WINDOWS-09F remaining source](enterprise-local/NEXT-SESSION.md).
+to preserve a session estimate. WINDOWS-09F exhausts the bounded API review; no repeat
+audit/mock loop is queued. The owner prioritizes practical local install without a
+CMEM account, but retained unbound/exit1 and runtime bans prevent claiming a working
+step9. The [single next remaining-source prompt](enterprise-local/NEXT-SESSION.md)
+is local host binding after concrete scope/input resolution, not another API review.
 
 ## Shipped
 

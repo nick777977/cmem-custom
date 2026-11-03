@@ -24,9 +24,10 @@ This board does not grant permission or duplicate the dependency graph.
 | WINDOWS-09C / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry 59c709482 | None active; all released | Host 2d8688e78/CLI 4945a916e/utilities c9978be26/S bc3275b4c/H abfce3963/G 4ac6ad868. 20 tests/234 assertions, one compile/viewer PASS; root same baseline. handoffs/WINDOWS-09C.md. No V3/CI. |
 | WINDOWS-09D / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry 8b39d1f86 | None active; all released | B855ef7d6e/S236dd661c/H2935e19d0; 20 tests/433 assertions, one compile/viewer PASS, root baseline FAIL; 19 inputs/869 source sentinels/192 outputs unchanged across compile. handoffs/WINDOWS-09D.md. No V3/CI. |
 | WINDOWS-09E / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry b9e683b75 | None active; all released | H98a6d019c, 16 V1 tests/337 assertions PASS, zero tripwire events; no application/generated delta or compile/typecheck. handoffs/WINDOWS-09E.md. No V3/CI. |
-| WINDOWS-09F / 9 continuation | claimed; bounded source/API review | Coordinator 2026-11-03; feat/cmem-light-local; serial; clean entry 1ca61590d18ebc80e2ef3e2aea74b89ffe54cf3a | Exact reservation below | Explicit launch; concrete OS/API and artifact contract review only; native BLOCKED. |
+| WINDOWS-09F / 9 continuation | done-review; full step9 BLOCKED | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; entry R1ca61590d | None active; all released | Review aebc55e99; no source/test/build/runtime. Concrete APIs mapped; host activation/native artifact-ABI-DNS-crash-release/execution inputs missing. handoffs/WINDOWS-09F.md. |
+| WINDOWS-09-LOCAL / 9 proposed source | awaiting concrete scope/inputs; unclaimed | None; serial selected branch | None | NEXT-SESSION: working local host binding; requires explicit replacement scope for active refusals and exact approved host/artifacts. No repeat review; no runtime inferred. |
 
-## WINDOWS-09F exact reservation — before edits
+## WINDOWS-09F reservation history — all released
 
 Claimed after clean branch/status/HEAD recheck at 1ca61590d18ebc80e2ef3e2aea74b89ffe54cf3a.
 One coordinator, serial. Read-only: existing compiled-smoke runner, Windows planner,
@@ -41,6 +42,9 @@ Review APIs/order/failure/ABI/artifact requirements and record concrete BLOCKED 
 no nominal adapter/approval manifest. Owner prioritizes usable local install without
 CMEM registration and avoiding further generic review loops; explicit runtime,
 registration/acquisition/CI prohibitions and native BLOCKED remain in force.
+Completed source/API review aebc55e99; no source reservation extension necessary,
+no code/test/build/runtime execution. Documentation closure only; all paths released.
+Full step9 BLOCKED, not a usable installation. Next action needs concrete scope/inputs.
 
 ## WINDOWS-09E reservation history — all released
 
@@ -256,16 +260,16 @@ SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed WINDOWS-09F
+## Minimal context for proposed local host-binding source
 
 - AGENTS -> README -> STATE -> roadmap step 9/graph/checkpoints -> TASKS.
-- DECISIONS A19/A20/A24/A25 and preserved invariants; current environment; NEXT-SESSION.
+- DECISIONS A19/A20/A26 and preserved invariants; current environment; NEXT-SESSION.
 - LLM-PROFILES scope/auth/MCP and VALIDATION V1-V3/CI; current environment;
-  PATCH-SEQUENCE section9 and 09E exact native/host/artifact/protocol prerequisites.
-- No previous audit/check replay; inspect only bounded native-interface source and
-  official API references needed to assess concrete guarantees after exact claim.
+  PATCH-SEQUENCE section9 and 09F exact native/host/artifact/protocol inputs.
+- No repeated API/audit/mock checks; concrete host binding needs source-scope and
+  approved inputs first. Current unbound/exit1/native/runtime prohibitions persist.
 
-Read handoffs/WINDOWS-09E.md first for completed mock failure source and exact gaps;
+Read handoffs/WINDOWS-09F.md first for completed API review and exact inputs;
 do not repeat its checks/audit by default. Current NEXT-SESSION owns one bounded launch.
 
 No whole-history or baseline/trust/hosted/Chroma replay. No real user state or runtime

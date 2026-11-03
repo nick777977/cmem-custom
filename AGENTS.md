@@ -68,9 +68,19 @@ release attempt after failed/timed-out stop. Sync launch failure leaves ownershi
 unknown; callbacks/timers are not OS cleanup/egress proof. 16 V1 tests/337 assertions
 PASS, zero forbidden tripwire events; no application changes, compile/typecheck or
 actual child. Prior 09D compile evidence preserved. Native-kind remains BLOCKED.
-See docs/enterprise-local/handoffs/WINDOWS-09E.md; next WINDOWS-09F remaining-source
-OS substrate/API and artifact-interface review awaits explicit launch. Do not activate
-this partial candidate or propose actual V3 before all concrete prerequisites exist.
+See docs/enterprise-local/handoffs/WINDOWS-09E.md.
+WINDOWS-09F review aebc55e99 maps concrete Job-at-creation, AppContainer/WFP,
+stream/deadline and release primitives to exact remaining gaps; no native adapter,
+application/generated change or V1/V2/runtime/CI replay. Source inspected at 1ca61590d.
+Review is complete; full step9 remains BLOCKED by disabled host/loading activation,
+missing approved artifacts/native ABI/DNS/crash-release contract and execution scope.
+The owner prioritizes usable local install/no CMEM account and defers minor flaws;
+the same request retains unbound/exit1/native BLOCKED and runtime/registration bans.
+Do not infer their revocation or fabricate a working installation/step9 completion.
+No more generic API/audit/mock loops: next remaining source is concrete local host
+binding after scope/input resolution, not another review. See
+docs/enterprise-local/handoffs/WINDOWS-09F.md and docs/enterprise-local/NEXT-SESSION.md.
+Do not activate this candidate or propose actual V3 before concrete prerequisites exist.
 Provider adapters and selected-provider login support must not
 be pruned as a side effect of launcher/bootstrap removal.
 Actual compiled-process smoke/CI/provider execution remains separately scoped.

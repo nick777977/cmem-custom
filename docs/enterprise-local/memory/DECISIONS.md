@@ -108,6 +108,22 @@ inputs, not actual V3. A19/A20/U1/D9/D11/D12/A15 and D5 proposals unchanged; no 
 provider/native-login, identity/memory/viewer, locks/trust/toolchain change.
 [Exact evidence, source citations, limitations and rollback](../handoffs/WINDOWS-09E.md).
 
+### A26 — WINDOWS-09F review closure and practical-install priority (2026-11-03)
+
+Explicit serial source/API review at R1ca61590d, evidence aebc55e99. Concrete Microsoft
+JOB_LIST/AppContainer/WFP/stream/wait/accounting primitives mapped to unresolved
+native artifact/ABI/OS/DNS/broker/crash/release inputs; no nominal adapter, approved
+manifest or source/runtime/CI execution. Review complete, full step9 BLOCKED.
+Owner requests prompt completion of a usable local plugin without CMEM signup,
+local Chroma and chosen LLM/auth, allowing minor flaws to be deferred. This does not
+establish an accepted waiver of the same request's explicit unbound/exit1/native
+BLOCKED and no-runtime/registration constraints. A scope clarification was requested;
+an unanswered option is not permission or selection. No artificial step9 completion.
+No more generic API/audit/mock loop: next useful source is local host binding after
+concrete scope, host/artifact inputs and corresponding source authorization. No other
+step executed or graph changed. A19/A20/D5/U1/D9/D11/D12/A15 and prior evidence retained.
+[Source/API findings, exact missing inputs and rollback](../handoffs/WINDOWS-09F.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

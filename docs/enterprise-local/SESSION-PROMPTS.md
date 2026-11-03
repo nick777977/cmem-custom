@@ -1,7 +1,7 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), WINDOWS-09F remaining source after
-bounded WINDOWS-09E closure (2026-11-03). A19/A20 supersede Bedrock-only:
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), local host-binding remaining
+source after WINDOWS-09F review (2026-11-03), pending concrete scope/inputs. A19/A20 supersede Bedrock-only:
 retain explicit user-configured LLM adapters/roles; add real compiled-process/CI
 checkpoints without claiming mock/compile as full runtime proof. Contracts:
 [LLM-PROFILES](LLM-PROFILES.md), [VALIDATION](VALIDATION.md).
@@ -23,8 +23,12 @@ eight canonical outputs paired earlier. [Historical gaps](handoffs/WINDOWS-09D.m
 WINDOWS-09E H98a6d019c: common mock admission/teardown failures addressed, 16 V1
 tests/337 assertions PASS, no application/generated delta or compile/typecheck.
 Sync launch ownership unknown; callbacks/timers do not prove OS cleanup/egress.
-[Current gaps](handoffs/WINDOWS-09E.md). Next single task: WINDOWS-09F concrete
-native OS substrate/API and artifact-interface remaining-source review.
+[Historical gaps](handoffs/WINDOWS-09E.md). WINDOWS-09F aebc55e99 completes the bounded
+source/Microsoft API review at R1ca61590d; no code/test/build/runtime. Full step9
+BLOCKED on host activation/native artifact-ABI-DNS-crash-release/execution inputs.
+[Current findings](handoffs/WINDOWS-09F.md). No more generic review/mock loop; next
+source is local host binding after concrete scope/inputs. Unbound/exit1 and runtime
+bans cannot simultaneously establish a working installation; clarification pending.
 No runtime proposal before approved artifacts/native OS boundary/cleanup readiness.
 Actual runtime/CI/provider execution still requires a scoped user launch.
 STATE/TASKS own current context. Session 01 and completed templates are historical;
@@ -72,7 +76,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | One proposed WINDOWS-09F source review; native substrate/artifact prerequisites and runtime prohibition explicit |
+| `docs/enterprise-local/NEXT-SESSION.md` | One proposed local host-binding source slice after concrete scope/inputs; no repeated API review or inferred runtime |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Canonical user profile/role/auth/model target; not implemented yet |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |

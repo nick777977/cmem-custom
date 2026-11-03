@@ -746,3 +746,55 @@ not actual V3. Documentation closure follows H; no source edits after V1.
 Documentation closure PASS: 14 Markdown files/121 relative links/18 H-pinned source
 line assertions; balanced fences/whitespace, source/tests stable, tracked preservation
 scope and roadmap graph unchanged. Final local docs commit follows, hooks/signing off.
+
+## WINDOWS-09F — concrete native API/source review (2026-11-03)
+
+Explicit serial same-step9 launch, clean R1ca61590d18ebc80e2ef3e2aea74b89ffe54cf3a
+on feat/cmem-light-local; exact TASKS claim before edits. Required current context
+read in order; direct runner/planner/host/preflight/blocked fork-CI source only.
+Targeted Win32/native symbol search in launcher and existing harness/test directories
+found no implementation; no broader audit, history reread or installed-tree probe.
+
+Review commit aebc55e99 records concrete official Microsoft APIs/order/failure/ABI/
+artifact/evidence mapping: JOB_LIST admission, retained handles/job descendants,
+AppContainer/WFP network candidate with DNS/broker and crash-lifetime gaps, native
+overlapped stream/deadline/cancel requirements, job/process/accounting/I/O/handle/
+profile release limits. Search-result Q&A/comments not relied on. This is candidate
+feasibility, not approved native substrate/manifest or empirical OS proof. Native
+adapter remains absent/BLOCKED. No second harness or nominal adapter introduced.
+
+Owner explicitly prioritizes usable local install/no CMEM account, local Chroma and
+chosen LLM/auth, with minor flaws deferrable. Full step9 cannot truthfully be called
+working while preserving requested empty commands/exit1 and runtime/registration bans.
+A concise scope clarification was requested asynchronously while independent review
+continued; no unanswered option treated as permission. Exact remaining inputs:
+working host/loading activation and D5 choice; approved immutable artifacts/native
+ABI/OS/DNS/broker/crash-release contract; execution/cleanup readiness and scope.
+No generic audit/mock-hardening/API review loop is queued; next useful source is
+local host binding after concrete scope/inputs, not another review.
+
+No source/harness/generator/generated/workflow/planner or dependency/toolchain edit.
+V1/V2/V3/V4/V5/V6/CI NOT RUN, no compile/typecheck/test or tool-version replay.
+No actual child/hooks/worker/MCP/services/listeners/native runtime/firewall/DNS/profile/
+registry/auth/inference/AWS/acquisition/installed-assets/real state/agents/worktrees.
+Research fetches are not application egress evidence. Local Git escalation authorized,
+hooks/signing off; no approval-review rejection or push.
+
+All 09/09B/09C and 09D B855ef7d6e/S236dd661c/H2935e19d0 preserved, including one
+compile/19-input/869-source/192-output historical stability evidence; 09E H98a6d019c
+16 V1 tests/337 assertions preserved. Protocol3 explicit-root/no-acquisition/no-PATH-
+repair/no-signup/unbound/exit1/no-env-node behavior intact. A19/A20/provider/native-login/
+viewer/SQLite canonical/Chroma derived/identity/sharing/filter/capture/retrieval
+unchanged. Step6 not implemented, U1/D9 activation blocked, no SQLite-only bypass;
+D11/D12 and A15 steps10/11/12 open. CI manual-only BLOCKED, planner source/dry-run,
+upstream triggers review only. Graph unchanged; no other numbered step executed.
+
+A26 and STATE/TASKS/contracts/environment/README/prompts updated; claims released.
+Full step9 remains explicitly BLOCKED; WINDOWS-09F review itself is complete. Exact
+source/API URLs, missing contract inputs and documentation-only rollback are in
+handoffs/WINDOWS-09F.md. Documentation closure follows the review commit.
+
+Closure checks PASS: 14 Markdown files/128 relative links/16 R-pinned source lines;
+balanced fences/whitespace, no non-document tracked delta, historical handoffs and
+roadmap graph unchanged. Separate local closure commit, hooks/signing off. No
+application evidence promoted and no step9 working-install completion claimed.

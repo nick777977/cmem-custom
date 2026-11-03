@@ -1,62 +1,47 @@
-# Next session: WINDOWS-09F — concrete native substrate/artifact source review
+# Next remaining source: working local host binding (inputs/scope pending)
 
-Proposed only; await explicit launch. Same step9, no actual V3/runtime prompt.
-WINDOWS-09E common mock admission/teardown slice is done-bounded; do not replay it.
+Proposed, not launched. WINDOWS-09F source/API review is complete. Do not schedule
+another generic review or mock-hardening continuation. Full step9 is BLOCKED;
+this is not a runtime prompt or a working-install claim.
+
+The owner requested usable local installation without a CMEM account, while the
+same request requires preserving unbound/exit1 host refusals and prohibits runtime/
+registration/acquisition. Resolve that conflict before replacing the active gates.
+Required non-secret inputs: intended host/version and supported command/loading
+contract; chosen D5 loading option; approved exact interpreter/bundle artifacts and
+paths/closure. Native execution additionally requires the bridge/OS/DNS/crash/release
+contract identified in WINDOWS-09F. Do not infer these from installed tools.
 
 ~~~text
-Продолжаем C:/0/ai/claude/claude-mem-custom/cmem-light, feat/cmem-light-local.
-Выполни WINDOWS-09F remaining source того же step9, один coordinator, serial,
-без agents/branches/worktrees и других steps. AGENTS -> README -> STATE -> roadmap
-step9/graph -> TASKS -> handoffs/WINDOWS-09E.md exact remaining gaps -> PATCH-SEQUENCE9
--> VALIDATION V1/V2/V3/CI -> LLM-PROFILES scope/auth/MCP -> DEV-ENVIRONMENT current.
-Branch/status/HEAD; exact claim до edits. Не повторять аудит/историю/готовые checks.
+Продолжаем cmem-light, feat/cmem-light-local, тот же step9, один coordinator serial.
+AGENTS -> README -> STATE -> roadmap step9/graph -> TASKS -> handoffs/WINDOWS-09F.md
+-> PATCH-SEQUENCE9 -> VALIDATION -> LLM-PROFILES -> DEV-ENVIRONMENT current.
+Branch/status/HEAD; exact claim до edits; no agents/branches/worktrees/other steps.
 
-Сохранить все 09/09B/09C и WINDOWS-09D B855ef7d6e/S236dd661c/H2935e19d0;
-09D один compile, 19 inputs/869 source sentinels/192 outputs stable across compile.
-WINDOWS-09E H98a6d019c: 16 V1 tests/337 assertions PASS, no compile/typecheck;
-input/handle validation, primary+cleanup errors, independent bounded stop/release.
-Sync launch failure ownership unknown, cleanup unproved; mocks/timers не OS proof.
-Native-kind BLOCKED. Protocol3 refusal, отсутствие acquisition/PATH repair/signup,
-unbound canonical commands, Codex/Setup exit1, no env-node shebang сохранить.
-Literal renderer/post-load realpath не approval. D5 оба варианта proposed; no registration.
+Следующий remaining-source срез — рабочая локальная host-привязка без CMEM signup,
+не новый API review. Сначала зафиксировать конкретные non-secret host/version/loading,
+D5 option и approved exact interpreter/bundle/artifact inputs из вводных пользователя,
+а также явное разрешение заменить соответствующие unbound/exit1 source-заглушки.
+Если данных/разрешения нет — назвать ровно эти BLOCKED inputs; не повторять review,
+готовые tests/compile и не создавать ещё одну общую plan tree. Не объявлять step9
+завершённым или локальную установку рабочей по V0/V1/отсутствию регистрации CMEM.
 
-Один bounded remaining-source review: конкретный Windows OS substrate/helper API и
-artifact-interface contract для native admission/cleanup. Используй существующий
-runner, repo source и официальную API documentation (read-only); не вводи второй
-harness, nominal adapter, approval manifest или fake OS approval. На каждую гарантию
-нужны конкретный API/primitive, порядок/ошибки, artifact/version/ABI/closure inputs и
-проверяемое evidence: atomic admission до любого child code, launch failure ownership,
-descendants/PID reuse/breakaway, inherited OS egress AND DNS deny, startup/deadline/
-stream limits, every-path owned-tree/listener/handle/boundary release. Где конкретного
-reviewed substrate/API или artifact contract нет — точный BLOCKED и недостающий input;
-не заполнять callback attestation. Native source adapter допустим только после этих
-конкретных reviewed inputs, не по label/installed tools. Никакого image/PID/global-port kill.
+Только после concrete inputs — точный bounded source/validation scope и reservation
+extension до edits; reuse existing runner/dependencies. Compile/runtime permission
+не inferred. Native-kind остаётся BLOCKED без reviewed substrate/artifact ABI/DNS/
+crash/release contract; no nominal adapter, callback approval or image/PID/port kill.
+Actual V3 prompt только после approved immutable artifacts, implemented native
+adapter/OS boundary, permissions и cleanup readiness. MCP/worker success не выдумывать.
 
-Actual V3 не предлагать до approved immutable artifacts, implemented native adapter/
-OS boundary, permissions и cleanup readiness. MCP initialize/list-tools и worker
-lifecycle success specs не выдумывать. U1/D9 activation закрыта, V4 требует approved
-Chroma assets. CI manual-only BLOCKED D12; planner source/dry-run only; upstream
-triggers review only. A15 10/11/12 открыты. Не переключаться на другие steps.
-
-A19/A20, Claude/Bedrock/API/Codex ChatGPT/OpenAI-compatible/native login сохранить;
-profiles step6 не делать. Viewer/SQLite canonical/Chroma derived/identity/sharing/
-filter/capture/retrieval не менять, без SQLite-only success bypass. Independent
-installer/diagnostic refusal не восстанавливать. Не запускать готовые checks без
-релевантного source delta; review-only не требует compile/typecheck/test replay.
-Если обнаружится конкретный допустимый source delta — расширить exact reservation
-до edits; использовать существующие reviewed inert/mock checks/dependencies и scratch
-только .scratch/enterprise-local/windows-09f. Application compile не inferred этим
-review; сначала concrete bounded source/validation scope без runtime/acquisition.
-
-Запрещены actual generated processes/smoke/hooks/worker/MCP/service/listeners/native
-runtime, CI execution/provision/upload/job/dispatch/push, acquisition/preparation/
-build-and-sync/dev, real settings/credentials/CODEX_HOME/memory/models/caches,
-auth/inference/AWS, machine PATH/registry/registration, agents/worktrees. Никаких
-runtime probes/installed asset inspection по факту наличия tools. Локальные logical
-commits разрешены, hooks/signing отключить; .git escalation допустима, push запрещён.
-
-Completion: concrete source/API feasibility evidence или exact BLOCKED inputs, не
-новая общая plan tree и не выдуманная готовность. Закрыть STATE/TASKS/WORKLOG/
-DECISIONS/contracts/DEV-ENVIRONMENT/NEXT-SESSION, preservation/rollback/exact gaps.
-Один следующий remaining-source prompt; runtime prompt только после всех prerequisites.
+Сохранить 09/09B/09C/09D/09E source/generated/evidence; A19/A20/provider/native login,
+viewer/SQLite canonical/Chroma derived/identity/sharing/filter/capture/retrieval.
+U1/D9 blocked, V4 approved Chroma assets, D11/D12/A15 10/11/12 open; no step6 work.
+Нет actual generated processes/hooks/worker/MCP/services/listeners/native runtime,
+CI provisioning/execution/upload/dispatch/push, acquisition/preparation/dev/deploy,
+real settings/credentials/CODEX_HOME/memory/models/caches, auth/inference/AWS,
+machine PATH/registry/registration. Planner source/dry-run only, CI manual-only BLOCKED.
+Scratch только .scratch/enterprise-local/windows-09-local; no automatic repair.
+Local logical commits hooks/signing off, .git escalation разрешена, no push.
+Закрыть STATE/TASKS/WORKLOG/DECISIONS/contracts/environment/NEXT-SESSION с actual
+result/limitations/rollback. Один следующий concrete source prompt; runtime не inferred.
 ~~~

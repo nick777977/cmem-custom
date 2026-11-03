@@ -189,7 +189,14 @@ WINDOWS-09E H98a6d019c changes only common mock harness/tests. Admission and cle
 failure handling supplies V1 evidence; no provider/native-login implementation, model/
 auth routing, local MCP tool or application behavior changed. No auth/inference/MCP
 process or real credentials/state read. Native remains BLOCKED; step6 stays open.
-[Current bounded evidence](handoffs/WINDOWS-09E.md).
+[Historical bounded evidence](handoffs/WINDOWS-09E.md).
+
+WINDOWS-09F aebc55e99 is source/official Windows API review only; no provider/auth/
+model/MCP implementation changed or executed. A19/A20 and native-login routes remain;
+no CMEM account is a product requirement. Working local Chroma/user-chosen models
+remain product goals, not outcomes proved by OS API review. U1/D9 and step6 remain
+open; no hidden profile fallback or SQLite-only success introduced.
+[Current bounded evidence](handoffs/WINDOWS-09F.md).
 
 Inspected source **48feeab567995de81d501b74007694b5ee95a880**, static only:
 

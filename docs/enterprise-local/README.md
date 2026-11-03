@@ -70,14 +70,22 @@ across compile; no generated follow-up commit. No real host envelope/loading pro
 native adapter/artifacts/admission/cleanup/protocol specs remain blocked; step9 partial.
 [Historical evidence/gaps/rollback](handoffs/WINDOWS-09D.md).
 
-Latest **WINDOWS-09E H98a6d019c**: common mock runner validates admission/handles,
+Earlier **WINDOWS-09E H98a6d019c**: common mock runner validates admission/handles,
 retains primary plus cleanup failures and attempts bounded release after failed/
 timed-out stop. Sync launch refusal means ownership unknown, never OS cleanup success.
 16 V1 tests/337 assertions PASS, zero forbidden tripwire events. No application or
 generated changes, compile/typecheck or real child; 09D evidence preserved. Native
 remains BLOCKED; step9 partial. [Exact evidence/gaps/rollback](handoffs/WINDOWS-09E.md).
-Next single task: **WINDOWS-09F remaining source — concrete native OS substrate/API
-and artifact-interface review**. No actual V3 prompt until all concrete prerequisites exist.
+That next review was completed below.
+
+Latest **WINDOWS-09F aebc55e99**: bounded source/Microsoft API feasibility review
+complete at R1ca61590d. Concrete job admission, security/network, stream/deadline and
+cleanup primitives mapped to missing native/artifact/ABI/DNS/crash-release inputs.
+No source/generated edit, test/compile/typecheck/runtime/CI. **Full step9 BLOCKED**:
+host commands still intentionally unbound/exit1 and D5 unselected; a working local
+install cannot be claimed under those retained constraints. No generic review replay
+queued. Next useful source: local host binding after scope/input resolution.
+[Exact findings/limits/rollback](handoffs/WINDOWS-09F.md), [single prompt](NEXT-SESSION.md).
 
 ## Reading order
 
