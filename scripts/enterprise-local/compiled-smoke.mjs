@@ -6,7 +6,8 @@ import { copyFileSync, mkdirSync, readFileSync, realpathSync, writeFileSync } fr
 import path from 'node:path';
 
 export const deadlines = Object.freeze({ runMs: 15_000, cleanupMs: 5_000, maxOutputBytes: 64 * 1024 });
-const entries = ['claude-mem-launcher.cjs', 'ensure-launcher.cjs', 'worker-service.cjs'];
+export const compiledEntries = ['claude-mem-launcher.cjs', 'ensure-launcher.cjs', 'worker-service.cjs', 'mcp-server.cjs', 'bun-runner.js', 'version-check.js', 'worker-wrapper.cjs', 'qoder-hook-launcher.cjs'];
+const entries = compiledEntries;
 const digest = file => createHash('sha256').update(readFileSync(file)).digest('hex');
 function descendant(root, file) {
   const delta = path.relative(root, file);
@@ -41,7 +42,7 @@ export function syntheticEnvironment(root, tools) {
  * cleanup verifies descendants/reparse points and the process boundary is empty.
  */
 export function prepareCopiedBundle({ workspace, sandbox, hashes, tools }) {
-  const taskRoot = realpathSync(path.join(workspace, '.scratch', 'enterprise-local', 'windows-09b'));
+  const taskRoot = realpathSync(path.join(workspace, '.scratch', 'enterprise-local', 'windows-09c'));
   descendant(taskRoot, path.resolve(sandbox));
   const parent = realpathSync(path.dirname(sandbox));
   if (parent !== taskRoot) descendant(taskRoot, parent);
@@ -92,6 +93,19 @@ export function refusalCases(fixture) {
   ].map(({ code, ...spec }) => ({ ...spec, expected: { exit: 1, stdout: '', stderrCode: code } }));
 }
 
+/** Copied wrapper negative specs only; no worker/MCP startup success implied. */
+export function wrapperRefusalCases(fixture) {
+  return ['bun-runner.js', 'version-check.js', 'worker-wrapper.cjs', 'qoder-hook-launcher.cjs'].flatMap(name => [
+    ['root-required', fixture.env, 'LOCAL_BUNDLE_ROOT_REQUIRED'],
+    ['missing-bundle', { ...fixture.env, CLAUDE_MEM_BUNDLE_ROOT: path.join(fixture.sandbox, 'missing') }, 'LOCAL_BUNDLE_MISSING'],
+    ['unapproved-bundle', { ...fixture.env, CLAUDE_MEM_BUNDLE_ROOT: fixture.bundle }, 'PRIVATE_LAUNCH_POLICY_PENDING'],
+  ].map(([suffix, env, code]) => ({
+    id: `${name}-${suffix}`, executable: fixture.tools.node, args: [path.join(fixture.bundle, 'scripts', name)],
+    cwd: fixture.sandbox, env, stdin: '', ...deadlines, evidence: 'controlled-refusal',
+    expected: { exit: name === 'qoder-hook-launcher.cjs' ? 0 : 1, stdout: '', stderrCode: code },
+  })));
+}
+
 function bounded(promise, ms, label) {
   let timer;
   return Promise.race([promise, new Promise((_, reject) => { timer = setTimeout(() => reject(new Error(label)), ms); })]).finally(() => clearTimeout(timer));
@@ -106,6 +120,9 @@ function bounded(promise, ms, label) {
  */
 export async function runCase(spec, adapter) {
   if (!adapter || !['mock', 'native'].includes(adapter.kind) || typeof adapter.launch !== 'function') throw new Error('BLOCKED: APPROVED_PROCESS_ADAPTER_REQUIRED');
+  // There is no implemented OS-owned-tree/egress/DNS adapter. A caller-supplied
+  // label or a method returning true cannot certify that boundary.
+  if (adapter.kind === 'native') throw new Error('BLOCKED: NATIVE_OS_BOUNDARY_NOT_IMPLEMENTED');
   const owned = adapter.launch(spec);
   try {
     const result = await bounded(owned.completion, spec.runMs, 'PROCESS_DEADLINE');
@@ -117,7 +134,7 @@ export async function runCase(spec, adapter) {
       const parsed = JSON.parse(result.stdout);
       if (typeof parsed.systemMessage !== 'string' || !parsed.systemMessage.includes(`${spec.expected.systemMessageCode}:`) || !result.stderr.includes(`${spec.expected.systemMessageCode}:`)) throw new Error('MISSING_CONTROLLED_REFUSAL');
     }
-    return { status: 'PASS', level: adapter.kind === 'mock' ? 'V1' : 'V3', substituted: adapter.kind === 'mock', id: spec.id, evidence: spec.evidence, readiness: false };
+    return { status: 'PASS', level: 'V1', substituted: true, id: spec.id, evidence: spec.evidence, readiness: false };
   } finally {
     await bounded(Promise.resolve().then(() => owned.stopOwnedTree()), spec.cleanupMs, 'CLEANUP_DEADLINE');
     await bounded(Promise.resolve().then(() => owned.assertReleased()), spec.cleanupMs, 'OWNED_RESOURCES_REMAIN');

@@ -2,10 +2,10 @@ import { afterAll, describe, expect, it } from 'bun:test';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync } from 'node:fs';
 import path from 'node:path';
-import { deadlines, leafCases, refusalCases, prepareCopiedBundle, runCase, syntheticEnvironment } from '../../scripts/enterprise-local/compiled-smoke.mjs';
+import { compiledEntries, deadlines, leafCases, refusalCases, wrapperRefusalCases, prepareCopiedBundle, runCase, syntheticEnvironment } from '../../scripts/enterprise-local/compiled-smoke.mjs';
 
 const workspace = process.cwd();
-const task = path.resolve('.scratch/enterprise-local/windows-09b');
+const task = path.resolve('.scratch/enterprise-local/windows-09c');
 mkdirSync(task, { recursive: true });
 const root = mkdtempSync(path.join(task, 'orchestration-'));
 afterAll(() => {
@@ -15,7 +15,7 @@ afterAll(() => {
 });
 // Tool strings are synthetic: no tool is executed or discovered in these tests.
 const tools = { node: path.join(root, 'tools', 'node.exe'), bun: path.join(root, 'tools', 'bun.exe') };
-const names = ['claude-mem-launcher.cjs', 'ensure-launcher.cjs', 'worker-service.cjs'];
+const names = compiledEntries;
 const hashes = Object.fromEntries(names.map(name => [name, createHash('sha256').update(readFileSync(path.join(workspace, 'plugin', 'scripts', name))).digest('hex')]));
 function fixture(name: string) { return prepareCopiedBundle({ workspace, sandbox: path.join(root, name), hashes, tools }); }
 function mockProcess(output: object | Promise<object>, cleanupFails = false) {
@@ -50,6 +50,7 @@ describe('compiled-entrypoint orchestration (MOCK ONLY, V1)', () => {
   });
   it('requires an explicit process boundary (no native/default adapter)', async () => {
     await expect(runCase({}, undefined)).rejects.toThrow('APPROVED_PROCESS_ADAPTER_REQUIRED');
+    await expect(runCase({}, { kind: 'native', launch() { throw Error('must not launch'); } })).rejects.toThrow('NATIVE_OS_BOUNDARY_NOT_IMPLEMENTED');
   });
   it('runs copied entrypoint specs through mocks and always releases ownership', async () => {
     for (const spec of leafCases(fixture('mock-success'), 1)) {
@@ -105,6 +106,18 @@ describe('compiled-entrypoint orchestration (MOCK ONLY, V1)', () => {
       expect(mock.events.slice(-2)).toEqual(['stop-owned-tree', 'assert-released']);
       await expect(runCase(spec, mockProcess({ ...output, exit: 0 }).adapter)).rejects.toThrow('UNEXPECTED_PROCESS_EXIT');
       await expect(runCase(spec, mockProcess({ ...output, stderr: 'different failure' }).adapter)).rejects.toThrow('MISSING_CONTROLLED_REFUSAL');
+    }
+  });
+  it('authors missing/unapproved refusal specs for all four exact copied wrappers (mock only)', async () => {
+    const f = fixture('wrapper refusal specs');
+    const specs = wrapperRefusalCases(f);
+    expect(specs.length).toBe(12);
+    for (const spec of specs) {
+      expect(existsSync(spec.args[0])).toBe(true);
+      expect(spec.cwd).toBe(f.sandbox);
+      const mock = mockProcess({ exit: spec.expected.exit, stdout: '', stderr: `cmem-light: ${spec.expected.stderrCode}: synthetic\n` });
+      expect(await runCase(spec, mock.adapter)).toMatchObject({ level: 'V1', substituted: true, readiness: false });
+      expect(mock.events.slice(-2)).toEqual(['stop-owned-tree','assert-released']);
     }
   });
 });
