@@ -24,7 +24,23 @@ This board does not grant permission or duplicate the dependency graph.
 | WINDOWS-09C / 9 continuation | done-bounded partial source | Coordinator finished; feat/cmem-light-local; serial; clean entry 59c709482 | None active; all released | Host 2d8688e78/CLI 4945a916e/utilities c9978be26/S bc3275b4c/H abfce3963/G 4ac6ad868. 20 tests/234 assertions, one compile/viewer PASS; root same baseline. handoffs/WINDOWS-09C.md. No V3/CI. |
 | WINDOWS-09D / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry 8b39d1f86 | None active; all released | B855ef7d6e/S236dd661c/H2935e19d0; 20 tests/433 assertions, one compile/viewer PASS, root baseline FAIL; 19 inputs/869 source sentinels/192 outputs unchanged across compile. handoffs/WINDOWS-09D.md. No V3/CI. |
 | WINDOWS-09E / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry b9e683b75 | None active; all released | H98a6d019c, 16 V1 tests/337 assertions PASS, zero tripwire events; no application/generated delta or compile/typecheck. handoffs/WINDOWS-09E.md. No V3/CI. |
-| WINDOWS-09F / 9 continuation | ready-unclaimed; await explicit launch | None; serial selected branch | None | NEXT-SESSION: concrete native OS substrate/API and artifact-interface remaining-source review; no adapter until reviewed concrete contract. Native BLOCKED. |
+| WINDOWS-09F / 9 continuation | claimed; bounded source/API review | Coordinator 2026-11-03; feat/cmem-light-local; serial; clean entry 1ca61590d18ebc80e2ef3e2aea74b89ffe54cf3a | Exact reservation below | Explicit launch; concrete OS/API and artifact contract review only; native BLOCKED. |
+
+## WINDOWS-09F exact reservation — before edits
+
+Claimed after clean branch/status/HEAD recheck at 1ca61590d18ebc80e2ef3e2aea74b89ffe54cf3a.
+One coordinator, serial. Read-only: existing compiled-smoke runner, Windows planner,
+direct launcher/host source and official Microsoft Win32/WFP API documentation.
+Write scope: docs/enterprise-local/handoffs/WINDOWS-09F.md; AGENTS.md;
+docs/{roadmap,PATCH-SEQUENCE}.md; docs/enterprise-local/{README,VALIDATION,
+LLM-PROFILES,DEV-ENVIRONMENT,NEXT-SESSION,SESSION-PROMPTS}.md;
+memory/{STATE,TASKS,WORKLOG,DECISIONS}.md; scratch only
+.scratch/enterprise-local/windows-09f/. No application/harness/generator/output edit
+or execution reserved. Extend exact reservation before any justified source delta.
+Review APIs/order/failure/ABI/artifact requirements and record concrete BLOCKED inputs;
+no nominal adapter/approval manifest. Owner prioritizes usable local install without
+CMEM registration and avoiding further generic review loops; explicit runtime,
+registration/acquisition/CI prohibitions and native BLOCKED remain in force.
 
 ## WINDOWS-09E reservation history — all released
 
