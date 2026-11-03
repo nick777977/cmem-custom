@@ -1,107 +1,32 @@
-// Where the tree-sitter CLI lives, and whether it is there at all. Dependency-free
-// on purpose (like language-map.ts): the PreToolUse file-context hook asks "can
-// smart_outline run here?" through it without pulling the tree-sitter parser
-// into the worker bundle. The hook and the MCP server resolve from the same
-// plugin root, so the hook's answer matches what the parser will find.
-import { createRequire } from "node:module";
-import { execFileSync } from "node:child_process";
-import { accessSync, constants, existsSync, statSync } from "node:fs";
-import { delimiter, dirname, isAbsolute, join, resolve } from "node:path";
-import { treeSitterBinaryName } from "./tree-sitter-bin-name.js";
+// Private tree-sitter resolution. No module/PATH/cwd/cache fallback.
+// Hash verification precedes every use; version probes remain bounded. Repository
+// pins establish byte identity, not artifact provenance or memory readiness.
+import { execFileSync } from 'node:child_process';
+import { accessSync, constants, statSync } from 'node:fs';
+import { isAbsolute } from 'node:path';
+import { verifyLocalTreeSitterCli } from './tree-sitter-cli-provision.js';
 
-const _require = typeof __filename !== 'undefined'
-  ? createRequire(__filename)
-  : createRequire(import.meta.url);
-
-// tree-sitter-cli installs `tree-sitter.exe` on Windows, not a bare `tree-sitter`
-// (see ChromaMcpManager.resolveUvxCommand for the same platform-suffix idiom).
-// Without the `.exe` suffix the existsSync check below always misses on Windows,
-// silently falling through to a bare `tree-sitter` that may not be on PATH —
-// smart file parsing then returns empty results with no error.
-//
-// Callers resolve per use and never cache the answer: the worker provisions the
-// executable in the background (tree-sitter-cli-provision.ts), and a process
-// that kept the bare-name fallback could not parse for its lifetime while the
-// File Read Gate, which checks on every Read, already sends Claude here.
 export function resolveTreeSitterBinPath(platform: NodeJS.Platform = process.platform): string {
-  const binName = treeSitterBinaryName(platform);
+  if (platform !== process.platform) throw new Error('LOCAL_TREE_SITTER_UNAVAILABLE: platform mismatch');
+  return verifyLocalTreeSitterCli(process.env.CLAUDE_MEM_BUNDLE_ROOT ?? '');
+}
 
-  let packageLocalBinPath: string | undefined;
-  try {
-    const pkgPath = _require.resolve("tree-sitter-cli/package.json");
-    packageLocalBinPath = join(dirname(pkgPath), binName);
-  } catch {
-    // [ANTI-PATTERN IGNORED]: tree-sitter-cli not in node_modules is expected; falls back to PATH
+// Compatibility signatures; legacy PATH inputs are deliberately never used.
+export function resolveTreeSitterBinPathFor(packageLocalBinPath: string, _searchPath: string): string {
+  const verified = resolveTreeSitterBinPath();
+  if (!isAbsolute(packageLocalBinPath) || verified !== packageLocalBinPath) {
+    throw new Error('LOCAL_TREE_SITTER_UNAVAILABLE: path is outside the selected bundle');
   }
-
-  if (packageLocalBinPath === undefined) return binName;
-  // Probing only means something for the platform we are running on; the
-  // platform parameter exists so tests can check other platforms' names.
-  if (platform !== process.platform) return existsSync(packageLocalBinPath) ? packageLocalBinPath : binName;
-  return resolveTreeSitterBinPathFor(packageLocalBinPath, process.env.PATH ?? '');
+  return verified;
 }
-
-/**
- * The binary the parser runs, given the path where a tree-sitter-cli package
- * keeps its executable: the bare name (a PATH lookup) when that file does not
- * exist, otherwise pickTreeSitterBinPath's choice. resolveTreeSitterBinPath
- * uses it for this process's own package; `npx claude-mem doctor` uses it for
- * the plugin root the worker runs from, so its answer matches the runtime.
- */
-export function resolveTreeSitterBinPathFor(packageLocalBinPath: string, searchPath: string): string {
-  const binName = treeSitterBinaryName();
-  if (!existsSync(packageLocalBinPath)) return binName;
-  return pickTreeSitterBinPath(packageLocalBinPath, binName, searchPath);
+export function pickTreeSitterBinPath(packageLocalBinPath: string, _binName: string, searchPath: string): string {
+  return resolveTreeSitterBinPathFor(packageLocalBinPath, searchPath);
 }
-
-/**
- * Which binary should the parser run when tree-sitter-cli has one on disk?
- * The package-local binary, unless the OS cannot run it and a tree-sitter on
- * PATH can (#4758: the 0.26.9 release asset needs GLIBC_2.39, so on Ubuntu
- * 22.04 / Debian 12 / RHEL 9 it is present but every spawn fails, and a
- * working build the user installed on PATH would otherwise never be used).
- * Both probes are cached per path + mtime + mode (see loadCheckFor), so this
- * stays cheap on the per-parse and per-Read paths, and a binary the worker
- * provisions later (new mtime) is re-probed.
- *
- * Exported for tests; callers use resolveTreeSitterBinPath.
- */
-export function pickTreeSitterBinPath(
-  packageLocalBinPath: string,
-  binName: string,
-  searchPath: string,
-): string {
-  if (loadCheckFor(packageLocalBinPath).loadable) return packageLocalBinPath;
-  const onPath = resolveOnPath(binName, searchPath);
-  if (onPath !== undefined && onPath !== packageLocalBinPath && loadCheckFor(onPath).loadable) {
-    return onPath;
-  }
-  // Nothing runs: keep the package-local path so checkTreeSitterCliLoadable
-  // reports why that binary fails, which is the actionable reason.
-  return packageLocalBinPath;
+export function isTreeSitterCliAvailable(resolvedBinPath?: string, _searchPath = ''): boolean {
+  try { return resolvedBinPath === undefined ? Boolean(resolveTreeSitterBinPath()) : resolveTreeSitterBinPathFor(resolvedBinPath, '') === resolvedBinPath; }
+  catch { return false; }
 }
-
-/**
- * Can smart_outline / smart_unfold parse anything here? True when the CLI
- * resolves to an existing file inside tree-sitter-cli, or when its bare name is
- * in a PATH directory (where the parser's execFileSync would find it). An
- * install whose tree-sitter-cli package never downloaded its binary answers
- * false, and every smart_outline call there reports "Could not parse".
- *
- * The parameters exist for tests; callers pass none.
- */
-export function isTreeSitterCliAvailable(
-  resolvedBinPath: string = resolveTreeSitterBinPath(),
-  searchPath: string = process.env.PATH ?? '',
-): boolean {
-  if (isAbsolute(resolvedBinPath)) return existsSync(resolvedBinPath);
-  return searchPath
-    .split(delimiter)
-    .some(directory => directory !== '' && existsSync(join(directory, resolvedBinPath)));
-}
-
-/** The fix when no tree-sitter release build runs here (#4858: musl). */
-export const TREE_SITTER_CLI_PATH_WORKAROUND = "put a tree-sitter 0.26 or newer build that runs on this system on PATH";
+export const TREE_SITTER_CLI_PATH_WORKAROUND = 'supply approved bundle-local tree-sitter assets; automatic repair is disabled';
 
 const TREE_SITTER_LOAD_PROBE_TIMEOUT_MS = 2_000;
 const TREE_SITTER_VERSION_OUTPUT = /^tree-sitter (\d+)\.(\d+)\.(\d+)(?:\s|$)/;
@@ -190,57 +115,16 @@ function probeTreeSitterCliLoadable(absoluteBinPath: string): TreeSitterCliLoadC
   }
 }
 
-function resolveOnPath(binName: string, searchPath: string): string | undefined {
-  for (const directory of searchPath.split(delimiter)) {
-    if (directory === '') continue;
-    const candidate = join(directory, binName);
-    try {
-      // Mirror the OS's own PATH lookup: a non-executable file does not shadow
-      // a working executable later in PATH (the parser's bare-name spawn skips
-      // it the same way).
-      if (statSync(candidate).isFile() && isExecutableFile(candidate)) return resolve(candidate);
-    } catch {
-      // Not in this directory; keep looking.
-    }
+/** Never probe an unverified path, even when a legacy caller supplies PATH. */
+export function checkTreeSitterCliLoadable(resolvedBinPath?: string, _searchPath = ''): TreeSitterCliLoadCheck {
+  try {
+    const verified = resolvedBinPath === undefined ? resolveTreeSitterBinPath() : resolveTreeSitterBinPathFor(resolvedBinPath, '');
+    return loadCheckFor(verified);
+  } catch {
+    return { present: false, loadable: false, reason: 'LOCAL_TREE_SITTER_UNAVAILABLE: missing, stale or unapproved bundle-local executable; no PATH/module fallback or repair' };
   }
-  return undefined;
 }
 
-/**
- * Does the resolved tree-sitter CLI actually run here? isTreeSitterCliAvailable
- * answers "is the file there"; this answers "can the smart tools parse with
- * it". A binary can be present but unloadable — e.g. tree-sitter-cli 0.26.9
- * links against GLIBC_2.39, so on Ubuntu 22.04 (glibc 2.35), Debian 12 or
- * RHEL 9 it exists yet every spawn fails (#4758). Callers should treat
- * present-but-not-loadable as "smart parsing unavailable" and say why
- * (reason) instead of the misleading "unsupported language" fallbacks.
- *
- * Synchronous so the PreToolUse File Read Gate can use it per Read. The --version
- * probe runs at most once per binary state (path + mtime + mode), so a
- * provisioned replacement or a `chmod +x` repair is re-probed while the hot
- * path pays one statSync + Map lookup; each hook invocation is a fresh
- * process, so a qualifying Read pays one short spawn, bounded by the 2s probe
- * timeout.
- * The parameters exist for tests; callers pass none.
- */
-export function checkTreeSitterCliLoadable(
-  resolvedBinPath: string = resolveTreeSitterBinPath(),
-  searchPath: string = process.env.PATH ?? '',
-): TreeSitterCliLoadCheck {
-  const absoluteBinPath = isAbsolute(resolvedBinPath)
-    ? resolvedBinPath
-    : resolveOnPath(resolvedBinPath, searchPath);
-  if (!absoluteBinPath) {
-    return {
-      present: false,
-      loadable: false,
-      reason: `tree-sitter CLI not found (looked for ${resolvedBinPath})`,
-    };
-  }
-  return loadCheckFor(absoluteBinPath);
-}
-
-/** The cached --version probe for one absolute binary path. */
 function loadCheckFor(absoluteBinPath: string): TreeSitterCliLoadCheck {
   let stats: { mtimeMs: number; mode: number };
   try {
@@ -260,21 +144,8 @@ function loadCheckFor(absoluteBinPath: string): TreeSitterCliLoadCheck {
   return check;
 }
 
-/**
- * Why the smart tools cannot parse here, or null when the CLI runs. Without
- * it, smart_outline answers "Could not parse … unsupported language or empty"
- * and smart_search reports "found 0 symbols", which read like a grammar
- * problem instead of the missing (#4858) or broken (#4758) CLI they are.
- *
- * The parameter exists for tests; callers pass none.
- */
-export function treeSitterCliUnavailableMessage(
-  check: TreeSitterCliLoadCheck = checkTreeSitterCliLoadable(),
-): string | null {
+
+export function treeSitterCliUnavailableMessage(check: TreeSitterCliLoadCheck = checkTreeSitterCliLoadable()): string | null {
   if (check.loadable) return null;
-  const problem = check.present
-    ? `the installed tree-sitter CLI cannot run on this system${check.reason ? ` (${check.reason})` : ""}`
-    : "the tree-sitter CLI is not installed (not in the plugin's tree-sitter-cli package and not on PATH)";
-  const fix = check.present ? "" : `; run \`npx claude-mem repair\`, or ${TREE_SITTER_CLI_PATH_WORKAROUND}`;
-  return `${problem}: this is a broken-install/environment issue, not an unsupported language${fix}`;
+  return check.reason ?? 'LOCAL_TREE_SITTER_UNAVAILABLE: supply approved bundle-local assets; automatic repair is disabled';
 }

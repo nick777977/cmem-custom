@@ -12,7 +12,7 @@ import { IS_WINDOWS, marketplaceDirectory, readPluginVersion } from '../utils/pa
 import { formatHostForUrl, getWorkerHost, getWorkerPort, resolvePluginRoot, type PluginRootResolution } from '../../shared/worker-utils.js';
 import { getBunVersion, getUvVersion, isInstallCurrent } from '../install/setup-runtime.js';
 import { treeSitterCliBinaryPath } from '../../services/smart-file-read/tree-sitter-cli-provision.js';
-import { checkTreeSitterCliLoadable, resolveTreeSitterBinPathFor, TREE_SITTER_CLI_PATH_WORKAROUND } from '../../services/smart-file-read/tree-sitter-bin-path.js';
+import { checkTreeSitterCliLoadable, TREE_SITTER_CLI_PATH_WORKAROUND } from '../../services/smart-file-read/tree-sitter-bin-path.js';
 import { resolveDataDir } from '../../shared/paths.js';
 import { paths } from '../../shared/paths.js';
 import { findOrphanedChromaRoots, readProcessTablePosix } from '../../supervisor/orphan-chroma-sweep.js';
@@ -240,28 +240,26 @@ export function pluginRootCheck(resolution: PluginRootResolution | null): CheckR
 
 /**
  * The "tree-sitter CLI" row for the plugin root the worker runs from. It
- * resolves the CLI the same way the parser does, so a working tree-sitter on
- * PATH counts when the package-local one is missing or cannot run (#4858).
- * Exported for tests, which also pass searchPath.
+ * checks only the selected bundle's verified executable. Legacy PATH input is
+ * ignored; missing/stale/unselected bytes produce a diagnostic, never repair.
  */
 export async function treeSitterCliCheck(pluginRoot: string, searchPath: string = process.env.PATH ?? ''): Promise<CheckResult> {
   const name = 'tree-sitter CLI';
   const packageLocalBinPath = treeSitterCliBinaryPath(pluginRoot);
-  const resolvedBinPath = resolveTreeSitterBinPathFor(packageLocalBinPath, searchPath);
-  const check = checkTreeSitterCliLoadable(resolvedBinPath, searchPath);
+  const check = checkTreeSitterCliLoadable(packageLocalBinPath, searchPath);
   if (check.loadable) {
     return {
       name,
       status: 'ok',
-      detail: isAbsolute(resolvedBinPath) ? resolvedBinPath : `${resolvedBinPath} on PATH`,
+      detail: packageLocalBinPath,
       required: false,
     };
   }
-  const problem = check.present ? check.reason : `missing at ${packageLocalBinPath} and not on PATH`;
+  const problem = check.reason ?? 'LOCAL_TREE_SITTER_UNAVAILABLE';
   return {
     name,
     status: 'warn',
-    detail: `${problem} — smart_search/smart_outline disabled; run \`npx claude-mem repair\`, or ${TREE_SITTER_CLI_PATH_WORKAROUND}`,
+    detail: `${problem}; ${TREE_SITTER_CLI_PATH_WORKAROUND}`,
     required: false,
   };
 }
