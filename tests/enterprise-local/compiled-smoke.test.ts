@@ -5,7 +5,7 @@ import path from 'node:path';
 import { compiledEntries, deadlines, leafCases, refusalCases, wrapperRefusalCases, prepareCopiedBundle, runCase, syntheticEnvironment } from '../../scripts/enterprise-local/compiled-smoke.mjs';
 
 const workspace = process.cwd();
-const task = path.resolve('.scratch/enterprise-local/windows-09c');
+const task = path.resolve('.scratch/enterprise-local/windows-09d');
 mkdirSync(task, { recursive: true });
 const root = mkdtempSync(path.join(task, 'orchestration-'));
 afterAll(() => {
@@ -111,7 +111,7 @@ describe('compiled-entrypoint orchestration (MOCK ONLY, V1)', () => {
   it('authors missing/unapproved refusal specs for all four exact copied wrappers (mock only)', async () => {
     const f = fixture('wrapper refusal specs');
     const specs = wrapperRefusalCases(f);
-    expect(specs.length).toBe(12);
+    expect(specs.length).toBe(28);
     for (const spec of specs) {
       expect(existsSync(spec.args[0])).toBe(true);
       expect(spec.cwd).toBe(f.sandbox);

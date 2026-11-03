@@ -42,7 +42,7 @@ export function syntheticEnvironment(root, tools) {
  * cleanup verifies descendants/reparse points and the process boundary is empty.
  */
 export function prepareCopiedBundle({ workspace, sandbox, hashes, tools }) {
-  const taskRoot = realpathSync(path.join(workspace, '.scratch', 'enterprise-local', 'windows-09c'));
+  const taskRoot = realpathSync(path.join(workspace, '.scratch', 'enterprise-local', 'windows-09d'));
   descendant(taskRoot, path.resolve(sandbox));
   const parent = realpathSync(path.dirname(sandbox));
   if (parent !== taskRoot) descendant(taskRoot, parent);
@@ -96,9 +96,13 @@ export function refusalCases(fixture) {
 /** Copied wrapper negative specs only; no worker/MCP startup success implied. */
 export function wrapperRefusalCases(fixture) {
   return ['bun-runner.js', 'version-check.js', 'worker-wrapper.cjs', 'qoder-hook-launcher.cjs'].flatMap(name => [
-    ['root-required', fixture.env, 'LOCAL_BUNDLE_ROOT_REQUIRED'],
-    ['missing-bundle', { ...fixture.env, CLAUDE_MEM_BUNDLE_ROOT: path.join(fixture.sandbox, 'missing') }, 'LOCAL_BUNDLE_MISSING'],
-    ['unapproved-bundle', { ...fixture.env, CLAUDE_MEM_BUNDLE_ROOT: fixture.bundle }, 'PRIVATE_LAUNCH_POLICY_PENDING'],
+    ['interpreter-required', fixture.env, 'LOCAL_INTERPRETER_ABSOLUTE_REQUIRED'],
+    ['interpreter-relative', { ...fixture.env, CLAUDE_MEM_NODE_EXECUTABLE: 'node' }, 'LOCAL_INTERPRETER_ABSOLUTE_REQUIRED'],
+    ['interpreter-missing', { ...fixture.env, CLAUDE_MEM_NODE_EXECUTABLE: path.join(fixture.sandbox, 'missing-node.exe') }, 'LOCAL_INTERPRETER_MISSING'],
+    ['interpreter-stale', { ...fixture.env, CLAUDE_MEM_NODE_EXECUTABLE: fixture.tools.bun }, 'LOCAL_INTERPRETER_STALE'],
+    ['root-required', { ...fixture.env, CLAUDE_MEM_NODE_EXECUTABLE: fixture.tools.node }, 'LOCAL_BUNDLE_ROOT_REQUIRED'],
+    ['missing-bundle', { ...fixture.env, CLAUDE_MEM_NODE_EXECUTABLE: fixture.tools.node, CLAUDE_MEM_BUNDLE_ROOT: path.join(fixture.sandbox, 'missing') }, 'LOCAL_BUNDLE_MISSING'],
+    ['unapproved-bundle', { ...fixture.env, CLAUDE_MEM_NODE_EXECUTABLE: fixture.tools.node, CLAUDE_MEM_BUNDLE_ROOT: fixture.bundle }, 'PRIVATE_LAUNCH_POLICY_PENDING'],
   ].map(([suffix, env, code]) => ({
     id: `${name}-${suffix}`, executable: fixture.tools.node, args: [path.join(fixture.bundle, 'scripts', name)],
     cwd: fixture.sandbox, env, stdin: '', ...deadlines, evidence: 'controlled-refusal',
