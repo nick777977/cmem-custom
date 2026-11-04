@@ -39,10 +39,40 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | not started; reuse existing adapters; split PROFILE-06A/06B if needed |
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17 | M | source refusal done-bounded, S 8fa997979 / G b8734d9b2, 127 tests + compile PASS; activation/contract U1/D9 open |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | not started; retain identity/sharing/filter/capture/retrieval behavior |
-| 9 | Deterministic Windows private paths and early compiled-entrypoint validation | IP W6; A20/A21/A22/A23/A24/A25/A26 | M | WINDOWS-09F API/source review complete aebc55e99; full step BLOCKED: unbound host activation/D5, approved artifacts/native ABI/DNS/crash-release contract and actual execution scope absent. 09E mock/09D compile evidence preserved, no new source/test/build/runtime; V3 NOT RUN. No more generic review loops; next useful source is working local host binding after concrete scope/inputs. |
+| 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A27 | M | source incomplete: current host/startup refusals must be replaced with working local setup. A27 permits necessary downloads/bootstrap and bounded tests; Codex first, Claude Code/Bedrock preserved. No admin/UAC. Custom OS boundary/CI no longer blocks phase one; historical V1/V2 evidence retained, actual setup acceptance pending. |
 | 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | not started; preserve needed SDK/Codex/API adapters, prune proved-unused closures only |
 | 11 | Exact-artifact local E2E, egress and selected-profile acceptance | IP P6/P7; A20 | M | not started; mock/offline checks independent of Bedrock availability; live rows separately gated |
 | 12 | Verified Windows bundle, SBOM, install/rollback and profile runbook | IP P8; A19/A20 | S | not started; deployment requires the intended profile's actual live evidence |
+
+## Phase-one delivery route (A27, 2026-11-04)
+
+One practical end-to-end target using the existing numbered steps, no new pipeline:
+
+1. Step9: make user-level dependency preparation/bootstrap, local build paths and
+   Codex local integration work. Inspect selected inputs/scripts first; no UAC,
+   machine PATH/registry/system services or public marketplace/CMEM account. Preserve
+   Claude Code host support. Replace deliberate refusals with actual local behavior.
+2. Steps5/6: finish cloud-sync removal and explicit role/model/auth routing; reuse
+   Codex ChatGPT-login and Claude/Bedrock/AWS SSO adapters. Local Codex tests must not
+   hardwire the product to OpenAI. Keep existing memory/viewer semantics.
+3. Step7: choose/install a compatible user-local Python/Chroma/embedding closure,
+   disable telemetry, load embeddings locally and fix actual compatibility errors.
+   Downloads during setup are allowed; missing assets get actionable setup errors.
+4. Step8 and checkpoints in9/11: real compiled startup, MCP and worker lifecycle,
+   capture -> SQLite -> selected-model observation/summary -> Chroma index/search ->
+   restart -> retrieval/viewer, using disposable data and owned-process cleanup.
+5. Steps10/12: package the local build and prerequisites with a reproducible user-level
+   setup/run/rollback guide; validate transfer on matching Windows/architecture/runtime.
+   Corporate Bedrock/SSO live proof happens in the authorized corporate environment.
+
+Necessary dependency/runtime/model acquisition and local host configuration are
+allowed parts of setup. Strong Job/AppContainer/WFP/DNS/crash-proof containment,
+CI provisioning/hosted publishing and exhaustive release provenance are deferred
+from first functional acceptance. Ordinary deadlines/cleanup and no unapproved
+memory/telemetry/model fallback are retained. No SQLite-only substitute for Chroma.
+Current Codex login is authorized for minimal synthetic live tests; exact model and
+budget must be proposed first. PHASE1-ALIGN only checked native login presence after
+authorization; no inference or manual credential-file inspection.
 
 Completed evidence and input-preservation limits remain in [DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md)
 and the HOSTED-03 / CHROMA-07 / TELEMETRY-04 handoffs. Do not repeat completed source
@@ -97,12 +127,12 @@ required; this is separate from the selected summary LLM.
 
 | ID | Question | Owner | Blocks |
 |---|---|---|---|
-| D1 | Approved artifact/runner source and lifecycle policy? A14 settles npm declarations only | human | acquisition, 7, 10, 12 |
+| D1 | A27 permits required dependency/tool/model downloads; choose compatible versions and official or enterprise-approved sources, document lifecycle. CI runner policy remains D12 | agent; user supplies enterprise restrictions if applicable | concrete dependency setup, 7/10/12 |
 | D2 | Allowed stored/LLM payloads per enabled profile and role? | human | real data/live tests, 8/11 |
-| D5 | Private plugin ID/loading and test upstream coexistence/disable procedure? | human | actual registration/install, 9/11/12 |
+| D5 | Local build loading accepted by A27: implement supported Codex local catalog/config and Claude Code local directory loading, coexistence and owned rollback without public publishing | agent; user-level target scope | actual local integration, 9/11/12 |
 | D7 | Exact selected profile(s): auth mode, endpoint/Region, model, proxy/CA and allowed infrastructure? No secrets in docs | human | actual live provider rows, 6/11 |
 | D8 | Approved local data location, retention/backup rules? | human | deployment, 8/12 |
-| D9 | Approved Python/Chroma/native/embedding assets, hashes/licenses and supported offline API? | agent research + human artifact permission | 7, actual V4, 10/12 |
+| D9 | Select/test compatible Python/Chroma/local embedding packages and versions; record source/license/hash/API as engineering work under A27 download permission, no manual user-supplied ABI required | agent | functioning local Chroma, 7/V4/10/12 |
 | D10 | Complete remaining dynamic clients/entrypoints/connectors and retained-provider closure? | agent | 1/10 |
 | D11 | Missing Chroma may enter explicitly visible SQLite-only degraded product mode? Still unselected | human | proposed product-mode change, 7/11 |
 | D12 | Approved CI execution location, runner inputs/network/control plane and artifact retention? | human | actual CI provisioning/execution and hosted uploads, 9/10 |
@@ -136,17 +166,17 @@ flowchart TD
   s2 -->|validate transport removal| s4["4 Remove telemetry"]
   s2 -->|validate database and index wiring| s5["5 Remove cloud sync"]
   s2 -->|validate retained adapters| s6["6 Explicit LLM profiles"]
-  s2 -->|pre-provisioned local runtime| s7["7 Offline Chroma"]
+  s2 -->|user-level local runtime and model setup| s7["7 Local Chroma"]
   s2 -->|preserve local API and viewer| s8["8 Local API and viewer"]
   s6 -->|effective profile config and safe status contract| s8
-  s2 -->|deterministic generated paths| s9["9 Windows paths and early smoke harness"]
+  s2 -->|deterministic local build and host setup| s9["9 User-level Windows setup"]
   s3 -->|hosted closure removed| s10["10 Retained runtime closure and fork CI"]
   s4 -->|telemetry closure removed| s10
   s5 -->|cloud closure removed| s10
   s6 -->|all model roles and retained adapters finalized| s10
   s7 -->|Python and local model contract finalized| s10
   s8 -->|API and viewer boundary finalized| s10
-  s9 -->|private entrypoints and reusable smoke harness finalized| s10
+  s9 -->|local host integration and bounded lifecycle verified| s10
   s10 -->|test exact packaged entrypoints| s11["11 Exact-artifact E2E and profile evidence"]
   s11 -->|functional and egress evidence for intended profiles| s12["12 Release and rollback"]
 ~~~
@@ -171,14 +201,12 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 9 | 11 | Exact artifact, disposable local E2E, process-tree/network evidence, separate V5 rows | Tested configuration; unavailable live routes remain pending |
 | 10 | 12 | Windows bundle/SBOM/runbook/install/rollback on exact final hashes | Release candidate for validated profiles |
 
-Remaining major blocks: 5/6/7 activation/8/9 completion/10/11/12. This is not exactly eight chats:
-step 6 and runtime/CI/artifact gates can need bounded continuations or separate permission
-launches. Avoid extra sessions for repeated audits; do not collapse unmet runtime gates
-to preserve a session estimate. WINDOWS-09F exhausts the bounded API review; no repeat
-audit/mock loop is queued. The owner prioritizes practical local install without a
-CMEM account, but retained unbound/exit1 and runtime bans prevent claiming a working
-step9. The [single next remaining-source prompt](enterprise-local/NEXT-SESSION.md)
-is local host binding after concrete scope/input resolution, not another API review.
+Remaining implementation: 9 local setup, 5/6/7/8 memory/model/index wiring, then local
+artifact/E2E/install acceptance in 10/11/12. A27 resolves the old download/runtime/
+unbound-host policy conflict. Do not keep native OS/CI research in the phase-one
+critical path or repeat generic audits. The [single next implementation prompt](enterprise-local/NEXT-SESSION.md)
+is WINDOWS-09-LOCAL: user-level bootstrap/build and working local Codex integration.
+Formal release hardening/CI stays deferred; actual functional checks are still required.
 
 ## Shipped
 

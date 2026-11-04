@@ -183,6 +183,16 @@ guarantee. Rollback: revert the isolated boundary change; no identity/data migra
 
 ## 9. Deterministic private Windows plugin and early process validation
 
+**A27 phase-one override (2026-11-04):** finish functional user-level local setup,
+not another refusal/sandbox review. Necessary dependency/runtime/model installation
+and bootstrap are allowed. Replace unbound/exit1 and unconditional local runtime
+refusals through bounded source changes; preserve removal of CMEM signup, telemetry,
+cloud corpus sync and hidden provider fallback. Codex first locally, Claude Code/
+Bedrock/SSO retained; use local catalog/config, no public publication. Build/install/
+run must require no admin/UAC or machine changes. Special OS isolation and CI are
+deferred from phase-one gates. Real bounded setup/lifecycle/memory acceptance is
+still required; old evidence below remains historical and step9 is not yet complete.
+
 WINDOWS-09 **partial** S0d0a4b176 / G004588740 / Hf2c722fad: SessionStart compile/PATH
 repair and tree-sitter helper acquisition removed; diagnostic preflight always blocked.
 17 tests/53 assertions + one compile/viewer typecheck PASS; root has three unchanged

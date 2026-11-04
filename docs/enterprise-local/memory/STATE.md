@@ -1,58 +1,62 @@
 # Current handoff
 
-Updated 2026-11-03 after WINDOWS-09F. Branch feat/cmem-light-local; clean entry and
-inspected source **R1ca61590d18ebc80e2ef3e2aea74b89ffe54cf3a**. One coordinator,
-serial; review **aebc55e99**, documentation closure follows. Claims released.
-[Concrete source/API evidence, inputs, preservation and rollback](../handoffs/WINDOWS-09F.md).
+Updated 2026-11-04 after PHASE1-ALIGN. feat/cmem-light-local, one coordinator serial;
+clean entry/source inspected d055fea4c3487e6010bbb35adb6f69c68b578215. A27 is current
+scope; historical blanket refusals and native-sandbox prerequisites are superseded.
+Current task changed docs/plan only and ran inert version/help probes. No application,
+harness, generated, manifest or lock change. Claims released at closure.
 
-## Current outcome
+## Accepted first deliverable
 
-WINDOWS-09F bounded source/Microsoft API review is complete. No source, harness,
-generator, generated, workflow or planner edit; no V1/V2/V3-V6/CI execution, compile,
-typecheck/test replay, native bridge load or tool/installed-asset probe. Only reviewed
-read-only repo/API inspection and document/scope checks. Baseline remains
-Node22.23.4/npm10.9.9/Bun1.4.4 without re-execution/install/update.
+Local checkout -> necessary dependency/runtime/model bootstrap -> local build ->
+local Codex host integration -> SQLite + real Chroma + local embeddings + selected
+LLM observation/summary + search/restart/viewer. No CMEM account/signup/SAML,
+telemetry, cloud corpus sync, hidden gateway or model/account fallback. Downloads
+needed for setup are allowed. No public marketplace publishing.
 
-Concrete candidate: job creation/limits before CreateProcessW JOB_LIST initial-thread
-execution; actual process handles for identity; restricted security plus AppContainer/
-WFP policy before admission; native bounded asynchronous streams/deadlines; owned-job
-termination plus process/I/O/accounting/handle/boundary reconciliation. Exact API
-references, order, errors and limits are in the handoff. Jobs alone do not deny
-network/DNS/broker traffic; dynamic WFP filter teardown and job kill-on-close lack a
-reviewed joint crash-order contract. JS timeout/callback results are not OS proof.
-No native adapter or nominal approval manifest added; native-kind remains BLOCKED.
+Everything must build/install/run as an ordinary Windows user: no admin/UAC,
+machine PATH/registry/system services. Prefer user/project-local tools, venv/config/
+data. Support a transferred build on matching Windows/architecture/native/runtime
+inputs; actual portability test required. Codex is the first local test surface;
+retain Claude Code Enterprise through Bedrock/AWS SSO and other explicitly selected
+compatible adapters. Host choice must not silently choose background model/auth.
+Special native Job/AppContainer/WFP/DNS/crash-proof isolation and CI are deferred
+from phase-one gates. Ordinary deadlines, owned process/file cleanup and real memory
+acceptance remain mandatory. Existing source refusals are implementation gaps to fix.
 
-## Why full step9 is still BLOCKED
+## Checks actually performed
 
-1. Host/loading activation deliberately disabled: structured commands empty, shell
-   exit1, planner dry-run refusal. D5 private namespace/absolute unpacked path both
-   proposed. Literal renderer/post-load realpath do not approve interpreter/runtime.
-2. Exact immutable artifacts/native bridge ABI/OS target/permissions and inherited
-   DNS/broker/crash/release contract absent. No actual protocol/lifecycle success
-   specs for MCP/worker or approved grammar/query/Chroma closure.
-3. Current request prohibits actual runtime/registration/acquisition/CI execution.
-   A functioning installation cannot simultaneously retain its disabled launch paths.
+Direct desktop Codex executable: codex-cli 0.166.0-alpha.6; --help, app-server --help,
+plugin --help exit0. Node22.23.4/npm10.9.9/Bun1.4.4/Python3.13.15 version probes
+exit0. Eight inert probes, synthetic empty HOME/CODEX_HOME/env/data/temp/npm configs
+in .scratch/enterprise-local/phase1-align; no timeout/kill needed. A ninth authorized
+native login-status probe returned exit0/CHATGPT_LOGIN_PRESENT; only sanitized mode
+was retained. No model catalog, credential-file inspection/copying, inference, real memories, app-server/service/
+worker/MCP/listener, dependency install or compile/typecheck/test replay. No Windows
+elevation requested; no-admin full setup acceptance is still pending.
 
-Owner prioritizes usable local install without CMEM signup and permits deferring
-minor first-release flaws. That priority is recorded; no extra generic review or
-mock-hardening loop queued. It does not implicitly cancel the same request's explicit
-unbound/exit1/native-BLOCKED/runtime restrictions. A scope clarification was requested;
-no unanswered option counts as approval. Full step9 must not be marked functioning
-or complete through paperwork. No other numbered step executed; graph unchanged.
+Chroma/embedding/SQLite runtime readiness and chosen Python compatibility remain
+unverified. Three previous TS2345 errors are SettingsDefaults vs Record<string,string>
+type mismatches, not missing Chrome. Last application compile/viewer checks passed;
+root typecheck failed those three; no new app result claimed. 09/09B/09C/09D/09E/09F
+commits and exact previous source/compile evidence preserved.
 
-## Preservation and next action
+## Auth/model decisions
 
-09/09B/09C and 09D B855ef7d6e/S236dd661c/H2935e19d0 preserved: one 09D compile,
-19 inputs/869 source sentinels/192 outputs stable across that compile; no replay.
-09E H98a6d019c 16 V1 tests/337 assertions and primary/cleanup/unknown-ownership
-semantics preserved. Protocol3 explicit-root/no-acquisition/no-PATH-repair/no-signup
-and wrapper no-env-node refusals unchanged. A19/A20/provider/native-login/viewer/
-SQLite canonical/Chroma derived/identity/sharing/filter/capture/retrieval preserved;
-step6 not implemented, no SQLite-only bypass. U1/D9 blocked, V4 needs approved Chroma
-assets; D11/D12/A15 steps10/11/12 open. CI manual-only BLOCKED; planner source-only.
-No auth/inference/AWS/real state/models/PATH/registry/agents/worktrees/push.
+User authorizes existing Codex/ChatGPT login for minimal synthetic live tests via
+normal auth, with low token usage. They request model and budget proposal BEFORE
+inference. Candidate gpt-6-luna is documented for economical summarization/extraction,
+but account availability is unverified; proposed initial maximum three short turns,
+no automatic retries/fallback, report usage. No model selected or live call yet.
+Corporate Bedrock/SSO live acceptance remains for the authorized corporate environment.
+No further general policy questions; model selection remains the narrow live gate.
 
-One next remaining-source action: **working local host binding after concrete scope
-and artifact/host inputs**, using [NEXT-SESSION](../NEXT-SESSION.md). No repeat API
-review. Actual V3 cannot be proposed until approved immutable artifacts, implemented
-native adapter/OS boundary, permissions and cleanup readiness all exist.
+## One next implementation task
+
+**WINDOWS-09-LOCAL: user-level local bootstrap/build and Codex host binding.**
+[NEXT-SESSION](../NEXT-SESSION.md) gives bounded source/validation scope. Fix relevant
+type incompatibility, replace disabled local paths with real no-admin setup; preserve
+CMEM removal and existing providers. Do not restore the old installer wholesale.
+Then follow the existing [phase-one roadmap](../../roadmap.md) across steps5/6/7/8
+and actual local acceptance/packaging. No new review tree or OS-sandbox loop.
+Step9 is still incomplete; no working setup, Chroma or full memory acceptance claimed.

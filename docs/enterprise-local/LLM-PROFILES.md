@@ -1,6 +1,18 @@
 # User-controlled LLM profiles and task routing
 
 Accepted target contract, 2026-11-02, decisions A19/A20. **Not implemented yet.**
+
+A27 clarification (2026-11-04): Codex/ChatGPT login is the first local live-test
+route. Claude Code Enterprise through AWS Bedrock/AWS SSO remains a required
+supported route; preserve other explicitly selected compatible adapters. Host
+integration and the background memory model are distinct selections. Do not hardwire
+Codex test choices into the installer or let host login implicitly select observer
+provider/model. Build/install/run are ordinary-user Windows operations, no admin/UAC.
+Necessary dependency and local embedding-model downloads/bootstrap are permitted;
+special native OS sandbox/CI proof is deferred from first functional delivery.
+Current Codex login is authorized for minimal synthetic tests; propose exact model
+and limit first. Proposed gpt-6-luna/three short turns remains pending selection and
+actual account compatibility; no live call or credential inspection in PHASE1-ALIGN.
 Supersedes the Bedrock-only target in the supplied initial plan and old session
 prompts. Historical evidence/commits remain unchanged. Dependencies and execution
 waves live only in [roadmap](../roadmap.md); runtime evidence requirements live in
@@ -33,7 +45,7 @@ organization approval separate from the user's choice of a profile.
 | Interactive host | Claude Code/Codex session where the owner works | Existing host integration remains; its login/model does not silently choose observer routing |
 | Memory observer | Extract observations, compress fields, create session summaries | Explicit default profile/model, with optional explicit role overrides |
 | Other model jobs | Knowledge/standalone work, viewer refresh, copy and judges | Same profile policy; no independent detector or preset may bypass it |
-| Embeddings | Turn documents/queries into vectors for Chroma search | Separately approved local embedding model/runtime; no remote embedding API or runtime download |
+| Embeddings | Turn documents/queries into vectors for Chroma search | Local embedding model/runtime; necessary packages/weights may download during setup/bootstrap under A27, no remote embedding inference |
 | Persistence/API/viewer | Canonical SQLite/FTS5, derived Chroma, local UI and spool | Local; existing identity/sharing/filter semantics retained |
 
 A user may deliberately make the observer match the host's provider, or choose a
@@ -145,8 +157,9 @@ not a second independent routing system.
    model or malformed reply; bounded same-profile retries remain. An optional future
    explicit fallback chain needs its own task/contract and is not required for this release.
 5. Credential refresh belonging to the selected login/profile is distinct from switching
-   auth. Permit supported same-profile refresh; never silently repair/login/download or
-   switch credential types. User-owned real auth reads and outbound refresh need scope.
+   auth. Permit supported same-profile refresh; never silently login or switch credential
+   types. A27 permits reviewed dependency/model bootstrap, not hidden account repair.
+   Use the authorized selected login through its normal mechanism; do not print secrets.
 6. Legacy settings cannot revive cmem.ai trials/gateway probes, default quota fallback,
    secondary providers, hardcoded judge models or auto-selected tier aliases. Display
    migration-required/invalid state where necessary; no auto-migration of user state.

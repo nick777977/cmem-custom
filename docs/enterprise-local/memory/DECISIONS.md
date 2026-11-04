@@ -124,6 +124,40 @@ concrete scope, host/artifact inputs and corresponding source authorization. No 
 step executed or graph changed. A19/A20/D5/U1/D9/D11/D12/A15 and prior evidence retained.
 [Source/API findings, exact missing inputs and rollback](../handoffs/WINDOWS-09F.md).
 
+### A27 — functional phase one, Codex first, no administrator rights (2026-11-04)
+
+Owner clarification supersedes prior blanket dependency/runtime download and
+startup/registration bans: necessary packages/runtimes/build tools/local embedding
+weights may be downloaded and installed; bootstrap must prepare a usable local
+build. No CMEM registration/account/SAML/subscription, telemetry, cloud corpus sync,
+unselected external service or model/account fallback. Local plugin configuration/
+catalog is allowed; no public marketplace publication required or authorized.
+
+Build, dependency installation, plugin setup and runtime must work under an ordinary
+Windows user without admin/UAC, machine PATH/registry or system services. Prefer
+user/project-local tools/venv/data. Support transferring a prepared local build to
+corporate Windows with matching architecture/native/runtime prerequisites; verify
+portability rather than promising arbitrary-machine copying. Agent selects necessary
+compatible dependencies and records inputs; user need not supply Windows API/ABI or
+package hashes. Existing compatible baseline is preserved, no upgrade by default.
+
+Codex is first local host and memory-model test route; preserve Claude Code Enterprise
+through Bedrock/AWS SSO and explicitly selected existing adapters. The owner explicitly
+authorizes their current Codex login for minimal synthetic live tests with low token
+usage, and requests an exact economical model/limit proposal before inference.
+Proposed gpt-6-luna and maximum three short turns are not yet approved/entitlement-
+verified. No live model/manual credential inspection in PHASE1-ALIGN; the authorized
+native login-status check returned sanitized ChatGPT-login presence only. No corporate AWS run
+authorized here; no credential contents in chat or tracked evidence.
+
+Strong native Job/AppContainer/WFP/DNS/crash-proof boundary and CI are deferred
+from phase-one prerequisites. Retain bounded ordinary lifecycle/owned cleanup,
+synthetic tests, actual local Chroma and honest V1/V2/V3/V4/V5 distinctions. Current
+source refusals/native BLOCKED remain implementation gaps, not final policy; no
+mock relabelling or false readiness. Historical A21-A26 checks/commits are preserved.
+Current task updates the existing plan/checks tools; it does not implement or close
+steps5/6/7/8/9, change application behavior or deploy to the user's main profile.
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

@@ -7,6 +7,16 @@ default and optional role overrides. A19 supersedes Bedrock-only; no hidden mode
 account/gateway fallback, CMEM registration/subscription, telemetry or cloud sync.
 Local persistence does not imply offline generative inference.
 
+**Current plan authority: A27 (2026-11-04).** Build/install/bootstrap may download
+necessary dependencies and local embedding assets. Everything must build/install/run
+under an ordinary Windows user without admin/UAC. Test Codex first here; retain
+Claude Code Enterprise/Bedrock/AWS SSO. Load our local build through local host
+configuration/catalog, with no public publication or CMEM account. OS sandbox proof
+and CI are deferred from phase-one prerequisites; bounded real lifecycle and memory
+checks remain required. Old refusal work below is historical, not desired functionality.
+[Current handoff](memory/STATE.md), [phase-one route](../roadmap.md),
+[acceptance contract](VALIDATION.md), [next source task](NEXT-SESSION.md).
+
 Accepted target contracts A19/A20 (not implemented yet): [LLM-PROFILES](LLM-PROFILES.md),
 [VALIDATION](VALIDATION.md). Current adaptation [PLAN-ADAPT-05](handoffs/PLAN-ADAPT-05.md)
 was documentation-only. Later WINDOWS-09 source/compile evidence is below; no runtime,

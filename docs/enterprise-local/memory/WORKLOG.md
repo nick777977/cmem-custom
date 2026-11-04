@@ -798,3 +798,76 @@ Closure checks PASS: 14 Markdown files/128 relative links/16 R-pinned source lin
 balanced fences/whitespace, no non-document tracked delta, historical handoffs and
 roadmap graph unchanged. Separate local closure commit, hooks/signing off. No
 application evidence promoted and no step9 working-install completion claimed.
+
+## PHASE1-ALIGN — practical local build, Codex-first, no-admin plan (2026-11-04)
+
+Explicit owner clarification: required packages/tools/model weights may download
+for build/install/bootstrap; local memory does not require an air-gapped setup.
+No CMEM signup/account/SAML/subscription, telemetry, cloud corpus sync or hidden
+provider/gateway fallback. Use local build/local catalog/config, no public publishing.
+Codex first on this Windows host; preserve Claude Code Enterprise/Bedrock/AWS SSO.
+User additionally requires build/install/runtime without Windows admin/UAC, including
+portable-build transfer with matching target prerequisites. Strong custom OS sandbox
+and CI are deferred from first functional acceptance; ordinary owned cleanup/deadlines
+and real Chroma/memory acceptance remain required. This is accepted A27, superseding
+historical blanket download/runtime/native-proof prerequisites, not erasing evidence.
+
+Clean source entry d055fea4c3487e6010bbb35adb6f69c68b578215 on feat/cmem-light-local;
+exact docs/scratch claim before edits, serial coordinator, no agents/branches/worktrees.
+User asks plan correction/questions before implementation. No application/harness/
+generator/generated/manifest/lock change, package install or app runtime executed.
+
+Applied OpenAI Docs skill; read official Codex app-server, CLI/plugin packaging and
+model documentation. Current official local-plugin guidance plus installed CLI help
+inform next source; no public directory submission needed. Reviewed direct Codex
+installer/provider source only: existing app-server adapter is ChatGPT-login based;
+real supported host/version/config and auth behavior still need actual integration
+checks. No source module imported, main host config read or provider login run.
+Sources: https://learn.chatgpt.com/docs/app-server ;
+https://developers.openai.com/plugins/build/plugins ;
+https://learn.chatgpt.com/docs/models ;
+https://developers.openai.com/api/docs/models/gpt-6-luna .
+
+Get-Command found a Volta codex.cmd delegating to volta run and a direct desktop
+codex.exe. Chose the direct executable, avoiding launcher resolution/acquisition.
+Reviewed inert .NET ProcessStartInfo script: allowlisted empty synthetic env/HOME/
+CODEX_HOME/config/data/temp/npm configs in phase1-align scratch, explicit paths,
+10s wait, cleanup only of its owned process tree if needed. Eight probes exit0:
+codex-cli0.166.0-alpha.6; main/app-server/plugin --help; Node22.23.4/npm10.9.9/
+Bun1.4.4/Python3.13.15 versions. No timeout/kill path. No actual app-server/service/
+MCP/worker/listener, app build/typecheck/test, runtime assets or model inference.
+Python version is presence only, not Chroma compatibility; SQLite/Chroma/embedding
+runtime availability unverified. Old three TS2345 logs inspected: SettingsDefaults
+missing Record<string,string> index signature, unrelated to missing Chrome browser.
+No Chroma success, dependency repair or no-admin acceptance inferred.
+
+Asked only current-login permission and model/budget handling. User explicitly
+approved current Codex login for minimal synthetic tests/subscription usage and
+requested an economical exact model/limit proposal before inference. Extended claim
+for one native login-status read-only probe; reviewed script first. Ninth probe
+exit0 CHATGPT_LOGIN_PRESENT, only sanitized auth-mode evidence retained. No raw output
+persisted, credential file read/copied by the agent or inference sent. No model
+catalog/entitlement checked. Proposed gpt-6-luna/max3 short turns, no auto retries/
+fallback; still pending selection. Broad regressions should use deterministic fake
+LLM and real local Chroma; live turns only for the selected route's wiring.
+
+Existing roadmap revised in place: step9 user-level bootstrap/local host source,
+steps5/6 memory+profiles, step7 local Chroma/embeddings, step8/9/11 full local memory
+acceptance, steps10/12 local packaging/no-admin transfer. No new numbered steps or
+plan tree. Dependency edge topology unchanged; labels clarify install/native-proof
+scope. STATE/TASKS/DECISIONS/contracts/AGENTS/environment/README/prompts updated;
+NEXT-SESSION names one concrete WINDOWS-09-LOCAL source task. Prior commits/handoffs/
+source and exact compile/mock evidence preserved. Current working setup is not yet
+implemented or tested. No real memory/auth contents, AWS inference, machine PATH/
+registry/admin operations, CI/publish/upload/push. Local docs commit follows checks.
+
+Source inspected at d055fea4c: src/services/worker/CodexAppServerClient.ts:147
+builds app-server stdio args; :376/:377 requires ChatGPT auth mode.
+src/services/integrations/CodexCliInstaller.ts:27 selects the existing local catalog
+name. These are static integration seams, not executed installer/provider evidence.
+
+Plan closure checks PASS: 13 Markdown files/134 relative links/4 d055fea4c source
+pins, 18 dependency edges preserved (labels clarified), balanced fences/whitespace.
+All app/harness/generated/manifest/lock bytes and historical handoffs unchanged in
+tracked diff. One local documentation concern/commit, hooks/signing disabled; no
+application tests or build promoted from these document/tool checks.

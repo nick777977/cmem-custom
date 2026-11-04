@@ -10,6 +10,45 @@ authorize the agent to execute commands or use real user state.
 
 ## Current authorization
 
+**A27, 2026-11-04: phase-one local functionality supersedes the historical blanket
+acquisition/runtime refusals below.** Necessary dependency/runtime/model downloads,
+installation, bootstrap, build and bounded local setup/lifecycle tests are part of
+the target. Use a local checkout/build with local host configuration; no public
+marketplace publication or CMEM account/signup/SAML/subscription. Keep memory/index/
+viewer local; allow only explicitly selected LLM/auth traffic, no telemetry/cloud
+corpus sync/hidden gateway or model/account fallback.
+
+Build, dependency setup, install, startup and removal MUST work as an ordinary
+Windows user: no admin/UAC, machine PATH/registry, system service installation or
+privilege escalation. Prefer user/project-local tools, virtual environments and
+data. Verify a portable local build on a matching target environment; do not assume
+native Windows/architecture dependencies can be copied across arbitrary machines.
+Codex is the first local test host/backend; retain Claude Code Enterprise via AWS
+Bedrock/AWS SSO and other explicitly selected supported adapters. User authorizes
+their existing Codex/ChatGPT login for minimal synthetic live tests via normal auth;
+never print secrets. Propose the exact model and a small live-test budget BEFORE
+the first inference. Real memories, unrelated settings and credentials are not an
+investigation source. Corporate AWS execution is not part of the local test scope.
+
+Special Job/AppContainer/WFP/DNS/crash-proof isolation and CI are deferred from
+phase-one prerequisites. Keep ordinary owned-child cleanup, deadlines, task-owned
+test folders and honest result labels. Existing native-kind/source refusals are
+current implementation gaps to replace in bounded implementation, not permanent
+product policy. Do not blindly restore old signup/bootstrap or run broad upstream
+install/test/deploy scripts. Inspect commands, reuse compatible existing tools,
+install only needed dependencies, preserve data and local build/source pairing.
+
+Current PHASE1-ALIGN session is plan/document updates and inert tool version/help
+checks only, not application build/installation/host registration or inference.
+No agents/branches/worktrees/push. Local Git sandbox write approval does not grant
+Windows administrator privileges. NEXT-SESSION owns the next concrete source slice.
+
+### Historical source boundaries and evidence
+
+The records below remain audit history. Their absolute no-download/no-runtime/
+unbound-host/native-adapter prerequisites are superseded by A27 for phase one;
+their actual source/tests/compile results are preserved, not promoted to readiness.
+
 A19/A20, PLAN-ADAPT-05 (2026-11-02) supersede the old Bedrock-only target: retain
 Claude/Bedrock, supported Claude/Codex logins, direct API/OpenAI-compatible and other
 existing explicitly selected adapters. All model tasks use user-controlled profiles
@@ -99,7 +138,8 @@ installed plugin settings merely to investigate the repository.
   project/worktree identity, sharing, filtering, capture and retrieval semantics. The
   user explicitly deferred redesign or isolation fixes, even where current behavior
   is imperfect. Focus this release on removing unapproved remote connections and
-  runtime downloads. A19 supersedes the prior Bedrock-only exception: permit only
+  unapproved data egress. A27 permits necessary dependency/runtime/model downloads
+  and user-level setup. A19 supersedes the prior Bedrock-only exception: permit only
   explicitly selected user LLM/auth profiles, keep embeddings/local MCP local, and
   preserve compatible existing adapters. No hidden model/account or gateway fallback.
   Record scope weaknesses as deferred observations, not implementation blockers.

@@ -1,10 +1,43 @@
 # Development baseline and user-provided execution evidence
 
-Updated: 2026-11-03. Supersedes the pre-install assumption in the 2026-10-30 launcher.
+Updated: 2026-11-04. Supersedes the pre-install assumption in the 2026-10-30 launcher.
 This is not full runtime acceptance. Session 02 subsequently ran authorized step-2
 compile/targeted checks; see the current section below and [BUILD-02](handoffs/BUILD-02.md).
 
 ## Preferred local toolchain
+
+Current **PHASE1-ALIGN, 2026-11-04** (source entry d055fea4c): docs/plan and inert
+tool availability checks only. Direct Codex desktop binary (not the Volta codex.cmd
+wrapper, which delegates to volta run) returned **codex-cli 0.166.0-alpha.6**.
+`--help`, `app-server --help`, `plugin --help` all exit0. CLI plugin help exposes
+add/list/marketplace/remove; no plugin command mutated real config. This confirms
+binary/capability presence only, not plugin compatibility, login or model entitlement.
+
+Selected direct tool probes: **Node22.23.4/npm10.9.9/Bun1.4.4/Python3.13.15**, all
+exit0. Python used `-I -S --version`; no third-party imports or installed-package/model
+inspection. Chroma/embeddings/SQLite native readiness NOT VERIFIED. Python3.13 is
+present, not yet selected as the compatible Chroma runtime. The three previous TS2345
+diagnostics are SettingsDefaults-to-Record<string,string> type incompatibilities;
+they are not evidence of a missing Chrome browser or Chroma package.
+
+Reviewed .NET ProcessStartInfo probe script uses exact tool paths, empty allowlisted
+environment, synthetic HOME/USERPROFILE/CODEX_HOME/config/data/appdata/temp/npm config/
+cache under .scratch/enterprise-local/phase1-align, direct commands, 10s waits and
+cleanup of only its own process tree if needed. All eight probes exited normally;
+no timeout/kill path used. No actual app-server/worker/MCP/listener or inference.
+No agent inspection of real auth/settings/memory/cache files, package install/upgrade, application
+compile/typecheck/test replay. No Windows elevation requested; a full normal-user
+installation/transfer test is still pending. No OS-wide egress proof is claimed.
+
+A27 allows necessary downloads/bootstrap and requires no-admin user-level setup.
+Codex login for minimal synthetic live tests is authorized; exact model/budget is
+proposed before the first turn. Corporate Bedrock/AWS SSO remains required support,
+not a local live-tested route. Prior 09D/09E/09F results below are unchanged history.
+
+After user authorization, a ninth bounded probe ran native `codex login status`
+through normal current-user auth: exit0, sanitized CHATGPT_LOGIN_PRESENT. No token
+file read by the agent, raw output persisted, credential copied or inference sent.
+This establishes login presence, not model entitlement or successful paid/plan usage.
 
 Latest **WINDOWS-09F** (2026-11-03): aebc55e99, source/official Microsoft API review
 only at R1ca61590d. No application/harness/generated/workflow/toolchain/dependency

@@ -1,5 +1,51 @@
 # Build, runtime and CI evidence contract
 
+## Current phase-one contract — A27, 2026-11-04
+
+The owner has clarified the first deliverable: local checkout -> necessary user-level
+dependency/bootstrap setup -> local build -> local Codex integration -> real memory
+workflow, retaining Claude Code Enterprise/Bedrock/AWS SSO portability. No CMEM
+signup/account/subscription, telemetry, cloud corpus sync or hidden LLM fallback.
+Necessary npm/Python/tool/embedding downloads are permitted; local computation/data
+does not require an air-gapped installer. Separate preparation from compilation so
+failures are understandable, without making preparation impossible.
+
+Mandatory acceptance: build/install/start/stop/uninstall under an ordinary Windows
+user, no admin/UAC/machine PATH/registry/system service. Test owned local processes,
+bounded startup/output/stop and task-owned files/config/data; preserve the user's
+normal installation and memories. No image/PID/global-port cleanup. A copied build
+needs matching architecture/native/runtime prerequisites and user-writable paths;
+cross-machine portability must be tested, not inferred from a successful local build.
+
+Strong Job/AppContainer/WFP/inherited-DNS/crash-proof containment and CI provisioning
+are deferred from phase-one gates. V3 still means actual compiled-process behavior;
+its phase-one pass requires expected results, bounded lifecycle/owned cleanup and
+reviewed routing/traffic observations, not a custom native OS adapter. Do not claim
+OS-enforced no-egress from ordinary tests. The existing runCase native-kind refusal
+remains current source until a bounded implementation adapts the reused test seam;
+do not relabel mocks or flip approval flags to manufacture V3. Existing stronger
+requirements below are historical/release-hardening targets where they conflict.
+
+V4 requires real local SQLite + Chroma + local embeddings, synthetic capture/index/
+retrieval/restart/viewer checks and a deterministic fake LLM for broad regressions.
+Add only a few real Codex ChatGPT-login turns for selected-model integration. User
+authorizes the current login for synthetic tests, with minimal subscription usage;
+exact model and initial limit must be proposed before inference. Candidate (not yet
+selected/entitlement-verified): gpt-6-luna; proposed initial maximum three short turns,
+no automatic retries/model fallback, record reported token usage. API pricing is not
+a promise about subscription quota. Do not read/print token files for investigation.
+Bedrock/AWS SSO remains a separately configured retained route, tested live only in
+the authorized corporate environment. No real memory corpus used for test prompts.
+
+PHASE1-ALIGN performed selected tool version/help checks with empty synthetic
+HOME/CODEX_HOME and, after explicit user authorization, one native login-status probe
+retaining only CHATGPT_LOGIN_PRESENT/exit0. No model catalog/inference, app startup, compile,
+package installation or admin-rights acceptance test. Chroma/embedding/SQLite runtime
+readiness and target Python compatibility remain unverified. Prior evidence stays
+historical. [Current environment](DEV-ENVIRONMENT.md), [delivery route](../roadmap.md).
+
+## Historical levels and evidence
+
 Accepted validation plan, 2026-11-02, A20. V3-V6 remain planned/not run; bounded
 WINDOWS-09/09B/09C/09D V1/V2 and 09E V1 results and harness/CI source are distinguished below.
 Execution needs the applicable user launch and isolated assets/permissions. This file

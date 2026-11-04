@@ -1,11 +1,31 @@
 # Shared execution board
 
-Updated: 2026-11-03. Single place for active ownership and file reservations.
+Updated: 2026-11-04. Single place for active ownership and file reservations.
 Dependencies/waves remain solely in [roadmap](../../roadmap.md); decisions in
 [DECISIONS](DECISIONS.md); current resumable handoff in [STATE](STATE.md).
 This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
+
+2026-11-04 completed claim: **PHASE1-ALIGN**, coordinator serial on feat/cmem-light-local,
+clean entry d055fea4c3487e6010bbb35adb6f69c68b578215. Scope: align the existing plan
+with the owner's clarified local-install/Codex-first target; bounded CLI/tool
+availability checks only, no application execution, credentials or inference.
+Reserved: AGENTS.md; docs/{roadmap,PATCH-SEQUENCE}.md; docs/enterprise-local/
+{README,VALIDATION,LLM-PROFILES,DEV-ENVIRONMENT,NEXT-SESSION,SESSION-PROMPTS}.md;
+memory/{STATE,TASKS,WORKLOG,DECISIONS}.md; disposable checks only
+.scratch/enterprise-local/phase1-align/. No new plan tree, app/harness/generated/
+manifest/lock edits, agents/branches/worktrees or real host configuration writes.
+Next: inspect actual Codex CLI version/help with empty synthetic HOME/CODEX_HOME,
+record selected-auth/model questions without treating unanswered choices as approval.
+Reservation extension after explicit user reply (2026-11-04): one native
+`codex login status` read-only probe through normal current-user authentication.
+Only sanitized auth-mode/presence evidence retained; never inspect token files,
+print raw output, start app-server or send inference. All build/setup/run acceptance
+must be no-admin; user authorized current login but requested model/budget first.
+Completed plan/contract updates, eight version/help probes and one sanitized native
+login-status probe. No implementation/inference. All reservations released; actual
+checks are in DEV-ENVIRONMENT/WORKLOG. Next WINDOWS-09-LOCAL is ready-unclaimed.
 
 | ID / parent step | Status | Owner / branch / worktree | Reserved files | Evidence / handoff |
 |---|---|---|---|---|
@@ -25,7 +45,8 @@ This board does not grant permission or duplicate the dependency graph.
 | WINDOWS-09D / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry 8b39d1f86 | None active; all released | B855ef7d6e/S236dd661c/H2935e19d0; 20 tests/433 assertions, one compile/viewer PASS, root baseline FAIL; 19 inputs/869 source sentinels/192 outputs unchanged across compile. handoffs/WINDOWS-09D.md. No V3/CI. |
 | WINDOWS-09E / 9 continuation | done-bounded partial source | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; clean entry b9e683b75 | None active; all released | H98a6d019c, 16 V1 tests/337 assertions PASS, zero tripwire events; no application/generated delta or compile/typecheck. handoffs/WINDOWS-09E.md. No V3/CI. |
 | WINDOWS-09F / 9 continuation | done-review; full step9 BLOCKED | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; entry R1ca61590d | None active; all released | Review aebc55e99; no source/test/build/runtime. Concrete APIs mapped; host activation/native artifact-ABI-DNS-crash-release/execution inputs missing. handoffs/WINDOWS-09F.md. |
-| WINDOWS-09-LOCAL / 9 proposed source | awaiting concrete scope/inputs; unclaimed | None; serial selected branch | None | NEXT-SESSION: working local host binding; requires explicit replacement scope for active refusals and exact approved host/artifacts. No repeat review; no runtime inferred. |
+| PHASE1-ALIGN / coordination | done; plan and inert CLI checks | Coordinator finished 2026-11-04; feat/cmem-light-local; entry d055fea4c | None; all released | A27 permits necessary bootstrap/downloads and no-admin local functionality; Codex0.166.0-alpha.6/help/tool versions and ChatGPT-login presence verified; no app/code/inference. |
+| WINDOWS-09-LOCAL / 9 source | ready-unclaimed | None; serial selected branch | None | A27/NEXT-SESSION: implement user-level bootstrap/local Codex host binding; preserve Claude Code/Bedrock/SSO. Native sandbox deferred; exact model/budget selection gates inference only. |
 
 ## WINDOWS-09F reservation history — all released
 

@@ -1,7 +1,13 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), local host-binding remaining
-source after WINDOWS-09F review (2026-11-03), pending concrete scope/inputs. A19/A20 supersede Bedrock-only:
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), WINDOWS-09-LOCAL after
+PHASE1-ALIGN/A27 (2026-11-04): functional Codex-first local setup, required downloads
+allowed, build/install/run without admin/UAC, Claude Code/Bedrock/AWS SSO retained.
+Strong native OS sandbox and CI are deferred from phase-one prerequisites. Current
+Codex login is authorized for minimal synthetic live tests; propose exact model and
+budget before inference. No public publication/CMEM account or real-memory test data.
+Historical refusal/source-only restrictions below are superseded where they conflict
+with A27; old actual checks remain historical evidence. A19/A20 supersede Bedrock-only:
 retain explicit user-configured LLM adapters/roles; add real compiled-process/CI
 checkpoints without claiming mock/compile as full runtime proof. Contracts:
 [LLM-PROFILES](LLM-PROFILES.md), [VALIDATION](VALIDATION.md).
@@ -28,9 +34,10 @@ source/Microsoft API review at R1ca61590d; no code/test/build/runtime. Full step
 BLOCKED on host activation/native artifact-ABI-DNS-crash-release/execution inputs.
 [Current findings](handoffs/WINDOWS-09F.md). No more generic review/mock loop; next
 source is local host binding after concrete scope/inputs. Unbound/exit1 and runtime
-bans cannot simultaneously establish a working installation; clarification pending.
-No runtime proposal before approved artifacts/native OS boundary/cleanup readiness.
-Actual runtime/CI/provider execution still requires a scoped user launch.
+bans were the historical blocker; A27 now resolves the policy conflict. Replace those
+source gaps through bounded implementation. Required local setup/lifecycle tests
+are part of phase one; native OS isolation is no longer their prerequisite. CI/public
+upload remain out of scope, live model selection/budget still comes before inference.
 STATE/TASKS own current context. Session 01 and completed templates are historical;
 future templates below are adapted planning aids, never independent authorization.
 
@@ -76,7 +83,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | One proposed local host-binding source slice after concrete scope/inputs; no repeated API review or inferred runtime |
+| `docs/enterprise-local/NEXT-SESSION.md` | A27 WINDOWS-09-LOCAL: user-level bootstrap and Codex local-build integration; no repeated native isolation review |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Canonical user profile/role/auth/model target; not implemented yet |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |
