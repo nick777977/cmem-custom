@@ -32,7 +32,6 @@ import { resolveContextWindowTokens, observationFieldMaxChars, resolveObserverMa
 import { recycleObserverConversation, loadSessionStartContext, openObserverGeneration, observesBarePrompts } from './session/recycle-conversation.js';
 import { optimizeObservationFields, buildFieldCompressionPrompt, type CompressedField } from './field-optimizer.js';
 import { resolveFieldOptimizeTimeoutMs } from './retry.js';
-import { buildTelegramWrapupPrompt, type TelegramWrapupFormatterInput } from '../integrations/TelegramWrapupNotifier.js';
 import type { MainModelRole, ModelProfile } from './model-profiles.js';
 
 import {
@@ -68,12 +67,12 @@ export interface ProviderQueryResult {
 }
 
 export interface ProfileTurnRequest {
-  session: ActiveSession;
+  session?: Pick<ActiveSession, 'sessionDbId' | 'contentSessionId' | 'project'>;
   history: ConversationMessage[];
   signal: AbortSignal;
   timeoutMs: number;
   budget?: PaidSendBudget;
-  label: ObserverRequestLabel;
+  label?: ObserverRequestLabel;
 }
 
 export interface ProfileRun {
@@ -251,34 +250,6 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     return resolveObserverMaxOutputTokens();
   }
 
-  /** Format a stored summary through this provider's normal summary-model query path. */
-  async formatTelegramWrapup(
-    input: TelegramWrapupFormatterInput,
-    activeModelId?: string,
-  ): Promise<string> {
-    const config = this.getConfig();
-    if (!config.apiKey && this.requiresApiKey(config)) {
-      throw this.missingApiKeyError();
-    }
-    const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
-    const model = resolveSummaryTierModel(activeModelId ?? config.model, settings);
-    const summaryConfig = { ...config, model, plainText: true };
-    const result = await this.query(
-      [{ role: 'user', content: buildTelegramWrapupPrompt(input.summaryText) }],
-      summaryConfig,
-      undefined,
-      undefined,
-      undefined,
-      { kind: 'telegram_wrapup', sessionId: anonymousSessionId(input.contentSessionId) },
-    );
-    if (!result.content?.trim()) {
-      const error = new Error(`${this.providerName} returned no text for the Telegram wrap-up`);
-      logger.error('TELEGRAM', error.message, { sessionId: input.sessionDbId, model }, error);
-      throw error;
-    }
-    return result.content;
-  }
-
   /** Estimate token count for a single message body. */
   protected abstract estimateTokens(text: string): number;
 
@@ -301,6 +272,9 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
    */
   protected anchorFraming(history: ConversationMessage[]): { system: string | null; turns: ConversationMessage[] } {
     const first = history[0];
+    if (first?.role === 'system') {
+      return { system: first.content, turns: history.slice(1) };
+    }
     if (!first?.framing) {
       return { system: null, turns: history };
     }

@@ -20,18 +20,15 @@ import { focusAreaRowFields, MY_FOCUS_LIST, navWordIn, OTHER_FOCUS_AREA_ID, owne
 import { MAX_WORK_STATE_FIELDS_JSON_CHARS } from '../../../work-view/work-state-limits.mjs';
 import { AGENT_LIFECYCLE_LIST, agentStopFields } from '../../../work-view/agent-lifecycle.mjs';
 import { getProjectContext } from '../../../../utils/project-name.js';
-import { chatCompletionsHumanCopyProvider, HumanCopyWorker } from '../../../work-view/human-copy-worker.mjs';
-import { resolveOpenRouterConfig } from '../../OpenRouterProvider.js';
-import { resolveOpenAICompatConfig } from '../../OpenAICompatProvider.js';
-import { resolveOpenAICompatReasoning } from '../../reasoning-budget.js';
+import { modelHumanCopyProvider, HumanCopyWorker } from '../../../work-view/human-copy-worker.mjs';
 import { AutoRefreshWorker } from '../../../work-view/auto-refresh-worker.mjs';
 import { buildRefreshTask } from '../../../work-view/refresh-task.js';
 import type { HostedIntent } from '../../../work-view/hosted-intent.js';
-import { isOpenRouterApiUrl } from '../../../../shared/openrouter-base-url.js';
+import type { MainWorkerProfiles } from '../../MainWorkerProfiles.js';
 import { runAgentTask } from '../../../agent-runner/run.js';
 import { ledgerSignature, readLedger } from '../../../work-view/request-groups.mjs';
-import { configuredJudge, decideSuggestion } from '../../../work-view/request-judge.mjs';
-import { configuredFocusJudge } from '../../../work-view/focus-judge.mjs';
+import { decideSuggestion, jevClientFromSelection, jevJudge } from '../../../work-view/request-judge.mjs';
+import { jevFocusJudge } from '../../../work-view/focus-judge.mjs';
 import { BaseRouteHandler } from '../BaseRouteHandler.js';
 import { captureEvent } from '../../../telemetry/telemetry.js';
 import { isForeignLoopbackBrowserWrite } from './SettingsRoutes.js';
@@ -241,6 +238,7 @@ interface WorkViewOptions {
   setupStatePath?: string;
   /** Local auto-refresh settings; defaults to ~/.claude-mem/settings.json. */
   settingsPath?: string;
+  profiles?: MainWorkerProfiles;
   /** Deprecated history upload injection; never invoked. */
   historyImport?: HistoryImport | null;
   /** Deprecated hosted extraction injection; never invoked. */
@@ -251,70 +249,21 @@ interface WorkViewOptions {
 export interface SetupWorkItem { groupId: string; title: string; platform: string | null; lastActiveAt: string | null; progressPercent: number | null }
 const SETUP_WORK_SHOWN = 5;
 
-type HumanCopyProvider = ReturnType<typeof chatCompletionsHumanCopyProvider> & {
-  configKey?: string;
-  isOff?: () => boolean;
-  getConfigKey?: () => string | null;
-};
-
-function withHumanCopyConfigKey(provider: ReturnType<typeof chatCompletionsHumanCopyProvider>, config: unknown[]): HumanCopyProvider {
-  return Object.assign(provider, { configKey: createHash('sha256').update(JSON.stringify(config)).digest('hex') });
-}
-
-/** Resolve the explicitly selected copy endpoint, or follow today's primary-provider behavior. */
-function resolveConfiguredHumanCopyProvider(settingsPath: string): HumanCopyProvider | null {
-  const settings = SettingsDefaultsManager.loadFromFile(settingsPath, true, { readOnly: true });
-  // Unset keeps today's behaviour: only an OpenRouter primary writes card wording. Any other endpoint, an
-  // OpenAI-compatible primary included, spends tokens on it only once selected here.
-  const selection = settings.CLAUDE_MEM_WORK_VIEW_COPY_PROVIDER?.trim() || (settings.CLAUDE_MEM_PROVIDER === 'openrouter' ? 'openrouter' : '');
-  const modelOverride = settings.CLAUDE_MEM_WORK_VIEW_COPY_MODEL?.trim();
-
-  if (selection === 'openrouter') {
-    const config = resolveOpenRouterConfig(settingsPath);
-    const model = modelOverride || config.model;
-    if (!config.apiUrl || !config.apiKey || !model) return null;
-    const fallbackModels = !modelOverride && isOpenRouterApiUrl(config.apiUrl) ? config.fallbackModels : [];
-    return withHumanCopyConfigKey(chatCompletionsHumanCopyProvider({
-      url: config.apiUrl, apiKey: config.apiKey, model, ...(fallbackModels.length ? { fallbackModels } : {}),
-    }), ['openrouter', config.apiUrl, config.apiKey, model, fallbackModels]);
-  }
-  if (selection === 'openai-compatible') {
-    const config = resolveOpenAICompatConfig(settingsPath);
-    const model = modelOverride || config.model;
-    if (!config.apiUrl || !model || (config.requiresApiKey && !config.apiKey)) return null;
-    // The observer's reasoning setting for this endpoint applies to card wording too, and a strict server that
-    // rejects the field gets one resend without it (the observer's own rule, OpenAICompatProvider).
-    const sendReasoningOff = resolveOpenAICompatReasoning(settings.CLAUDE_MEM_OPENAI_COMPAT_REASONING) !== 'on';
-    return withHumanCopyConfigKey(chatCompletionsHumanCopyProvider({ url: config.apiUrl, apiKey: config.apiKey, model, sendReasoningOff }),
-      ['openai-compatible', config.apiUrl, config.apiKey, model, sendReasoningOff]);
-  }
-  return null;
-}
-
-/**
- * My Work summaries follow an OpenRouter primary provider by default, as before.
- * Any other configured endpoint is used only when selected here;
- * the observer's quota-fallback key is never activated merely because it exists.
- * Settings and credentials are resolved for each availability check/request so
- * saves take effect without rebuilding the routes.
- */
-export function configuredHumanCopyProvider(settingsPath = USER_SETTINGS_PATH): HumanCopyProvider {
-  const provider = (async (input: unknown) => {
-    const resolved = resolveConfiguredHumanCopyProvider(settingsPath);
-    if (!resolved) throw new Error('No supported My Work summary provider is configured.');
-    return resolved(input);
-  }) as HumanCopyProvider & { isAvailable: () => boolean; isOff: () => boolean; getConfigKey: () => string | null };
-  provider.isAvailable = () => {
-    try { return resolveConfiguredHumanCopyProvider(settingsPath) !== null; }
-    catch { return false; }
-  };
+export function configuredHumanCopyProvider(profiles: MainWorkerProfiles, settingsPath = USER_SETTINGS_PATH) {
+  const snapshot = () => profiles.snapshot(settingsPath);
+  const provider = modelHumanCopyProvider(messages => profiles.runRole(snapshot(), 'copy', undefined, 90_000,
+    async (profile, signal) => {
+      const result = await profiles.queryText(profile, messages, signal, 90_000);
+      return { ...result, servedModel: profile.model };
+    }));
+  provider.isAvailable = () => snapshot().copy.state === 'configured';
   provider.isOff = () => {
-    try { return SettingsDefaultsManager.loadFromFile(settingsPath, true, { readOnly: true }).CLAUDE_MEM_WORK_VIEW_COPY_PROVIDER?.trim() === 'off'; }
-    catch { return false; }
+    const copy = snapshot().copy;
+    return copy.state === 'paused' && copy.issue === 'disabled';
   };
   provider.getConfigKey = () => {
-    try { return resolveConfiguredHumanCopyProvider(settingsPath)?.configKey ?? null; }
-    catch { return null; }
+    const copy = snapshot().copy;
+    return copy.state === 'configured' ? createHash('sha256').update(JSON.stringify(copy.profile)).digest('hex') : null;
   };
   return provider;
 }
@@ -322,7 +271,7 @@ export function configuredHumanCopyProvider(settingsPath = USER_SETTINGS_PATH): 
 /** My Work's automatic refresh on the user's own logged-in agent, unless
  * CLAUDE_MEM_WORK_VIEW_AUTO_REFRESH is 'false' (checked on every tick). */
 export function defaultAutoRefresh(ledgerDir: string, settingsPath = USER_SETTINGS_PATH, _setupPath: string | undefined = undefined, _setupActive = () => false,
-  localDeviceId: () => string, saveFocus: (body: RouterFocusBody) => { placed: number; focusAreaIds: string[] }): AutoRefreshWorker {
+  localDeviceId: () => string, saveFocus: (body: RouterFocusBody) => { placed: number; focusAreaIds: string[] }, profiles?: MainWorkerProfiles): AutoRefreshWorker {
   const openDatabase = () => {
     const database = new Database(DB_PATH, { readonly: true, create: false });
     database.exec('PRAGMA busy_timeout = 1500');
@@ -334,10 +283,22 @@ export function defaultAutoRefresh(ledgerDir: string, settingsPath = USER_SETTIN
     // Legacy hosted setup state must never gate the retained local refresh.
     enabled: () => SettingsDefaultsManager.loadFromFile(settingsPath, true, { readOnly: true }).CLAUDE_MEM_WORK_VIEW_AUTO_REFRESH !== 'false',
     runJob: async ({ needs, reason }) => {
-      // The judges are read from settings per run, so a provider change applies to the next refresh.
-      const task = buildRefreshTask({ needs, reason, dataDir: DATA_DIR, ledgerDir, pluginRoot: getPackageRoot(), openDatabase, localDeviceId, saveFocus,
-        judge: configuredJudge(settingsPath), focusJudge: configuredFocusJudge(settingsPath) });
-      return { ...(await runAgentTask(task)), steps: task.steps };
+      if (!profiles) return { state: 'waiting-for-agent', agent: null, result: null, error: 'refresh: profile_required' };
+      const snapshot = profiles.snapshot(settingsPath);
+      const judge = snapshot.requestJudge.state === 'configured' ? {
+        name: 'jev',
+        judge: (...args: Parameters<ReturnType<typeof jevJudge>['judge']>) =>
+          profiles.runRole(snapshot, 'requestJudge', undefined, 30_000,
+            async (_profile, signal) => jevJudge(jevClientFromSelection(snapshot.requestJudge, { signal })).judge(...args)),
+      } : null;
+      const focusJudge = snapshot.focusJudge.state === 'configured' ? {
+        name: 'jev',
+        pick: (...args: Parameters<ReturnType<typeof jevFocusJudge>['pick']>) =>
+          profiles.runRole(snapshot, 'focusJudge', undefined, 30_000,
+            async (_profile, signal) => jevFocusJudge(jevClientFromSelection(snapshot.focusJudge, { signal })).pick(...args)),
+      } : null;
+      const task = buildRefreshTask({ needs, reason, dataDir: DATA_DIR, ledgerDir, pluginRoot: getPackageRoot(), openDatabase, localDeviceId, saveFocus, judge, focusJudge });
+      return { ...(await runAgentTask(task, profiles, snapshot)), steps: task.steps };
     },
     log: (level, message, data) => (level === 'info' ? logger.info : logger.warn).call(logger, 'WORKER', message, data),
     localDeviceId,
@@ -377,14 +338,14 @@ export class WorkViewRoutes extends BaseRouteHandler {
     });
     this.reviews = new LocalReviewStore(options.reviewPath ?? join(DATA_DIR, 'work-view-reviews.db'));
     this.humanCopy = options.humanCopy === undefined
-      ? new HumanCopyWorker({ provider: configuredHumanCopyProvider(), cachePath: join(DATA_DIR, 'work-view', 'human-copy.json'),
+      ? new HumanCopyWorker({ provider: options.profiles ? configuredHumanCopyProvider(options.profiles, options.settingsPath) : null, cachePath: join(DATA_DIR, 'work-view', 'human-copy.json'),
         warn: message => logger.warn('WORKER', message) })
       : options.humanCopy;
     if (this.humanCopy) void this.humanCopy.load().then(() => this.humanCopy?.start());
     // A test or demo with its own ledger never starts an agent unless it passes one in.
     this.autoRefresh = options.autoRefresh === undefined
       ? (options.ledgerDir === undefined && ledgerDir ? defaultAutoRefresh(ledgerDir, options.settingsPath, options.setupStatePath,
-        undefined, () => this.getLocalDeviceId(), body => this.recordRouterFocus(body)) : null)
+        undefined, () => this.getLocalDeviceId(), body => this.recordRouterFocus(body), options.profiles) : null)
       : options.autoRefresh;
     this.autoRefresh?.start();
     this.appendWorkStateEntry = options.appendWorkStateEntry ?? null;

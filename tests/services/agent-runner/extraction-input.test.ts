@@ -6,8 +6,6 @@ import { spawnSync } from 'child_process';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
-import { runAgentTask, type AgentTask } from '../../../src/services/agent-runner/run.js';
-import type { UsableAgent } from '../../../src/services/agent-runner/detect.js';
 import { writeOwnerPromptsFile } from '../../../src/services/prompt-import/owner-prompts-file.js';
 import { SetupScan } from '../../../src/services/prompt-import/setup-scan.js';
 import { SessionStore } from '../../../src/services/sqlite/SessionStore.js';
@@ -18,38 +16,6 @@ const FIXTURE_HOME = join(import.meta.dir, '..', '..', 'fixtures', 'prompt-impor
 const FIXTURE_NOW = Date.parse('2026-10-10T00:00:00.000Z');
 const PLUGIN_ROOT = join(import.meta.dir, '..', '..', '..', 'plugin');
 const SAVE_GOALS = join(PLUGIN_ROOT, 'skills', 'owner-goals', 'scripts', 'save_goals.py');
-
-const agents = (...ids: Array<UsableAgent['id']>): UsableAgent[] =>
-  (['claude-code', 'codex', 'gemini'] as const).map(id => ({ id, path: ids.includes(id) ? `/bin/${id}` : null, authenticated: ids.includes(id), reason: 'test' }));
-
-function geminiTask(events: string[], prepare?: () => Promise<void>): AgentTask {
-  return {
-    reason: 'test', cwd: '/data', prepare,
-    claudeCode: { plugins: [], tools: [], allowedTools: [] },
-    run: async () => { events.push('run'); return 'done'; },
-  };
-}
-const neverQuery = (() => { throw new Error('query must not run'); }) as never;
-const env = async () => ({ PATH: '/bin' });
-
-describe('agent runner prepare step', () => {
-  it('runs once, before the first agent, and not at all without a logged-in agent', async () => {
-    const events: string[] = [];
-    const prepare = async () => { events.push('prepare'); };
-    expect((await runAgentTask(geminiTask(events, prepare), { detect: async () => agents('codex'), query: neverQuery, buildEnv: env })).state).toBe('ok');
-    expect(events).toEqual(['prepare', 'run']);
-    events.length = 0;
-    expect((await runAgentTask(geminiTask(events, prepare), { detect: async () => agents(), query: neverQuery, buildEnv: env })).state).toBe('waiting-for-agent');
-    expect(events).toEqual([]);
-  });
-
-  it('a failed prepare is reported and no agent runs', async () => {
-    const events: string[] = [];
-    const result = await runAgentTask(geminiTask(events, async () => { throw new Error('transcripts unreadable'); }), { detect: async () => agents('codex'), query: neverQuery, buildEnv: env });
-    expect(result).toMatchObject({ state: 'failed', agent: null, error: 'Preparing the run failed: transcripts unreadable' });
-    expect(events).toEqual([]);
-  });
-});
 
 describe('owner prompts from the prompt importer', () => {
   it('writes every agent\'s typed prompts in the export script\'s format, and save_goals.py verifies quotes against it', async () => {

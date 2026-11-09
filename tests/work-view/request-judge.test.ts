@@ -5,11 +5,17 @@ import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
-  decideSuggestion, jevClient, jevClientFromSettings, jevJudge, JOIN_THRESHOLD, judgeConversation, MAX_CANDIDATE_REQUESTS, MAX_DECISION_BODY_BYTES,
-  OPENROUTER_DECISIONS_URL, routeUndecided, rulesJudge, SUGGEST_THRESHOLD,
+  decideSuggestion, jevClientFromSelection, jevJudge, JOIN_THRESHOLD, judgeConversation, MAX_CANDIDATE_REQUESTS, MAX_DECISION_BODY_BYTES,
+  routeUndecided, rulesJudge, SUGGEST_THRESHOLD,
 } from '../../src/services/work-view/request-judge.mjs';
 import { groupIdFor, groupingInput, openSuggestions, readLedger, runCli } from '../../src/services/work-view/request-groups.mjs';
+import { resolveMainProfiles } from '../../src/services/worker/model-profiles.js';
 import { buildRefreshTask } from '../../src/services/work-view/refresh-task.js';
+
+const localProfile = { id: 'main', provider: 'openai-compatible', model: 'synthetic-main', auth: 'none', endpoint: 'http://127.0.0.1:54321/v1' };
+const decision = { id: 'judge', provider: 'openrouter', model: 'synthetic-judge', auth: 'api-key', keyEnv: 'CMEM_PROFILE_KEY_JUDGE', endpoint: 'https://judge.example.invalid/decisions' };
+const decisionEnv = { CMEM_PROFILE_KEY_JUDGE: 'fixture-judge-key', CMEM_PROFILE_KEY_JUDGE_ENDPOINT: decision.endpoint };
+const judgeSelection = resolveMainProfiles({ default: localProfile, requestJudge: decision }, decisionEnv).requestJudge;
 
 const DAY = 86400000, NOW = 100 * DAY;
 const key = (session: string, platform = 'claude') => JSON.stringify(['conversation', platform, session]);
@@ -264,18 +270,18 @@ describe('the request judge', () => {
     const dir = ledgerDir();
     try {
       let sent = 0;
-      const big = jevClient({ url: 'https://cmem.ai/api/inference/v1/decisions', apiKey: `cm_pro_${'a'.repeat(24)}`, fetchImpl: async () => { sent++; return new Response('{"answers":{}}'); } });
-      await expect(big.decide({ blob: 'x'.repeat(MAX_DECISION_BODY_BYTES) }, {})).rejects.toThrow(/takes at most 65536\. It is not trimmed/);
+      const big = jevClientFromSelection(judgeSelection, { fetchImpl: async () => { sent++; return new Response('{"answers":{}}'); } });
+      await expect(big.decide({ blob: 'x'.repeat(MAX_DECISION_BODY_BYTES) }, {})).rejects.toThrow('decision_body_too_large');
       expect(sent).toBe(0);
-      const spent = jevClient({ url: 'https://cmem.ai/api/inference/v1/decisions', apiKey: `cm_pro_${'a'.repeat(24)}`, fetchImpl: async () => new Response(JSON.stringify({ error: { code: 'allowance_exhausted', message: 'Monthly allowance spent.', request_id: 'req_1' } }), { status: 402 }) });
-      await expect(spent.decide({ a: 1 }, { q: { type: 'noul', instructions: 'x', criteria: { true: 'y', false: 'n' } } })).rejects.toThrow('Jev answered 402 allowance_exhausted: Monthly allowance spent. (request req_1)');
+      const spent = jevClientFromSelection(judgeSelection, { fetchImpl: async () => new Response(JSON.stringify({ error: { code: 'allowance_exhausted', message: 'Monthly allowance spent.', request_id: 'req_1' } }), { status: 402 }) });
+      await expect(spent.decide({ a: 1 }, { q: { type: 'noul', instructions: 'x', criteria: { true: 'y', false: 'n' } } })).rejects.toThrow('decision_http_402');
       const database = fixtureDatabase();
       ledgerWithOpenRequest(dir);
       const plan = await routeUndecided({ dir, database, judge: jevJudge(spent), now: NOW, apply: true });
       // b and c had an open request to check and the call failed; d had none and needed no call.
       expect(plan.counts).toEqual({ joined: 0, suggested: 0, new: 1, unplaced: 2 });
       expect(plan.unplaced.map(entry => entry.conversationKey)).toEqual([key('b'), key('c')]);
-      expect(plan.unplaced[0].reason).toBe('jev: Jev answered 402 allowance_exhausted: Monthly allowance spent. (request req_1)');
+      expect(plan.unplaced[0].reason).toBe('jev: decision_http_402');
       const ledger = readLedger(dir);
       expect(ledger.groups.conversations[key('b')]).toBeUndefined();
       expect(ledger.groups.conversations[key('d')]).toBe(groupIdFor(key('d')));
@@ -283,35 +289,23 @@ describe('the request judge', () => {
     } finally { rmSync(dir, { recursive: true, force: true }); }
   });
 
-  it('a Jev client comes only from the CMEM Pro gateway or openrouter.ai, with the matching key', async () => {
-    const none = () => undefined;
-    let sent: { url: string; body: any; authorization: string | null } | null = null;
-    const fetchImpl = (async (url: string, init: RequestInit) => {
-      sent = { url, body: JSON.parse(String(init.body)), authorization: (init.headers as Record<string, string>).Authorization ?? null };
-      return new Response(JSON.stringify({ answers: { q: { type: 'noul', noul: 0.5 } }, model: 'typesafe/jev-1.14' }));
-    }) as unknown as typeof fetch;
-    const question = { q: { type: 'noul', instructions: 'x', criteria: { true: 'y', false: 'n' } } };
-    expect(jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'claude', CLAUDE_MEM_OPENROUTER_API_KEY: 'sk-or-1' }, { credential: none })).toBeNull();
-    // CMEM Pro: the gateway's /decisions with the account key; the gateway pins the judge, so no model is sent.
-    const pro = jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter', CLAUDE_MEM_OPENROUTER_BASE_URL: 'https://cmem.ai/api/inference/v1', CLAUDE_MEM_OPENROUTER_API_KEY: `cm_pro_${'b'.repeat(24)}` }, { credential: none, fetchImpl });
-    expect(pro?.url).toBe('https://cmem.ai/api/inference/v1/decisions');
-    expect((await pro!.decide({ a: 1 }, question)).answers.q.noul).toBe(0.5);
-    expect(sent).toEqual({ url: 'https://cmem.ai/api/inference/v1/decisions', body: { state: { a: 1 }, questions: question }, authorization: `Bearer cm_pro_${'b'.repeat(24)}` });
-    // Bring your own key: OpenRouter's Decisions API, naming the measured release.
-    const own = jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter', CLAUDE_MEM_OPENROUTER_BASE_URL: '', CLAUDE_MEM_OPENROUTER_API_KEY: 'sk-or-1' }, { credential: none, fetchImpl });
-    expect(own?.url).toBe(OPENROUTER_DECISIONS_URL);
-    await own!.decide({ a: 2 }, question);
-    expect(sent).toEqual({ url: OPENROUTER_DECISIONS_URL, body: { model: 'typesafe/jev-1.14', state: { a: 2 }, questions: question }, authorization: 'Bearer sk-or-1' });
-    // The key may come from ~/.claude-mem/.env, as the observer's does.
-    expect(jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter' }, { credential: name => name === 'OPENROUTER_API_KEY' ? 'sk-or-env' : undefined })?.url).toBe(OPENROUTER_DECISIONS_URL);
-    // Another OpenAI-compatible endpoint has no Decisions API; keys and endpoints never cross; no key, no judge.
-    expect(jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter', CLAUDE_MEM_OPENROUTER_BASE_URL: 'https://api.deepseek.com', CLAUDE_MEM_OPENROUTER_API_KEY: 'sk-1' }, { credential: none })).toBeNull();
-    expect(jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter', CLAUDE_MEM_OPENROUTER_BASE_URL: 'https://cmem.ai/api/inference/v1', CLAUDE_MEM_OPENROUTER_API_KEY: 'sk-or-1' }, { credential: none })).toBeNull();
-    expect(jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter', CLAUDE_MEM_OPENROUTER_BASE_URL: '', CLAUDE_MEM_OPENROUTER_API_KEY: `cm_pro_${'b'.repeat(24)}` }, { credential: none })).toBeNull();
-    expect(jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter' }, { credential: none })).toBeNull();
-    // A pool-only install (no primary key) uses the first pool key off the gateway; never on it.
-    expect((jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter', CLAUDE_MEM_OPENROUTER_API_KEYS: 'sk-or-pool-1, sk-or-pool-2' }, { credential: none, fetchImpl: undefined }) as any)?.url).toBe(OPENROUTER_DECISIONS_URL);
-    expect(jevClientFromSettings({ CLAUDE_MEM_PROVIDER: 'openrouter', CLAUDE_MEM_OPENROUTER_BASE_URL: 'https://cmem.ai/api/inference/v1', CLAUDE_MEM_OPENROUTER_API_KEYS: 'sk-or-pool-1' }, { credential: none })).toBeNull();
+  it('requires an explicit bound Decisions endpoint and never follows a redirect', async () => {
+    const requests: RequestInit[] = [];
+    const fetchImpl = (async (_url, init) => {
+      requests.push(init!);
+      return new Response(null, { status: 307, headers: { Location: 'https://wrong.example.invalid/decisions' } });
+    }) as typeof fetch;
+    const options = { fetchImpl };
+    const configured = { default: localProfile, requestJudge: decision };
+    expect(() => jevClientFromSelection(resolveMainProfiles(configured, {}).requestJudge, options)).toThrow('credential_unavailable');
+    const wrongEndpoint = resolveMainProfiles({ ...configured, requestJudge: { ...decision, endpoint: 'https://cmem.ai/decisions' } }, decisionEnv);
+    expect(() => jevClientFromSelection(wrongEndpoint.requestJudge, options)).toThrow('invalid_profile');
+    expect(requests).toHaveLength(0);
+    await expect(jevClientFromSelection(judgeSelection, options).decide({ ask: 'synthetic' }, {})).rejects.toThrow('decision_http_307');
+    expect(requests).toHaveLength(1);
+    expect(requests[0].redirect).toBe('error');
+    expect(new Headers(requests[0].headers).get('authorization')).toBe('Bearer fixture-judge-key');
+    expect(JSON.parse(String(requests[0].body)).model).toBe(decision.model);
   });
 
   it('the refresh runs the judge before any agent batch: a placed conversation never reaches the grouping prompt', async () => {

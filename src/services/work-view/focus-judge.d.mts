@@ -13,7 +13,6 @@ export interface FocusJudge { name: string; pick(request: ConversationContext & 
 
 export function askFocusArea(client: JevClient, request: unknown, areas: FocusAreaChoice[]): Promise<FocusPick>;
 export function jevFocusJudge(client: JevClient): FocusJudge;
-export function configuredFocusJudge(settingsPath?: string): FocusJudge | null;
 export function requestContexts(database: LedgerDatabase, ledger: Record<string, any>, requests: Array<Pick<FocusRequestRecord, 'anchor' | 'title'>>): Map<string, ConversationContext & { title: string }>;
 export function judgeFocusBatch(options: { judge: FocusJudge; input: FocusInput; database: LedgerDatabase; ledger: Record<string, any> }): Promise<FocusJudgement[]>;
 export function placesAlone(result: Pick<FocusJudgement, 'focusAreaId' | 'confidence'>, threshold?: number | null): boolean;

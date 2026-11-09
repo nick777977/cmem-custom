@@ -692,33 +692,6 @@ ${err.stack ?? ""}
 });
 
 // src/shared/openrouter-base-url.ts
-function isHttpUrl(value) {
-  try {
-    return HTTP_URL_PROTOCOLS.has(new URL(value).protocol);
-  } catch {
-    return false;
-  }
-}
-function warnUnusableBaseUrl(value) {
-  if (lastWarnedBaseUrl === value) return;
-  lastWarnedBaseUrl = value;
-  logger.warn("SDK", "CLAUDE_MEM_OPENROUTER_BASE_URL is not an http(s) URL; requests to it will fail until it is fixed", { baseUrl: value });
-}
-function resolveOpenRouterChatCompletionsUrl(baseUrl) {
-  const trimmed = (baseUrl ?? "").trim();
-  if (!trimmed) {
-    return DEFAULT_OPENROUTER_API_URL;
-  }
-  if (!isHttpUrl(trimmed)) {
-    warnUnusableBaseUrl(trimmed);
-    const normalized = trimmed.replace(TRAILING_SLASHES, "");
-    return normalized.toLowerCase().endsWith(CHAT_COMPLETIONS_PATH) ? normalized : `${normalized}${CHAT_COMPLETIONS_PATH}`;
-  }
-  const url = new URL(trimmed);
-  const path3 = url.pathname.replace(TRAILING_SLASHES, "");
-  url.pathname = path3.toLowerCase().endsWith(CHAT_COMPLETIONS_PATH) ? path3 : `${path3}${CHAT_COMPLETIONS_PATH}`;
-  return url.href;
-}
 function isOpenRouterApiUrl(apiUrl) {
   try {
     return new URL(apiUrl).hostname.toLowerCase() === "openrouter.ai";
@@ -726,16 +699,10 @@ function isOpenRouterApiUrl(apiUrl) {
     return false;
   }
 }
-var DEFAULT_OPENROUTER_API_URL, CHAT_COMPLETIONS_PATH, HTTP_URL_PROTOCOLS, TRAILING_SLASHES, lastWarnedBaseUrl;
 var init_openrouter_base_url = __esm({
   "src/shared/openrouter-base-url.ts"() {
     "use strict";
     init_logger();
-    DEFAULT_OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions";
-    CHAT_COMPLETIONS_PATH = "/chat/completions";
-    HTTP_URL_PROTOCOLS = /* @__PURE__ */ new Set(["http:", "https:"]);
-    TRAILING_SLASHES = /\/+$/;
-    lastWarnedBaseUrl = null;
   }
 });
 
@@ -2386,195 +2353,178 @@ var init_my_focus = __esm({
   }
 });
 
-// src/shared/gemini-error-details.ts
-var init_gemini_error_details = __esm({
-  "src/shared/gemini-error-details.ts"() {
-    "use strict";
-  }
-});
-
-// src/shared/api-key-pool.ts
-function parseApiKeyList(raw) {
-  const parts = Array.isArray(raw) ? raw.flatMap((entry) => typeof entry === "string" ? splitKeyString(entry) : []) : typeof raw === "string" ? splitKeyString(raw) : [];
-  const seen = /* @__PURE__ */ new Set();
-  const keys = [];
-  for (const part of parts) {
-    if (seen.has(part)) continue;
-    seen.add(part);
-    keys.push(part);
-    if (keys.length >= MAX_POOL_KEYS) break;
-  }
-  return keys;
+// src/services/worker/model-profiles.ts
+import { isAbsolute } from "node:path";
+function isRecord2(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
 }
-function splitKeyString(raw) {
-  return raw.split(/[\s,;]+/).map((part) => part.trim()).filter((part) => part.length > 0);
+function matches(value, pattern) {
+  return typeof value === "string" && pattern.test(value);
 }
-function buildKeyPool(primary, listRaw) {
-  const listed = parseApiKeyList(listRaw);
-  const primaryTrimmed = primary.trim();
-  if (!primaryTrimmed) return listed;
-  return parseApiKeyList([primaryTrimmed, ...listed]);
+function absolutePath(value) {
+  return typeof value === "string" && !/[\x00-\x1f]/.test(value) && isAbsolute(value) && (process.platform !== "win32" || /^[a-z]:[\\/]/i.test(value));
 }
-var MAX_POOL_KEYS, KEY_COOLDOWN_MS, RATE_LIMIT_COOLDOWN_MAX_MS, ROTATE_KINDS, KEY_ROTATE_KINDS;
-var init_api_key_pool = __esm({
-  "src/shared/api-key-pool.ts"() {
-    "use strict";
-    init_paths();
-    init_logger();
-    init_gemini_error_details();
-    MAX_POOL_KEYS = 32;
-    KEY_COOLDOWN_MS = {
-      rate_limit: 6e4,
-      quota_exhausted: 30 * 6e4,
-      auth_invalid: 6 * 60 * 6e4
-    };
-    RATE_LIMIT_COOLDOWN_MAX_MS = 15 * 6e4;
-    ROTATE_KINDS = /* @__PURE__ */ new Set(["rate_limit", "quota_exhausted", "auth_invalid"]);
-    KEY_ROTATE_KINDS = [...ROTATE_KINDS];
-  }
-});
-
-// src/shared/oauth-token.ts
-import { execFile } from "child_process";
-import { promisify } from "util";
-var execFileAsync;
-var init_oauth_token = __esm({
-  "src/shared/oauth-token.ts"() {
-    "use strict";
-    init_paths();
-    init_SettingsDefaultsManager();
-    init_logger();
-    execFileAsync = promisify(execFile);
-  }
-});
-
-// src/shared/EnvManager.ts
-import { existsSync as existsSync9, readFileSync as readFileSync7, writeFileSync as writeFileSync2, mkdirSync as mkdirSync4, chmodSync } from "fs";
-import { parseEnv } from "util";
-function envFilePath() {
-  return process.env.CLAUDE_MEM_ENV_FILE ?? paths.envFile();
+function executablePath(value) {
+  return absolutePath(value) && (process.platform !== "win32" || /\.exe$/i.test(value));
 }
-function parseEnvFile(content) {
-  return parseEnv(stripUtf8Bom(content));
-}
-function loadClaudeMemEnv() {
-  const envFile = envFilePath();
-  if (!existsSync9(envFile)) {
-    return {};
-  }
+function endpointUrl(value) {
+  if (typeof value !== "string") return;
   try {
-    const content = readFileSync7(envFile, "utf-8");
-    const parsed = parseEnvFile(content);
-    const result = {};
-    for (const key of CREDENTIAL_KEYS) {
-      if (parsed[key]) result[key] = parsed[key];
-    }
-    return result;
-  } catch (error) {
-    logger.warn("ENV", "Failed to load .env file", { path: envFile }, error instanceof Error ? error : new Error(String(error)));
-    return {};
-  }
-}
-function getCredential(key) {
-  const env = loadClaudeMemEnv();
-  return env[key];
-}
-var CREDENTIAL_KEYS;
-var init_EnvManager = __esm({
-  "src/shared/EnvManager.ts"() {
-    "use strict";
-    init_logger();
-    init_paths();
-    init_atomic_json();
-    init_SettingsDefaultsManager();
-    init_oauth_token();
-    CREDENTIAL_KEYS = [
-      "ANTHROPIC_API_KEY",
-      "ANTHROPIC_FALLBACK_API_KEY",
-      "ANTHROPIC_BASE_URL",
-      "ANTHROPIC_AUTH_TOKEN",
-      "GEMINI_API_KEY",
-      "GEMINI_API_KEYS",
-      "OPENROUTER_API_KEY",
-      "OPENROUTER_API_KEYS",
-      "OPENAI_COMPAT_API_KEY",
-      "OPENAI_COMPAT_API_KEYS"
-    ];
-  }
-});
-
-// src/shared/pro-promo.ts
-var PRO_TRIAL_MAX_DAYS, PRO_TRIAL_LABEL, PLAN_USAGE_GAIN_PERCENT, PRO_TRIAL_PITCH;
-var init_pro_promo = __esm({
-  "src/shared/pro-promo.ts"() {
-    "use strict";
-    PRO_TRIAL_MAX_DAYS = 30;
-    PRO_TRIAL_LABEL = `${PRO_TRIAL_MAX_DAYS} Day Free Trial`;
-    PLAN_USAGE_GAIN_PERCENT = 100;
-    PRO_TRIAL_PITCH = `${PRO_TRIAL_LABEL} \u2014 memory runs off-plan. Get up to ${PLAN_USAGE_GAIN_PERCENT}% more usage from your plan`;
-  }
-});
-
-// src/shared/relayed-text.ts
-var init_relayed_text = __esm({
-  "src/shared/relayed-text.ts"() {
-    "use strict";
-  }
-});
-
-// src/shared/cmem-gateway.ts
-function cmemProOrigin() {
-  return (process.env.CMEM_PRO_ORIGIN?.trim() || "https://cmem.ai").replace(/\/+$/, "");
-}
-function isCmemGatewayUrl(url) {
-  const trimmed = (url ?? "").trim();
-  if (!trimmed) return false;
-  try {
-    const gateway = new URL(cmemProOrigin());
-    const candidate = new URL(trimmed);
-    if (gateway.protocol !== "http:" && gateway.protocol !== "https:" || candidate.origin !== gateway.origin) {
-      return false;
-    }
-    const gatewayPath = gateway.pathname.replace(/\/+$/, "");
-    return gatewayPath === "" || candidate.pathname === gatewayPath || candidate.pathname.startsWith(`${gatewayPath}/`);
+    const url = new URL(value);
+    const host = url.hostname.replace(/\.$/, "");
+    if (url.username || url.password || url.search || url.hash || host === "cmem.ai" || host.endsWith(".cmem.ai")) return;
+    if (url.protocol === "https:" || url.protocol === "http:" && host === "127.0.0.1") return url;
   } catch {
-    return false;
+    return;
   }
 }
-function isCmemMemoryKey(apiKey) {
-  return (apiKey ?? "").trim().startsWith("cm_pro_");
+function resolveRoute(input, env) {
+  const { provider, auth, endpoint, keyEnv, executable, authHome, awsPath, awsProfile, awsConfigFile, region, model } = input;
+  switch (provider) {
+    case "claude":
+      if (!executablePath(executable) || endpoint !== void 0) return "invalid_profile";
+      if (auth === "aws-sso") {
+        if (!matches(model, /^(?:[a-z]{2,}-)?(?:[a-z]+\.)?anthropic\.claude-[\w.-]+(?::\d+)?$/) && !matches(model, /^arn:aws(?:-[a-z]+)?:bedrock:[a-z0-9-]+:\d{12}:(?:application-)?inference-profile\/[\w.:-]+$/)) return "invalid_profile";
+        if (!executablePath(awsPath) || !absolutePath(awsConfigFile) || !matches(awsProfile, /^[\w.-]{1,80}$/) || !matches(region, /^[a-z]{2}(?:-[a-z]+)+-\d+$/)) return "invalid_profile";
+        return { provider, auth, executable, awsPath, awsProfile, awsConfigFile, region };
+      }
+      if (!matches(model, /^claude-[\w.-]+-\d[\w.-]*$/) || model.endsWith("-latest")) return "invalid_profile";
+      if (auth === "claude-login") {
+        return absolutePath(authHome) ? { provider, auth, authHome, executable } : "invalid_profile";
+      }
+      if (auth !== "api-key") return "unsupported_route";
+      if (!matches(keyEnv, KEY_REFERENCE)) return "invalid_profile";
+      const claudeKey = selectedKey(env, keyEnv, input);
+      return claudeKey && endpointUrl(env[`${keyEnv}_ENDPOINT`])?.href === "https://api.anthropic.com/" ? { provider, auth, apiKey: claudeKey, keyEnv, executable } : "credential_unavailable";
+    case "codex":
+      if (auth !== "chatgpt") return "unsupported_route";
+      return executablePath(executable) && absolutePath(authHome) ? { provider, auth, executable, authHome } : "invalid_profile";
+    case "openai-compatible":
+    case "openrouter":
+    case "gemini":
+      if (auth === "none" && provider === "openai-compatible") {
+        const url2 = endpointUrl(endpoint);
+        return url2?.hostname === "127.0.0.1" ? { provider, auth, endpoint: url2.href, apiKey: "" } : "unsupported_route";
+      }
+      if (auth !== "api-key") return "unsupported_route";
+      break;
+    default:
+      return "unsupported_route";
+  }
+  if (!matches(keyEnv, KEY_REFERENCE)) return "invalid_profile";
+  const apiKey = selectedKey(env, keyEnv, input);
+  if (!apiKey) return "credential_unavailable";
+  if (provider === "gemini") {
+    const googleEndpoint = "https://generativelanguage.googleapis.com/";
+    if (endpoint !== void 0 || !matches(model, /^gemini-[a-z0-9][a-z0-9.-]*$/)) return "invalid_profile";
+    return endpointUrl(env[`${keyEnv}_ENDPOINT`])?.href === googleEndpoint ? { provider, auth, endpoint: googleEndpoint, apiKey } : "credential_unavailable";
+  }
+  const url = endpointUrl(endpoint);
+  if (!url) return "invalid_profile";
+  if (endpointUrl(env[`${keyEnv}_ENDPOINT`])?.href !== url.href) return "credential_unavailable";
+  return { provider, auth, endpoint: url.href, apiKey };
 }
-function isKeyAllowedForEndpoint(apiUrl, apiKey) {
-  return isCmemGatewayUrl(apiUrl) === isCmemMemoryKey(apiKey);
+function selectedKey(env, keyEnv, input) {
+  const key = env[keyEnv];
+  if (!key || /[\s,]/.test(key) || key.startsWith("cm_pro_") || key === input.model || key === input.id) return;
+  return key;
 }
-var init_cmem_gateway = __esm({
-  "src/shared/cmem-gateway.ts"() {
+function resolveProfile(input, env, inherited) {
+  const paused = (issue) => ({ state: "paused", issue, inherited });
+  if (!isRecord2(input) || !matches(input.id, /^[a-z0-9][a-z0-9_-]{0,63}$/) || !matches(input.model, /^[A-Za-z0-9][A-Za-z0-9._:/-]{0,239}$/)) return paused("invalid_profile");
+  if (/^(?:auto|default|latest|openrouter\/(?:auto|free))$/i.test(input.model)) return paused("unsupported_route");
+  const route = resolveRoute(input, env);
+  if (typeof route === "string") return paused(route);
+  const allowed = /* @__PURE__ */ new Set(["id", "provider", "model", "auth", ...Object.keys(route)]);
+  allowed.delete("apiKey");
+  if (route.auth === "api-key") allowed.add("keyEnv");
+  if (route.provider === "gemini") allowed.delete("endpoint");
+  if (Object.keys(input).some((key) => !allowed.has(key))) return paused("invalid_profile");
+  return { state: "configured", profile: Object.freeze({ ...route, id: input.id, model: input.model }), inherited };
+}
+function isDecisionsProfile(profile) {
+  return (profile.provider === "openrouter" || profile.provider === "openai-compatible") && new URL(profile.endpoint).pathname.endsWith("/decisions");
+}
+function supportsRole(role, profile) {
+  if (role === "telegramWrapup") return false;
+  if (role === "requestJudge" || role === "focusJudge") return isDecisionsProfile(profile);
+  if (role === "knowledge") return profile.provider === "claude";
+  return !isDecisionsProfile(profile);
+}
+function resolveMainProfiles(raw, env) {
+  const absent = raw === void 0 || raw === "";
+  let parsed = raw;
+  if (typeof raw === "string" && !absent) {
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      parsed = null;
+    }
+  }
+  const input = isRecord2(parsed) && Object.keys(parsed).every((key) => key === "default" || MODEL_ROLES.some((role) => role === key)) ? parsed : void 0;
+  let defaultSelection = { state: "paused", issue: input || absent ? "profile_required" : "invalid_profile", inherited: true };
+  if (input && Object.hasOwn(input, "default")) {
+    defaultSelection = resolveProfile(input.default, env, true);
+    if (defaultSelection.state === "configured" && isDecisionsProfile(defaultSelection.profile)) {
+      defaultSelection = { state: "paused", issue: "unsupported_capability", inherited: true };
+    }
+  }
+  const roleSelection = (role) => {
+    const inherited = !input || !Object.hasOwn(input, role);
+    if (!inherited && input[role] === "off" && BACKGROUND_MODEL_ROLES.some((optional) => optional === role)) {
+      return { state: "paused", issue: "disabled", inherited: false };
+    }
+    const selected = defaultSelection.state === "configured" && !inherited ? resolveProfile(input[role], env, false) : defaultSelection;
+    if (selected.state === "configured" && !supportsRole(role, selected.profile)) {
+      return { state: "paused", issue: "unsupported_capability", inherited: selected.inherited };
+    }
+    return selected;
+  };
+  return Object.fromEntries(MODEL_ROLES.map((role) => [role, roleSelection(role)]));
+}
+function readMainProfiles(settingsPath = paths.settings(), env = process.env) {
+  let settings = {};
+  let raw;
+  try {
+    const document = readJsonFileWithBom(settingsPath);
+    if (!isRecord2(document)) throw new Error("Invalid settings document");
+    settings = settingsTarget(document);
+    raw = settings[MODEL_PROFILES_SETTING];
+  } catch (error) {
+    if (error?.code !== "ENOENT") raw = null;
+  }
+  const snapshot = resolveMainProfiles(env[MODEL_PROFILES_SETTING] ?? raw, env);
+  const legacyCopy = env.CLAUDE_MEM_WORK_VIEW_COPY_PROVIDER ?? settings.CLAUDE_MEM_WORK_VIEW_COPY_PROVIDER;
+  return snapshot.copy.inherited && typeof legacyCopy === "string" && legacyCopy.trim() === "off" ? { ...snapshot, copy: { state: "paused", issue: "disabled", inherited: false } } : snapshot;
+}
+var MODEL_PROFILES_SETTING, KEY_REFERENCE, MAIN_MODEL_ROLES, BACKGROUND_MODEL_ROLES, MODEL_ROLES;
+var init_model_profiles = __esm({
+  "src/services/worker/model-profiles.ts"() {
     "use strict";
+    init_atomic_json();
     init_paths();
-    init_SettingsDefaultsManager();
     init_settings_document();
-    init_hook_io();
-    init_pro_promo();
-    init_relayed_text();
+    MODEL_PROFILES_SETTING = "CLAUDE_MEM_MODEL_PROFILES";
+    KEY_REFERENCE = /^CMEM_PROFILE_KEY_[A-Z0-9_]{1,96}(?<!_ENDPOINT)$/;
+    MAIN_MODEL_ROLES = ["observer", "summary", "compression"];
+    BACKGROUND_MODEL_ROLES = ["refresh", "copy", "requestJudge", "focusJudge", "knowledge", "telegramWrapup"];
+    MODEL_ROLES = [...MAIN_MODEL_ROLES, ...BACKGROUND_MODEL_ROLES];
   }
 });
 
 // src/services/work-view/request-judge.mjs
 var request_judge_exports = {};
 __export(request_judge_exports, {
-  JEV_MODEL: () => JEV_MODEL,
   JOIN_THRESHOLD: () => JOIN_THRESHOLD,
   MAX_CANDIDATE_REQUESTS: () => MAX_CANDIDATE_REQUESTS,
   MAX_DECISION_BODY_BYTES: () => MAX_DECISION_BODY_BYTES,
-  OPENROUTER_DECISIONS_URL: () => OPENROUTER_DECISIONS_URL,
   SUGGEST_THRESHOLD: () => SUGGEST_THRESHOLD,
   answerOf: () => answerOf,
   bandFor: () => bandFor,
   configuredJudge: () => configuredJudge,
   contextReader: () => contextReader,
   decideSuggestion: () => decideSuggestion,
-  jevClient: () => jevClient,
-  jevClientFromSettings: () => jevClientFromSettings,
+  jevClientFromSelection: () => jevClientFromSelection,
   jevJudge: () => jevJudge,
   judgeConversation: () => judgeConversation,
   routeUndecided: () => routeUndecided,
@@ -2632,7 +2582,7 @@ function jevJudge(client) {
       };
       if (pick.choice === "none") return { requestId: null, confidence: probability("none"), evidence: `Judge jev (${model}): none of ${considered} is continued (p ${probability("none").toFixed(2)}).` };
       const request = candidates.find((candidate) => candidate.groupId === pick.choice);
-      if (!request) throw new Error(`Jev picked "${pick.choice}", which was not offered.`);
+      if (!request) throw new Error("Jev picked an unavailable request.");
       const checked = await client.decide({ request: request.context, conversation: conversation.context }, { same: { type: "noul", instructions: CHECK_INSTRUCTIONS, criteria: CHECK_CRITERIA } });
       const score = answerOf(checked, "same", "noul").noul;
       if (!Number.isFinite(score)) throw new Error("Jev's check gave no score.");
@@ -2640,53 +2590,47 @@ function jevJudge(client) {
     }
   };
 }
-function jevClient({ url, apiKey, model = null, fetchImpl = fetch }) {
-  if (typeof url !== "string" || !url || typeof apiKey !== "string" || !apiKey) throw new TypeError("A Jev client needs a url and an apiKey.");
+function jevClientFromSelection(selection, { fetchImpl = fetch, signal } = {}) {
+  if (selection.state !== "configured") throw new Error(selection.issue);
+  const profile = selection.profile;
+  if (!isDecisionsProfile(profile)) throw new Error("unsupported_capability");
+  const { endpoint: url, apiKey, model } = profile;
   return {
     name: "jev",
     url,
-    model: model ?? JEV_MODEL,
+    model,
     async decide(state, questions) {
-      const body = JSON.stringify(model ? { model, state, questions } : { state, questions });
-      const bytes = Buffer.byteLength(body, "utf8");
-      if (bytes > MAX_DECISION_BODY_BYTES) throw new Error(`Jev request is ${bytes} bytes; the decisions gateway takes at most ${MAX_DECISION_BODY_BYTES}. It is not trimmed: this conversation goes to the grouping agent instead.`);
+      const body = JSON.stringify({ model, state, questions });
+      if (Buffer.byteLength(body, "utf8") > MAX_DECISION_BODY_BYTES) throw new Error("decision_body_too_large");
+      const headers = { "Content-Type": "application/json" };
+      if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
+      const deadline = AbortSignal.timeout(DECISION_TIMEOUT_MS);
+      const requestSignal = signal ? AbortSignal.any([signal, deadline]) : deadline;
+      requestSignal.throwIfAborted();
       let response;
       try {
-        response = await fetchImpl(url, { method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" }, body, signal: AbortSignal.timeout(DECISION_TIMEOUT_MS) });
-      } catch (error) {
-        throw new Error(`Jev request failed: ${error instanceof Error ? error.message : String(error)}`);
-      }
-      const text2 = await response.text();
-      let parsed = null;
-      try {
-        parsed = JSON.parse(text2);
+        response = await fetchImpl(url, { method: "POST", headers, body, redirect: "error", signal: requestSignal });
       } catch {
+        throw new Error("decision_transport_failed");
       }
       if (!response.ok) {
-        const failure = parsed?.error && typeof parsed.error === "object" ? parsed.error : {};
-        throw new Error(`Jev answered ${response.status}${failure.code ? ` ${failure.code}` : ""}: ${failure.message ?? text2.slice(0, 200) ?? "no body"}${failure.request_id ? ` (request ${failure.request_id})` : ""}`);
+        await response.body?.cancel().catch(() => {
+        });
+        throw new Error(`decision_http_${response.status}`);
       }
-      if (!parsed?.answers || typeof parsed.answers !== "object") throw new Error("Jev answered without answers.");
-      return parsed;
+      const parsed = await response.json().catch(() => null);
+      if (!parsed?.answers || typeof parsed.answers !== "object") throw new Error("invalid_decision_reply");
+      return { answers: parsed.answers, model };
     }
   };
 }
-function jevClientFromSettings(settings, { credential = (name) => getCredential(name), fetchImpl } = {}) {
-  if (settings?.CLAUDE_MEM_PROVIDER !== "openrouter") return null;
-  const apiKey = String(settings.CLAUDE_MEM_OPENROUTER_API_KEY ?? "").trim() || credential("OPENROUTER_API_KEY") || "";
-  const base = String(settings.CLAUDE_MEM_OPENROUTER_BASE_URL ?? "").trim();
-  if (isCmemGatewayUrl(base)) {
-    const url = `${base.replace(/\/+$/, "")}/decisions`;
-    return apiKey && isKeyAllowedForEndpoint(url, apiKey) ? jevClient({ url, apiKey, fetchImpl }) : null;
-  }
-  if (!isOpenRouterApiUrl(resolveOpenRouterChatCompletionsUrl(base))) return null;
-  const pool = buildKeyPool(apiKey, settings.CLAUDE_MEM_OPENROUTER_API_KEYS || credential("OPENROUTER_API_KEYS") || "");
-  const key = pool.find((candidate) => isKeyAllowedForEndpoint(OPENROUTER_DECISIONS_URL, candidate));
-  return key ? jevClient({ url: OPENROUTER_DECISIONS_URL, apiKey: key, model: JEV_MODEL, fetchImpl }) : null;
-}
-function configuredJudge(settingsPath = USER_SETTINGS_PATH) {
-  const client = jevClientFromSettings(SettingsDefaultsManager.loadFromFile(settingsPath, true, { readOnly: true }));
-  return client ? jevJudge(client) : null;
+function configuredJudge(settingsPath) {
+  const selection = readMainProfiles(settingsPath).requestJudge;
+  if (selection.state === "configured") return jevJudge(jevClientFromSelection(selection));
+  if (selection.issue === "disabled") return null;
+  return { name: "jev", async judge() {
+    throw new Error(`requestJudge: ${selection.issue}`);
+  } };
 }
 async function judgeConversation(conversation, openRequests, judge) {
   const pick = await judge.judge(conversation, openRequests);
@@ -2830,16 +2774,11 @@ function decideSuggestion({ dir, database, conversationKey: conversationKey2, ac
   writeJsonAtomic(join8(dir, "request-groups.json"), next);
   return { status: next.suggestions[conversationKey2].status, requestId: next.conversations[conversationKey2] ?? null };
 }
-var DAY_MS, iso2, JOIN_THRESHOLD, SUGGEST_THRESHOLD, MAX_CANDIDATE_REQUESTS, MAX_DECISION_BODY_BYTES, DECISION_TIMEOUT_MS, JEV_MODEL, OPENROUTER_DECISIONS_URL, CONTEXT_PROMPTS, CONTEXT_PROMPT_CHARS, CONTEXT_RECORDED_TITLES, CONTEXT_TITLE_CHARS, PICK_INSTRUCTIONS, CHECK_INSTRUCTIONS, CHECK_CRITERIA, clean, rulesJudge;
+var DAY_MS, iso2, JOIN_THRESHOLD, SUGGEST_THRESHOLD, MAX_CANDIDATE_REQUESTS, MAX_DECISION_BODY_BYTES, DECISION_TIMEOUT_MS, CONTEXT_PROMPTS, CONTEXT_PROMPT_CHARS, CONTEXT_RECORDED_TITLES, CONTEXT_TITLE_CHARS, PICK_INSTRUCTIONS, CHECK_INSTRUCTIONS, CHECK_CRITERIA, clean, rulesJudge;
 var init_request_judge = __esm({
   "src/services/work-view/request-judge.mjs"() {
     "use strict";
-    init_api_key_pool();
-    init_EnvManager();
-    init_cmem_gateway();
-    init_openrouter_base_url();
-    init_paths();
-    init_SettingsDefaultsManager();
+    init_model_profiles();
     init_request_groups();
     init_request_projection();
     DAY_MS = 864e5;
@@ -2849,8 +2788,6 @@ var init_request_judge = __esm({
     MAX_CANDIDATE_REQUESTS = 19;
     MAX_DECISION_BODY_BYTES = 64 * 1024;
     DECISION_TIMEOUT_MS = 6e4;
-    JEV_MODEL = "typesafe/jev-1.14";
-    OPENROUTER_DECISIONS_URL = "https://openrouter.ai/api/alpha/decisions";
     CONTEXT_PROMPTS = 3;
     CONTEXT_PROMPT_CHARS = 250;
     CONTEXT_RECORDED_TITLES = 8;
@@ -2876,7 +2813,7 @@ var init_request_judge = __esm({
 // src/services/work-view/request-groups.mjs
 import { Database } from "bun:sqlite";
 import { createHash } from "node:crypto";
-import { mkdirSync as mkdirSync5, readFileSync as readFileSync8, readdirSync, renameSync as renameSync2, statSync as statSync5, writeFileSync as writeFileSync3 } from "node:fs";
+import { mkdirSync as mkdirSync4, readFileSync as readFileSync7, readdirSync, renameSync as renameSync2, statSync as statSync5, writeFileSync as writeFileSync2 } from "node:fs";
 import { homedir as homedir7 } from "node:os";
 import { join as join9 } from "node:path";
 function placeholders(values) {
@@ -3024,16 +2961,16 @@ function readGoals(database) {
 }
 function readJson(path3, fallback) {
   try {
-    return JSON.parse(readFileSync8(path3, "utf8"));
+    return JSON.parse(readFileSync7(path3, "utf8"));
   } catch (error) {
     if (error.code === "ENOENT") return fallback;
     throw error;
   }
 }
 function writeJsonAtomic(path3, value) {
-  mkdirSync5(join9(path3, ".."), { recursive: true });
+  mkdirSync4(join9(path3, ".."), { recursive: true });
   const temp = `${path3}.tmp`;
-  writeFileSync3(temp, `${JSON.stringify(value, null, 2)}
+  writeFileSync2(temp, `${JSON.stringify(value, null, 2)}
 `, { mode: 384 });
   renameSync2(temp, path3);
 }
@@ -3442,7 +3379,7 @@ function refreshNeeds({ dir = LEDGER_DIR, database, now = Date.now(), days = 14,
   return { due: due.length, ungrouped, goalsStale, unplaced: queued.length, otherChanged, needed: Boolean(due.length || ungrouped || goalsStale || queued.length || otherChanged) };
 }
 function readInput(source) {
-  return JSON.parse(readFileSync8(source === "-" ? 0 : source, "utf8"));
+  return JSON.parse(readFileSync7(source === "-" ? 0 : source, "utf8"));
 }
 function textOption(args, name) {
   const index = args.indexOf(`--${name}`);

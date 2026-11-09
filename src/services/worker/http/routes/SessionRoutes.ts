@@ -15,7 +15,7 @@ import { OpenRouterProvider } from '../../OpenRouterProvider.js';
 import { OpenAICompatProvider } from '../../OpenAICompatProvider.js';
 import type { CodexProvider } from '../../CodexProvider.js';
 import { claudeQuotaStandIn } from '../../../../shared/claude-fallback-readiness.js';
-import { getSelectedProvider, recordCmemFallbackIfEligible, releaseCmemGatewayProbe, selectProviderForGenerator, type SelectableProvider } from '../../provider-dispatch.js';
+import { getSelectedProvider, releaseCmemGatewayProbe, selectProviderForGenerator, type SelectableProvider } from '../../provider-dispatch.js';
 import type { WorkerService } from '../../../worker-service.js';
 import { BaseRouteHandler } from '../BaseRouteHandler.js';
 import { SessionEventBroadcaster } from '../../events/SessionEventBroadcaster.js';
@@ -62,7 +62,6 @@ import {
   claudeCliSelfHealAttemptsInWindow,
   SELF_HEAL_MAX_ATTEMPTS,
 } from '../../stale-spawn-recovery.js';
-import type { TelegramWrapupFormatterInput } from '../../../integrations/TelegramWrapupNotifier.js';
 
 const MAX_USER_PROMPT_BYTES = 256 * 1024;
 
@@ -97,7 +96,6 @@ export class SessionRoutes extends BaseRouteHandler {
     private mainProfiles?: MainWorkerProfiles,
   ) {
     super();
-    if (!mainProfiles) this.sessionManager.setTelegramWrapupFormatter?.(this.formatTelegramWrapup);
   }
 
   /**
@@ -145,43 +143,6 @@ export class SessionRoutes extends BaseRouteHandler {
     void this.workerService.shutdown('restart');
     return true;
   }
-
-  private formatTelegramWrapup = async (input: TelegramWrapupFormatterInput): Promise<string> => {
-    const activeSession = this.sessionManager.getSession(input.sessionDbId);
-    const selection = activeSession?.currentProvider
-      ? { provider: activeSession.currentProvider, gatewayProbeClaimId: null }
-      : selectProviderForGenerator();
-    const activeModelId = activeSession?.currentProvider ? activeSession.lastModelId : undefined;
-
-    try {
-      switch (selection.provider) {
-        case 'codex':
-          if (!this.codexAgent) throw new Error('Codex provider is not available');
-          return await this.codexAgent.formatTelegramWrapup(
-            input, activeModelId === 'codex-default' ? undefined : activeModelId,
-          );
-        case 'gemini':
-          return await this.geminiAgent.formatTelegramWrapup(input, activeModelId);
-        case 'openrouter':
-          return await this.openRouterAgent.formatTelegramWrapup(input, activeModelId);
-        case 'openai-compatible':
-          if (!this.openAICompatAgent) throw new Error('OpenAI-compatible provider is not available');
-          return await this.openAICompatAgent.formatTelegramWrapup(input, activeModelId);
-        default:
-          return await this.sdkAgent.formatTelegramWrapup(input, activeModelId);
-      }
-    } catch (error) {
-      // A wrap-up is a gateway request like any other: a terminal rejection
-      // records the fallback, and when this wrap-up holds the post-window
-      // re-probe claim, its failure keeps memory on Claude.
-      if (selection.provider === 'openrouter') {
-        recordCmemFallbackIfEligible(error, selection.gatewayProbeClaimId);
-      }
-      throw error;
-    } finally {
-      releaseCmemGatewayProbe(selection.gatewayProbeClaimId);
-    }
-  };
 
   /** Schedule retries through the normal provider gates and per-session mutex.
    * The count is attempts scheduled, not generators admitted by those gates.

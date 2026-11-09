@@ -52,7 +52,6 @@ import type { ClaudeCredential } from '../../shared/quota-cooldown.js';
 import { IDLE_TIMEOUT_MS } from './SessionMessageBuffer.js';
 import { optimizeObservationFields, buildFieldCompressionPrompt, type CompressedField, type FieldCompressor } from './field-optimizer.js';
 import { resolveFieldOptimizeTimeoutMs } from './retry.js';
-import { buildTelegramWrapupPrompt, type TelegramWrapupFormatterInput } from '../integrations/TelegramWrapupNotifier.js';
 import { telemetryBuffer } from '../telemetry/buffer.js';
 import { captureEvent } from '../telemetry/telemetry.js';
 import { clearDependencyStatus, recordClaudeCliSetupRequired, OBSERVER_DIR_UNUSABLE_CODE } from '../../shared/dependency-health.js';
@@ -1130,7 +1129,7 @@ export class ClaudeProvider {
     }
   }
 
-  async queryProfileTurn(prompt: string, session: ActiveSession, model: string, executable: string,
+  async queryProfileTurn(prompt: string, session: Pick<ActiveSession, 'sessionDbId' | 'contentSessionId' | 'project'>, model: string, executable: string,
     env: NodeJS.ProcessEnv, signal: AbortSignal): Promise<string> {
     return (await this.runStandaloneObserverPrompt(prompt, {
       sessionDbId: session.sessionDbId, contentSessionId: session.contentSessionId, project: session.project,
@@ -1161,27 +1160,6 @@ export class ClaudeProvider {
       claudePath,
     );
     return condensed ? { text: condensed, truncated: false } : null;
-  }
-
-  /** Format a stored summary through the same hardened Claude SDK path as summaries. */
-  async formatTelegramWrapup(
-    input: TelegramWrapupFormatterInput,
-    activeModelId?: string,
-  ): Promise<string> {
-    const claudePath = findClaudeExecutable('SDK');
-    const modelId = activeModelId ?? this.getSummaryModelId();
-    const text = await this.runStandaloneObserverPrompt(
-      buildTelegramWrapupPrompt(input.summaryText),
-      input,
-      modelId,
-      claudePath,
-    );
-    if (!text?.trim()) {
-      const error = new Error('Claude returned no text for the Telegram wrap-up');
-      logger.error('TELEGRAM', error.message, { sessionId: input.sessionDbId, model: modelId }, error);
-      throw error;
-    }
-    return text;
   }
 
   private async *createMessageGenerator(

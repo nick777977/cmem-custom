@@ -2,15 +2,13 @@
 // focus areas each request is part of. refresh-task.ts runs it on every focus-input batch when the install has Jev;
 // scripts/calibrate-focus-routing.mjs asks the same question of the requests the owner placed by hand.
 //
-// One Jev `choice` question per request over the kept areas plus `none`, through request-judge.mjs's client (the CMEM
-// Pro gateway or OpenRouter's Decisions API). More kept areas than one question takes are asked in sets, and when more
+// One Jev `choice` question per request over the kept areas plus `none`, through the selected Decisions endpoint.
+// More kept areas than one question takes are asked in sets, and when more
 // than one set picks an area a last question goes over just those winners. A refused or failed call leaves the request
 // unjudged with the reason; there are no retries and the state is never trimmed. While FOCUS_AUTO_PLACE_THRESHOLD is
 // null every pick is only a hint for the focus agent, which decides.
-import { USER_SETTINGS_PATH } from '../../shared/paths.js';
-import { SettingsDefaultsManager } from '../../shared/SettingsDefaultsManager.js';
 import { readCandidates } from './request-groups.mjs';
-import { answerOf, contextReader, jevClientFromSettings, MAX_CANDIDATE_REQUESTS } from './request-judge.mjs';
+import { answerOf, contextReader, MAX_CANDIDATE_REQUESTS } from './request-judge.mjs';
 
 /** The Jev confidence at or above which a pick is placed without the agent. Null: no pick places a request on its own.
  * Measured 2026-10-27: the live `my-focus` list held 0 owner placements (`placed_by: owner`), so nothing is labeled
@@ -72,12 +70,6 @@ export async function askFocusArea(client, request, areas) {
 }
 
 export const jevFocusJudge = (client) => ({ name: 'jev', pick: (request, areas) => askFocusArea(client, request, areas) });
-
-/** The focus judge this install can use (Jev on a CMEM Pro or OpenRouter install), or null: the agent places alone. */
-export function configuredFocusJudge(settingsPath = USER_SETTINGS_PATH) {
-  const client = jevClientFromSettings(SettingsDefaultsManager.loadFromFile(settingsPath, true, { readOnly: true }));
-  return client ? jevFocusJudge(client) : null;
-}
 
 /** The context Jev reads for a request: its anchor conversation as request-judge.mjs measured it, plus the title. */
 export function requestContexts(database, ledger, requests) {

@@ -1,11 +1,10 @@
 import type { LedgerDatabase } from './request-groups.mjs';
+import type { ProfileSelection } from '../worker/model-profiles.js';
 
 export const JOIN_THRESHOLD: number;
 export const SUGGEST_THRESHOLD: number;
 export const MAX_CANDIDATE_REQUESTS: number;
 export const MAX_DECISION_BODY_BYTES: number;
-export const JEV_MODEL: string;
-export const OPENROUTER_DECISIONS_URL: string;
 
 /** One conversation as Jev was measured with it: its worktree, start, first prompts and the titles the agent recorded. */
 export interface ConversationContext { worktree: string | null; started: string | null; asks: string[]; agent_recorded: string[] }
@@ -28,8 +27,7 @@ export interface JevClient { name: 'jev'; url: string; model: string; decide(sta
 export function answerOf(result: JevAnswer, id: string, type: string): any;
 export const rulesJudge: RequestJudge;
 export function jevJudge(client: JevClient): RequestJudge;
-export function jevClient(options: { url: string; apiKey: string; model?: string | null; fetchImpl?: typeof fetch }): JevClient;
-export function jevClientFromSettings(settings: Record<string, unknown> | null | undefined, options?: { credential?: (name: string) => string | undefined; fetchImpl?: typeof fetch }): JevClient | null;
+export function jevClientFromSelection(selection: ProfileSelection, options?: { fetchImpl?: typeof fetch; signal?: AbortSignal }): JevClient;
 /** The Jev judge this install can use, or null (then only code links route and the grouping agent decides the rest). */
 export function configuredJudge(settingsPath?: string): RequestJudge | null;
 export function bandFor(confidence: number): JudgeBand;

@@ -4,7 +4,7 @@ import type { PaidSendBudget } from './worker/paid-send-budget.js';
 import type { ClaudeCredential } from '../shared/quota-cooldown.js';
 
 export interface ConversationMessage {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   content: string;
   /**
    * Set on a generation's init or continuation prompt (openObserverGeneration).

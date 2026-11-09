@@ -13,7 +13,7 @@ import type { DatabaseManager } from './DatabaseManager.js';
 import type { SessionManager } from './SessionManager.js';
 import type { WorkerRef } from './agents/index.js';
 import { resolveContextWindowTokens } from './context-window.js';
-import { describeModelRole, readMainProfiles, type MainModelRole, type MainProfileSnapshot, type ModelProfile } from './model-profiles.js';
+import { describeModelRole, MAIN_MODEL_ROLES, MODEL_ROLES, readMainProfiles, type ModelRoleStatus, type MainModelRole, type MainProfileSnapshot, type ModelProfile, type ModelRole } from './model-profiles.js';
 import { OpenAICompatibleProvider, type ProfileRun, type ProfileTurnRequest, type ProviderQueryResult } from './OpenAICompatibleProvider.js';
 import { ClassifiedProviderError, isClassified } from './provider-errors.js';
 import type { SelectableProvider } from './provider-dispatch.js';
@@ -35,8 +35,8 @@ function setupFailure(message: string): ClassifiedProviderError {
   return new ClassifiedProviderError(message, { kind: 'setup_required', cause: null });
 }
 
-class RecordedProfileFailure extends ClassifiedProviderError {
-  constructor(role: MainModelRole, issue: string) {
+export class RecordedProfileFailure extends ClassifiedProviderError {
+  constructor(role: ModelRole, readonly issue: string) {
     super(`${role}: ${issue}`, { kind: 'setup_required', cause: null });
   }
 }
@@ -106,7 +106,9 @@ async function bedrockCredentials(profile: Extract<ModelProfile, { auth: 'aws-ss
   }
 }
 
-async function claudeEnv(profile: Extract<ModelProfile, { provider: 'claude' }>, signal: AbortSignal): Promise<NodeJS.ProcessEnv> {
+export async function prepareClaudeProfile(profile: Extract<ModelProfile, { provider: 'claude' }>, signal: AbortSignal): Promise<NodeJS.ProcessEnv> {
+  signal.throwIfAborted();
+  requireExecutable(profile.executable);
   const env = {
     ...nativeRuntimeEnv(),
     CLAUDE_CONFIG_DIR: join(paths.dataDir(), 'observer-profile-runtime'),
@@ -154,12 +156,12 @@ class ProfileClaudeProvider extends OpenAICompatibleProvider<{ apiKey: string; m
 
   override async queryProfile(profile: ModelProfile, request: ProfileTurnRequest): Promise<ProviderQueryResult> {
     if (profile.provider !== 'claude') throw setupFailure('Claude profile required');
-    requireExecutable(profile.executable);
-    const env = await claudeEnv(profile, request.signal);
+    const env = await prepareClaudeProfile(profile, request.signal);
     request.signal.throwIfAborted();
     const prompt = this.conversationToOpenAIMessages(request.history)
       .map(message => `${message.role.toUpperCase()}:\n${message.content}`).join('\n\n');
-    const content = await this.claude.queryProfileTurn(prompt, request.session, profile.model, profile.executable, env, request.signal);
+    const session = request.session ?? { sessionDbId: nextStandaloneSessionId(), contentSessionId: '', project: '' };
+    const content = await this.claude.queryProfileTurn(prompt, session, profile.model, profile.executable, env, request.signal);
     return { content };
   }
 }
@@ -167,9 +169,14 @@ class ProfileClaudeProvider extends OpenAICompatibleProvider<{ apiKey: string; m
 type ProfileAdapter = Pick<OpenAICompatibleProvider<{ apiKey: string; model: string }>, 'startProfileSession' | 'queryProfile'>;
 type Adapters = Record<SelectableProvider, ProfileAdapter>;
 
+let standaloneSessionId = 0;
+export function nextStandaloneSessionId(): number {
+  return --standaloneSessionId;
+}
+
 export class MainWorkerProfiles {
   private readonly adapters: Adapters;
-  private readonly failures = new Map<MainModelRole, { fingerprint: string; issue: string }>();
+  private readonly failures = new Map<ModelRole, { fingerprint: string; issue: string }>();
 
   constructor(db: DatabaseManager, sessions: SessionManager, claude: ClaudeProvider, adapters: Omit<Adapters, 'claude'>) {
     this.adapters = { ...adapters, claude: new ProfileClaudeProvider(db, sessions, claude) };
@@ -178,17 +185,20 @@ export class MainWorkerProfiles {
   snapshot = readMainProfiles;
 
   fingerprint(snapshot: MainProfileSnapshot): string {
-    return createHash('sha256').update(JSON.stringify(snapshot)).digest('hex');
+    return createHash('sha256').update(JSON.stringify(MAIN_MODEL_ROLES.map(role => snapshot[role]))).digest('hex');
   }
 
-  status() {
+  private roleFingerprint(snapshot: MainProfileSnapshot, role: ModelRole): string {
+    return createHash('sha256').update(JSON.stringify(snapshot[role])).digest('hex');
+  }
+
+  status(): Record<ModelRole, ModelRoleStatus & { lastFailure?: string }> {
     const snapshot = this.snapshot();
-    const fingerprint = this.fingerprint(snapshot);
-    const statusFor = (role: MainModelRole) => {
+    const statusFor = (role: ModelRole) => {
       const failure = this.failures.get(role);
-      return { ...describeModelRole(snapshot[role]), ...(failure?.fingerprint === fingerprint ? { lastFailure: failure.issue } : {}) };
+      return { ...describeModelRole(snapshot[role]), ...(failure?.fingerprint === this.roleFingerprint(snapshot, role) ? { lastFailure: failure.issue } : {}) };
     };
-    return { observer: statusFor('observer'), summary: statusFor('summary'), compression: statusFor('compression') };
+    return Object.fromEntries(MODEL_ROLES.map(role => [role, statusFor(role)])) as ReturnType<MainWorkerProfiles['status']>;
   }
 
   async startSession(snapshot: MainProfileSnapshot, session: ActiveSession, worker: WorkerRef): Promise<void> {
@@ -204,25 +214,39 @@ export class MainWorkerProfiles {
   }
 
   async send(snapshot: MainProfileSnapshot, role: MainModelRole, request: ProfileTurnRequest, worker: WorkerRef): Promise<ProviderQueryResult> {
+    return this.runRole(snapshot, role, request.signal, request.timeoutMs, async (profile, signal) => {
+      const result = await this.adapters[profile.provider].queryProfile(profile, { ...request, signal });
+      if (!result.content.trim()) throw new ClassifiedProviderError('Empty provider reply', { kind: 'unrecoverable', cause: null });
+      return { ...result, servedModel: result.servedModel ?? profile.model, profileProvider: profile.provider };
+    }, worker);
+  }
+
+  queryText(profile: ModelProfile, history: ProfileTurnRequest['history'], signal: AbortSignal, timeoutMs: number) {
+    signal.throwIfAborted();
+    return this.adapters[profile.provider].queryProfile(profile, { history, signal, timeoutMs });
+  }
+
+  async runRole<T>(snapshot: MainProfileSnapshot, role: ModelRole, callerSignal: AbortSignal | undefined, timeoutMs: number,
+    run: (profile: ModelProfile, signal: AbortSignal) => Promise<T>, worker?: WorkerRef): Promise<T> {
     const selection = snapshot[role];
     if (selection.state === 'paused') {
       this.recordIssue(worker, role, selection.issue);
       throw new RecordedProfileFailure(role, selection.issue);
     }
     const { profile } = selection;
-    const timeout = AbortSignal.timeout(request.timeoutMs);
+    const fingerprint = this.roleFingerprint(snapshot, role);
+    const timeout = AbortSignal.timeout(timeoutMs);
     try {
-      const signal = AbortSignal.any([request.signal, timeout]);
+      const signal = callerSignal ? AbortSignal.any([callerSignal, timeout]) : timeout;
       signal.throwIfAborted();
-      const result = await this.adapters[profile.provider].queryProfile(profile, { ...request, signal });
+      const result = await run(profile, signal);
       signal.throwIfAborted();
-      if (!result.content.trim()) throw new ClassifiedProviderError('Empty provider reply', { kind: 'unrecoverable', cause: null });
-      if (this.failures.get(role)?.fingerprint === this.fingerprint(snapshot)) this.failures.delete(role);
-      return { ...result, servedModel: result.servedModel ?? profile.model, profileProvider: profile.provider };
+      if (this.failures.get(role)?.fingerprint === fingerprint) this.failures.delete(role);
+      return result;
     } catch (error) {
-      request.signal.throwIfAborted();
+      callerSignal?.throwIfAborted();
       const kind = timeout.aborted ? 'timeout' : isClassified(error) ? error.kind : 'provider_error';
-      this.failures.set(role, { fingerprint: this.fingerprint(snapshot), issue: kind });
+      this.failures.set(role, { fingerprint, issue: kind });
       this.recordIssue(worker, role, kind, profile);
       // Provider error bodies, URLs, command lines and child stderr can contain secrets or user text.
       throw new RecordedProfileFailure(role, kind);
@@ -234,13 +258,13 @@ export class MainWorkerProfiles {
     const role = session.lastGeneratorSource === 'summarize' ? 'summary' : 'observer';
     const selection = snapshot[role];
     const issue = isClassified(error) && error.code === 'profile_invalid_reply' ? 'invalid_reply' : 'processing_failed';
-    this.failures.set(role, { fingerprint: this.fingerprint(snapshot), issue });
+    this.failures.set(role, { fingerprint: this.roleFingerprint(snapshot, role), issue });
     this.recordIssue(worker, role, issue, selection.state === 'configured' ? selection.profile : undefined);
   }
 
-  recordIssue(worker: WorkerRef, role: MainModelRole, issue: string, profile?: ModelProfile): void {
+  recordIssue(worker: WorkerRef | undefined, role: ModelRole, issue: string, profile?: ModelProfile): void {
     const route = profile ? { profileId: profile.id, provider: profile.provider, model: profile.model, auth: profile.auth } : {};
     logger.warn('SESSION', 'Model profile paused', { role, issue, ...route });
-    worker.recordAiInteraction?.({ success: false, provider: profile?.provider ?? 'unconfigured', error: `${role}: ${issue}` });
+    worker?.recordAiInteraction?.({ success: false, provider: profile?.provider ?? 'unconfigured', error: `${role}: ${issue}` });
   }
 }

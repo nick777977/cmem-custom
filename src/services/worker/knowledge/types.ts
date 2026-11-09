@@ -42,6 +42,7 @@ export interface CorpusFile {
   stats: CorpusStats;
   system_prompt: string;
   session_id: string | null;
+  session_profile?: string;
   observations: CorpusObservation[];
 }
 

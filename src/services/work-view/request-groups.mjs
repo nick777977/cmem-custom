@@ -768,8 +768,7 @@ export function readConversationProjects(database, conversationKeys) {
 
 /** New conversations sent to the grouping agent at once. */
 export const GROUPING_BATCH = 20;
-/** Requests placed per focus answer: GROUPING_BATCH, the per-answer size the same light model (STEP_MODELS) already
- * decides "every listed item exactly once" for in grouping. Reused, not measured for placement itself. */
+/** The focus step reuses the grouping batch size for its validated one-decision-per-request answer. */
 export const FOCUS_BATCH = GROUPING_BATCH;
 const CLOSED_STATES = new Set(['shipped', 'abandoned']);
 

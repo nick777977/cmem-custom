@@ -1,5 +1,6 @@
+import type { ProfileTurnRequest, ProviderQueryResult } from '../worker/OpenAICompatibleProvider.js';
 type HumanCopyProvider = ((input: unknown) => Promise<Record<string, unknown>>) & { isAvailable?: () => boolean; isOff?: () => boolean; getConfigKey?: () => string | null };
-export function chatCompletionsHumanCopyProvider(options: { url: string; apiKey: string; model: string; fallbackModels?: string[]; sendReasoningOff?: boolean; fetchImpl?: typeof fetch }): HumanCopyProvider;
+export function modelHumanCopyProvider(send: (messages: ProfileTurnRequest['history']) => Promise<ProviderQueryResult>): HumanCopyProvider;
 export function fitGeneratedCopy(output: unknown): unknown;
 export class HumanCopyWorker {
   revision: number;

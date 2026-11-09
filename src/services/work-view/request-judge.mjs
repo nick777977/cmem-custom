@@ -2,22 +2,10 @@
 // grouping agent sees it. refresh-task.ts runs it ahead of the agent batch; the request-groups
 // CLI's `judge --days N [--apply]` backfills.
 //
-// Two judges. `rules` is the code link request-groups.mjs already proves: the conversation wrote
-// to the same work-state list, or recorded the same request_id, as a member of one open request.
-// `jev` is Typesafe's Jev, reached through the CMEM Pro decisions gateway with the key and base
-// URL the worker already has, or on a bring-your-own-key install through OpenRouter's Decisions
-// API; any other provider has no Jev judge and the conversation is handled as before. Jev gets one
-// choice question over the root's open requests plus "none", then one calibrated yes/no check on
-// the pick, and the check's score decides: join, a suggestion for the owner, or a request of its
-// own. State is never trimmed to fit a limit: a question that would be too large is refused and
-// the conversation falls back to the grouping agent.
+// Rules use existing local links. Jev uses the explicitly selected Decisions
+// endpoint and leaves refused or failed questions unplaced.
 import { join } from 'node:path';
-import { buildKeyPool } from '../../shared/api-key-pool.js';
-import { getCredential } from '../../shared/EnvManager.js';
-import { isCmemGatewayUrl, isKeyAllowedForEndpoint } from '../../shared/cmem-gateway.js';
-import { isOpenRouterApiUrl, resolveOpenRouterChatCompletionsUrl } from '../../shared/openrouter-base-url.js';
-import { USER_SETTINGS_PATH } from '../../shared/paths.js';
-import { SettingsDefaultsManager } from '../../shared/SettingsDefaultsManager.js';
+import { isDecisionsProfile, readMainProfiles } from '../worker/model-profiles.js';
 import { applyDecisions, groupIdFor, groupingInput, LEDGER_DIR, readCandidates, readLedger, writeJsonAtomic } from './request-groups.mjs';
 import { humanRequestTitle, requestText } from './request-projection.mjs';
 
@@ -46,8 +34,6 @@ export const MAX_DECISION_BODY_BYTES = 64 * 1024;
 const DECISION_TIMEOUT_MS = 60_000;
 /** The release the thresholds were measured against. The Pro gateway pins the same one server-side
  * and ignores a client model; a bring-your-own-key install names it itself. */
-export const JEV_MODEL = 'typesafe/jev-1.14';
-export const OPENROUTER_DECISIONS_URL = 'https://openrouter.ai/api/alpha/decisions';
 /** The per-conversation context Jev was measured with (the research client's context.mjs): the worktree
  * and start, the first three prompts at 250 characters, and the first eight titles the agent recorded at
  * 120. This is the measured prompt shape the thresholds hold for, not a fit to a limit. */
@@ -134,7 +120,7 @@ export function jevJudge(client) {
       };
       if (pick.choice === 'none') return { requestId: null, confidence: probability('none'), evidence: `Judge jev (${model}): none of ${considered} is continued (p ${probability('none').toFixed(2)}).` };
       const request = candidates.find((candidate) => candidate.groupId === pick.choice);
-      if (!request) throw new Error(`Jev picked "${pick.choice}", which was not offered.`);
+      if (!request) throw new Error('Jev picked an unavailable request.');
       const checked = await client.decide({ request: request.context, conversation: conversation.context }, { same: { type: 'noul', instructions: CHECK_INSTRUCTIONS, criteria: CHECK_CRITERIA } });
       const score = answerOf(checked, 'same', 'noul').noul;
       if (!Number.isFinite(score)) throw new Error('Jev\'s check gave no score.');
@@ -143,56 +129,44 @@ export function jevJudge(client) {
   };
 }
 
-/** One send per question, no retry: the gateway meters nothing on a failure, and a refused or failed
- * call means the conversation goes to the grouping agent instead. */
-export function jevClient({ url, apiKey, model = null, fetchImpl = fetch }) {
-  if (typeof url !== 'string' || !url || typeof apiKey !== 'string' || !apiKey) throw new TypeError('A Jev client needs a url and an apiKey.');
+/** One send per question to the selected endpoint. Never follow redirects. */
+export function jevClientFromSelection(selection, { fetchImpl = fetch, signal } = {}) {
+  if (selection.state !== 'configured') throw new Error(selection.issue);
+  const profile = selection.profile;
+  if (!isDecisionsProfile(profile)) throw new Error('unsupported_capability');
+  const { endpoint: url, apiKey, model } = profile;
   return {
-    name: 'jev', url, model: model ?? JEV_MODEL,
+    name: 'jev', url, model,
     async decide(state, questions) {
-      const body = JSON.stringify(model ? { model, state, questions } : { state, questions });
-      const bytes = Buffer.byteLength(body, 'utf8');
-      if (bytes > MAX_DECISION_BODY_BYTES) throw new Error(`Jev request is ${bytes} bytes; the decisions gateway takes at most ${MAX_DECISION_BODY_BYTES}. It is not trimmed: this conversation goes to the grouping agent instead.`);
+      const body = JSON.stringify({ model, state, questions });
+      if (Buffer.byteLength(body, 'utf8') > MAX_DECISION_BODY_BYTES) throw new Error('decision_body_too_large');
+      const headers = { 'Content-Type': 'application/json' };
+      if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
+      const deadline = AbortSignal.timeout(DECISION_TIMEOUT_MS);
+      const requestSignal = signal ? AbortSignal.any([signal, deadline]) : deadline;
+      requestSignal.throwIfAborted();
       let response;
       try {
-        response = await fetchImpl(url, { method: 'POST', headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' }, body, signal: AbortSignal.timeout(DECISION_TIMEOUT_MS) });
-      } catch (error) { throw new Error(`Jev request failed: ${error instanceof Error ? error.message : String(error)}`); }
-      const text = await response.text();
-      let parsed = null;
-      try { parsed = JSON.parse(text); } catch { /* A non-JSON body is reported below with its status. */ }
-      if (!response.ok) {
-        const failure = parsed?.error && typeof parsed.error === 'object' ? parsed.error : {};
-        throw new Error(`Jev answered ${response.status}${failure.code ? ` ${failure.code}` : ''}: ${failure.message ?? text.slice(0, 200) ?? 'no body'}${failure.request_id ? ` (request ${failure.request_id})` : ''}`);
+        response = await fetchImpl(url, { method: 'POST', headers, body, redirect: 'error', signal: requestSignal });
+      } catch {
+        throw new Error('decision_transport_failed');
       }
-      if (!parsed?.answers || typeof parsed.answers !== 'object') throw new Error('Jev answered without answers.');
-      return parsed;
+      if (!response.ok) {
+        await response.body?.cancel().catch(() => {});
+        throw new Error(`decision_http_${response.status}`);
+      }
+      const parsed = await response.json().catch(() => null);
+      if (!parsed?.answers || typeof parsed.answers !== 'object') throw new Error('invalid_decision_reply');
+      return { answers: parsed.answers, model };
     },
   };
 }
 
-/** The Jev client this install can use, from the worker's own provider settings: the CMEM Pro gateway
- * (`<base>/decisions` with the cm_pro_ key) or openrouter.ai (the Decisions API with the user's key),
- * with the gateway/key lock every provider applies. Any other provider or endpoint: null, no judge. */
-export function jevClientFromSettings(settings, { credential = (name) => getCredential(name), fetchImpl } = {}) {
-  if (settings?.CLAUDE_MEM_PROVIDER !== 'openrouter') return null;
-  const apiKey = String(settings.CLAUDE_MEM_OPENROUTER_API_KEY ?? '').trim() || credential('OPENROUTER_API_KEY') || '';
-  const base = String(settings.CLAUDE_MEM_OPENROUTER_BASE_URL ?? '').trim();
-  if (isCmemGatewayUrl(base)) {
-    // The gateway key is account-delivered: never a pool key, as the provider's own config holds.
-    const url = `${base.replace(/\/+$/, '')}/decisions`;
-    return apiKey && isKeyAllowedForEndpoint(url, apiKey) ? jevClient({ url, apiKey, fetchImpl }) : null;
-  }
-  // Blank means openrouter.ai. Another OpenAI-compatible endpoint (DeepSeek, LM Studio) has no Decisions API.
-  if (!isOpenRouterApiUrl(resolveOpenRouterChatCompletionsUrl(base))) return null;
-  // The primary key, else the first key of the pool the provider rotates through (a pool-only install).
-  const pool = buildKeyPool(apiKey, settings.CLAUDE_MEM_OPENROUTER_API_KEYS || credential('OPENROUTER_API_KEYS') || '');
-  const key = pool.find((candidate) => isKeyAllowedForEndpoint(OPENROUTER_DECISIONS_URL, candidate));
-  return key ? jevClient({ url: OPENROUTER_DECISIONS_URL, apiKey: key, model: JEV_MODEL, fetchImpl }) : null;
-}
-
-export function configuredJudge(settingsPath = USER_SETTINGS_PATH) {
-  const client = jevClientFromSettings(SettingsDefaultsManager.loadFromFile(settingsPath, true, { readOnly: true }));
-  return client ? jevJudge(client) : null;
+export function configuredJudge(settingsPath) {
+  const selection = readMainProfiles(settingsPath).requestJudge;
+  if (selection.state === 'configured') return jevJudge(jevClientFromSelection(selection));
+  if (selection.issue === 'disabled') return null;
+  return { name: 'jev', async judge() { throw new Error(`requestJudge: ${selection.issue}`); } };
 }
 
 /** One judge's verdict on one conversation against the open requests of its project root, banded:

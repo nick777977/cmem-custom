@@ -1,268 +1,149 @@
-
-import { CorpusStore } from './CorpusStore.js';
-import { CorpusRenderer } from './CorpusRenderer.js';
-import type { CorpusFile, QueryResult } from './types.js';
-import { logger } from '../../../utils/logger.js';
-import { SettingsDefaultsManager } from '../../../shared/SettingsDefaultsManager.js';
-import { USER_SETTINGS_PATH } from '../../../shared/paths.js';
-import { buildIsolatedEnvWithFreshOAuth } from '../../../shared/EnvManager.js';
-import { findClaudeExecutable, isClaudeExecutableUnspawnable } from '../../../shared/find-claude-executable.js';
-import { sanitizeEnv } from '../../../supervisor/env-sanitizer.js';
-import { resolveTierAlias } from '../model-aliases.js';
-import { AppError } from '../../server/ErrorHandler.js';
-import { isAuthFailureObserverOutput, isOrgDisabledSubscriptionObserverOutput } from '../../../sdk/output-classifier.js';
-
-// @ts-ignore - Agent SDK types may not be available
+import { createHash } from 'node:crypto';
 import { query } from '@anthropic-ai/claude-agent-sdk';
 import { buildHardenedSdkOptions } from '../../../sdk/hardened-options.js';
+import { isAuthFailureObserverOutput } from '../../../sdk/output-classifier.js';
+import { SettingsDefaultsManager } from '../../../shared/SettingsDefaultsManager.js';
+import { createSdkSpawnFactory, waitForSlot } from '../../../supervisor/process-registry.js';
+import { AppError } from '../../server/ErrorHandler.js';
+import { nextStandaloneSessionId, prepareClaudeProfile, RecordedProfileFailure, type MainWorkerProfiles } from '../MainWorkerProfiles.js';
+import type { ModelProfile } from '../model-profiles.js';
+import { ClassifiedProviderError } from '../provider-errors.js';
+import { resolveLlmTimeoutMs } from '../retry.js';
+import type { CorpusStore } from './CorpusStore.js';
+import { CorpusRenderer } from './CorpusRenderer.js';
+import type { CorpusFile, QueryResult } from './types.js';
 
-/**
- * The exact line the Claude Code CLI prints when `--resume <id>` names a
- * session it has no transcript for. In stream-json mode it arrives first as the
- * `errors` entry of an `error_during_execution` result, which
- * `errorFromUnsuccessfulResult` keeps in its message; the Agent SDK can also
- * repeat it inside `Claude Code process exited with code N. stderr: <tail>`
- * (sdk.mjs `formatStderrTail`). The line itself lives in the CLI binary
- * (@anthropic-ai/claude-agent-sdk-darwin-arm64/claude, SDK 0.3.289).
- */
-const SDK_SESSION_RESUME_FAILURE_PATTERN = /No conversation found with session ID/;
+type ClaudeProfile = Extract<ModelProfile, { provider: 'claude' }>;
 
-/**
- * True only for the SDK's explicit "this session cannot be resumed" failure.
- * Anything else (auth, network, a generic "not found", an abort) must surface
- * as-is rather than silently paying for a fresh prime.
- */
+/** Retry only the SDK's specific missing-transcript failure. */
 export function isSessionResumeError(error: unknown): boolean {
-  const message = error instanceof Error ? error.message : String(error);
-  return SDK_SESSION_RESUME_FAILURE_PATTERN.test(message);
+  return /No conversation found with session ID/.test(error instanceof Error ? error.message : String(error));
 }
 
-/**
- * The error for a terminal SDK result that did not succeed, carrying the
- * result's own text: `errors` on the error subtypes, `result` on an `is_error`
- * success (an API error). The SDK builds its "Claude Code returned an error
- * result" error the same way (sdk.mjs). Keeping that text is what lets
- * `isSessionResumeError` see an expired session, so `query` still reprimes.
- */
-function errorFromUnsuccessfulResult(
-  action: 'prime' | 'query',
-  resultMessage: { subtype?: string; result?: unknown; errors?: unknown }
-): Error {
-  const details = resultMessage.subtype === 'success'
-    ? (typeof resultMessage.result === 'string' ? resultMessage.result.trim() : '')
-    : (Array.isArray(resultMessage.errors)
-      ? resultMessage.errors.map((entry) => String(entry).trim()).filter(Boolean).join('; ')
-      : '');
-  if (isAuthFailureObserverOutput(details)) {
-    // A signed-out CLI or a refused key is the user's setup state, not a worker
-    // fault: a 4xx keeps it out of the error sink and tells the caller what to fix.
-    const remedy = isOrgDisabledSubscriptionObserverOutput(details) ? '' : ' Run /login in Claude Code, then retry.';
-    return new AppError(`Knowledge ${action} failed: Claude Code is not authenticated (${details}).${remedy}`, 401, 'CLAUDE_NOT_AUTHENTICATED');
-  }
-  return new Error(`Knowledge ${action} failed (${resultMessage.subtype})${details ? `: ${details}` : ''}`);
+function sessionBinding(profile: ClaudeProfile): string {
+  return createHash('sha256').update(JSON.stringify(profile, (key, value) => key === 'apiKey' ? undefined : value)).digest('hex');
 }
 
-/**
- * `findClaudeExecutable`, with its setup failures (no CLI, every CLI too old,
- * a bad CLAUDE_CODE_PATH, the desktop app) as a 424 `AppError`. The user must
- * fix their machine, so the route logs a warning and does not send the error
- * to error tracking. An unspawnable CLI stays a server fault: only a worker
- * restart fixes it.
- */
-function findClaudeExecutableForKnowledge(): string {
-  try {
-    return findClaudeExecutable('WORKER');
-  } catch (error) {
-    if (isClaudeExecutableUnspawnable(error) || !(error instanceof Error)) throw error;
-    throw new AppError(error.message, 424, 'CLAUDE_CLI_SETUP_REQUIRED');
-  }
+function profileFailure(error: unknown): never {
+  if (!(error instanceof RecordedProfileFailure)) throw error;
+  const setup = ['profile_required', 'invalid_profile', 'unsupported_route', 'unsupported_capability',
+    'credential_unavailable', 'disabled', 'setup_required'].includes(error.issue);
+  throw new AppError(error.message, setup ? 424 : error.issue === 'auth_invalid' ? 401 : 502, 'KNOWLEDGE_PROFILE_FAILED');
 }
 
-/** Per-call options. `abortController` is passed to the Agent SDK's `Options.abortController` (sdk.d.ts). */
 export interface KnowledgeAgentCallOptions {
   abortController?: AbortController;
 }
 
 export class KnowledgeAgent {
-  private renderer: CorpusRenderer;
+  private readonly renderer = new CorpusRenderer();
 
-  constructor(
-    private corpusStore: CorpusStore
-  ) {
-    this.renderer = new CorpusRenderer();
+  constructor(private corpusStore: CorpusStore, private profiles: MainWorkerProfiles, private sdkQuery = query) {}
+
+  private run<T>(snapshot: ReturnType<MainWorkerProfiles['snapshot']>, options: KnowledgeAgentCallOptions,
+    task: (profile: ClaudeProfile, env: NodeJS.ProcessEnv, signal: AbortSignal) => Promise<T>): Promise<T> {
+    return this.profiles.runRole(snapshot, 'knowledge', options.abortController?.signal, resolveLlmTimeoutMs(),
+      async (profile, signal) => {
+        if (profile.provider !== 'claude') throw new Error('unsupported_capability');
+        return task(profile, await prepareClaudeProfile(profile, signal), signal);
+      }).catch(profileFailure);
   }
 
-  async prime(corpus: CorpusFile, callOptions: KnowledgeAgentCallOptions = {}): Promise<string> {
-    const renderedCorpus = this.renderer.renderCorpus(corpus);
-
-    const primePrompt = [
-      corpus.system_prompt,
-      '',
-      'Here is your complete knowledge base:',
-      '',
-      renderedCorpus,
-      '',
-      'Acknowledge what you\'ve received. Summarize the key themes and topics you can answer questions about.'
+  private primePrompt(corpus: CorpusFile): string {
+    return [
+      corpus.system_prompt, '', 'Here is your complete knowledge base:', '', this.renderer.renderCorpus(corpus), '',
+      'Acknowledge what you have received. Summarize the key themes and topics you can answer questions about.',
     ].join('\n');
+  }
 
-    const claudePath = findClaudeExecutableForKnowledge();
-    const isolatedEnv = sanitizeEnv(await buildIsolatedEnvWithFreshOAuth());
-
-    const queryResult = query({
-      prompt: primePrompt,
-      options: buildHardenedSdkOptions({
-        source: 'KnowledgeAgent',
-        project: corpus.name,
-        model: this.getModelId(),
-        env: isolatedEnv,
-        pathToClaudeCodeExecutable: claudePath,
-        abortController: callOptions.abortController,
-      }),
+  async prime(corpus: CorpusFile, options: KnowledgeAgentCallOptions = {}): Promise<string> {
+    return this.run(this.profiles.snapshot(), options, async (profile, env, signal) => {
+      const result = await this.turn(this.primePrompt(corpus), profile, env, signal);
+      this.saveSession(corpus, result.session_id, profile, signal);
+      return result.session_id;
     });
-
-    let sessionId: string | undefined;
-    let successfulResult = false;
-    try {
-      for await (const msg of queryResult) {
-        if (msg.session_id) sessionId = msg.session_id;
-        if (msg.type === 'result') {
-          successfulResult = msg.is_error !== true && msg.subtype === 'success';
-          if (!successfulResult) throw errorFromUnsuccessfulResult('prime', msg);
-          logger.info('WORKER', `Knowledge agent primed for corpus "${corpus.name}"`);
-        }
-      }
-    } catch (error) {
-      if (callOptions.abortController?.signal.aborted) throw error;
-      if (sessionId && successfulResult) {
-        if (error instanceof Error) {
-          logger.debug('WORKER', `SDK process exited after priming corpus "${corpus.name}" — session captured, continuing`, {}, error);
-        } else {
-          logger.debug('WORKER', `SDK process exited after priming corpus "${corpus.name}" — session captured, continuing (non-Error thrown)`, { thrownValue: String(error) });
-        }
-      } else {
-        throw error;
-      }
-    }
-
-    // Never persist a session whose prime the caller abandoned, even if the SDK ended quietly.
-    callOptions.abortController?.signal.throwIfAborted();
-
-    if (!successfulResult) {
-      throw new Error(`Knowledge prime ended without a successful result for corpus "${corpus.name}"`);
-    }
-    if (!sessionId) {
-      throw new Error(`Failed to capture session_id while priming corpus "${corpus.name}"`);
-    }
-
-    corpus.session_id = sessionId;
-    this.corpusStore.write(corpus);
-
-    return sessionId;
   }
 
-  async query(corpus: CorpusFile, question: string, callOptions: KnowledgeAgentCallOptions = {}): Promise<QueryResult> {
-    if (!corpus.session_id) {
-      throw new AppError(`Corpus "${corpus.name}" has no session — call prime first`, 409, 'CORPUS_NOT_PRIMED');
-    }
-
-    try {
-      const result = await this.executeQuery(corpus, question, callOptions);
-      if (result.session_id !== corpus.session_id) {
-        corpus.session_id = result.session_id;
-        this.corpusStore.write(corpus);
+  async query(corpus: CorpusFile, question: string, options: KnowledgeAgentCallOptions = {}): Promise<QueryResult> {
+    const snapshot = this.profiles.snapshot();
+    const selected = snapshot.knowledge;
+    if (selected.state === 'configured' && selected.profile.provider === 'claude') {
+      if (!corpus.session_id) throw new AppError('Prime this corpus before asking a question.', 409, 'CORPUS_NOT_PRIMED');
+      if (corpus.session_profile !== sessionBinding(selected.profile)) {
+        throw new AppError('Prime this corpus with the selected knowledge profile.', 409, 'CORPUS_PROFILE_CHANGED');
       }
+    }
+    return this.run(snapshot, options, async (profile, env, signal) => {
+      let result: QueryResult;
+      try {
+        result = await this.turn(question, profile, env, signal, corpus.session_id!);
+      } catch (error) {
+        signal.throwIfAborted();
+        if (!isSessionResumeError(error)) throw error;
+        const primed = await this.turn(this.primePrompt(corpus), profile, env, signal);
+        this.saveSession(corpus, primed.session_id, profile, signal);
+        result = await this.turn(question, profile, env, signal, primed.session_id);
+      }
+      if (result.session_id !== corpus.session_id) this.saveSession(corpus, result.session_id, profile, signal);
       return result;
-    } catch (error) {
-      // The caller walked away; the route logs that once. Not a query failure.
-      if (callOptions.abortController?.signal.aborted) throw error;
-      if (!isSessionResumeError(error)) {
-        if (error instanceof AppError && error.statusCode < 500) {
-          logger.warn('WORKER', `Query rejected for corpus "${corpus.name}"`, {}, error);
-        } else if (error instanceof Error) {
-          logger.error('WORKER', `Query failed for corpus "${corpus.name}"`, {}, error);
-        } else {
-          logger.error('WORKER', `Query failed for corpus "${corpus.name}" (non-Error thrown)`, { thrownValue: String(error) });
-        }
-        throw error;
-      }
-      logger.info('WORKER', `Session expired for corpus "${corpus.name}", auto-repriming...`);
-      await this.prime(corpus, callOptions);
-      const refreshedCorpus = this.corpusStore.read(corpus.name);
-      if (!refreshedCorpus || !refreshedCorpus.session_id) {
-        throw new Error(`Auto-reprime failed for corpus "${corpus.name}"`);
-      }
-      const result = await this.executeQuery(refreshedCorpus, question, callOptions);
-      if (result.session_id !== refreshedCorpus.session_id) {
-        refreshedCorpus.session_id = result.session_id;
-        this.corpusStore.write(refreshedCorpus);
-      }
-      return result;
-    }
-  }
-
-  async reprime(corpus: CorpusFile, callOptions: KnowledgeAgentCallOptions = {}): Promise<string> {
-    corpus.session_id = null;
-    return this.prime(corpus, callOptions);
-  }
-
-  private async executeQuery(corpus: CorpusFile, question: string, callOptions: KnowledgeAgentCallOptions): Promise<QueryResult> {
-    const claudePath = findClaudeExecutableForKnowledge();
-    const isolatedEnv = sanitizeEnv(await buildIsolatedEnvWithFreshOAuth());
-
-    const queryResult = query({
-      prompt: question,
-      options: buildHardenedSdkOptions({
-        source: 'KnowledgeAgent',
-        project: corpus.name,
-        model: this.getModelId(),
-        env: isolatedEnv,
-        pathToClaudeCodeExecutable: claudePath,
-        resume: corpus.session_id!,
-        abortController: callOptions.abortController,
-      }),
     });
+  }
 
-    let answer = '';
-    let newSessionId = corpus.session_id!;
-    let successfulResult = false;
+  reprime(corpus: CorpusFile, options: KnowledgeAgentCallOptions = {}): Promise<string> {
+    return this.prime(corpus, options);
+  }
+
+  private saveSession(corpus: CorpusFile, sessionId: string, profile: ClaudeProfile, signal: AbortSignal): void {
+    signal.throwIfAborted();
+    const updated = { ...corpus, session_id: sessionId, session_profile: sessionBinding(profile) };
+    this.corpusStore.write(updated);
+    Object.assign(corpus, updated);
+  }
+
+  private async turn(prompt: string, profile: ClaudeProfile, env: NodeJS.ProcessEnv, signal: AbortSignal, resume?: string): Promise<QueryResult> {
+    signal.throwIfAborted();
+    const controller = new AbortController();
+    const abort = () => controller.abort();
+    signal.addEventListener('abort', abort, { once: true });
+    const id = nextStandaloneSessionId();
     try {
-      for await (const msg of queryResult) {
-        if (msg.session_id) newSessionId = msg.session_id;
-        if (msg.type === 'result') {
-          successfulResult = msg.is_error !== true && msg.subtype === 'success';
-          if (!successfulResult) throw errorFromUnsuccessfulResult('query', msg);
+      const slot = await waitForSlot(() => parseInt(SettingsDefaultsManager.get('CLAUDE_MEM_MAX_CONCURRENT_AGENTS'), 10) || 2, signal, id);
+      try {
+        signal.throwIfAborted();
+        const options = buildHardenedSdkOptions({
+          source: 'KnowledgeAgent', model: profile.model, env, pathToClaudeCodeExecutable: profile.executable,
+          abortController: controller, resume,
+          spawnClaudeCodeProcess: createSdkSpawnFactory(id, slot, [], { executable: profile.executable, env }),
+        });
+        let sessionId = resume;
+        let answer = '';
+        let successful = false;
+        try {
+          for await (const message of this.sdkQuery({ prompt, options: { ...options, maxTurns: 1 } })) {
+            if (message.session_id) sessionId = message.session_id;
+            if (message.type !== 'result') continue;
+            successful = message.subtype === 'success' && !message.is_error;
+            const details = 'errors' in message ? message.errors.join('\n') : message.result;
+            if (!successful) {
+              if (isSessionResumeError(details)) throw new Error('No conversation found with session ID');
+              if (isAuthFailureObserverOutput(details)) {
+                throw new ClassifiedProviderError('Knowledge authentication failed', { kind: 'auth_invalid', cause: null });
+              }
+              throw new Error('Knowledge request failed');
+            }
+            answer = details;
+          }
+        } catch (error) {
+          if (!successful) throw error;
         }
-        if (msg.type === 'assistant') {
-          const text = msg.message.content
-            .filter((b: any) => b.type === 'text')
-            .map((b: any) => b.text)
-            .join('');
-          answer = text;
-        }
+        signal.throwIfAborted();
+        if (!successful || !sessionId || (resume && !answer.trim())) throw new Error('Knowledge request ended without a usable result');
+        return { answer, session_id: sessionId };
+      } finally {
+        slot.release();
       }
-    } catch (error) {
-      if (callOptions.abortController?.signal.aborted) throw error;
-      if (answer && successfulResult) {
-        if (error instanceof Error) {
-          logger.debug('WORKER', `SDK process exited after query — answer captured, continuing`, {}, error);
-        } else {
-          logger.debug('WORKER', `SDK process exited after query — answer captured, continuing (non-Error thrown)`, { thrownValue: String(error) });
-        }
-      } else {
-        throw error;
-      }
+    } finally {
+      signal.removeEventListener('abort', abort);
     }
-
-    if (!successfulResult) {
-      throw new Error(`Knowledge query ended without a successful result for corpus "${corpus.name}"`);
-    }
-    return { answer, session_id: newSessionId };
   }
-
-  private getModelId(): string {
-    const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
-    // Resolve $TIER:<fast|smart|simple|summary> aliases at request time (#2289).
-    return resolveTierAlias(settings.CLAUDE_MEM_MODEL, settings);
-  }
-
 }

@@ -86,7 +86,7 @@ function appEnv(root, port) {
 function profileEnv(profile, config) {
   if (profile && Object.hasOwn(profile, 'default')) {
     const env = { CLAUDE_MEM_MODEL_PROFILES: JSON.stringify(profile) };
-    for (const role of ['default', 'observer', 'summary', 'compression']) {
+    for (const role of ['default', 'observer', 'summary', 'compression', 'refresh', 'copy', 'requestJudge', 'focusJudge', 'knowledge']) {
       const selected = profile[role];
       if (selected?.auth !== 'api-key' || !/^CMEM_PROFILE_KEY_[A-Z0-9_]{1,96}(?<!_ENDPOINT)$/.test(selected.keyEnv)) continue;
       for (const name of [selected.keyEnv, `${selected.keyEnv}_ENDPOINT`]) {

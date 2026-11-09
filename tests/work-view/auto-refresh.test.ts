@@ -6,7 +6,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { AutoRefreshWorker } from '../../src/services/work-view/auto-refresh-worker.mjs';
-import { buildRefreshTask, FOCUS_ANSWER_SCHEMA, GROUPING_ANSWER_SCHEMA, reviewConcurrency, STEP_MODELS } from '../../src/services/work-view/refresh-task.js';
+import { buildRefreshTask, FOCUS_ANSWER_SCHEMA, GROUPING_ANSWER_SCHEMA, reviewConcurrency } from '../../src/services/work-view/refresh-task.js';
 import { readLedger, runCli } from '../../src/services/work-view/request-groups.mjs';
 import { scratchDir } from '../helpers/scratch-dir.js';
 import { everyRequestInOther, focusInputFrom, focusWriter, isOtherPass } from '../helpers/fake-focus-writer.js';
@@ -167,21 +167,10 @@ describe('automatic refresh scheduler', () => {
 });
 
 describe('refresh task', () => {
-  it('Claude Code gets only read-only tools: Read, Grep, Glob and memory search, with no Bash, Write or bypass', () => {
+  it('scopes refresh file tools to the work-view ledger, away from settings', () => {
     const task = buildRefreshTask({ localDeviceId: () => '', needs: { due: 2, ungrouped: 1, goalsStale: true, unplaced: 0, needed: true }, reason: 'scheduled', dataDir: '/data', ledgerDir: '/data/work-view', pluginRoot: '/plugin', openDatabase: handle(fixtureDatabase()), now: () => NOW });
-    const { claudeCode } = task;
-    // The work-view folder, not the data dir that holds .env and settings.json.
     expect(task.cwd).toBe('/data/work-view');
-    expect(claudeCode.plugins).toEqual([{ type: 'local', path: '/plugin' }]);
-    expect(claudeCode.tools).toEqual(['Read', 'Grep', 'Glob']);
-    // File tools are approved per call, only inside the work-view folder.
-    expect(claudeCode.readableFolders).toEqual(['/data/work-view']);
-    expect(claudeCode.allowedTools.filter(tool => ['Read', 'Grep', 'Glob'].includes(tool))).toEqual([]);
-    expect(claudeCode.allowedTools).toContain('mcp__plugin_claude-mem_mcp-search__search');
-    expect(claudeCode.allowedTools).toContain('mcp__plugin_claude-mem_mcp-search__work_state_read');
-    // No raw work-state writes: they would skip the skills' validators.
-    expect(claudeCode.allowedTools.filter(tool => /Bash|Write|Edit|work_state_write|save_memory|smart_search|smart_outline|smart_unfold|Agent|Skill/.test(tool))).toEqual([]);
-    expect(JSON.stringify(task)).not.toMatch(/bypass|dangerous/i);
+    expect(task.readableFolders).toEqual(['/data/work-view']);
   });
 
   it('every backend (read-only): the worker groups, reviews and retells from the agent\'s JSON through the validators', async () => {
@@ -190,14 +179,14 @@ describe('refresh task', () => {
       const database = fixtureDatabase();
       const task = buildRefreshTask({ localDeviceId: () => '', needs: { due: 0, ungrouped: 1, goalsStale: false, unplaced: 0, needed: true }, reason: 'scheduled', dataDir: dir, ledgerDir: dir, pluginRoot: PLUGIN_ROOT, openDatabase: handle(database), now: () => NOW, saveFocus: focusWriter(database).save });
       const prompts: string[] = [];
-      const models: unknown[] = [];
+      const schemas: unknown[] = [];
       let reviewAnswers = 0;
-      const ask = async (prompt: string, stepModels: unknown) => {
+      const ask = async (prompt: string, schema?: unknown) => {
         prompts.push(prompt);
-        models.push(stepModels);
+        schemas.push(schema);
         expect(prompt).toMatch(/read-only sandbox/);
         // Codex and Gemini run without MCP servers: no instruction to search memory, the evidence is inline.
-        expect(prompt).toMatch(/You have no memory tools/);
+        expect(prompt).toMatch(/Use the supplied input evidence/);
         expect(prompt).not.toMatch(/with its MCP tools/);
         expect(prompt).not.toContain('${CLAUDE_SKILL_DIR}');
         const file = /is in (\S+\.json)/.exec(prompt)?.[1];
@@ -220,12 +209,7 @@ describe('refresh task', () => {
       expect(Object.values(ledger.groups.groups).map((group: any) => group.title)).toEqual(['Release cards']);
       expect(Object.values(ledger.progress).map((review: any) => review.percent)).toEqual([40]);
       expect(ledger.story.narrative).toBe('One request is under way.');
-      // Grouping and the focus step run on the light models; reviews and the story on the careful ones.
-      // The focus step asks twice: place the request, then propose from Other (where it landed).
-      expect(models).toEqual([STEP_MODELS.grouping, STEP_MODELS.review, STEP_MODELS.review, STEP_MODELS.focus, STEP_MODELS.focus, STEP_MODELS.story]);
-      expect(STEP_MODELS.focus).toBe(STEP_MODELS.grouping);
-      expect(STEP_MODELS.grouping).toEqual({ 'claude-code': { model: 'haiku' }, codex: { model: 'gpt-6-luna', reasoningEffort: 'low' }, gemini: { model: 'flash-lite' } });
-      expect(STEP_MODELS.review).toEqual({ 'claude-code': { model: 'sonnet' }, codex: {}, gemini: { model: 'flash' } });
+      expect(schemas).toEqual([GROUPING_ANSWER_SCHEMA, undefined, undefined, FOCUS_ANSWER_SCHEMA, FOCUS_ANSWER_SCHEMA, undefined]);
     } finally { rmSync(dir, { recursive: true, force: true }); }
   });
 });
@@ -239,7 +223,7 @@ describe('Codex grouping answers', () => {
     try {
       const database = fixtureDatabase();
       const schemas: unknown[] = [];
-      const ask = async (prompt: string, _models: unknown, schema?: unknown) => {
+      const ask = async (prompt: string, schema?: unknown) => {
         schemas.push(schema);
         if (prompt.includes('Do only section 1')) return readFileSync(join(FIXTURES, 'grouping-answer-schema.txt'), 'utf8');
         if (prompt.includes('Do only section 2')) {
@@ -303,10 +287,10 @@ describe('focus step', () => {
       requests(database, dir, ['b', 'c']);
       const writer = focusWriter(database);
       const task = buildRefreshTask({ localDeviceId: () => '', needs: { due: 3, ungrouped: 0, goalsStale: false, unplaced: 3, needed: true }, reason: 'scheduled', dataDir: dir, ledgerDir: dir, pluginRoot: PLUGIN_ROOT, openDatabase: handle(database), now: () => NOW, saveFocus: writer.save });
-      const steps: Array<{ prompt: string; models: unknown; schema: unknown }> = [];
+      const steps: Array<{ prompt: string; schema: unknown }> = [];
       let placeAnswers = 0;
-      const ask = async (prompt: string, models: unknown, schema?: unknown) => {
-        steps.push({ prompt, models, schema });
+      const ask = async (prompt: string, schema?: unknown) => {
+        steps.push({ prompt, schema });
         if (prompt.includes('Do only section 2')) return reviewAll(prompt);
         if (isOtherPass(prompt)) {
           const other = focusInputFrom(prompt);
@@ -329,7 +313,7 @@ describe('focus step', () => {
       expect(await task.run(ask, 'codex')).toBe('3 requests reviewed, 3 requests placed, 1 focus areas suggested, story written.');
       const focusSteps = steps.filter(step => step.prompt.includes('Do only section 3'));
       expect(focusSteps).toHaveLength(3);
-      for (const step of focusSteps) { expect(step.models).toBe(STEP_MODELS.focus); expect(step.schema).toBe(FOCUS_ANSWER_SCHEMA); }
+      for (const step of focusSteps) expect(step.schema).toBe(FOCUS_ANSWER_SCHEMA);
       expect(steps.map(step => /Do only section (\d)/.exec(step.prompt)?.[1] ?? 'review')).toEqual(['2', '3', '3', '3', '4']);
       expect(task.steps.map(timing => timing.step)).toEqual(['review', 'focus', 'focus', 'story']);
       // Only accepted answers reached the worker's write: the placement batch and the Other pass.
@@ -510,7 +494,7 @@ describe('parallel reviews', () => {
         return JSON.stringify({ reviews: shows.map((show: any) => ({ groupId: show.groupId, state: 'in-progress', percent: 30, summary: 'Under way.', reviewBasis: show.reviewBasis })) });
       };
       expect(await task.run(ask, 'claude-code')).toBe('10 requests reviewed, 10 requests placed, story written.');
-      expect(lastPrompt).toMatch(/Search claude-mem memory with its MCP tools/);
+      expect(lastPrompt).toMatch(/Use the supplied input evidence/);
       expect(most).toBe(2);
       // refresh.json's run record gets one timing per step and review batch.
       expect(task.steps.map(timing => [timing.step, timing.agent, timing.groups])).toEqual([['review', 'claude-code', 8], ['review', 'claude-code', 2], ['focus', 'claude-code', undefined], ['focus', 'claude-code', undefined], ['story', 'claude-code', undefined]]);

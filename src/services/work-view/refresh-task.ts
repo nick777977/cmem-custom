@@ -1,8 +1,7 @@
 /**
  * The job My Work's automatic refresh hands the agent runner: refresh the
  * owner's goals when they are stale, then group, review, sort into focus areas and retell
- * every request that is due. No day window beyond the skill's own default,
- * no group cap and no time limit (owner rule, Oct 22).
+ * every request that is due. The runner supplies the selected profile and request deadline.
  *
  * Every backend (Claude Code, Codex, Gemini) runs the same way: the worker
  * runs the skills' CLI and scripts, asks the read-only agent one JSON
@@ -14,22 +13,18 @@ import { spawn } from 'child_process';
 import { randomBytes } from 'crypto';
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'fs';
 import { join } from 'path';
-import type { AgentTask, AnswerSchema, AskAgent, StepModels } from '../agent-runner/run.js';
-import type { UsableAgentId } from '../agent-runner/detect.js';
+import type { AgentTask, AnswerSchema, AskAgent, RefreshAgent } from '../agent-runner/run.js';
 import { runCommand } from '../agent-runner/detect.js';
 import { writeOwnerPromptsFile, type OwnerPromptsFile } from '../prompt-import/owner-prompts-file.js';
 import { resolvePythonCommand } from './python.js';
 import { SettingsDefaultsManager } from '../../shared/SettingsDefaultsManager.js';
+import { getWorkerPort } from '../../shared/worker-utils.js';
 import { FOCUS_BATCH, readGoals, readLedger, runCli, validateFocusAnswer, validateGroupingAnswer, type FocusInput, type LedgerDatabase, type RefreshNeeds } from './request-groups.mjs';
 import { FOCUS_AUTO_PLACE_THRESHOLD, judgeFocusBatch, placesAlone, type FocusJudge, type FocusJudgement } from './focus-judge.mjs';
 import { isWithdrawnArea, PROPOSAL_KINDS, readFocusAreas, type FocusArea, type RouterFocusBody } from './my-focus.mjs';
 import { NAV_LABELS } from './nav-words.mjs';
 import { routeUndecided, type RequestJudge } from './request-judge.mjs';
 
-/** claude-mem MCP tools a refresh may call: reads only. Saves go through the skills' scripts and their
- * validators (save_goals.py, the request-groups CLI), never a raw work_state_write. */
-export const MEMORY_TOOLS = ['search', 'dumb_search', 'timeline', 'get_observations', 'get_tool_uses', 'work_state_read'];
-const PLUGIN_MCP_PREFIX = 'mcp__plugin_claude-mem_mcp-search__';
 const REVIEW_BATCH = 8;
 /** save_goals.py's FAILED_AFTER_WRITING_EXIT: it failed after its first write, so the goals step must not ask again. */
 const SAVE_GOALS_FAILED_AFTER_WRITING_EXIT = 3;
@@ -47,13 +42,7 @@ export function reviewConcurrency(dataDir: string): number {
     ?? parseInt(SettingsDefaultsManager.getAllDefaults().CLAUDE_MEM_MAX_CONCURRENT_AGENTS, 10);
 }
 
-/** The model each step runs on. Small, fast models match conversations and goals; stronger ones judge
- * progress, write the story and pick verbatim quotes. Codex's careful steps use its CLI default model.
- * Ids checked against claude --help (aliases), codex-cli 0.163.0 models_cache.json and gemini 0.49.0 aliases. */
-const LIGHT: StepModels = { 'claude-code': { model: 'haiku' }, codex: { model: 'gpt-6-luna', reasoningEffort: 'low' }, gemini: { model: 'flash-lite' } };
-const CAREFUL: StepModels = { 'claude-code': { model: 'sonnet' }, codex: {}, gemini: { model: 'flash' } };
-export const STEP_MODELS = { goals: CAREFUL, grouping: LIGHT, review: CAREFUL, focus: LIGHT, story: CAREFUL } as const;
-type Step = keyof typeof STEP_MODELS;
+type Step = 'goals' | 'grouping' | 'review' | 'focus' | 'story';
 
 const strictObject = (properties: Record<string, unknown>) => ({ type: 'object', additionalProperties: false, required: Object.keys(properties), properties });
 const stringArray = { type: 'array', items: { type: 'string' } };
@@ -81,7 +70,7 @@ export const FOCUS_ANSWER_SCHEMA: AnswerSchema = strictObject({
 });
 
 /** When each step ran, for refresh.json's run record (not shown in My Work). */
-export interface StepTiming { step: string; agent: UsableAgentId; startedAt: string; finishedAt: string; groups?: number }
+export interface StepTiming { step: string; agent: RefreshAgent; startedAt: string; finishedAt: string; groups?: number }
 
 export interface RefreshTaskOptions {
   needs: RefreshNeeds;
@@ -90,11 +79,11 @@ export interface RefreshTaskOptions {
   dataDir: string;
   /** ~/.claude-mem/work-view: every backend's working directory, and the only folder Claude Code may read. */
   ledgerDir: string;
-  /** The installed plugin folder holding skills/ and .mcp.json. */
+  /** The installed plugin folder holding the skill prompts and local scripts. */
   pluginRoot: string;
   openDatabase: () => LedgerDatabase & { close(): void };
-  /** Files each new conversation under the request it continues before the grouping agent sees it (Jev on
-   * a CMEM Pro or OpenRouter install, request-judge.mjs). Null or absent: code links alone route, and the
+  /** Files each new conversation under the request it continues before the grouping agent sees it.
+   * Null or absent: code links alone route, and the
    * agent decides the rest as before. */
   judge?: RequestJudge | null;
   /** Asks Jev which kept focus area each request of a focus batch is part of, before the focus agent sees it
@@ -200,20 +189,20 @@ export function buildRefreshTask(options: RefreshTaskOptions): AgentTask & { ste
   };
 
   const steps: StepTiming[] = [];
-  const run = async (askBackend: AskAgent, agent: UsableAgentId): Promise<string> => {
+  const run = async (askBackend: AskAgent, agent: RefreshAgent): Promise<string> => {
     const runDir = join(ledgerDir, 'agent-runs', randomBytes(6).toString('hex'));
     mkdirSync(runDir, { recursive: true });
     let fileNumber = 0;
     const inlineEvidence = new Map<string, string>();
-    if (agent === 'gemini' && needs.goalsStale) {
+    if (agent !== 'claude-code' && needs.goalsStale) {
       for (const name of ['owner-prompts.md', 'new-owner-prompts.md']) {
         const path = join(goalsFolder, name);
         if (existsSync(path)) inlineEvidence.set(path, readFileSync(path, 'utf8'));
       }
     }
-    const ask: AskAgent = (prompt, models, schema) => {
-      const supplied = agent === 'gemini' ? [...inlineEvidence].filter(([path]) => prompt.includes(path)) : [];
-      return askBackend(supplied.length ? `${prompt}\n\nThe following input files are supplied inline; no file tools are available:\n${supplied.map(([path, contents]) => `--- ${path} ---\n${contents}`).join('\n\n')}` : prompt, models, schema);
+    const ask: AskAgent = (prompt, schema) => {
+      const supplied = agent !== 'claude-code' ? [...inlineEvidence].filter(([path]) => prompt.includes(path)) : [];
+      return askBackend(supplied.length ? `${prompt}\n\nThe following input files are supplied inline; no file tools are available:\n${supplied.map(([path, contents]) => `--- ${path} ---\n${contents}`).join('\n\n')}` : prompt, schema);
     };
     const writeInput = (name: string, value: unknown) => {
       const path = join(runDir, `${++fileNumber}-${name}.json`);
@@ -253,8 +242,18 @@ export function buildRefreshTask(options: RefreshTaskOptions): AgentTask & { ste
      * (FAILED_AFTER_WRITING_EXIT) is never retried, since a second answer would suggest its new areas again. */
     const runScript = async (args: string[]) => {
       const spawnImpl = options.spawnImpl ?? spawn;
-      const interpreter = await (python ??= resolvePythonCommand(spawnImpl));
-      const result = await runCommand(spawnImpl, interpreter.command, [...interpreter.args, ...args], { cwd: dataDir, env: { ...process.env, CLAUDE_MEM_INTERNAL: '1', PYTHONUTF8: '1' } });
+      const runtime = new Set(['PATH', 'PATHEXT', 'SYSTEMROOT', 'WINDIR', 'COMSPEC', 'HOME', 'USERPROFILE', 'APPDATA', 'LOCALAPPDATA', 'TEMP', 'TMP']);
+      const env = {
+        ...Object.fromEntries(Object.entries(process.env).filter(([key]) => runtime.has(key.toUpperCase()))),
+        CLAUDE_MEM_DATA_DIR: dataDir,
+        CLAUDE_MEM_WORKER_HOST: '127.0.0.1',
+        CLAUDE_MEM_WORKER_PORT: String(getWorkerPort({ readOnly: true })),
+        CLAUDE_MEM_INTERNAL: '1',
+        PYTHONUTF8: '1',
+        NO_PROXY: '127.0.0.1',
+      };
+      const interpreter = await (python ??= resolvePythonCommand(spawnImpl, process.platform, env));
+      const result = await runCommand(spawnImpl, interpreter.command, [...interpreter.args, ...args], { cwd: dataDir, env });
       if (result.spawnError) throw result.spawnError;
       if (result.exitCode !== 0) {
         throw Object.assign(new Error(`${args[0].split('/').pop()} exited ${result.exitCode}: ${`${result.stdout}\n${result.stderr}`.trim().slice(-800)}`),
@@ -273,7 +272,7 @@ export function buildRefreshTask(options: RefreshTaskOptions): AgentTask & { ste
       let refusal: string | null = null;
       let answer = '';
       for (let attempt = 0; attempt < 2; attempt++) {
-        answer = await ask(refusal ? `${question}\n\nYour previous answer was refused: ${refusal}\nRejected answer:\n${answer}\n\nFix it and answer again.` : question, STEP_MODELS[name], answerSchema);
+        answer = await ask(refusal ? `${question}\n\nYour previous answer was refused: ${refusal}\nRejected answer:\n${answer}\n\nFix it and answer again.` : question, answerSchema);
         try { return await save(parseAgentJson(answer)); }
         catch (error) {
           // A save that failed after it started writing is not the answer's fault, and asking again would write twice.
@@ -290,9 +289,7 @@ export function buildRefreshTask(options: RefreshTaskOptions): AgentTask & { ste
     });
     const readOnly = [
       'You are running in a read-only sandbox for claude-mem\'s automatic refresh: you cannot run commands that write or save. Nobody is watching, so never ask a question.',
-      agent === 'claude-code'
-        ? 'Search claude-mem memory with its MCP tools (search, timeline, get_observations) for evidence beyond the input files.'
-        : 'You have no memory tools: the input files hold the evidence (each conversation\'s asks and observations). Where the skill says to search memory, use them instead.',
+      'Use the supplied input evidence. Where the skill says to search memory, use the recorded asks and observations in the inputs.',
     ].join(' ');
 
     try {
@@ -384,7 +381,7 @@ export function buildRefreshTask(options: RefreshTaskOptions): AgentTask & { ste
             requestProgress, '---', readOnly,
             `Do only section 2's review for the groups whose \`show\` output is in ${writeInput('show', shows)}: decide each one from the evidence as the reviewer task describes (amend the previous review for a group in "amend" mode). Reply with only {"reviews": [<one record-progress input per group, with reviewBasis copied verbatim from its show output>]}.`,
             refusals.length ? `Your previous answer was refused for these groups:\n${refusals.join('\n')}\nFix them and answer again for those groups only. Here are the rejected reviews to correct, preserving their evidence and reviewBasis:\n${JSON.stringify(rejectedReviews)}` : '',
-          ].join('\n\n'), STEP_MODELS.review);
+          ].join('\n\n'));
           let reviews: Array<{ groupId?: string }> = [];
           try { const answer = parseAgentJson(text); reviews = Array.isArray(answer.reviews) ? answer.reviews : []; }
           catch { /* Every group in this batch is refused below as "no review was given". */ }
@@ -507,14 +504,7 @@ export function buildRefreshTask(options: RefreshTaskOptions): AgentTask & { ste
     steps,
     // The work-view folder holds every input file; the data dir above it holds .env and settings.json.
     cwd: ledgerDir,
-    claudeCode: {
-      // The plugin is loaded for its memory-search MCP server; steps read their input files and search memory, nothing else.
-      plugins: [{ type: 'local', path: pluginRoot }],
-      tools: ['Read', 'Grep', 'Glob'],
-      allowedTools: MEMORY_TOOLS.map(tool => `${PLUGIN_MCP_PREFIX}${tool}`),
-      // Prompts carry untrusted conversation text, so file reads are held to the input files' folder.
-      readableFolders: [ledgerDir],
-    },
+    readableFolders: [ledgerDir],
     run,
     prepare: needs.goalsStale ? prepareGoals : undefined,
   };

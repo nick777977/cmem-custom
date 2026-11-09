@@ -579,6 +579,7 @@ export class WorkerService implements WorkerRef {
     ));
 
     this.workViewRoutes = new WorkViewRoutes({
+      profiles: this.mainProfiles,
       getLocalDeviceId: () => this.dbManager.getLocalSyncDeviceId(),
       appendWorkStateEntry: (entry) => {
         this.dbManager.getSessionStore().appendWorkStateEntry(entry);
@@ -852,7 +853,7 @@ export class WorkerService implements WorkerRef {
         searchManager.getOrchestrator(),
         this.corpusStore
       );
-      const knowledgeAgent = new KnowledgeAgent(this.corpusStore);
+      const knowledgeAgent = new KnowledgeAgent(this.corpusStore, this.mainProfiles);
       this.server.registerRoutes(new CorpusRoutes(this.corpusStore, corpusBuilder, knowledgeAgent));
       logger.info('WORKER', 'CorpusRoutes registered');
 

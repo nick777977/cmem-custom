@@ -1,7 +1,6 @@
 import { readFile, writeFile, mkdir, rename, appendFile } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { createHumanCopyInput, humanCopyFingerprint, validateHumanCopy, HUMAN_COPY_INSTRUCTIONS } from './human-copy.mjs';
-import { endpointRejectsReasoningField, isUnknownReasoningParameter, rememberEndpointRejectsReasoningField } from '../worker/reasoning-budget.js';
 
 function fitText(value, limit) {
   if (typeof value !== 'string') return value;
@@ -38,6 +37,7 @@ function safeFailureReason(error) {
   const status = Number(error?.status);
   if (Number.isInteger(status) && status >= 100 && status <= 599) return `HTTP ${status}`;
   const message = error instanceof Error ? error.message : '';
+  if (error?.issue === 'auth_invalid' || error?.issue === 'setup_required') return 'Selected profile needs attention';
   if (message.startsWith('No answer text')) return 'No answer text';
   if (message === 'Invalid summary JSON.') return 'Invalid summary JSON';
   if (error?.name === 'AbortError' || error?.name === 'TimeoutError') return 'Request timed out';
@@ -46,6 +46,7 @@ function safeFailureReason(error) {
 }
 
 function httpStatus(error) {
+  if (error?.issue === 'auth_invalid' || error?.issue === 'setup_required') return 401;
   const status = Number(error?.status);
   return Number.isInteger(status) && status >= 100 && status <= 599 ? status : null;
 }
@@ -58,52 +59,20 @@ function isPermanentClientError(status) {
   return status >= 400 && status < 500 && !RETRYABLE_CLIENT_STATUSES.includes(status);
 }
 
-/** OpenAI-compatible chat completions with the user's configured observer
- * endpoint, key and model. The caller decides whether one is configured. */
-export function chatCompletionsHumanCopyProvider({ url, apiKey, model, fallbackModels = [], sendReasoningOff = true, fetchImpl = fetch }) {
+/** Adapt a selected text route to the existing copy validator and cache. */
+export function modelHumanCopyProvider(send) {
   return async input => {
-    const headers = { 'Content-Type': 'application/json' };
-    if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
-    const withReasoning = sendReasoningOff && !endpointRejectsReasoningField(url);
-    let response = await send(withReasoning);
-    // Strict schemas (vLLM) 400 on the unknown `reasoning` field: remember the URL and resend once without it,
-    // as the observer does (OpenAICompatProvider). Any other refusal stands.
-    if (withReasoning && (response.status === 400 || response.status === 422)) {
-      const text = await response.clone().text().catch(() => '');
-      if (isUnknownReasoningParameter(text)) {
-        rememberEndpointRejectsReasoningField(url);
-        response = await send(false);
-      }
-    }
-    if (!response.ok) {
-      const error = new Error(`Summary request returned ${response.status}.`);
-      error.status = response.status;
-      throw error;
-    }
-    const data = await response.json();
-    const raw = data.choices?.[0]?.message?.content;
-    const content = typeof raw === 'string' ? raw : Array.isArray(raw) ? raw.filter(part => part.type === 'text').map(part => part.text || '').join('') : '';
+    const result = await send([
+      { role: 'system', content: `${HUMAN_COPY_INSTRUCTIONS}\n${SUMMARY_STYLE}` },
+      { role: 'user', content: JSON.stringify(input) },
+    ]);
     let output = null;
-    try { if (content.trim()) output = JSON.parse(content); } catch { /* Retain usage even for unusable output. */ }
-    return { output, usage: data.usage ?? null, model: data.model ?? model, responseId: data.id ?? null,
-      error: !content.trim() ? `No answer text (finish: ${data.choices?.[0]?.finish_reason || 'unknown'}).` : output === null ? 'Invalid summary JSON.' : null };
-
-    function send(includeReasoning) {
-      return fetchImpl(url, {
-        method: 'POST', signal: AbortSignal.timeout(90000),
-        headers,
-        body: JSON.stringify({
-          ...(fallbackModels.length ? { models: [model, ...fallbackModels] } : { model }),
-          stream: false, temperature: 0.15, max_tokens: 5000,
-          ...(includeReasoning ? { reasoning: { enabled: false } } : {}),
-          response_format: { type: 'json_object' },
-          messages: [
-            { role: 'system', content: `${HUMAN_COPY_INSTRUCTIONS}\n${SUMMARY_STYLE}` },
-            { role: 'user', content: JSON.stringify(input) },
-          ],
-        }),
-      });
-    }
+    try { output = JSON.parse(result.content); } catch { /* Preserve the cached copy on invalid JSON. */ }
+    const usage = result.inputTokens === undefined && result.outputTokens === undefined ? null : {
+      prompt_tokens: result.inputTokens, completion_tokens: result.outputTokens, cost: result.costUsd,
+    };
+    return { output, usage, model: result.servedModel, responseId: null,
+      error: !result.content.trim() ? 'No answer text' : output === null ? 'Invalid summary JSON.' : null };
   };
 }
 

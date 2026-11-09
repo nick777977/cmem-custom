@@ -19,8 +19,9 @@ import { join } from 'node:path';
 import { askFocusArea, MIN_OWNER_LABELED_PAIRS, requestContexts } from '../src/services/work-view/focus-judge.mjs';
 import { MY_FOCUS_LIST, OTHER_FOCUS_AREA_ID, buildFocusAreas } from '../src/services/work-view/my-focus.mjs';
 import { readLedger } from '../src/services/work-view/request-groups.mjs';
-import { jevClientFromSettings } from '../src/services/work-view/request-judge.mjs';
+import { jevClientFromSelection } from '../src/services/work-view/request-judge.mjs';
 import { reduceWorkState } from '../src/services/work-view/work-state-reduce.mjs';
+import { readMainProfiles } from '../src/services/worker/model-profiles.ts';
 import { SettingsDefaultsManager } from '../src/shared/SettingsDefaultsManager.ts';
 
 /** The cutoffs the table is printed at: every tenth from 0.5 to 0.9, plus 0.95 to split the top band. Below 0.5 Jev
@@ -87,8 +88,7 @@ async function main(database, { databasePath, dataDir, settings, dryRun }) {
     return;
   }
   if (dryRun) { console.log('\nDry run: Jev was not asked.'); return; }
-  const client = jevClientFromSettings(settings);
-  if (!client) throw new Error('This install has no Jev client (CMEM Pro gateway or OpenRouter with a key); nothing can be asked.');
+  const client = jevClientFromSelection(readMainProfiles(join(dataDir, 'settings.json')).focusJudge);
   const ledger = readLedger(join(dataDir, 'work-view'));
   const titles = new Map(Object.values(ledger.groups.groups).map((group) => [group.anchor, group.title]));
   const anchors = [...new Set(asked.map((pair) => pair.anchor))];

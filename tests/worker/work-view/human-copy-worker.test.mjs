@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { HumanCopyWorker, chatCompletionsHumanCopyProvider, fitGeneratedCopy } from '../../../src/services/work-view/human-copy-worker.mjs';
+import { HumanCopyWorker, modelHumanCopyProvider, fitGeneratedCopy } from '../../../src/services/work-view/human-copy-worker.mjs';
 import { createHumanCopyInput, validateHumanCopy } from '../../../src/services/work-view/human-copy.mjs';
 
 const request = (id = 'request-one', progress = 'The local source is connected.') => ({
@@ -307,33 +307,6 @@ test('explicit off hides cached wording while retaining it for later reuse', asy
   assert.equal(calls, 1);
 });
 
-test('a strict server that rejects the reasoning field gets one resend without it, and is remembered', async () => {
-  const bodies = [];
-  const provider = chatCompletionsHumanCopyProvider({
-    url: 'http://127.0.0.1:8000/v1/strict-reasoning/chat/completions', apiKey: '', model: 'vllm-model',
-    fetchImpl: async (_url, init) => {
-      const body = JSON.parse(init.body); bodies.push(body);
-      if (Object.hasOwn(body, 'reasoning')) return new Response(JSON.stringify({ object: 'error', message: "[{'type': 'extra_forbidden', 'loc': ('body', 'reasoning'), 'msg': 'Extra inputs are not permitted'}]" }), { status: 400 });
-      return new Response(JSON.stringify({ choices: [{ message: { content: '{"title":"t"}' } }] }));
-    },
-  });
-  assert.deepEqual((await provider({ version: 1 })).output, { title: 't' });
-  assert.deepEqual(bodies.map(body => Object.hasOwn(body, 'reasoning')), [true, false]);
-  // The next request to that URL leaves the field out from the start.
-  await provider({ version: 2 });
-  assert.deepEqual(bodies.map(body => Object.hasOwn(body, 'reasoning')), [true, false, false]);
-});
-
-test('any other 400 is not resent', async () => {
-  let calls = 0;
-  const provider = chatCompletionsHumanCopyProvider({
-    url: 'http://127.0.0.1:8000/v1/other-400/chat/completions', apiKey: '', model: 'm',
-    fetchImpl: async () => { calls++; return new Response(JSON.stringify({ error: { message: 'model is required' } }), { status: 400 }); },
-  });
-  await assert.rejects(provider({ version: 1 }), error => error.status === 400);
-  assert.equal(calls, 1);
-});
-
 test('402 (out of credits) retries on the capped backoff instead of waiting for a settings change', async t => {
   let now = 0, calls = 0;
   const instance = worker(async () => { calls++; throw Object.assign(new Error('insufficient credits'), { status: 402 }); },
@@ -348,31 +321,18 @@ test('402 (out of credits) retries on the capped backoff instead of waiting for 
   now = 250; instance.pump(); await settle(); assert.equal(calls, 3);
 });
 
-test('the chat-completions provider omits authorization for a configured keyless local endpoint', async () => {
-  let sent;
-  const provider = chatCompletionsHumanCopyProvider({
-    url: 'http://127.0.0.1:1234/v1/chat/completions', apiKey: '', model: 'local-model',
-    fetchImpl: async (url, init) => { sent = { url, init }; return new Response(JSON.stringify({ choices: [{ message: { content: '{"title":"t"}' } }] })); },
-  });
-  await provider({ version: 1 });
-  assert.equal(sent.url, 'http://127.0.0.1:1234/v1/chat/completions');
-  assert.equal(Object.hasOwn(sent.init.headers, 'Authorization'), false);
-});
-
-test('the chat-completions provider sends the configured model and key and parses JSON copy', async () => {
-  let sent;
-  const provider = chatCompletionsHumanCopyProvider({
-    url: 'https://example.test/v1/chat/completions', apiKey: 'key-1', model: 'configured-model',
-    fetchImpl: async (url, init) => { sent = { url, init }; return new Response(JSON.stringify({ model: 'configured-model', choices: [{ message: { content: '{"title":"t"}' } }] })); },
+test('the copy adapter sends presentation instructions and parses the selected route response', async () => {
+  let messages;
+  const provider = modelHumanCopyProvider(async value => {
+    messages = value;
+    return { content: '{"title":"t"}', servedModel: 'configured-model', inputTokens: 15, outputTokens: 5 };
   });
   const input = { original: { text: 'Lütfen iş kartlarımı göster.' } };
   const result = await provider(input);
-  assert.equal(sent.url, 'https://example.test/v1/chat/completions');
-  assert.equal(sent.init.headers.Authorization, 'Bearer key-1');
-  const body = JSON.parse(sent.init.body);
-  assert.equal(body.model, 'configured-model');
-  assert.ok(body.messages[0].content.includes('First decide which human language the person wrote original.text in, ignoring code, file paths, URLs, repository and product names; write every value in that language. It overrides the language of these instructions and of the rest of the payload.'));
-  assert.deepEqual(JSON.parse(body.messages[1].content), input);
+  assert.ok(messages[0].content.includes('First decide which human language the person wrote original.text in'));
+  assert.deepEqual(JSON.parse(messages[1].content), input);
   assert.deepEqual(result.output, { title: 't' });
+  assert.equal(result.model, 'configured-model');
+  assert.equal(result.usage.prompt_tokens, 15);
   assert.equal(result.error, null);
 });

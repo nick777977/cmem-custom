@@ -6,9 +6,14 @@ import { join } from 'node:path';
 import { askFocusArea, FOCUS_AUTO_PLACE_THRESHOLD, jevFocusJudge, judgeFocusBatch, MIN_OWNER_LABELED_PAIRS, placesAlone } from '../../src/services/work-view/focus-judge.mjs';
 import { focusAreaRowFields, MY_FOCUS_LIST, readFocus } from '../../src/services/work-view/my-focus.mjs';
 import { groupIdFor, readLedger, runCli } from '../../src/services/work-view/request-groups.mjs';
-import { jevClient, MAX_CANDIDATE_REQUESTS, MAX_DECISION_BODY_BYTES } from '../../src/services/work-view/request-judge.mjs';
+import { jevClientFromSelection, MAX_CANDIDATE_REQUESTS, MAX_DECISION_BODY_BYTES } from '../../src/services/work-view/request-judge.mjs';
+import { resolveMainProfiles } from '../../src/services/worker/model-profiles.js';
 import { buildRefreshTask } from '../../src/services/work-view/refresh-task.js';
 import { everyRequestInOther, focusInputFrom, focusWriter, isOtherPass } from '../helpers/fake-focus-writer.js';
+
+const localProfile = { id: 'main', provider: 'openai-compatible', model: 'synthetic-main', auth: 'none', endpoint: 'http://127.0.0.1:54321/v1' };
+const focusJudge = { ...localProfile, model: 'synthetic-focus', endpoint: 'http://127.0.0.1:54321/decisions' };
+const selection = resolveMainProfiles({ default: localProfile, focusJudge }, {}).focusJudge;
 
 const DAY = 86400000, NOW = 100 * DAY;
 const key = (session: string) => JSON.stringify(['conversation', 'claude', session]);
@@ -84,19 +89,19 @@ describe('the focus judge', () => {
     const dir = ledgerDir();
     try {
       let sent = 0;
-      const big = jevClient({ url: 'https://cmem.ai/api/inference/v1/decisions', apiKey: `cm_pro_${'a'.repeat(24)}`, fetchImpl: async () => { sent++; return new Response('{"answers":{}}'); } });
+      const big = jevClientFromSelection(selection, { fetchImpl: async () => { sent++; return new Response('{"answers":{}}'); } });
       // The request's title is not cut by the context reader, so a huge one makes the question too large.
       const database = fixture(dir, { cardsTitle: 'x'.repeat(MAX_DECISION_BODY_BYTES) });
       const ledger = readLedger(dir);
       const input = { ...runFocusInput(dir, database) };
       const results = await judgeFocusBatch({ judge: jevFocusJudge(big), input, database: handle(database)(), ledger });
       const cards = results.find(result => result.anchor === key('a'))!;
-      expect(cards).toEqual({ anchor: key('a'), focusAreaId: null, confidence: null, evidence: expect.stringContaining('the decisions gateway takes at most 65536. It is not trimmed') });
+      expect(cards).toEqual({ anchor: key('a'), focusAreaId: null, confidence: null, evidence: expect.stringContaining('decision_body_too_large') });
       // The other two were small enough and were sent, once each, with no retry.
       expect(sent).toBe(2);
 
-      const spent = jevClient({ url: 'https://cmem.ai/api/inference/v1/decisions', apiKey: `cm_pro_${'a'.repeat(24)}`, fetchImpl: async () => new Response(JSON.stringify({ error: { code: 'allowance_exhausted', message: 'Monthly allowance spent.' } }), { status: 402 }) });
-      expect((await judgeFocusBatch({ judge: jevFocusJudge(spent), input, database: handle(database)(), ledger }))[1]).toEqual({ anchor: key('c'), focusAreaId: null, confidence: null, evidence: 'Judge jev could not judge it: Jev answered 402 allowance_exhausted: Monthly allowance spent.' });
+      const spent = jevClientFromSelection(selection, { fetchImpl: async () => new Response(JSON.stringify({ error: { code: 'allowance_exhausted', message: 'Monthly allowance spent.' } }), { status: 402 }) });
+      expect((await judgeFocusBatch({ judge: jevFocusJudge(spent), input, database: handle(database)(), ledger }))[1]).toEqual({ anchor: key('c'), focusAreaId: null, confidence: null, evidence: 'Judge jev could not judge it: decision_http_402' });
       // Only kept areas are offered; with none kept, nothing is asked.
       const quiet = fakeJev(() => { throw new Error('must not be asked'); });
       expect((await judgeFocusBatch({ judge: jevFocusJudge(quiet.client), input: { ...input, areas: input.areas.filter((area: any) => area.status !== 'kept') }, database: handle(database)(), ledger }))[0]).toMatchObject({ focusAreaId: null, evidence: 'Judge jev: no kept focus area to choose from.' });

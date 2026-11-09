@@ -914,46 +914,49 @@ export async function processAgentResponse(
     });
   }
 
-  // Alerts fire for newly stored observations only; a Tier-0 merge (#3038)
-  // re-confirms a row that already alerted.
-  const fresh = freshlyStoredObservations(labeledObservations, result);
+  // The explicit-profile worker keeps stored memory and notifications local.
+  if (!session.mainProfileFingerprint) {
+    // Alerts fire for newly stored observations only; a Tier-0 merge (#3038)
+    // re-confirms a row that already alerted.
+    const fresh = freshlyStoredObservations(labeledObservations, result);
 
-  void notifyTelegram({
-    observations: fresh.observations,
-    observationIds: fresh.observationIds,
-    project: context.project,
-    memorySessionId: registeredMemorySessionId,
-  });
+    void notifyTelegram({
+      observations: fresh.observations,
+      observationIds: fresh.observationIds,
+      project: context.project,
+      memorySessionId: registeredMemorySessionId,
+    });
 
-  void notifyGrokBotAwareness({
-    observations: fresh.observations,
-    observationIds: fresh.observationIds,
-    project: context.project,
-    memorySessionId: registeredMemorySessionId,
-    agentId: context.pendingAgentId,
-  });
+    void notifyGrokBotAwareness({
+      observations: fresh.observations,
+      observationIds: fresh.observationIds,
+      project: context.project,
+      memorySessionId: registeredMemorySessionId,
+      agentId: context.pendingAgentId,
+    });
 
-  // Optional brainbeat webhook (off unless CLAUDE_MEM_GROK_BOT_WEBHOOK_URL is set).
-  // Like the alerts above, only newly stored rows fire (a dedup merge re-confirms one that already did).
-  void notifyGrokBotBrainbeat({
-    observations: fresh.observations,
-    observationIds: fresh.observationIds,
-    project: context.project,
-  });
+    // Optional brainbeat webhook (off unless CLAUDE_MEM_GROK_BOT_WEBHOOK_URL is set).
+    // Like the alerts above, only newly stored rows fire (a dedup merge re-confirms one that already did).
+    void notifyGrokBotBrainbeat({
+      observations: fresh.observations,
+      observationIds: fresh.observationIds,
+      project: context.project,
+    });
 
-  // Optional Notion export (off unless CLAUDE_MEM_NOTION_ENABLED). Queues and
-  // returns; the upserts run in the background and never fail capture.
-  notifyNotion({
-    observations: fresh.observations,
-    observationIds: fresh.observationIds,
-    project: context.project,
-    memorySessionId: registeredMemorySessionId,
-    createdAtEpoch: result.createdAtEpoch,
-  });
+    // Optional Notion export (off unless CLAUDE_MEM_NOTION_ENABLED). Queues and
+    // returns; the upserts run in the background and never fail capture.
+    notifyNotion({
+      observations: fresh.observations,
+      observationIds: fresh.observationIds,
+      project: context.project,
+      memorySessionId: registeredMemorySessionId,
+      createdAtEpoch: result.createdAtEpoch,
+    });
 
-  // Growing Grok Bot INDEX: any new observation (any project) can fill a
-  // thin seat diary via the house fallback, so refresh all mapped seats.
-  notifyGrokBotIndex();
+    // Growing Grok Bot INDEX: any new observation (any project) can fill a
+    // thin seat diary via the house fallback, so refresh all mapped seats.
+    notifyGrokBotIndex();
+  }
 
   await syncAndBroadcastObservations(
     labeledObservations,
