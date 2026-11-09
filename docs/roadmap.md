@@ -36,7 +36,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 3 | Local memory without hosted setup/history import | IP W1; A16 | S | done-bounded; HOSTED-03 S 417483949 / G 298d44742, 58 tests + compile PASS |
 | 4 | Local diagnostics without remote telemetry | IP W2; A18 | S | done-bounded; TELEMETRY-04 S 0abd4180b / G 6bb7c6995, 206 tests + compile PASS |
 | 5 | Local SQLite/Chroma without cloud sync | IP W3; A27 | S | done-bounded for local worker. Legacy credentials and queues inert in compiled loopback checks. Real Chroma activation remains step 7. [CLOUD-05](enterprise-local/handoffs/CLOUD-05.md) |
-| 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | not started; reuse existing adapters; split PROFILE-06A/06B if needed |
+| 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | PROFILE-06A done-bounded for observer, summary and field compression. PROFILE-06B owns remaining background and standalone routes. [Evidence](enterprise-local/handoffs/PROFILE-06A.md) |
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17 | M | source refusal done-bounded, S 8fa997979 / G b8734d9b2, 127 tests + compile PASS; activation/contract U1/D9 open |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | not started; retain identity/sharing/filter/capture/retrieval behavior |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28 | M | done-bounded for private Codex CLI on Windows x64. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Desktop and Claude host acceptance remain open. |
@@ -195,7 +195,7 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 3 | 3 and 7 | Hosted done; Chroma source refusal done, activation awaits D9 | Hosted-free core and eventual local-index candidate |
 | 4 | 4 and 9 | Telemetry done; Windows launcher/generators/CLI preflight; author synthetic process/CI runner, scoped early V3 when launched | Deterministic entrypoints and quick runtime feedback |
 | 5 | 5 | DatabaseManager/CloudSync/SyncClient/routes and worker; V1/V2, safe V3 slice | Local data without cloud sync |
-| 6 | 6 | Existing providers/dispatch/env/settings/roles and effective status; PROFILE-06A then 06B if needed; V1/V2/V3 | All model tasks obey explicit profiles |
+| 6 | 6 | Existing providers/dispatch/env/settings/roles and effective status. PROFILE-06A then PROFILE-06B, V1/V2/V3 | All model tasks obey explicit profiles |
 | 7 | 8 | Worker API/viewer network and profile settings presentation, identity semantics retained; V3/browser checks | Local-only interface with visible routing |
 | 8 | 10 | Scripts/manifests/locks/artifacts; retained dependency closure, CI pinning/provisioning gate; V4 as prerequisites permit | Reviewed exact artifact |
 | 9 | 11 | Exact artifact, disposable local E2E, process-tree/network evidence, separate V5 rows | Tested configuration; unavailable live routes remain pending |
@@ -203,7 +203,7 @@ own concrete reviewed scope and cleanup/evidence contract.
 
 Remaining implementation covers 6/7/8 memory/model/index wiring, followed by
 local artifact/E2E/install acceptance in 10/11/12. The
-[next implementation prompt](enterprise-local/NEXT-SESSION.md) is PROFILE-06A.
+[next implementation prompt](enterprise-local/NEXT-SESSION.md) is PROFILE-06B.
 The tested Windows lane and its limitations are recorded in
 [WINDOWS-09-LOCAL](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 

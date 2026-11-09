@@ -23,10 +23,15 @@ the copied MCP server, which saved and found a synthetic observation in SQLite.
 See the [Windows setup runbook](WINDOWS-LOCAL-SETUP.md) and the
 [check results and limits](handoffs/WINDOWS-09-LOCAL.md).
 
-Accepted target contracts A19/A20 (not implemented yet): [LLM-PROFILES](LLM-PROFILES.md),
+Accepted target contracts A19/A20: [LLM-PROFILES](LLM-PROFILES.md),
 [VALIDATION](VALIDATION.md). Current adaptation [PLAN-ADAPT-05](handoffs/PLAN-ADAPT-05.md)
 was documentation-only. Later WINDOWS-09 source/compile evidence is below; no runtime,
 CI, login or real user-state access was performed.
+
+**PROFILE-06A, 2026-11-09.** The main worker now requires explicit model
+profiles. A copied worker passed a synthetic loopback check across observation,
+summary and field compression. [Configuration](LLM-PROFILES.md#main-worker-configuration)
+and [evidence](handoffs/PROFILE-06A.md).
 
 ## Current local development baseline
 

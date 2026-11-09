@@ -1,8 +1,8 @@
 # User-controlled LLM profiles and task routing
 
-Accepted target contract, 2026-11-02, decisions A19/A20. Full role routing
-remains step 6. A28 requires an explicit observer profile in the private
-Codex launcher.
+Accepted target contract, 2026-11-02, decisions A19/A20. PROFILE-06A implements
+the main worker routes described below. Step 6 still includes background and
+standalone work. A28 requires an explicit observer profile in the private Codex launcher.
 
 A27 clarification (2026-11-04): Codex/ChatGPT login is the first local live-test
 route. Claude Code Enterprise through AWS Bedrock/AWS SSO remains a required
@@ -60,10 +60,9 @@ routing, if needed later, must be explicit and separately scoped.
 
 ## Profile contract
 
-This is a logical contract, **not an already accepted JSON/settings schema**. Step 6
-chooses the smallest compatible representation in existing settings and reports the
-exact migration/validation contract before retaining source changes. No new config
-service, plugin framework, secret store or provider rewrite is required by this plan.
+The table defines the contract for all retained model jobs. The main worker
+uses the [settings representation below](#main-worker-configuration). PROFILE-06B
+extends it to the remaining jobs.
 
 | Field/concept | Requirement |
 |---|---|
@@ -86,6 +85,77 @@ Changing the endpoint requires revalidation of credential binding. Reject creden
 that belong to another service; do not follow cross-origin redirects carrying auth or
 content. No API key, OAuth token, query-secret URL or raw memory enters diagnostics.
 Exact endpoint/network approval is profile-specific; do not invent AWS/auth allowlists.
+
+## Main worker configuration
+
+`CLAUDE_MEM_MODEL_PROFILES` accepts a JSON object in `settings.json`, including
+the existing `env` wrapper. The process environment accepts the same object as
+a JSON string and takes precedence over the entire file value. The private
+Windows launcher accepts this object with `--profile` and passes through only
+the API key references that the selected profiles name.
+
+```json
+{
+  "default": {
+    "id": "local-test",
+    "provider": "openai-compatible",
+    "model": "synthetic-observer",
+    "auth": "none",
+    "endpoint": "http://127.0.0.1:43984/v1"
+  },
+  "summary": {
+    "id": "local-summary",
+    "provider": "openai-compatible",
+    "model": "synthetic-summary",
+    "auth": "none",
+    "endpoint": "http://127.0.0.1:43984/v1"
+  }
+}
+```
+
+`default` is required. The only override keys in this slice are `observer`,
+`summary` and `compression`. Each override is a complete profile. Omission
+inherits the default. An invalid override stays paused. A missing or invalid
+default blocks admission. An invalid observer selection also blocks the session
+generator. An unavailable compressor keeps the existing local field truncation.
+
+| Provider | Auth | Additional required fields and binding |
+|---|---|---|
+| `openai-compatible` | `api-key` | `endpoint`, `keyEnv`. The endpoint serves chat completions. |
+| `openai-compatible` | `none` | `endpoint` on `127.0.0.1`. |
+| `openrouter` | `api-key` | `endpoint`, `keyEnv`. Select a single model and a chat-completions endpoint. |
+| `gemini` | `api-key` | `keyEnv` bound to `https://generativelanguage.googleapis.com/`. |
+| `claude` | `api-key` | Absolute Claude `executable` and `keyEnv` bound to `https://api.anthropic.com/`. |
+| `claude` | `claude-login` | Absolute Claude `executable` and selected `authHome` with usable native OAuth credentials. Windows and Linux use the selected directory's `.credentials.json`. |
+| `claude` | `aws-sso` | Absolute Claude `executable`, AWS CLI `awsPath`, `awsConfigFile`, selected `awsProfile` and `region`. Select a Bedrock model ID or inference-profile ARN. The selected IAM Identity Center profile supplies temporary credentials. |
+| `codex` | `chatgpt` | Absolute Codex `executable` and selected `authHome` with native ChatGPT login. |
+
+Every profile also requires a lowercase local `id`, `provider`, `model` and
+`auth`. Use a concrete model identifier accepted by the selected adapter.
+On Windows the native executable fields require local drive paths to `.exe`
+files. Profile API keys stay in the worker process environment. For a
+`keyEnv` value of `CMEM_PROFILE_KEY_WORK`, set that variable to the key and
+`CMEM_PROFILE_KEY_WORK_ENDPOINT` to the approved base URL or fixed provider
+origin. Changing the destination requires updating the binding. HTTP is
+accepted on `127.0.0.1`. Use HTTPS elsewhere. The HTTP adapters refuse
+redirects and profile URLs reject embedded credentials, query strings, fragments
+and CMEM endpoints. The named AWS SSO profile should already be signed in using
+the normal AWS mechanism. The worker resolves that profile's short-lived
+credentials through AWS CLI `configure export-credentials`.
+[AWS CLI reference](https://docs.aws.amazon.com/cli/latest/reference/configure/export-credentials.html).
+
+Legacy `CLAUDE_MEM_PROVIDER`, provider model defaults, key pools, tier aliases
+and quota-fallback settings do not enable main worker inference. To migrate,
+write the explicit profile and selected auth reference. Existing settings and
+SQLite rows need no schema migration. A repaired profile can resume queued
+work on the next event or through the existing local processing retry.
+
+`GET /api/health` exposes `ai.roles` with the effective profile ID, model,
+provider, auth, inheritance and configuration state. Failures use safe
+categories. Credentials, auth directories, endpoints and raw transport errors
+stay out of this status. `configured` describes local selection. Native login
+availability and remote entitlement are checked by the selected transport.
+See [PROFILE-06A](handoffs/PROFILE-06A.md) for the evidence boundary.
 
 ## Roles and effective settings
 

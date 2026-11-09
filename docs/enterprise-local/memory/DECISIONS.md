@@ -187,6 +187,19 @@ rows and the ownership checks for replicated rows. Local remaps keep their
 existing project predicates and Chroma metadata reconciliation.
 [Validation and rollback](../handoffs/CLOUD-05.md).
 
+### PROFILE-06A implementation of A19 and A27 (2026-11-09)
+
+Use `CLAUDE_MEM_MODEL_PROFILES` in the existing worker settings or process
+environment. One required default supplies omitted role overrides. A present
+invalid override pauses that route. HTTP API keys are referenced by environment
+name and bound to the selected destination by a companion environment value.
+The profile path bypasses legacy provider, tier, credential and gateway fallback.
+For Claude, the existing hardened one-shot SDK path serves each role through
+the shared worker queue. AWS SSO resolves the selected named profile through
+the explicit AWS CLI and passes its temporary credentials to Claude. Status is
+read-only and excludes credentials and destination paths. The exact schema and
+remaining compatibility work are in the [profile contract](../LLM-PROFILES.md#main-worker-configuration).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

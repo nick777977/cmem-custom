@@ -944,4 +944,21 @@ compiled starts, SQLite and viewer reads, five 404s, and zero fixture HTTP or
 upgrade requests after the positive control. The second stop preserved the
 note and both legacy queue rows. Removed the disposable registration.
 No live inference. [Evidence, preliminary failures and rollback](../handoffs/CLOUD-05.md).
-Released reservations and handed step 6 to [PROFILE-06A](../NEXT-SESSION.md).
+Released reservations and handed step 6 to [PROFILE-06A](../handoffs/PROFILE-06A.md).
+
+## 2026-11-09 — PROFILE-06A
+
+Clean entry f1f6ce612. Source, focused tests and generated outputs 534de7911.
+Added a default profile and optional main worker role overrides in existing
+settings, credential binding for API endpoints, explicit native auth sources,
+safe health status and queue-preserving failure handling. The private Windows
+launcher translates its existing profile inputs and accepts the full profile set.
+
+165 focused tests and 501 assertions, both typechecks and guarded compile
+passed. A byte-identical worker copy used a synthetic loopback fixture without
+administrator rights. It withheld legacy-only and missing-key work, resumed
+buffered work after explicit configuration, sent exactly five fake requests
+across three success and two failure routes, reopened the resulting SQLite
+rows and shut down cleanly. All three approved live turns remain unused.
+[Evidence and rollback](../handoffs/PROFILE-06A.md). Released reservations.
+[PROFILE-06B](../NEXT-SESSION.md) owns remaining model paths.

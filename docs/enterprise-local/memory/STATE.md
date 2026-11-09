@@ -1,8 +1,18 @@
 # Current handoff
 
-Updated 2026-11-09 after CLOUD-05 on feat/cmem-light-local by one coordinator.
-Clean entry 7b7e5cbdb. A27 is current scope.
+Updated 2026-11-09 after PROFILE-06A on feat/cmem-light-local by one coordinator.
+Clean entry f1f6ce612. A27 is current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
+
+The main worker requires an explicit default model profile and accepts optional
+observer, summary and field compression overrides. Its health response shows
+the effective role choices and safe failure categories. Legacy settings alone
+pause model work with the queue intact. A copied compiled worker routed all
+three roles to synthetic loopback endpoints, preserved failed work and stored
+an observation and summary in SQLite. Source and paired build `534de7911`.
+165 focused tests / 501 assertions, root/viewer typechecks and guarded compile
+passed. [Configuration](../LLM-PROFILES.md#main-worker-configuration) and
+[evidence and limits](../handoffs/PROFILE-06A.md).
 
 The local worker no longer registers cloud corpus sync or TeamBrain proxy
 routes or runs push, pull or realtime. Old settings and both legacy queues
@@ -76,7 +86,7 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**PROFILE-06A: route the main worker model tasks through explicit profiles.**
+**PROFILE-06B: route the remaining background and standalone model tasks.**
 [NEXT-SESSION](../NEXT-SESSION.md) gives bounded source and validation scope.
 Then follow the [phase-one roadmap](../../roadmap.md) for remaining model roles,
 local Chroma/embeddings and the remaining acceptance. The local launcher evidence

@@ -7,6 +7,29 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-09 completed **PROFILE-06A** claim, one coordinator on clean
+`feat/cmem-light-local` at `f1f6ce61221ac92fc05330c6410aefbc886c7fde`.
+Source reserved: `src/services/worker/{provider-dispatch,model-profiles,MainWorkerProfiles,OpenAICompatibleProvider,OpenAICompatProvider,OpenRouterProvider,GeminiProvider,CodexProvider,CodexAppServerClient,ClaudeProvider,streamed-chat-completion}.ts`,
+`src/services/worker/{http/routes/SessionRoutes,session/GeneratorRunner}.ts`,
+`src/services/{worker-service,server/Server}.ts`, `src/shared/oauth-token.ts`,
+and `scripts/enterprise-local/codex-local.mjs` for private launcher compatibility.
+The shared response boundary and session state are also reserved in
+`src/services/worker/agents/ResponseProcessor.ts` and `src/services/worker-types.ts`.
+`src/supervisor/process-registry.ts` is reserved for explicit Claude launch options.
+Focused tests: `tests/enterprise-local/profile-06a.test.ts`; scratch:
+`.scratch/enterprise-local/profile-06a/`. Serial compile owns the worker CJS/map
+pair, with all other tracked outputs and build inputs checked for changes before
+retaining any delta. Docs: `docs/roadmap.md`, `docs/enterprise-local/{LLM-PROFILES,
+WINDOWS-LOCAL-SETUP,NEXT-SESSION}.md`, `memory/{STATE,TASKS,WORKLOG,DECISIONS}.md`
+and `handoffs/PROFILE-06A.md` under `docs/enterprise-local/`.
+Compile review also reserves `plugin/scripts/server-service.cjs.map`. The
+standalone server CJS did not change. The shared spawn registry and HTTP
+completion imports account for the map change.
+Closure also updates README, SESSION-PROMPTS, VALIDATION and the CLOUD-05
+handoff link under `docs/enterprise-local/`. Source, tests and emitted files
+are paired in `534de7911`. The copied worker passed its loopback fixture and
+stopped. Reservations released. PROFILE-06B is next and unclaimed.
+
 2026-11-09 completed **WINDOWS-09-LOCAL** claim at 34f908ae6 on feat/cmem-light-local.
 One coordinator. Source and paired artifacts in ef815b29a. Synthetic checks ran
 under .scratch/enterprise-local/windows-09-local/. Reservations released. The final
@@ -16,7 +39,7 @@ synthetic profile remains registered and stopped.
 one coordinator. Source, focused tests and five emitted pairs in e87ef65ae.
 The compiled test used a fresh private catalog under
 .scratch/enterprise-local/cloud-05/ and removed its registration after stop.
-Reservations released. PROFILE-06A is next and unclaimed.
+Reservations released. PROFILE-06A followed this slice.
 
 2026-11-09 completed claim: **PHASE1-DATA-CHECK**, serial coordinator, clean entry
 4df2b8f5ef3fb9b79b9f7401bd1fb42bc6936328. Read source only. Check Bun SQLite/FTS5

@@ -83,4 +83,4 @@ Keep the SQLite data. Revert the source and compiled pairs together if
 required. Reverting can re-enable cloud sync for previously configured
 settings and queues, so keep a reverted worker stopped until its settings
 have been reviewed. No down migration is needed for the CLOUD-05 change.
-[PROFILE-06A](../NEXT-SESSION.md) owns explicit main-worker model roles.
+[PROFILE-06A](PROFILE-06A.md) followed with explicit main-worker model roles.
