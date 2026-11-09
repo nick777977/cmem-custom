@@ -68,6 +68,7 @@ edges/waves, and [LLM-PROFILES](LLM-PROFILES.md) owns model routing policy.
 | HOSTED-03 | 58 isolated tests + one real compile PASS | Full installed memory flow or actual model access |
 | CHROMA-07 | 127 mocked/synthetic tests + one real compile PASS | Approved Python/model, running Chroma or embeddings |
 | TELEMETRY-04 | 206 tests / 728 assertions + one real compile PASS | Full worker/MCP/host process-tree lifecycle or provider auth correctness |
+| [CLOUD-05](handoffs/CLOUD-05.md) | Focused SQLite, route and local index fixtures, typechecks and guarded compile. Bounded compiled worker passed two cycles against a reachable loopback fixture with zero hub/model traffic, five cloud routes returning 404 and legacy queues preserved. | Whole-process OS egress proof, separate server/host integrations, real Chroma or inference |
 | Previous user build/start | User-reported build and worker ready; preserved separately | Current source/artifact, full memory/Chroma/provider acceptance |
 | WINDOWS-09 source/harness | 17 V1 tests / 53 assertions, compile/viewer typecheck PASS; root three unchanged baseline TS2345 | No actual generated process, readiness or complete private path proof |
 | WINDOWS-09B source/harness | 19 V1 tests / 112 assertions, one compile/viewer PASS; root same three errors; eight paired outputs changed, 19 inputs preserved | Explicit-root refusal is not a global boundary around remaining host templates/Setup/grammar; no V3/readiness |

@@ -35,7 +35,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 2 | Compile locally without install, sync or restart | IP W8; A11/A14/A15 | S | boundary accepted for source progression; release provenance/OS evidence pending in 10/11/12 |
 | 3 | Local memory without hosted setup/history import | IP W1; A16 | S | done-bounded; HOSTED-03 S 417483949 / G 298d44742, 58 tests + compile PASS |
 | 4 | Local diagnostics without remote telemetry | IP W2; A18 | S | done-bounded; TELEMETRY-04 S 0abd4180b / G 6bb7c6995, 206 tests + compile PASS |
-| 5 | Local SQLite/Chroma without cloud sync | IP W3 | S | not started |
+| 5 | Local SQLite/Chroma without cloud sync | IP W3; A27 | S | done-bounded for local worker. Legacy credentials and queues inert in compiled loopback checks. Real Chroma activation remains step 7. [CLOUD-05](enterprise-local/handoffs/CLOUD-05.md) |
 | 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | not started; reuse existing adapters; split PROFILE-06A/06B if needed |
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17 | M | source refusal done-bounded, S 8fa997979 / G b8734d9b2, 127 tests + compile PASS; activation/contract U1/D9 open |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | not started; retain identity/sharing/filter/capture/retrieval behavior |
@@ -201,9 +201,9 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 9 | 11 | Exact artifact, disposable local E2E, process-tree/network evidence, separate V5 rows | Tested configuration; unavailable live routes remain pending |
 | 10 | 12 | Windows bundle/SBOM/runbook/install/rollback on exact final hashes | Release candidate for validated profiles |
 
-Remaining implementation covers 5/6/7/8 memory/model/index wiring, followed by
+Remaining implementation covers 6/7/8 memory/model/index wiring, followed by
 local artifact/E2E/install acceptance in 10/11/12. The
-[next implementation prompt](enterprise-local/NEXT-SESSION.md) is CLOUD-05.
+[next implementation prompt](enterprise-local/NEXT-SESSION.md) is PROFILE-06A.
 The tested Windows lane and its limitations are recorded in
 [WINDOWS-09-LOCAL](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 

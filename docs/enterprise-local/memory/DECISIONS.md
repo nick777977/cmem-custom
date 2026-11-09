@@ -175,6 +175,18 @@ The lifecycle fixture uses a loopback endpoint and explicitly disables Chroma.
 The remaining Claude host and full packaged acceptance are later checks.
 [Evidence and limits](../handoffs/WINDOWS-09-LOCAL.md).
 
+### CLOUD-05 implementation boundary (2026-11-09)
+
+Apply A27 to the local worker by removing the cloud push/pull lifecycle,
+sync status and TeamBrain proxy routes, and new cloud mutation production.
+Keep the existing SQLite schema, persisted device ID, origin data and legacy
+queue rows. Remove the startup outbox purge so switching to this fork does
+not discard queued history. Clear the obsolete sync-health banner state.
+Keep the existing cloud-disabled deletion guard for previously acknowledged
+rows and the ownership checks for replicated rows. Local remaps keep their
+existing project predicates and Chroma metadata reconciliation.
+[Validation and rollback](../handoffs/CLOUD-05.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

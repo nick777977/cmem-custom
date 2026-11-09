@@ -10,7 +10,13 @@ This board does not grant permission or duplicate the dependency graph.
 2026-11-09 completed **WINDOWS-09-LOCAL** claim at 34f908ae6 on feat/cmem-light-local.
 One coordinator. Source and paired artifacts in ef815b29a. Synthetic checks ran
 under .scratch/enterprise-local/windows-09-local/. Reservations released. The final
-synthetic profile remains registered and stopped. CLOUD-05 is next, unclaimed.
+synthetic profile remains registered and stopped.
+
+2026-11-09 completed **CLOUD-05** claim at 7b7e5cbdb on feat/cmem-light-local,
+one coordinator. Source, focused tests and five emitted pairs in e87ef65ae.
+The compiled test used a fresh private catalog under
+.scratch/enterprise-local/cloud-05/ and removed its registration after stop.
+Reservations released. PROFILE-06A is next and unclaimed.
 
 2026-11-09 completed claim: **PHASE1-DATA-CHECK**, serial coordinator, clean entry
 4df2b8f5ef3fb9b79b9f7401bd1fb42bc6936328. Read source only. Check Bun SQLite/FTS5
@@ -62,7 +68,8 @@ checks are in DEV-ENVIRONMENT/WORKLOG. Next WINDOWS-09-LOCAL is ready-unclaimed.
 | WINDOWS-09F / 9 continuation | done-review; full step9 BLOCKED | Coordinator finished 2026-11-03; feat/cmem-light-local; serial; entry R1ca61590d | None active; all released | Review aebc55e99; no source/test/build/runtime. Concrete APIs mapped; host activation/native artifact-ABI-DNS-crash-release/execution inputs missing. handoffs/WINDOWS-09F.md. |
 | PHASE1-ALIGN / coordination | done; plan and inert CLI checks | Coordinator finished 2026-11-04; feat/cmem-light-local; entry d055fea4c | None; all released | A27 permits necessary bootstrap/downloads and no-admin local functionality; Codex0.166.0-alpha.6/help/tool versions and ChatGPT-login presence verified; no app/code/inference. |
 | WINDOWS-09-LOCAL / 9 | done-bounded | Coordinator finished; feat/cmem-light-local; entry 34f908ae6 | None active | ef815b29a, 70 tests, typechecks, compile, private catalog/real worker and MCP SQLite checks, transfer on matching host, uninstall. [Evidence](../handoffs/WINDOWS-09-LOCAL.md). No live inference. |
-| CLOUD-05 / 5 | ready-unclaimed | None; serial selected branch | None | Remove worker cloud sync routes and runtime wiring while preserving SQLite and local Chroma. [Next session](../NEXT-SESSION.md). |
+| CLOUD-05 / 5 | done-bounded | Coordinator finished; feat/cmem-light-local; entry 7b7e5cbdb | None active | e87ef65ae, focused checks and guarded compile, compiled restart with legacy settings and two inert outboxes. [Evidence](../handoffs/CLOUD-05.md). |
+| PROFILE-06A / 6 | ready-unclaimed | None; serial selected branch | None | Explicit main-worker role selection, dispatch and status. [Next session](../NEXT-SESSION.md). |
 
 ## WINDOWS-09F reservation history — all released
 

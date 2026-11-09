@@ -1,8 +1,14 @@
 # Current handoff
 
-Updated 2026-11-09 after WINDOWS-09-LOCAL on feat/cmem-light-local by one coordinator.
-Clean entry 34f908ae6. Source and compiled pairs ef815b29a. A27 is current scope.
+Updated 2026-11-09 after CLOUD-05 on feat/cmem-light-local by one coordinator.
+Clean entry 7b7e5cbdb. A27 is current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
+
+The local worker no longer registers cloud corpus sync or TeamBrain proxy
+routes or runs push, pull or realtime. Old settings and both legacy queues
+were inert across two starts of a copied private install. SQLite data and
+legacy device identity remain readable. The worker stopped cleanly and the
+disposable registration was removed. [CLOUD-05 evidence](../handoffs/CLOUD-05.md).
 
 Private Codex CLI registration from a transferred copy passed. A non-admin
 worker reached SQLite readiness, served the viewer and stopped cleanly. Codex
@@ -70,9 +76,9 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**CLOUD-05: remove shared worker cloud corpus sync wiring.**
+**PROFILE-06A: route the main worker model tasks through explicit profiles.**
 [NEXT-SESSION](../NEXT-SESSION.md) gives bounded source and validation scope.
-Then follow the [phase-one roadmap](../../roadmap.md) for explicit role routing,
+Then follow the [phase-one roadmap](../../roadmap.md) for remaining model roles,
 local Chroma/embeddings and the remaining acceptance. The local launcher evidence
 covers the tested private CLI configuration. Desktop integration, full memory
 acceptance and release packaging remain separate checks.

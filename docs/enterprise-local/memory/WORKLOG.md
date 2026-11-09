@@ -928,3 +928,20 @@ Catalog lists gpt-6-luna. Zero live calls because native built-in provider
 retry overrides were rejected. No Python packages or Chroma assets installed
 for this Windows slice. See [runbook](../WINDOWS-LOCAL-SETUP.md) and
 [evidence and rollback](../handoffs/WINDOWS-09-LOCAL.md). Next source CLOUD-05.
+
+## 2026-11-09 — CLOUD-05
+
+Source, tests and generated pairs e87ef65ae from clean entry 7b7e5cbdb.
+Removed the local worker's cloud push, pull, realtime and remote-only routes.
+Legacy queues and device identity stay readable. Local writes, deletes and
+project remaps do not create cloud operations. Kept local Chroma reconciliation
+and documented the separate server API and TeamBrain host surfaces.
+
+83 focused tests / 446 assertions, root/viewer typechecks and guarded
+build:compile passed. A sandboxed Bun loopback attempt returned EACCES.
+The approved ordinary-user run installed a private copy and verified two
+compiled starts, SQLite and viewer reads, five 404s, and zero fixture HTTP or
+upgrade requests after the positive control. The second stop preserved the
+note and both legacy queue rows. Removed the disposable registration.
+No live inference. [Evidence, preliminary failures and rollback](../handoffs/CLOUD-05.md).
+Released reservations and handed step 6 to [PROFILE-06A](../NEXT-SESSION.md).

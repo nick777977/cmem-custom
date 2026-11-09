@@ -86,6 +86,29 @@ one compile PASS; bounded Node closure, not OS-wide/Python E11/runtime acceptanc
 The register below retains historical pinned-source findings; E03/E04 are retired
 by this superseding status. SDK declaration/tree pruning remains step 10.
 
+## CLOUD-05 local worker disposition (2026-11-09)
+
+E05 is retired in the local worker. The compiled worker has no CloudSync,
+SyncClient, SyncApply, sync status or TeamBrain proxy module in its source map.
+Both legacy outboxes remain on disk and the local worker has no drain. A
+reachable IPv4 loopback fixture saw no requests or upgrade attempts during
+two starts with legacy credentials, including a restart with both queues populated. See
+[source, fixture and evidence limits](enterprise-local/handoffs/CLOUD-05.md).
+
+Separate surfaces inventoried for later closure:
+
+- The standalone server entrypoint still registers authenticated `/v1`
+  event, memory and search routes, with a Postgres implementation that also
+  exposes `/v1/connect`. This is separate from the local SQLite worker and its
+  former cloud hub client. [Server bootstrap](../src/server/runtime/ServerService.ts#L197),
+  [SQLite server routes](../src/server/routes/v1/ServerV1Routes.ts#L151),
+  [Postgres server routes](../src/server/routes/v1/ServerV1PostgresRoutes.ts#L247).
+- The separate host context hook can fetch a team brief when TeamBrain is
+  configured. The MCP team tools still point to the retired worker proxy
+  paths. These entrypoints remain in inventory for the packaged-surface
+  review in steps 10 and 11. [Context hook](../src/cli/handlers/context.ts#L263),
+  [MCP tool declarations](../src/servers/mcp-server.ts#L780).
+
 ## Reachable capability register
 
 | ID | Evidence / caller / trigger | Destination and payload / process | Policy and disposition | Dependency impact and future regression proof |
@@ -94,7 +117,7 @@ by this superseding status. SDK declaration/tree pruning remains step 10.
 | E02 | `src/services/worker-service.ts:601`; `src/services/setup/history-import.ts:101`; WorkViewRoutes at `:597` | `${origin}/api/import`; historical memory upload using cloud token; worker | Forbidden: remove import wiring/client independently of E01 | HistoryImport routes and setup state; old setup token must be inert |
 | E03 | `src/services/telemetry/telemetry.ts:1,78,514,586`; worker logger bridge `worker-service.ts:665`, buffer `:1003` | Default `https://us.i.posthog.com` from `telemetry/common.ts:21`; events/exceptions/install metadata; worker | Forbidden: remove transport, jobs and SDK; retain local logging | Telemetry instrumentation callers/build closure; boot/error/shutdown must produce no analytics attempt |
 | E04 | `src/services/telemetry/cli-telemetry.ts:75` invokes fetch to configured telemetry host | `${host}/capture/`; CLI events; CLI process | Forbidden: remove CLI transport too | CLI consent/settings/commands; CLI tests and packaged entrypoint closure |
-| E05 | `worker-service.ts:859,939,1051`; `src/services/sync/CloudSync.ts:637,1022,1674`; `SyncClient.ts` | Dynamic hub; `/v1/sync/status`, `/v1/sync/ops`, realtime/polling; corpus mutations and auth; worker | Forbidden: remove remote sync lifecycle/routes/clients | DatabaseManager outbox flags/device identity; preserve schema/Chroma; old tokens, restart, retries must not connect |
+| E05 | Historical `worker-service.ts:859,939,1051`; `src/services/sync/CloudSync.ts:637,1022,1674`; `SyncClient.ts` | Dynamic hub; `/v1/sync/status`, `/v1/sync/ops`, realtime/polling; corpus mutations and auth; worker | Forbidden; removed from local worker by CLOUD-05 | Legacy settings and restart verified with a loopback fixture. Exact packaged-surface review remains in 10/11. |
 | E06 | `src/services/worker/provider-dispatch.ts:232,336,412`; instantiated providers `worker-service.ts:337` | Gateway/third-party model APIs, dynamic compatible endpoints; observer content/keys; worker or child | Retain explicit compatible profile routes under A19; reject unselected destinations/models/accounts and implicit fallback/probing | SessionRoutes, settings, quota routing, UI; unsupported profile/auth/model combinations, legacy defaults and failures must fail closed |
 | E07 | `src/services/worker/ClaudeProvider.ts:436,475,501,1069`; `src/shared/EnvManager.ts:230,306,368`; `src/supervisor/env-sanitizer.ts:42,60` | SDK child inherits broad env and possible OAuth/key fallback; exact selected endpoint UNKNOWN; observer content | Retain explicitly selected Claude Bedrock/API/login modes; isolate profile auth/env and validate BOTH observer call sites | Preserve hardened SDK options and recursion guard; selected/expired SSO and login, explicit API modes, wrong-profile keys, proxy/CA tests |
 | E08 | `src/services/sync/ChromaMcpManager.ts:1015` builds uvx arguments; stdio transport `:449` | Runtime Python package resolution; package indexes/cache; uvx/Python subprocess | Replace with absolute pre-provisioned executable | Pin full compatible dependency graph; cold-cache test must not spawn package manager |

@@ -6,6 +6,12 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
+**CLOUD-05, 2026-11-09.** Reused Node 22.23.4, npm 10.9.9 and Bun 1.4.4.
+Root/viewer typechecks and guarded compile passed. The default sandbox denied
+the Bun loopback control with EACCES. The approved ordinary-user rerun used a
+fresh private install and passed two compiled-worker cycles, with graceful
+shutdown and local catalog removal. [Evidence and limits](handoffs/CLOUD-05.md).
+
 **WINDOWS-09-LOCAL, 2026-11-09**, source/build ef815b29a. Direct Node 22.23.4,
 npm 10.9.9 and Bun 1.4.4 retained with existing dependencies. Desktop Codex
 CLI 0.167.0-alpha.3.2 replaces the earlier tested binary path for this host.

@@ -102,12 +102,14 @@ OS/process-tree runtime acceptance 11. [Evidence/rollback G then S](enterprise-l
 
 ## 5. Cloud removal with local indexing intact
 
-Candidates: remove cloud push/pull/realtime/routes/lifecycle; stop remote outbox
-production while preserving SQLite schema/device compatibility and Chroma synchronization.
-Acceptance: old token/hub settings inert, no remote client; durable events and index
-rebuild/restart preserved. Planned validation: DatabaseManager/SQLite/sync fixtures,
-including `tests/services/sync/chroma-sync-reconcile.test.ts`. Rollback: preserve data;
-revert source, no destructive down migration.
+Done-bounded for the local worker. Removed cloud push, pull, realtime, sync
+status and TeamBrain proxy registration. SQLite schema, device identity and
+legacy queue contents remain readable. Local writes and remaps do not create
+new cloud mutations. Local Chroma reconciliation is covered by fixtures.
+An installed worker passed startup, read/write, restart and shutdown with
+legacy settings and queues in a loopback fixture. Real Chroma rebuild remains
+step 7. Revert the paired source and artifacts together and preserve the data.
+[Evidence and rollback](enterprise-local/handoffs/CLOUD-05.md).
 
 ## 6. Explicit user LLM profiles for every retained model task
 
