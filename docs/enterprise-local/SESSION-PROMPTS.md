@@ -1,11 +1,12 @@
 # Session prompts and bounded handoffs
 
-Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), WINDOWS-09-LOCAL after
-PHASE1-ALIGN/A27 (2026-11-04): functional Codex-first local setup, required downloads
-allowed, build/install/run without admin/UAC, Claude Code/Bedrock/AWS SSO retained.
+Current launcher: [NEXT-SESSION.md](NEXT-SESSION.md), CLOUD-05 after the
+bounded [WINDOWS-09-LOCAL](handoffs/WINDOWS-09-LOCAL.md) implementation.
+A27 permits required downloads and ordinary-user build/install/run.
+Claude Code/Bedrock/AWS SSO adapters are retained.
 Strong native OS sandbox and CI are deferred from phase-one prerequisites. Current
-Codex login is authorized for minimal synthetic live tests; propose exact model and
-budget before inference. No public publication/CMEM account or real-memory test data.
+Codex login and gpt-6-luna are approved for up to three short synthetic turns.
+Zero turns used. No public publication, CMEM account or real-memory test data.
 Historical refusal/source-only restrictions below are superseded where they conflict
 with A27; old actual checks remain historical evidence. A19/A20 supersede Bedrock-only:
 retain explicit user-configured LLM adapters/roles; add real compiled-process/CI
@@ -83,7 +84,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | A27 WINDOWS-09-LOCAL: user-level bootstrap and Codex local-build integration; no repeated native isolation review |
+| `docs/enterprise-local/NEXT-SESSION.md` | CLOUD-05: remove remote corpus sync wiring from the local worker while retaining SQLite and ChromaSync |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Canonical user profile/role/auth/model target; not implemented yet |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |

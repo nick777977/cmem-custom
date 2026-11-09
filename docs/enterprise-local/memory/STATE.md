@@ -1,8 +1,22 @@
 # Current handoff
 
-Updated 2026-11-09 after PHASE1-DATA-CHECK on feat/cmem-light-local by one coordinator.
-Clean entry/source inspected 4df2b8f5ef3fb9b79b9f7401bd1fb42bc6936328. A27 is current
-scope; historical blanket refusals and native-sandbox prerequisites are superseded.
+Updated 2026-11-09 after WINDOWS-09-LOCAL on feat/cmem-light-local by one coordinator.
+Clean entry 34f908ae6. Source and compiled pairs ef815b29a. A27 is current scope.
+Historical blanket refusals and native-sandbox prerequisites are superseded.
+
+Private Codex CLI registration from a transferred copy passed. A non-admin
+worker reached SQLite readiness, served the viewer and stopped cleanly. Codex
+app-server loaded MCP and saved and retrieved a synthetic observation without a
+turn. Seven hooks were discovered and the Windows SessionStart command was
+exercised directly. Codex still requires normal hook trust review. Three earlier
+test registrations were removed with their SQLite data retained. Final synthetic
+installation is stopped. [Setup](../WINDOWS-LOCAL-SETUP.md) and
+[evidence](../handoffs/WINDOWS-09-LOCAL.md).
+
+Guarded compile, root/viewer typechecks and 70 targeted tests passed. The
+worker's external mode skips the legacy handle scan that crashed under Bun and
+refuses port reclaim. Transfer was tested on the same x64 Windows host.
+
 PHASE1-ALIGN changed the plan and ran tool probes. PHASE1-DATA-CHECK recorded the
 model approval and checked embedded SQLite and Chroma package presence. No application,
 harness, generated, manifest or lock change. Claims released at closure.
@@ -25,7 +39,7 @@ Special native Job/AppContainer/WFP/DNS/crash-proof isolation and CI are deferre
 from phase-one gates. Ordinary deadlines, owned process/file cleanup and real memory
 acceptance remain mandatory. Existing source refusals are implementation gaps to fix.
 
-## Checks actually performed
+## Prior phase-one checks
 
 Direct desktop Codex executable: codex-cli 0.166.0-alpha.6; --help, app-server --help,
 plugin --help exit0. Node22.23.4/npm10.9.9/Bun1.4.4/Python3.13.15 version probes
@@ -34,16 +48,15 @@ in .scratch/enterprise-local/phase1-align; no timeout/kill needed. A ninth autho
 native login-status probe returned exit0/CHATGPT_LOGIN_PRESENT; only sanitized mode
 was retained. No model catalog, credential-file inspection/copying, inference, real memories, app-server/service/
 worker/MCP/listener, dependency install or compile/typecheck/test replay. No Windows
-elevation requested; no-admin full setup acceptance is still pending.
+elevation was requested in those probes.
 
 PHASE1-DATA-CHECK at 4df2b8f5e confirmed Bun SQLite 3.53.4, WAL, file reopen and
 FTS5 query on a synthetic file. Neither chromadb nor chroma-mcp package metadata
 was found in the selected Python 3.13 installation, its ordinary user site or
 the repo .venv/venv paths. No SQLite system installation needed. Select a compatible
-project/user-local Chroma environment during implementation. Chroma, embeddings and
-integrated app readiness remain unverified. Three previous TS2345 errors are SettingsDefaults vs Record<string,string>
-type mismatches, not missing Chrome. Last application compile/viewer checks passed;
-root typecheck failed those three; no new app result claimed. 09/09B/09C/09D/09E/09F
+project/user-local Chroma environment during implementation. Chroma and embeddings
+remain unverified. WINDOWS-09-LOCAL corrected the three SettingsDefaults TS2345
+errors. 09/09B/09C/09D/09E/09F
 commits and exact previous source/compile evidence preserved.
 
 ## Auth/model decisions
@@ -51,16 +64,15 @@ commits and exact previous source/compile evidence preserved.
 User authorizes existing Codex/ChatGPT login for minimal synthetic live tests via
 normal auth, with low token usage. On 2026-11-09 they approved gpt-6-luna and a
 maximum of three short synthetic turns, with no automatic retries or fallback.
-Check availability before inference and report usage. Live calls remain not run.
+Native catalog lists gpt-6-luna. Account entitlement is unverified. Strict CLI
+config rejects zero-retry overrides for the built-in provider. Zero turns used.
 Corporate Bedrock/SSO live acceptance remains for the authorized corporate environment.
-No further policy questions. Account model availability remains unverified.
 
 ## One next implementation task
 
-**WINDOWS-09-LOCAL: user-level local bootstrap/build and Codex host binding.**
-[NEXT-SESSION](../NEXT-SESSION.md) gives bounded source/validation scope. Fix relevant
-type incompatibility, replace disabled local paths with real no-admin setup; preserve
-CMEM removal and existing providers. Do not restore the old installer wholesale.
-Then follow the existing [phase-one roadmap](../../roadmap.md) across steps5/6/7/8
-and actual local acceptance/packaging. No new review tree or OS-sandbox loop.
-Step9 is still incomplete; no working setup, Chroma or full memory acceptance claimed.
+**CLOUD-05: remove shared worker cloud corpus sync wiring.**
+[NEXT-SESSION](../NEXT-SESSION.md) gives bounded source and validation scope.
+Then follow the [phase-one roadmap](../../roadmap.md) for explicit role routing,
+local Chroma/embeddings and the remaining acceptance. The local launcher evidence
+covers the tested private CLI configuration. Desktop integration, full memory
+acceptance and release packaging remain separate checks.

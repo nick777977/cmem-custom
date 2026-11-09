@@ -1,6 +1,6 @@
 ---
 status: living
-updated_at: 2026-11-03
+updated_at: 2026-11-09
 ---
 
 # Enterprise local memory roadmap
@@ -39,7 +39,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | not started; reuse existing adapters; split PROFILE-06A/06B if needed |
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17 | M | source refusal done-bounded, S 8fa997979 / G b8734d9b2, 127 tests + compile PASS; activation/contract U1/D9 open |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | not started; retain identity/sharing/filter/capture/retrieval behavior |
-| 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A27 | M | source incomplete: current host/startup refusals must be replaced with working local setup. A27 permits necessary downloads/bootstrap and bounded tests; Codex first, Claude Code/Bedrock preserved. No admin/UAC. Custom OS boundary/CI no longer blocks phase one; historical V1/V2 evidence retained, actual setup acceptance pending. |
+| 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28 | M | done-bounded for private Codex CLI on Windows x64. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Desktop and Claude host acceptance remain open. |
 | 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | not started; preserve needed SDK/Codex/API adapters, prune proved-unused closures only |
 | 11 | Exact-artifact local E2E, egress and selected-profile acceptance | IP P6/P7; A20 | M | not started; mock/offline checks independent of Bedrock availability; live rows separately gated |
 | 12 | Verified Windows bundle, SBOM, install/rollback and profile runbook | IP P8; A19/A20 | S | not started; deployment requires the intended profile's actual live evidence |
@@ -81,13 +81,13 @@ contract prerequisite is still open. D11 does not become a SQLite-only product m
 
 ## Validation checkpoints during development
 
-Tests and real compile have already run, but compiled worker/MCP lifecycle, exact
-install and live model access are not established. Add early runtime feedback within
-existing increments instead of postponing all startup errors until final step 11:
+Tests, compile and bounded Windows private Codex lifecycle have run. Full
+release-artifact install and live model access remain open. Use runtime feedback
+within the remaining increments:
 
-- Step 9 authors/reviews the reusable synthetic compiled-entrypoint runner and a
-  fork CI lane definition. With separate execution scope, V3 checks safe load/no-op/
-  missing-input/refusal paths; it does not need Bedrock or Chroma activation.
+- Step 9 has historical mock runner and CI source evidence. WINDOWS-09-LOCAL
+  adds real compiled worker and Codex/MCP checks in a dedicated installation.
+  The formal release and CI lanes remain separate.
 - Steps 5/6/8 run affected V1/V2 checks and, when authorized/safe, relevant V3 slices.
   Step 6 proves profile routing/no-send failure behavior without cloud accounts.
 - Once 5/6/7/8/9 prerequisites are available, V4 runs real local memory/index/restart
@@ -129,7 +129,7 @@ required; this is separate from the selected summary LLM.
 |---|---|---|---|
 | D1 | A27 permits required dependency/tool/model downloads; choose compatible versions and official or enterprise-approved sources, document lifecycle. CI runner policy remains D12 | agent; user supplies enterprise restrictions if applicable | concrete dependency setup, 7/10/12 |
 | D2 | Allowed stored/LLM payloads per enabled profile and role? | human | real data/live tests, 8/11 |
-| D5 | Local build loading accepted by A27: implement supported Codex local catalog/config and Claude Code local directory loading, coexistence and owned rollback without public publishing | agent; user-level target scope | actual local integration, 9/11/12 |
+| D5 | A28 verifies dedicated Codex CLI local catalog and rollback. Confirm desktop and Claude Code local directory loading and target coexistence on their intended hosts | agent; user-level target scope | remaining host and packaged acceptance, 11/12 |
 | D7 | Exact selected profile(s): auth mode, endpoint/Region, model, proxy/CA and allowed infrastructure? No secrets in docs | human | actual live provider rows, 6/11 |
 | D8 | Approved local data location, retention/backup rules? | human | deployment, 8/12 |
 | D9 | Select/test compatible Python/Chroma/local embedding packages and versions; record source/license/hash/API as engineering work under A27 download permission, no manual user-supplied ABI required | agent | functioning local Chroma, 7/V4/10/12 |
@@ -201,12 +201,11 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 9 | 11 | Exact artifact, disposable local E2E, process-tree/network evidence, separate V5 rows | Tested configuration; unavailable live routes remain pending |
 | 10 | 12 | Windows bundle/SBOM/runbook/install/rollback on exact final hashes | Release candidate for validated profiles |
 
-Remaining implementation: 9 local setup, 5/6/7/8 memory/model/index wiring, then local
-artifact/E2E/install acceptance in 10/11/12. A27 resolves the old download/runtime/
-unbound-host policy conflict. Do not keep native OS/CI research in the phase-one
-critical path or repeat generic audits. The [single next implementation prompt](enterprise-local/NEXT-SESSION.md)
-is WINDOWS-09-LOCAL: user-level bootstrap/build and working local Codex integration.
-Formal release hardening/CI stays deferred; actual functional checks are still required.
+Remaining implementation covers 5/6/7/8 memory/model/index wiring, followed by
+local artifact/E2E/install acceptance in 10/11/12. The
+[next implementation prompt](enterprise-local/NEXT-SESSION.md) is CLOUD-05.
+The tested Windows lane and its limitations are recorded in
+[WINDOWS-09-LOCAL](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 
 ## Shipped
 

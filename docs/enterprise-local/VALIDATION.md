@@ -2,6 +2,12 @@
 
 ## Current phase-one contract — A27, 2026-11-04
 
+WINDOWS-09-LOCAL adds bounded real installation and lifecycle evidence for
+the private Windows Codex CLI lane. It covers local catalog, compiled worker
+and MCP, SQLite save/search, viewer, same-host transfer and removal. Chroma
+was disabled only for the synthetic lifecycle check. Full V4 and live V5
+remain pending. [Evidence](handoffs/WINDOWS-09-LOCAL.md).
+
 The owner has clarified the first deliverable: local checkout -> necessary user-level
 dependency/bootstrap setup -> local build -> local Codex integration -> real memory
 workflow, retaining Claude Code Enterprise/Bedrock/AWS SSO portability. No CMEM

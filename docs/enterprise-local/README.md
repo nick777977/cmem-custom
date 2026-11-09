@@ -17,6 +17,12 @@ checks remain required. Old refusal work below is historical, not desired functi
 [Current handoff](memory/STATE.md), [phase-one route](../roadmap.md),
 [acceptance contract](VALIDATION.md), [next source task](NEXT-SESSION.md).
 
+**WINDOWS-09-LOCAL, 2026-11-09.** The private Codex CLI install and foreground
+worker passed bounded local acceptance on Windows x64 without UAC. Codex loaded
+the copied MCP server, which saved and found a synthetic observation in SQLite.
+See the [Windows setup runbook](WINDOWS-LOCAL-SETUP.md) and the
+[check results and limits](handoffs/WINDOWS-09-LOCAL.md).
+
 Accepted target contracts A19/A20 (not implemented yet): [LLM-PROFILES](LLM-PROFILES.md),
 [VALIDATION](VALIDATION.md). Current adaptation [PLAN-ADAPT-05](handoffs/PLAN-ADAPT-05.md)
 was documentation-only. Later WINDOWS-09 source/compile evidence is below; no runtime,
@@ -88,14 +94,14 @@ generated changes, compile/typecheck or real child; 09D evidence preserved. Nati
 remains BLOCKED; step9 partial. [Exact evidence/gaps/rollback](handoffs/WINDOWS-09E.md).
 That next review was completed below.
 
-Latest **WINDOWS-09F aebc55e99**: bounded source/Microsoft API feasibility review
+Historical **WINDOWS-09F aebc55e99**: bounded source/Microsoft API feasibility review
 complete at R1ca61590d. Concrete job admission, security/network, stream/deadline and
 cleanup primitives mapped to missing native/artifact/ABI/DNS/crash-release inputs.
 No source/generated edit, test/compile/typecheck/runtime/CI. **Full step9 BLOCKED**:
 host commands still intentionally unbound/exit1 and D5 unselected; a working local
 install cannot be claimed under those retained constraints. No generic review replay
 queued. Next useful source: local host binding after scope/input resolution.
-[Exact findings/limits/rollback](handoffs/WINDOWS-09F.md), [single prompt](NEXT-SESSION.md).
+[Exact historical findings/limits/rollback](handoffs/WINDOWS-09F.md).
 
 ## Reading order
 

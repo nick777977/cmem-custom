@@ -6,6 +6,16 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
+**WINDOWS-09-LOCAL, 2026-11-09**, source/build ef815b29a. Direct Node 22.23.4,
+npm 10.9.9 and Bun 1.4.4 retained with existing dependencies. Desktop Codex
+CLI 0.167.0-alpha.3.2 replaces the earlier tested binary path for this host.
+Windows x64 10.0.26200. Typechecks, guarded compile and 70 focused tests pass.
+Ordinary-user install/start/stop/uninstall and a copied build on the same host
+pass. Codex app-server and compiled MCP saved and found a synthetic SQLite
+observation, and the local viewer responded. Chroma packages and weights were
+not provisioned in this slice. Catalog lists gpt-6-luna, zero live calls.
+[Setup](WINDOWS-LOCAL-SETUP.md), [evidence and limits](handoffs/WINDOWS-09-LOCAL.md).
+
 **PHASE1-DATA-CHECK, 2026-11-09**, entry 4df2b8f5e. The selected Bun `bun:sqlite` reports
 SQLite 3.53.4. On a synthetic file, creation with WAL, FTS5 insert, close/reopen and
 `MATCH` read passed. The app uses embedded SQLite. A system sqlite3 executable is

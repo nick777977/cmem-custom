@@ -1,6 +1,8 @@
 # User-controlled LLM profiles and task routing
 
-Accepted target contract, 2026-11-02, decisions A19/A20. **Not implemented yet.**
+Accepted target contract, 2026-11-02, decisions A19/A20. Full role routing
+remains step 6. A28 requires an explicit observer profile in the private
+Codex launcher.
 
 A27 clarification (2026-11-04): Codex/ChatGPT login is the first local live-test
 route. Claude Code Enterprise through AWS Bedrock/AWS SSO remains a required
@@ -12,7 +14,9 @@ Necessary dependency and local embedding-model downloads/bootstrap are permitted
 special native OS sandbox/CI proof is deferred from first functional delivery.
 Current Codex login and gpt-6-luna are approved for up to three short synthetic
 turns (2026-11-09). Verify account availability first. No automatic retries or
-fallback. No live calls have been run.
+fallback. WINDOWS-09-LOCAL found the exact model in the native catalog.
+Account entitlement remains unverified. Strict config rejected disabling
+retries on the built-in provider, so the full three-turn budget remains unused.
 Supersedes the Bedrock-only target in the supplied initial plan and old session
 prompts. Historical evidence/commits remain unchanged. Dependencies and execution
 waves live only in [roadmap](../roadmap.md); runtime evidence requirements live in

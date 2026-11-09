@@ -904,3 +904,27 @@ contracts. Existing setup/runtime work remains unclaimed. NEXT-SESSION carries t
 next no-admin Windows bootstrap and Codex integration task. Docs-only change, with
 source/generated/dependency and historical evidence preserved. Rollback is reverting
 this documentation commit. Scratch files are synthetic and disposable.
+
+## 2026-11-09 — WINDOWS-09-LOCAL
+
+Source and paired artifacts ef815b29a from clean entry 34f908ae6.
+Added Windows-only private catalog install, explicit model/profile inputs,
+foreground worker, Codex hooks and MCP binding, and native unregister.
+Corrected the three Chroma settings type errors and bounded managed worker
+startup, shutdown and port ownership. Reproduced the Bun native handle scan
+crash and excluded that scan from the external worker mode.
+
+Typechecks, 70 targeted tests and guarded build:compile passed. Direct CLI
+0.167.0-alpha.3.2 registered the plugin. Same-host copied build with a path
+containing spaces passed on a non-admin token. Real app-server discovered the
+hooks, the SessionStart command ran directly with synthetic stdin, and actual
+MCP save/search used SQLite. The viewer responded and the worker exited cleanly.
+Earlier disposable profiles were unregistered with data retained. Final
+disposable profile remains stopped. The first sandbox expansion was rejected
+against obsolete PHASE1-ALIGN scope. Later synthetic loopback checks were
+approved and passed without Windows elevation.
+
+Catalog lists gpt-6-luna. Zero live calls because native built-in provider
+retry overrides were rejected. No Python packages or Chroma assets installed
+for this Windows slice. See [runbook](../WINDOWS-LOCAL-SETUP.md) and
+[evidence and rollback](../handoffs/WINDOWS-09-LOCAL.md). Next source CLOUD-05.

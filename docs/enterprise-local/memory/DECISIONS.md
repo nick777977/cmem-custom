@@ -163,13 +163,25 @@ short synthetic live turns using the authorized Codex login. Check model availab
 first. No automatic retries, fallback or use of actual memories. This is test scope,
 not a new production model default. Zero live turns used in PHASE1-DATA-CHECK.
 
+### A28 — private Codex CLI install and external worker lifecycle (2026-11-09)
+
+WINDOWS-09-LOCAL implements D5 for the tested Codex CLI lane. Install under a
+new user-writable root, use a private local catalog and dedicated Codex home,
+and render absolute hook/MCP commands from the copied build. The user reviews
+hook trust through Codex. The foreground launcher owns the worker and its
+shutdown. The normal profile and other provider adapters remain separate.
+The observer uses an explicitly selected profile independent of the host login.
+The lifecycle fixture uses a loopback endpoint and explicitly disables Chroma.
+The remaining Claude host and full packaged acceptance are later checks.
+[Evidence and limits](../handoffs/WINDOWS-09-LOCAL.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |
 |---|---|---|
 | P01 | Retain SQLite/FTS5 + persistent local Chroma and existing Claude SDK | Matches supplied objective; runtime compatibility unverified |
 | P02 | Superseded by accepted A19: user-controlled model profiles and roles across retained adapters | Preserve isolation and reject implicit model/account/auth switching; implementation and actual profile evidence pending. No longer a Bedrock-only provider-removal instruction. |
-| P03 | Private identity such as `cmem-light-local`, fresh separate data path | Prevent upstream cache/data collision; final ID/path and plugin policy pending |
+| P03 | A28 implements private Codex identity `claude-mem@cmem-light-private` with fresh dedicated profile and data path | Full release identity and target portability remain in step 12 |
 | P04 | Superseded by A06: retain local viewer | Remove its hosted routes/actions and external assets while preserving local functionality |
 | P05 | Rejected for this release: introduce separate repository/worktree scopes | A06 preserves upstream identity, sharing and filtering behavior; scope redesign deferred |
 | P06 | Compile boundary A11; CHROMA-07/A17 removes uvx and refuses unverified runtime; approved Python/model activation pending | U1/D9 lack approved artifacts and local-only embedding/telemetry API. A path/config attestation cannot enable launch; actual runtime acceptance remains open |

@@ -38,10 +38,10 @@ product policy. Do not blindly restore old signup/bootstrap or run broad upstrea
 install/test/deploy scripts. Inspect commands, reuse compatible existing tools,
 install only needed dependencies, preserve data and local build/source pairing.
 
-Current PHASE1-ALIGN session is plan/document updates and inert tool version/help
-checks only, not application build/installation/host registration or inference.
-No agents/branches/worktrees/push. Local Git sandbox write approval does not grant
-Windows administrator privileges. NEXT-SESSION owns the next concrete source slice.
+PHASE1-ALIGN was a completed plan and tool-probe session. A27 and the current
+user launch govern implementation and bounded lifecycle execution. No
+agents/branches/worktrees/push. Local Git sandbox write or loopback test approval
+does not grant Windows administrator privileges. NEXT-SESSION owns the next source slice.
 
 ### Historical source boundaries and evidence
 
