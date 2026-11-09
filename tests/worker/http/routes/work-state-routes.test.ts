@@ -25,8 +25,6 @@ let store: SessionStore;
 let checkout: string;
 let project: string;
 let loggerSpies: Array<ReturnType<typeof spyOn>> = [];
-/** Every row is a `work_state` sync op: the route nudges the push drain once per save. */
-let cloudSyncNotifyCalls = 0;
 
 beforeEach(async () => {
   loggerSpies = [
@@ -36,7 +34,6 @@ beforeEach(async () => {
     spyOn(logger, 'error').mockImplementation(() => {}),
   ];
   store = new SessionStore(':memory:');
-  cloudSyncNotifyCalls = 0;
   checkout = mkdtempSync(join(tmpdir(), 'work-state-checkout-'));
   project = getProjectContext(checkout).primary;
 
@@ -44,7 +41,6 @@ beforeEach(async () => {
   app.use(express.json());
   const dbManager = {
     getSessionStore: () => store,
-    getCloudSync: () => ({ notify: () => { cloudSyncNotifyCalls++; } }),
   };
   new WorkStateRoutes(dbManager as any).setupRoutes(app);
   ModeManager.getInstance().loadMode('code');
@@ -290,18 +286,18 @@ describe('literal primitive field keys', () => {
   });
 });
 
-describe('WorkStateRoutes cloud sync', () => {
-  it('nudges the push drain once per saved row, and not for a refused or excluded write', async () => {
+describe('WorkStateRoutes local writes', () => {
+  it('stores accepted rows and leaves the outbox empty', async () => {
     await write({ cwd: checkout, list: 'release', fields: { task: 'publish', status: 'todo' } });
     await write({ cwd: checkout, list: 'release', fields: { version: '13.35.0' } });
-    expect(cloudSyncNotifyCalls).toBe(2);
+    expect(store.getWorkStateEntries([project], 'release')).toHaveLength(2);
 
     expect((await write({ cwd: checkout, list: 'release', fields: {} })).status).toBe(400);
-    expect(cloudSyncNotifyCalls).toBe(2);
 
     process.env.CLAUDE_MEM_EXCLUDED_PROJECTS = basename(checkout);
     await write({ cwd: checkout, list: 'release', fields: { task: 'publish', status: 'done' } });
-    expect(cloudSyncNotifyCalls).toBe(2);
+    expect(store.getWorkStateEntries([project], 'release')).toHaveLength(2);
+    expect(store.db.prepare('SELECT op_uuid FROM sync_outbox').all()).toEqual([]);
   });
 
   it('refuses an integer past 2^53, which canonical JSON could not carry to the cloud', async () => {

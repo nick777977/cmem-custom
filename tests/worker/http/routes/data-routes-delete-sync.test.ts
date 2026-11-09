@@ -1,19 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, mock, spyOn } from 'bun:test';
 import { Database } from 'bun:sqlite';
-import { mkdtempSync, rmSync } from 'fs';
-import { tmpdir } from 'os';
-import { join } from 'path';
 import type { Request, Response } from 'express';
 import { SessionStore } from '../../../../src/services/sqlite/SessionStore.js';
-import { CloudSync } from '../../../../src/services/sync/CloudSync.js';
 import { DataRoutes } from '../../../../src/services/worker/http/routes/DataRoutes.js';
 import { logger } from '../../../../src/utils/logger.js';
 
-describe('DataRoutes synchronized delete APIs', () => {
+describe('DataRoutes local delete APIs', () => {
   let db: Database;
-  let tempDir: string;
   let store: SessionStore;
-  let sync: CloudSync;
   let handlers: Map<string, (req: Request, res: Response) => void>;
   let broadcasts: Array<Record<string, unknown>>;
   // Stands in for the worker's ChromaSync; null means "Chroma not configured".
@@ -21,19 +15,8 @@ describe('DataRoutes synchronized delete APIs', () => {
   let chromaCalls: Array<{ docType: string; sqliteId: number }>;
 
   beforeEach(() => {
-    tempDir = mkdtempSync(join(tmpdir(), 'cmem-delete-routes-'));
     db = new Database(':memory:');
     store = new SessionStore(db);
-    sync = new CloudSync(db, {
-      CLAUDE_MEM_CLOUD_SYNC_TOKEN: 'test-token',
-      CLAUDE_MEM_CLOUD_SYNC_USER_ID: 'test-user',
-      CLAUDE_MEM_CLOUD_SYNC_HUB_URL: 'https://hub.test',
-      CLAUDE_MEM_CLOUD_SYNC_DEVICE_ID: 'device-delete-routes',
-      CLAUDE_MEM_CLOUD_SYNC_DEVICE_NAME: 'test',
-    }, {
-      settingsPath: join(tempDir, 'settings.json'),
-      fetchImpl: mock(async () => new Response('{}', { status: 500 })) as typeof fetch,
-    });
 
     db.prepare(`
       INSERT INTO sdk_sessions
@@ -70,7 +53,7 @@ describe('DataRoutes synchronized delete APIs', () => {
     };
     const routes = new DataRoutes(
       {} as any,
-      { getSessionStore: () => store, getCloudSync: () => sync, getChromaSync: () => chromaSync } as any,
+      { getSessionStore: () => store, getChromaSync: () => chromaSync } as any,
       { getSession: () => undefined } as any,
       { broadcast: (event: Record<string, unknown>) => { broadcasts.push(event); } } as any,
       {} as any,
@@ -87,12 +70,10 @@ describe('DataRoutes synchronized delete APIs', () => {
   });
 
   afterEach(() => {
-    sync.stop();
     db.close();
-    rmSync(tempDir, { recursive: true, force: true });
   });
 
-  it('atomically tombstones observation, summary, and prompt deletions through registered production routes', () => {
+  it('deletes local observations, summaries, and prompts without queuing tombstones', () => {
     const cases = [
       ['/api/observation/:id', 'observation', 'observations'],
       ['/api/summary/:id', 'summary', 'session_summaries'],
@@ -109,21 +90,11 @@ describe('DataRoutes synchronized delete APIs', () => {
       handlers.get(path)!({ params: { id: '1' }, path } as unknown as Request, response);
 
       expect(status).toBe(200);
-      expect(responseBody).toMatchObject({ success: true, id: '1', kind, entity_rev: '2' });
+      expect(responseBody).toMatchObject({ success: true, id: '1', kind, entity_rev: null });
       expect(db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get()).toEqual({ n: 0 });
     }
 
-    const outbox = db.prepare(`
-      SELECT kind, entity_rev, deleted, body FROM sync_content_outbox ORDER BY id
-    `).all() as Array<{ kind: string; entity_rev: string; deleted: number; body: string }>;
-    expect(outbox.map(row => [row.kind, row.entity_rev, row.deleted])).toEqual([
-      ['observation', '2', 1],
-      ['summary', '2', 1],
-      ['prompt', '2', 1],
-    ]);
-    for (const row of outbox) {
-      expect(JSON.parse(row.body)).toMatchObject({ kind: row.kind, deleted: true, payload: null });
-    }
+    expect(db.prepare('SELECT id FROM sync_content_outbox').all()).toEqual([]);
     // Open viewer tabs are told after each committed delete.
     expect(broadcasts).toEqual([
       { type: 'item_deleted', itemType: 'observation', id: 1 },

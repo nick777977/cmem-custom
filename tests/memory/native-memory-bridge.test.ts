@@ -176,16 +176,14 @@ describe('memory folder watcher', () => {
     db.close();
   });
 
-  it('keeps an existing deduplicated observation vector unchanged while nudging cloud sync', () => {
-    let indexed = 0, nudged = 0;
+  it('keeps an existing deduplicated observation vector unchanged', () => {
+    let indexed = 0;
     const manager = {
       getSessionStore: () => ({ getOrCreateManualSession: () => 'manual', storeObservation: () => ({id: 7, createdAtEpoch: 0, mergedIntoExisting: true}) }),
-      getCloudSync: () => ({notify: () => { nudged++; }}),
       getChromaSync: () => ({ syncObservation: () => { indexed++; return Promise.resolve(); } }),
     };
     expect(saveMemory(manager as any, 'p', { text: 'proposed duplicate' }).message).toContain('matches existing');
     expect(indexed).toBe(0);
-    expect(nudged).toBe(1);
   });
 
   it('deduplicates the same file fingerprint across concurrent processes', async () => {

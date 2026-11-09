@@ -20,7 +20,7 @@ describe('welcome hint observation check with an isolated reader', () => {
     const contextReader = {
       hasObservations: () => { const read = deferred(); reads.push(read); return read.promise; },
     };
-    const routes = new SearchRoutes({ getSessionStore: () => ({}) } as any, contextCache as any, null, contextReader as any);
+    const routes = new SearchRoutes({ getSessionStore: () => ({}) } as any, contextCache as any, contextReader as any);
     const check = () => (routes as any).projectsHaveObservations({}, ['app']) as Promise<boolean>;
 
     // Request A reads before the delete and resumes after it.

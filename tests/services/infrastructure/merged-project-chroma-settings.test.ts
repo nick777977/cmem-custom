@@ -61,7 +61,8 @@ beforeEach(() => {
 afterEach(() => {
   if (savedChromaEnabled === undefined) delete process.env.CLAUDE_MEM_CHROMA_ENABLED;
   else process.env.CLAUDE_MEM_CHROMA_ENABLED = savedChromaEnabled;
-  if (tempRoot) rmSync(tempRoot, { recursive: true, force: true });
+  Bun.gc(true);
+  if (tempRoot) rmSync(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 });
   tempRoot = undefined;
 });
 
@@ -143,11 +144,7 @@ function expectSqliteMerge(dbPath: string): void {
 
   expect(observation).toEqual({ project: sourceProject, merged_into_project: targetProject });
   expect(summary).toEqual({ project: sourceProject, merged_into_project: targetProject });
-  expect(ops).toContainEqual({
-    op: 'remap_project',
-    where: { project: sourceProject, merged_into_project_is_null: true },
-    fields: { merged_into_project: targetProject },
-  });
+  expect(ops).toEqual([]);
 }
 
 function mergedCounts(result: AdoptionResult | ProjectMergeResult): number[] {

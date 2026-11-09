@@ -118,9 +118,6 @@ export class MemoryIngestRoutes extends BaseRouteHandler {
       failed: report.failed,
     });
 
-    // Every local write nudges cloud sync, as /api/memory/save does.
-    if (report.stored > 0) this.dbManager.getCloudSync()?.notify();
-
     res.json(report);
   }
 }

@@ -148,16 +148,10 @@ describe('bare-repository worktree adoption (#4958)', () => {
     expect(sessionProject(dbPath, beta.memorySessionId)).toBe('beta/main');
     expect(observation(dbPath, unrelated.observationId).project).toBe('main');
 
-    // The re-key travels to other devices as a remap_project op.
     const verify = new SessionStore(dbPath);
-    const remaps = (verify.db.prepare('SELECT body FROM sync_outbox').all() as Array<{ body: string }>)
-      .map(op => JSON.parse(op.body))
-      .filter(op => op.op === 'remap_project' && op.fields.project);
+    const ops = verify.db.prepare('SELECT op_uuid FROM sync_outbox').all();
     verify.close();
-    expect(remaps.map(op => [op.where.project, op.fields.project])).toEqual([
-      ['main', 'alpha/main'],
-      ['main', 'beta/main'],
-    ]);
+    expect(ops).toEqual([]);
   });
 
   for (const layout of ['alpha.git', 'beta/.bare'] as const) {

@@ -6,7 +6,6 @@ import { logger } from '../../utils/logger.js';
 import { getPathModeProjectContext, getProjectContext } from '../../utils/project-name.js';
 import { bareRepositoryProjectName } from '../../utils/worktree.js';
 import { ChromaSync, MergedIntoProjectTarget } from '../sync/ChromaSync.js';
-import { emitRemapProject, hasSyncLane } from '../sync/remap-outbox.js';
 import { paths } from '../../shared/paths.js';
 import { SettingsDefaultsManager } from '../../shared/SettingsDefaultsManager.js';
 import { openConfiguredSqliteDatabase } from '../sqlite/connection.js';
@@ -240,8 +239,7 @@ function rekeyBareWorktreeSessions(
   worktreePath: string,
   legacyKey: string,
   worktreeKey: string,
-  evidence: WriterEvidence,
-  syncLane: boolean
+  evidence: WriterEvidence
 ): { sessions: number; observations: number; summaries: number } {
   const counts = { sessions: 0, observations: 0, summaries: 0 };
   if (!evidence.sessionCwd) return counts;
@@ -259,18 +257,8 @@ function rekeyBareWorktreeSessions(
     if (!isPathInside(session.cwd, worktreePath)) continue;
     counts.sessions += updateSession.run(worktreeKey, session.id).changes;
     if (!session.memory_session_id) continue;
-    if (syncLane) {
-      const remap = emitRemapProject(
-        db,
-        { project: legacyKey, memory_session_id: session.memory_session_id },
-        { project: worktreeKey }
-      );
-      counts.observations += remap.observations;
-      counts.summaries += remap.summaries;
-    } else {
-      counts.observations += updateObs.run(worktreeKey, legacyKey, session.memory_session_id).changes;
-      counts.summaries += updateSum.run(worktreeKey, legacyKey, session.memory_session_id).changes;
-    }
+    counts.observations += updateObs.run(worktreeKey, legacyKey, session.memory_session_id).changes;
+    counts.summaries += updateSum.run(worktreeKey, legacyKey, session.memory_session_id).changes;
   }
   return counts;
 }
@@ -610,14 +598,6 @@ export async function adoptMergedWorktrees(opts: {
       'UPDATE session_summaries SET merged_into_project = ? WHERE project = ? AND merged_into_project IS NULL'
     );
 
-    // Two-lane sync (plan Phase 3 task 2): this function runs on its OWN DB
-    // connection, so the remap must be pure SQL — emitRemapProject bumps
-    // sync_rev to R = 1+MAX per the SyncApply contract, re-nulls synced_at
-    // on native rows, and queues the remap_project mutation op in the same
-    // transaction. Pre-migration DBs (no sync lane yet) take the legacy
-    // plain-UPDATE path.
-    const syncLane = hasSyncLane(db);
-
     const adoptWorktreeInTransaction = (worktreeProject: string) => {
       const rows = selectObsForPatch.all(
         worktreeProject,
@@ -628,20 +608,8 @@ export async function adoptMergedWorktrees(opts: {
         parentProject
       ) as Array<{ id: number }>;
 
-      let obsChanges: number;
-      let sumChanges: number;
-      if (syncLane) {
-        const remap = emitRemapProject(
-          db!,
-          { project: worktreeProject, merged_into_project_is_null: true },
-          { merged_into_project: parentProject }
-        );
-        obsChanges = remap.observations;
-        sumChanges = remap.summaries;
-      } else {
-        obsChanges = updateObs.run(parentProject, worktreeProject).changes;
-        sumChanges = updateSum.run(parentProject, worktreeProject).changes;
-      }
+      const obsChanges = updateObs.run(parentProject, worktreeProject).changes;
+      const sumChanges = updateSum.run(parentProject, worktreeProject).changes;
       for (const r of rows) {
         adoptedChromaTargets.push({ docType: 'observation', sqliteId: r.id });
       }
@@ -678,7 +646,7 @@ export async function adoptMergedWorktrees(opts: {
     ]
       // A worktree named after its repo writes to the repo key itself (#3641);
       // "adopting" it would stamp the repo's own rows as merged into
-      // themselves and queue a remap op that re-pushes every one of them.
+      // themselves.
       .filter(target => target.project !== parentProject);
 
     const tx = db.transaction(() => {
@@ -688,7 +656,7 @@ export async function adoptMergedWorktrees(opts: {
           const legacyKey = path.basename(worktree.path);
           const worktreeKey = getPathModeProjectContext(worktree.path).primary;
           if (worktreeKey === legacyKey || !existsSync(worktree.path)) continue;
-          const rekeyed = rekeyBareWorktreeSessions(db!, worktree.path, legacyKey, worktreeKey, writerEvidence, syncLane);
+          const rekeyed = rekeyBareWorktreeSessions(db!, worktree.path, legacyKey, worktreeKey, writerEvidence);
           result.rekeyedSessions += rekeyed.sessions;
           result.rekeyedObservations += rekeyed.observations;
           result.rekeyedSummaries += rekeyed.summaries;

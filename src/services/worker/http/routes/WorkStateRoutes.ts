@@ -108,8 +108,6 @@ export class WorkStateRoutes extends BaseRouteHandler {
     const store = this.dbManager.getSessionStore();
     store.appendWorkStateEntry({ project: checkout.primary, listName: list, fields });
     logger.debug('WORKER', 'Work state entry saved', { project: checkout.primary, list });
-    // The row is a `work_state` sync op: nudge the push drain (null when sync is off).
-    this.dbManager.getCloudSync()?.notify();
     // Only what is still open, cut like the SessionStart section, so a long-kept
     // list does not repeat its closed items on every write.
     const openLines = renderWorkStateLines(store.getWorkStateEntries(checkout.allProjects, list), Date.now());

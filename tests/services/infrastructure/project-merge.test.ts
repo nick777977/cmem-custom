@@ -23,7 +23,8 @@ import { SessionStore } from '../../../src/services/sqlite/SessionStore.js';
 let tempRoot: string | undefined;
 
 afterEach(() => {
-  if (tempRoot) rmSync(tempRoot, { recursive: true, force: true });
+  Bun.gc(true);
+  if (tempRoot) rmSync(tempRoot, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 });
   tempRoot = undefined;
 });
 
@@ -61,7 +62,7 @@ function freshDatabase(): { dataDirectory: string; dbPath: string } {
 }
 
 describe('project merge (plan-20)', () => {
-  it('stamps merged_into_project, keeps project, and queues the remap for cloud sync', async () => {
+  it('stamps merged_into_project, keeps project, and leaves the outbox empty', async () => {
     const { dataDirectory, dbPath } = freshDatabase();
     const store = new SessionStore(dbPath);
     const fromId = seed(store, 'memory-a', 'frontend');
@@ -83,11 +84,7 @@ describe('project merge (plan-20)', () => {
       { id: fromId, project: 'frontend', merged_into_project: 'work' },
       { id: otherId, project: 'unrelated', merged_into_project: null },
     ]);
-    expect(ops).toContainEqual({
-      op: 'remap_project',
-      where: { project: 'frontend', merged_into_project_is_null: true },
-      fields: { merged_into_project: 'work' },
-    });
+    expect(ops).toEqual([]);
   });
 
   it('dry run reports the counts and changes nothing', async () => {

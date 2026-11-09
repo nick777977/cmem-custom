@@ -17,7 +17,7 @@ export interface BackupRoutesOptions {
 /**
  * Local backup endpoints.
  *
- * Registered unconditionally (CloudSyncRoutes pattern): a disabled install
+ * Registered unconditionally: a disabled install
  * (CLAUDE_MEM_BACKUP_ENABLED !== 'true', so getBackupManager() is null) still
  * answers status with `{configured: false}`, and list works against whatever
  * snapshots exist on disk.

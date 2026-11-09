@@ -134,8 +134,6 @@ export class SearchRoutes extends BaseRouteHandler {
     // next time (liveness plan, Phase 6). Null in tests and tools that only
     // need the route.
     private contextCache: (Pick<ContextCacheService, 'recordLiveRender' | 'removalGenerationNow' | 'warmVariant'> & Partial<Pick<ContextCacheService, 'invalidationGenerationNow' | 'beginRenderSequence'>>) | null = null,
-    // Cloud sync's pull loop (null when sync is off). Structural so tests can stub it.
-    private syncClient: { pullOnce(options?: { timeoutMs?: number }): Promise<void>; isSocketLive(): boolean } | null = null,
     private contextReader: ContextReadWorkerClient | null = null,
   ) {
     super();
@@ -427,12 +425,6 @@ export class SearchRoutes extends BaseRouteHandler {
     }
 
     const injectStartedAt = Date.now();
-    // Local-first: render from the local db now, never wait on the network.
-    // The pull is only a nudge (wakes a suspended sync loop, catches up for the
-    // next session); ops it applies invalidate the cached files as usual.
-    if (this.syncClient && !this.syncClient.isSocketLive()) {
-      void this.syncClient.pullOnce();
-    }
     // A delete that lands while this renders must not see its row written back to the cache.
     const removalGenerationAtRenderStart = this.contextCache?.removalGenerationNow();
     const invalidationGenerationAtStart = this.contextCache?.invalidationGenerationNow?.();

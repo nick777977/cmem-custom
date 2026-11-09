@@ -44,7 +44,7 @@ const routeScript = `
       ? Promise.reject(new Error('Synthetic cache alias lookup failure'))
       : reader.readKeys(projects),
   });
-  const wired = new SearchRoutes(manager, cache, null, reader);
+  const wired = new SearchRoutes(manager, cache, reader);
   const inline = new SearchRoutes(manager);
   const wiredApp = express(); wired.setupRoutes(wiredApp);
   const inlineApp = express(); inline.setupRoutes(inlineApp);
@@ -53,7 +53,7 @@ const routeScript = `
   const server = app.listen(0, '127.0.0.1');
   await new Promise(resolve => server.once('listening', resolve));
   try {
-    const query = new URLSearchParams({ cwd: checkout });
+    const query = new URLSearchParams({ projects: 'app', cwd: checkout });
     const root = 'http://127.0.0.1:' + server.address().port;
     const before = await fetch(root + '/inline/api/context/inject?' + query);
     const beforeBody = await before.text();

@@ -4,8 +4,8 @@
 //   (b) prompt repair (requeuePromptSync via
 //       updateMemorySessionId /
 //       ensureMemorySessionIdRegistered)         → set_prompt_session, rev = post-bump sync_rev
-//   (c) worktree adoption remap                  → remap_project, rev = 1+MAX(sync_rev)
-//   (d) one-time cwd remap                       → remap_project, rev = 1+MAX(sync_rev)
+//   (c) local worktree adoption remap           → local rows, no outbox write
+//   (d) local one-time cwd remap                → local rows, no outbox write
 // The remap sites are verified through their OWN-CONNECTION code paths: (c)
 // via adoptMergedWorktrees against a real git repo + merged worktree, (d) via
 // runOneTimeCwdRemap against a real pending_messages fixture — both open the
@@ -70,7 +70,8 @@ describe('mutation sites', () => {
   });
 
   afterEach(() => {
-    rmSync(tempDir, { recursive: true, force: true });
+    Bun.gc(true);
+    rmSync(tempDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 20 });
   });
 
   // ---------------------------------------------------------------------------
@@ -244,7 +245,7 @@ describe('mutation sites', () => {
   });
 
   // ---------------------------------------------------------------------------
-  // emitRemapProject — the shared pure-SQL helper both remap sites call,
+  // emitRemapProject — the retained sync helper,
   // exercised on an OWN connection (openConfiguredSqliteDatabase on a file
   // DB, the exact connection type the sites use).
   // ---------------------------------------------------------------------------
@@ -259,11 +260,11 @@ describe('mutation sites', () => {
         INSERT INTO sdk_sessions (content_session_id, memory_session_id, project, started_at, started_at_epoch, status)
         VALUES ('sess-1', 'mem-1', 'parent/wt', ?, 1751234567000, 'active')
       `).run(ISO);
-      store.db.close();
+      store.db.close(true);
       db = openConfiguredSqliteDatabase(dbPath); // the sites' own-connection shape
     });
 
-    afterEach(() => db.close());
+    afterEach(() => db.close(true));
 
     function seedObs(project: string, syncRev: number, syncedAt: number | null, origin?: { device: string; localId: string }): void {
       db.prepare(`
@@ -362,7 +363,7 @@ describe('mutation sites', () => {
   // a merged worktree. Summaries only (no observation ids ⇒ the site's Chroma
   // patch is skipped — vector search is not under test here).
   // ---------------------------------------------------------------------------
-  it('adoptMergedWorktrees emits remap_project through its own connection', async () => {
+  it('adoptMergedWorktrees updates the local project alias without queuing a remap', async () => {
     const repo = join(tempDir, 'mainrepo');
     mkdirSync(repo);
     git(repo, 'init', '-b', 'main');
@@ -385,7 +386,7 @@ describe('mutation sites', () => {
       INSERT INTO session_summaries (memory_session_id, project, request, created_at, created_at_epoch, sync_rev, synced_at)
       VALUES ('mem-1', 'mainrepo/wt', 'req', ?, 1751234567891, 2, 123)
     `).run(ISO);
-    store.db.close();
+    store.db.close(true);
 
     const result = await adoptMergedWorktrees({ repoPath: repo, dataDirectory: dataDir });
     expect(result.mergedBranches).toContain('feature');
@@ -396,19 +397,11 @@ describe('mutation sites', () => {
     try {
       const summary = db.prepare('SELECT merged_into_project, sync_rev, synced_at FROM session_summaries WHERE id = 1').get() as any;
       expect(summary.merged_into_project).toBe('mainrepo');
-      expect(summary.sync_rev).toBe('3'); // R = 1 + MAX(2)
-      expect(summary.synced_at).toBeNull();
-
-      const ops = outboxRows(db);
-      expect(ops.length).toBe(1);
-      expect(ops[0].rev).toBe('3');
-      expect(ops[0].body).toEqual({
-        op: 'remap_project',
-        where: { project: 'mainrepo/wt', merged_into_project_is_null: true },
-        fields: { merged_into_project: 'mainrepo' },
-      });
+      expect(summary.sync_rev).toBe('2');
+      expect(summary.synced_at).toBe(123);
+      expect(outboxRows(db)).toEqual([]);
     } finally {
-      db.close();
+      db.close(true);
     }
   }, 30000);
 
@@ -532,7 +525,7 @@ describe('mutation sites', () => {
   // (d) one-time cwd remap — the REAL site, own connection, real git repo
   // classified from pending_messages.cwd.
   // ---------------------------------------------------------------------------
-  it('runOneTimeCwdRemap emits remap_project through its own connection', () => {
+  it('runOneTimeCwdRemap updates local projects without queuing a remap', () => {
     const repo = join(tempDir, 'realproj');
     mkdirSync(repo);
     git(repo, 'init', '-b', 'main');
@@ -556,7 +549,7 @@ describe('mutation sites', () => {
       INSERT INTO observations (memory_session_id, project, type, title, created_at, created_at_epoch, sync_rev, synced_at)
       VALUES ('mem-1', 'stale-name', 'discovery', 't', ?, 1751234567890, 1, 100)
     `).run(ISO);
-    store.db.close();
+    store.db.close(true);
 
     runOneTimeCwdRemap(dataDir);
     expect(existsSync(join(dataDir, '.cwd-remap-applied-v1'))).toBe(true);
@@ -568,19 +561,11 @@ describe('mutation sites', () => {
 
       const obs = db.prepare('SELECT project, sync_rev, synced_at FROM observations WHERE id = 1').get() as any;
       expect(obs.project).toBe('realproj');
-      expect(obs.sync_rev).toBe('2'); // R = 1 + MAX(1)
-      expect(obs.synced_at).toBeNull();
-
-      const ops = outboxRows(db);
-      expect(ops.length).toBe(1);
-      expect(ops[0].rev).toBe('2');
-      expect(ops[0].body).toEqual({
-        op: 'remap_project',
-        where: { memory_session_id: 'mem-1' },
-        fields: { project: 'realproj' },
-      });
+      expect(obs.sync_rev).toBe('1');
+      expect(obs.synced_at).toBe(100);
+      expect(outboxRows(db)).toEqual([]);
     } finally {
-      db.close();
+      db.close(true);
     }
   });
 });
