@@ -6,6 +6,12 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
+**PROFILE-06B, 2026-11-09.** Reused Node 22.23.4, npm 10.9.9 and Bun 1.4.4
+with existing dependencies. Root/viewer typechecks, guarded compile and 146
+focused tests passed. A non-admin run of the byte-identical copied worker
+passed the synthetic loopback fixture. The worker exited and SQLite reopened.
+The existing private install was preserved. [Evidence](handoffs/PROFILE-06B.md).
+
 **CLOUD-05, 2026-11-09.** Reused Node 22.23.4, npm 10.9.9 and Bun 1.4.4.
 Root/viewer typechecks and guarded compile passed. The default sandbox denied
 the Bun loopback control with EACCES. The approved ordinary-user rerun used a

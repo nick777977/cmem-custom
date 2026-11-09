@@ -961,4 +961,20 @@ buffered work after explicit configuration, sent exactly five fake requests
 across three success and two failure routes, reopened the resulting SQLite
 rows and shut down cleanly. All three approved live turns remain unused.
 [Evidence and rollback](../handoffs/PROFILE-06A.md). Released reservations.
-[PROFILE-06B](../NEXT-SESSION.md) owns remaining model paths.
+[PROFILE-06B](../handoffs/PROFILE-06B.md) owns the remaining local model paths.
+
+## 2026-11-09 — PROFILE-06B local background profiles
+
+Clean entry ee4f7dfbf on feat/cmem-light-local. One coordinator reserved exact
+paths before edits. Source, tests and paired worker/CLI outputs in 616c51272.
+Refresh, card copy, request/focus judges and knowledge now share the selected
+profile boundary. Telegram wrap-up refuses before dispatch under the local-only
+delivery policy. Separate server and dormant installer model paths remain
+assigned to step 10 before release admission.
+
+143 focused tests / 764 assertions, 3 setup-route loopback tests / 18 assertions,
+root/viewer typechecks, guarded compile and copied worker loopback passed.
+Preserved private Windows setup, SQLite evidence and copy cache. The synthetic
+worker stopped cleanly and SQLite reopened. No live turns used. Closed step 6
+within the local worker and request-progress CLI boundary. Released reservations.
+[Evidence and rollback](../handoffs/PROFILE-06B.md). Next CHROMA-07-LOCAL.

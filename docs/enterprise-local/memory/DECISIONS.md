@@ -200,6 +200,19 @@ the explicit AWS CLI and passes its temporary credentials to Claude. Status is
 read-only and excludes credentials and destination paths. The exact schema and
 remaining compatibility work are in the [profile contract](../LLM-PROFILES.md#main-worker-configuration).
 
+### PROFILE-06B implementation of A19 and A27 (2026-11-09)
+
+Background jobs use the same required default and complete optional overrides.
+Decisions roles require an explicitly bound Decisions endpoint. Knowledge
+requires Claude's resumable SDK capability and a local profile binding.
+Refresh retains the read-only file checks for Claude and passes prepared
+evidence to adapters without file tools. It loads no host plugin or MCP.
+The local-only delivery policy refuses Telegram wrap-up before model dispatch.
+Other outbound notification/export callbacks do not run in profile-mode
+observation processing. The local worker and standalone judge are the
+verified boundary. [Configuration](../LLM-PROFILES.md#background-capability-and-migration)
+and [remaining ownership](../handoffs/PROFILE-06B.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

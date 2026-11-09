@@ -1,8 +1,18 @@
 # Current handoff
 
-Updated 2026-11-09 after PROFILE-06A on feat/cmem-light-local by one coordinator.
-Clean entry f1f6ce612. A27 is current scope.
+Updated 2026-11-09 after PROFILE-06B on feat/cmem-light-local by one coordinator.
+Clean entry ee4f7dfbf. A27 is current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
+
+The local worker now resolves refresh, copy, request and focus judges, and
+knowledge through explicit profiles. The separate request-progress judge
+command shares that policy. Unsupported capabilities pause before dispatch.
+Telegram wrap-up has a visible local-only refusal. Cached copy, corpus files
+and the private Windows setup stay local. Source and paired build `616c51272`.
+146 focused tests and 782 assertions, root/viewer typechecks, guarded compile
+and the copied-worker loopback check passed. SQLite reopened after shutdown.
+[Configuration](../LLM-PROFILES.md#background-capability-and-migration) and
+[evidence and ownership boundaries](../handoffs/PROFILE-06B.md).
 
 The main worker requires an explicit default model profile and accepts optional
 observer, summary and field compression overrides. Its health response shows
@@ -86,9 +96,9 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**PROFILE-06B: route the remaining background and standalone model tasks.**
+**CHROMA-07-LOCAL: verify and activate a local Chroma and embedding runtime.**
 [NEXT-SESSION](../NEXT-SESSION.md) gives bounded source and validation scope.
-Then follow the [phase-one roadmap](../../roadmap.md) for remaining model roles,
-local Chroma/embeddings and the remaining acceptance. The local launcher evidence
+Then follow the [phase-one roadmap](../../roadmap.md) for local API/viewer and
+release acceptance. The local launcher evidence
 covers the tested private CLI configuration. Desktop integration, full memory
 acceptance and release packaging remain separate checks.

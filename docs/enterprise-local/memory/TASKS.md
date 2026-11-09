@@ -7,6 +7,38 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-09 completed **PROFILE-06B** claim. One coordinator on clean
+`feat/cmem-light-local` at `ee4f7dfbf04cece361ecb7b8901eecdc7829f214`.
+Source reservation history:
+
+- `src/services/agent-runner/run.ts`, `src/services/work-view/refresh-task.ts`,
+  `src/services/work-view/python.ts` for the local goals helper environment,
+  `src/services/work-view/{human-copy-worker,request-judge,focus-judge}.{mjs,d.mts}`,
+  `src/services/work-view/request-groups.mjs`, `scripts/calibrate-focus-routing.mjs`
+- `src/services/worker/{model-profiles,MainWorkerProfiles,OpenAICompatibleProvider,ClaudeProvider,CodexProvider}.ts`,
+  `src/services/worker/http/routes/{WorkViewRoutes,SessionRoutes}.ts`,
+  `src/services/worker/knowledge/{KnowledgeAgent,types}.ts`,
+  `src/services/worker/agents/ResponseProcessor.ts`,
+  `src/services/{worker-service,worker-types,server/Server}.ts`,
+  `scripts/enterprise-local/codex-local.mjs`
+- Tests `tests/enterprise-local/{profile-06a,profile-06b}.test.ts`,
+  `tests/services/agent-runner/{run,extraction-input}.test.ts`,
+  `tests/work-view/{auto-refresh,request-judge,focus-judge}.test.ts`,
+  `tests/worker/work-view/{human-copy-provider,human-copy-worker}.test.mjs`,
+  `tests/integrations/telegram-wrapup-notifier.test.ts`
+- Reviewed compile owns `plugin/scripts/{worker-service,server-service}.cjs`
+  and their maps, and `plugin/skills/request-progress/scripts/request-groups.mjs`.
+  Fingerprint tracked inputs, source and all tracked outputs. Extend this claim
+  before retaining any other output. Scratch `.scratch/enterprise-local/profile-06b/`.
+- Closure `docs/roadmap.md`, `docs/enterprise-local/{README,LLM-PROFILES,VALIDATION,DEV-ENVIRONMENT,NEXT-SESSION,SESSION-PROMPTS}.md`,
+  `docs/enterprise-local/memory/{STATE,TASKS,WORKLOG,DECISIONS}.md`
+  and `docs/enterprise-local/handoffs/{PROFILE-06A,PROFILE-06B}.md`.
+
+Source, tests and paired output `616c51272`. 146 focused tests and 782
+assertions across two runs, both typechecks, guarded compile and the copied
+worker loopback check passed. All reservations released. CHROMA-07-LOCAL is
+next and unclaimed. [Evidence](../handoffs/PROFILE-06B.md).
+
 2026-11-09 completed **PROFILE-06A** claim, one coordinator on clean
 `feat/cmem-light-local` at `f1f6ce61221ac92fc05330c6410aefbc886c7fde`.
 Source reserved: `src/services/worker/{provider-dispatch,model-profiles,MainWorkerProfiles,OpenAICompatibleProvider,OpenAICompatProvider,OpenRouterProvider,GeminiProvider,CodexProvider,CodexAppServerClient,ClaudeProvider,streamed-chat-completion}.ts`,
@@ -28,7 +60,7 @@ completion imports account for the map change.
 Closure also updates README, SESSION-PROMPTS, VALIDATION and the CLOUD-05
 handoff link under `docs/enterprise-local/`. Source, tests and emitted files
 are paired in `534de7911`. The copied worker passed its loopback fixture and
-stopped. Reservations released. PROFILE-06B is next and unclaimed.
+stopped. Reservations released. [PROFILE-06B](../handoffs/PROFILE-06B.md) followed this slice.
 
 2026-11-09 completed **WINDOWS-09-LOCAL** claim at 34f908ae6 on feat/cmem-light-local.
 One coordinator. Source and paired artifacts in ef815b29a. Synthetic checks ran
@@ -92,7 +124,9 @@ checks are in DEV-ENVIRONMENT/WORKLOG. Next WINDOWS-09-LOCAL is ready-unclaimed.
 | PHASE1-ALIGN / coordination | done; plan and inert CLI checks | Coordinator finished 2026-11-04; feat/cmem-light-local; entry d055fea4c | None; all released | A27 permits necessary bootstrap/downloads and no-admin local functionality; Codex0.166.0-alpha.6/help/tool versions and ChatGPT-login presence verified; no app/code/inference. |
 | WINDOWS-09-LOCAL / 9 | done-bounded | Coordinator finished; feat/cmem-light-local; entry 34f908ae6 | None active | ef815b29a, 70 tests, typechecks, compile, private catalog/real worker and MCP SQLite checks, transfer on matching host, uninstall. [Evidence](../handoffs/WINDOWS-09-LOCAL.md). No live inference. |
 | CLOUD-05 / 5 | done-bounded | Coordinator finished; feat/cmem-light-local; entry 7b7e5cbdb | None active | e87ef65ae, focused checks and guarded compile, compiled restart with legacy settings and two inert outboxes. [Evidence](../handoffs/CLOUD-05.md). |
-| PROFILE-06A / 6 | ready-unclaimed | None; serial selected branch | None | Explicit main-worker role selection, dispatch and status. [Next session](../NEXT-SESSION.md). |
+| PROFILE-06A / 6 | done-bounded | Coordinator finished; feat/cmem-light-local | None | Main worker observation, summary and compression at `534de7911`. [Evidence](../handoffs/PROFILE-06A.md). |
+| PROFILE-06B / 6 | done-bounded | Coordinator finished; feat/cmem-light-local | None | Background and standalone judge paths, explicit capability refusals, copied worker evidence at `616c51272`. [Evidence](../handoffs/PROFILE-06B.md). |
+| CHROMA-07-LOCAL / 7 | ready-unclaimed | None; serial selected branch | None | Local Chroma and embedding activation. [Next session](../NEXT-SESSION.md). |
 
 ## WINDOWS-09F reservation history — all released
 

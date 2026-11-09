@@ -1,8 +1,8 @@
 # User-controlled LLM profiles and task routing
 
-Accepted target contract, 2026-11-02, decisions A19/A20. PROFILE-06A implements
-the main worker routes described below. Step 6 still includes background and
-standalone work. A28 requires an explicit observer profile in the private Codex launcher.
+Accepted target contract, 2026-11-02, decisions A19/A20. PROFILE-06A and
+PROFILE-06B implement this configuration for the local worker. A28 requires an
+explicit profile in the private Codex launcher.
 
 A27 clarification (2026-11-04): Codex/ChatGPT login is the first local live-test
 route. Claude Code Enterprise through AWS Bedrock/AWS SSO remains a required
@@ -60,9 +60,8 @@ routing, if needed later, must be explicit and separately scoped.
 
 ## Profile contract
 
-The table defines the contract for all retained model jobs. The main worker
-uses the [settings representation below](#main-worker-configuration). PROFILE-06B
-extends it to the remaining jobs.
+The table defines the contract for all retained model jobs. The worker and its
+background jobs use the [settings representation below](#main-worker-configuration).
 
 | Field/concept | Requirement |
 |---|---|
@@ -113,11 +112,13 @@ the API key references that the selected profiles name.
 }
 ```
 
-`default` is required. The only override keys in this slice are `observer`,
-`summary` and `compression`. Each override is a complete profile. Omission
-inherits the default. An invalid override stays paused. A missing or invalid
-default blocks admission. An invalid observer selection also blocks the session
-generator. An unavailable compressor keeps the existing local field truncation.
+`default` is required. The override keys are `observer`, `summary`,
+`compression`, `refresh`, `copy`, `requestJudge`, `focusJudge`, `knowledge`
+and `telegramWrapup`. Each override is a complete profile. Omission inherits
+the default. Optional jobs accept the string `"off"`. An invalid override
+stays paused. A missing or invalid default blocks admission. An invalid
+observer selection also blocks the session generator. An unavailable compressor
+keeps the existing local field truncation.
 
 | Provider | Auth | Additional required fields and binding |
 |---|---|---|
@@ -145,7 +146,7 @@ credentials through AWS CLI `configure export-credentials`.
 [AWS CLI reference](https://docs.aws.amazon.com/cli/latest/reference/configure/export-credentials.html).
 
 Legacy `CLAUDE_MEM_PROVIDER`, provider model defaults, key pools, tier aliases
-and quota-fallback settings do not enable main worker inference. To migrate,
+and quota-fallback settings do not enable local worker inference. To migrate,
 write the explicit profile and selected auth reference. Existing settings and
 SQLite rows need no schema migration. A repaired profile can resume queued
 work on the next event or through the existing local processing retry.
@@ -155,7 +156,24 @@ provider, auth, inheritance and configuration state. Failures use safe
 categories. Credentials, auth directories, endpoints and raw transport errors
 stay out of this status. `configured` describes local selection. Native login
 availability and remote entitlement are checked by the selected transport.
-See [PROFILE-06A](handoffs/PROFILE-06A.md) for the evidence boundary.
+See [PROFILE-06A](handoffs/PROFILE-06A.md) and [PROFILE-06B](handoffs/PROFILE-06B.md)
+for the evidence boundaries.
+
+### Background capability and migration
+
+| Role key | Local worker behavior |
+|---|---|
+| `refresh` | One profile per run across goals, grouping, review, focus placement and story. Claude can use Read, Grep and Glob inside the ledger only. Other adapters receive the prepared evidence inline and have no file tools. The worker runs the existing validators and saves the result. |
+| `copy` | Uses the selected text adapter and the existing copy validator and cache. Legacy copy-provider and copy-model settings cannot select a model. A legacy copy opt-out remains effective until an explicit `copy` override. |
+| `requestJudge`, `focusJudge` | Each requires an override using `openrouter` or `openai-compatible` with the full compatible endpoint ending in `/decisions`. Set the explicit model and bind any key to that exact URL. A Decisions endpoint is unsupported for text roles. If a judge is unavailable, the existing local rules and separately selected refresh steps still apply. |
+| `knowledge` | Requires the selected Claude route because prime and query resume a local SDK conversation. Prime an existing corpus once under the selected profile before asking it questions. Legacy sessions and sessions for another profile stay stored until a successful prime replaces their binding. |
+| `telegramWrapup` | Reports `unsupported_capability` under the local-only delivery policy. Stored summaries remain local. The formatter is withheld before any model or Telegram call. |
+
+An inherited `refresh` or `copy` profile can send its normal task input to the
+selected model. Set the role to `"off"` to pause it. The existing
+`CLAUDE_MEM_WORK_VIEW_AUTO_REFRESH=false` setting stops scheduled refresh.
+Refresh never loads host plugins or MCP. The local worker and interactive host
+retain their existing memory search entrypoints.
 
 ## Roles and effective settings
 
@@ -172,10 +190,8 @@ profile/model; no need to force users to configure every role separately.
 | viewer copy | Human-readable summary/copy generation; same policy, preserve existing cached content on failure |
 | viewer judges | Request/focus/grouping decisions; no hardcoded Jev/OpenRouter model or separate endpoint default |
 
-These role names are planning vocabulary, not mandated public setting keys. At step 6
-trace actual callers and collapse aliases that share behavior; do not add roles with no
-retained caller. Inference solely formatting a removed outbound connector can be removed
-with that connector, rather than introducing a new role for it.
+The table uses logical names. The configuration section defines the setting keys.
+The local-only delivery policy leaves connector-only inference unavailable.
 
 Settings/status must show role -> effective profile -> model -> auth mode, inheritance
 and disabled/error state. Secret values never appear. Reuse existing settings/status
@@ -301,10 +317,8 @@ Inspected source **48feeab567995de81d501b74007694b5ee95a880**, static only:
 | src/services/work-view/human-copy-worker.mjs:63,96 | Separate HTTP call and fallbackModels body |
 | src/sdk/hardened-options.ts:233,241-243 | Retain tool/MCP/settings isolation |
 
-Step 6 should deliver two bounded increments if needed: PROFILE-06A (shared resolution,
-legacy rejection, main observer/summary/compression and effective status) then PROFILE-06B
-(background/standalone/copy/judges and all retained provider-role coverage). Avoid one
-large rewrite. Step 10 may prune a dependency only after proving it is not needed by any
-retained configured route. Test exact subprocess options and no-send failures as well as
-pure resolver units. See [VALIDATION](VALIDATION.md) for runtime/CI obligations and
-[PLAN-ADAPT-05](handoffs/PLAN-ADAPT-05.md) for this documentation-only change.
+PROFILE-06A and PROFILE-06B close the bounded local worker and request-progress
+entrypoints. Step 10 owns admission of the separately built server and dormant
+setup/installer helpers before they can enter a release bundle. Step 11 owns
+per-provider live evidence. See [VALIDATION](VALIDATION.md) and the
+[PROFILE-06B evidence](handoffs/PROFILE-06B.md).

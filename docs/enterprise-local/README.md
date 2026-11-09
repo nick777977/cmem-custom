@@ -33,6 +33,12 @@ profiles. A copied worker passed a synthetic loopback check across observation,
 summary and field compression. [Configuration](LLM-PROFILES.md#main-worker-configuration)
 and [evidence](handoffs/PROFILE-06A.md).
 
+**PROFILE-06B, 2026-11-09.** Local refresh, card copy, request/focus judging and
+knowledge use the same explicit profile boundary. Health reports unsupported
+capabilities, including the local-only Telegram wrap-up refusal.
+[Configuration](LLM-PROFILES.md#background-capability-and-migration) and
+[evidence](handoffs/PROFILE-06B.md).
+
 ## Current local development baseline
 
 Use **Node.js 22.23.4, npm 10.9.9, Bun 1.4.4** for this fork. User-provided logs

@@ -95,6 +95,6 @@ so review those settings while the worker is stopped before restarting it.
 
 The main worker's Telegram wrap-up formatter is withheld with a local
 unavailable diagnostic pending explicit routing. Other background paths and
-standalone helpers remain outside this evidence boundary. Continue
-[PROFILE-06B](../NEXT-SESSION.md) for refresh, copy, judging, knowledge, wrap-up
+standalone helpers remain outside this evidence boundary.
+[PROFILE-06B](PROFILE-06B.md) covers refresh, copy, judging, knowledge, wrap-up
 and standalone work. Chroma and offline embedding setup stay in step 7.
