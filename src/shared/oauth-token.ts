@@ -603,6 +603,13 @@ async function readStoredClaudeCredential(
   return { kind: 'absent', reason: `${fileResult.reason}; ${legacyStoreResult.reason}` };
 }
 
+/** Read only the selected native login, with no environment token or other account fallback. */
+export function readSelectedClaudeLogin(authHome: string): Promise<OAuthTokenResult> {
+  return process.platform === 'darwin'
+    ? readStoredClaudeCredential(resolveClaudeCredentialProfile(authHome), execFileAsync)
+    : Promise.resolve(readClaudeCredentialsFile(authHome));
+}
+
 /**
  * Read the Claude Code OAuth token the SDK child should run with.
  *

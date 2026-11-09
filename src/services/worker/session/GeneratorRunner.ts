@@ -66,6 +66,10 @@ export interface GeneratorRunnerDependencies {
    * triggered.
    */
   maybeSelfHealStaleClaudeSpawn: (error: unknown, source: string, sessionDbId: number) => boolean;
+  profileRun?: {
+    start: () => Promise<void>;
+    onFailure: (error: unknown) => void;
+  };
 }
 
 /**
@@ -186,7 +190,7 @@ export async function startGeneratorWithProvider(
         : provider === 'openai-compatible'
           ? 'OpenAI-compatible'
           : 'Claude SDK';
-  if (!agent) throw new Error(`${agentName} provider is not configured`);
+  if (!agent && !deps.profileRun) throw new Error(`${agentName} provider is not configured`);
 
   const actualQueueDepth = sessionManager.getMessageBuffer().getPendingCount(session.sessionDbId);
 
@@ -214,8 +218,16 @@ export async function startGeneratorWithProvider(
   let scheduledResume: { afterMs: number; source: string } | null = null;
   let generatorPromise: Promise<void>;
 
-  generatorPromise = agent.startSession(session, workerService)
+  generatorPromise = (deps.profileRun ? deps.profileRun.start() : agent!.startSession(session, workerService))
     .catch(async error => {
+      if (deps.profileRun) {
+        if (myController.signal.aborted && session.abortReason && !isClassified(error)) return;
+        skipGeneratorExitFinalization = true;
+        session.pausedReason = 'setup_required';
+        await sessionManager.resetProcessingToPending(session.sessionDbId);
+        deps.profileRun.onFailure(error);
+        return;
+      }
       const classified = isClassified(error) ? error : null;
       // Since #3999 a provider PAUSES on a classified error by aborting the
       // controller before rethrowing, so an aborted controller alone no longer
@@ -398,6 +410,7 @@ export async function startGeneratorWithProvider(
         // Setup needs operator repair. A transport timer from an earlier
         // failure must not restart Claude while that setup gate is active.
         sessionManager.clearTransportResume(session.sessionDbId);
+        session.abortReason = null;
         if (session.generatorPromise === generatorPromise) {
           session.generatorPromise = null;
         }

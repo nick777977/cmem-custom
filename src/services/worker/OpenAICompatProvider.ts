@@ -139,6 +139,7 @@ export interface OpenAICompatConfig {
   requiresApiKey: boolean;
   /** Set for a Telegram wrap-up request (OpenAICompatibleProvider.formatTelegramWrapup). */
   plainText?: boolean;
+  explicitProfile?: boolean;
 }
 
 /**
@@ -488,6 +489,19 @@ export class OpenAICompatProvider extends OpenAICompatibleProvider<OpenAICompatC
     return resolveOpenAICompatConfig(paths.settings());
   }
 
+  protected override profileConfig(profile: import('./model-profiles.js').ModelProfile): OpenAICompatConfig {
+    if (profile.provider !== 'openai-compatible') return super.profileConfig(profile);
+    return {
+      apiKey: profile.apiKey,
+      apiKeys: profile.apiKey ? [profile.apiKey] : [],
+      model: profile.model,
+      apiUrl: resolveOpenRouterChatCompletionsUrl(profile.endpoint),
+      preset: resolveOpenAICompatPreset('custom'),
+      requiresApiKey: profile.auth === 'api-key',
+      explicitProfile: true,
+    };
+  }
+
   /** Extend this turn with already-queued events; normal confirm/reset covers every claim. */
   protected override observationTurnPrompt(session: ActiveSession, first: PendingMessageWithId, prompt: ObservationPromptParts): string {
     const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
@@ -737,7 +751,7 @@ export class OpenAICompatProvider extends OpenAICompatibleProvider<OpenAICompatC
     };
     warnIfCutOff();
 
-    if (isLengthTruncatedEmptyReply(content, finishReason) && !disabledOnSend && !endpointRejectsReasoningField(config.apiUrl)) {
+    if (!config.explicitProfile && isLengthTruncatedEmptyReply(content, finishReason) && !disabledOnSend && !endpointRejectsReasoningField(config.apiUrl)) {
       if (!claimReasoningBudgetRetry(paidSendBudget)) {
         logger.error('SDK', reasoningBudgetSkippedMessage(label, paidSendBudget?.spentPaidSends ?? 0), {
           model: config.model,

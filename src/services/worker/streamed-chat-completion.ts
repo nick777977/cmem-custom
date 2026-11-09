@@ -242,6 +242,7 @@ async function openExchange(
 ): Promise<OpenedExchange> {
   const init: RequestInit = {
     method: 'POST',
+    redirect: 'error',
     headers: request.headers,
     body: JSON.stringify(body),
     signal: request.signal,

@@ -107,6 +107,7 @@ export interface RouteHandler {
 export interface AiStatus {
   provider: string;
   authMethod: string;
+  roles?: Record<import('../worker/model-profiles.js').MainModelRole, import('../worker/model-profiles.js').ModelRoleStatus & { lastFailure?: string }>;
   lastInteraction: {
     timestamp: number;
     success: boolean;

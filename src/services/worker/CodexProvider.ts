@@ -36,6 +36,7 @@ interface CodexConfig {
   apiKey: string;
   model: string;
   codexPath: string;
+  nativeCodexHome?: string;
   reasoningEffort: string | null;
   signal?: AbortSignal;
   /** The session this config serves, for per-session fault counting. */
@@ -229,6 +230,14 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
     };
   }
 
+  protected override profileConfig(profile: import('./model-profiles.js').ModelProfile): CodexConfig {
+    if (profile.provider !== 'codex') return super.profileConfig(profile);
+    return {
+      apiKey: 'codex-subscription', model: profile.model, codexPath: profile.executable,
+      nativeCodexHome: profile.authHome, reasoningEffort: null,
+    };
+  }
+
   protected override readonly rejectAbortedObservation = true;
 
   /** A Codex turn carries no output-token cap, so the condense budget stays the field cap's. */
@@ -310,6 +319,7 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
       'Follow the latest user request: XML for observations/summaries, plain text for payload compression.',
       ...history.map(message => `${message.role.toUpperCase()}:\n${message.content}`),
     ].join('\n\n');
+    if (config.nativeCodexHome) return this.runTurnWithRetry(prompt, config, timeoutMs, abortSignal, paidSendBudget);
     // Pool slots run concurrently: a success may only clear the breaker or
     // setup status it was admitted under, never a newer failure another slot
     // recorded meanwhile (each record installs a new object).
@@ -370,6 +380,7 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
       try {
         return await client.runTurn({
           codexPath: config.codexPath,
+          nativeCodexHome: config.nativeCodexHome,
           model: config.model,
           reasoningEffort: config.reasoningEffort,
           timeoutMs,
@@ -380,6 +391,7 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
           // breaker.
           beforeSend: () => {
             attemptSignal.throwIfAborted();
+            if (config.nativeCodexHome) return;
             const setup = getDependencyStatus('codex_cli');
             if (setup && isDependencyStatusInCooldown(setup, CODEX_CLI_SETUP_RECHECK_COOLDOWN_MS)) {
               throw new ClassifiedProviderError(setup.message, {
@@ -390,7 +402,7 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
             if (cooldown && isQuotaCooldownActive('codex')) throw cooldownRefusal(cooldown);
           },
           onFailure: error => {
-            if (attemptSignal.aborted) return;
+            if (attemptSignal.aborted || config.nativeCodexHome) return;
             publishCodexFailure(isClassified(error) ? error : classifyCodexError(error));
           },
         });
@@ -400,7 +412,7 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
       }
       // maxRetries bounds in-place retries of refusals only (a rate limit, an
       // armed breaker); the paid-send budget bounds every resend of the batch.
-    }, { label: 'Codex', maxRetries: 1, perAttemptTimeoutMs: timeoutMs, abortSignal: admittedSignal, paidSendBudget }), abortSignal);
+    }, { label: 'Codex', maxRetries: config.nativeCodexHome ? 0 : 1, perAttemptTimeoutMs: timeoutMs, abortSignal: admittedSignal, paidSendBudget }), abortSignal);
   }
 }
 

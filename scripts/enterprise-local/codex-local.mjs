@@ -84,15 +84,26 @@ function appEnv(root, port) {
 }
 
 function profileEnv(profile, config) {
+  if (profile && Object.hasOwn(profile, 'default')) {
+    const env = { CLAUDE_MEM_MODEL_PROFILES: JSON.stringify(profile) };
+    for (const role of ['default', 'observer', 'summary', 'compression']) {
+      const selected = profile[role];
+      if (selected?.auth !== 'api-key' || !/^CMEM_PROFILE_KEY_[A-Z0-9_]{1,96}(?<!_ENDPOINT)$/.test(selected.keyEnv)) continue;
+      for (const name of [selected.keyEnv, `${selected.keyEnv}_ENDPOINT`]) {
+        if (process.env[name] !== undefined) env[name] = process.env[name];
+      }
+    }
+    return env;
+  }
   if (typeof profile.model !== 'string' || !profile.model.trim()) {
     throw new Error('The observer profile requires an explicit model');
   }
   if (profile.provider === 'codex') {
     return {
-      CODEX_HOME: realpathSync(windowsPath(profile.authHome)),
-      CLAUDE_MEM_PROVIDER: 'codex',
-      CLAUDE_MEM_CODEX_PATH: config.codex,
-      CLAUDE_MEM_CODEX_MODEL: profile.model,
+      CLAUDE_MEM_MODEL_PROFILES: JSON.stringify({ default: {
+        id: 'private-codex', provider: 'codex', model: profile.model, auth: 'chatgpt',
+        executable: config.codex, authHome: realpathSync(windowsPath(profile.authHome)),
+      } }),
     };
   }
   if (profile.provider === 'openai-compatible') {
@@ -108,12 +119,12 @@ function profileEnv(profile, config) {
     const key = process.env.CLAUDE_MEM_OPENAI_COMPAT_API_KEY;
     if (!key?.trim()) throw new Error('Set CLAUDE_MEM_OPENAI_COMPAT_API_KEY for the selected endpoint');
     return {
-      CLAUDE_MEM_PROVIDER: 'openai-compatible',
-      CLAUDE_MEM_OPENAI_COMPAT_PRESET: '',
-      CLAUDE_MEM_OPENAI_COMPAT_BASE_URL: url.href,
-      CLAUDE_MEM_OPENAI_COMPAT_MODEL: profile.model,
-      CLAUDE_MEM_OPENAI_COMPAT_API_KEY: key,
-      CLAUDE_MEM_OPENAI_COMPAT_API_KEYS: '',
+      CLAUDE_MEM_MODEL_PROFILES: JSON.stringify({ default: {
+        id: 'private-api', provider: 'openai-compatible', model: profile.model, auth: 'api-key',
+        endpoint: url.href, keyEnv: 'CMEM_PROFILE_KEY_PRIVATE',
+      } }),
+      CMEM_PROFILE_KEY_PRIVATE: key,
+      CMEM_PROFILE_KEY_PRIVATE_ENDPOINT: url.href,
     };
   }
   throw new Error('Select a codex or openai-compatible observer profile for this launcher');

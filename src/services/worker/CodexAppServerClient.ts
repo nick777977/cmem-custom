@@ -126,6 +126,7 @@ export interface CodexAppServerClientOptions {
 
 export interface CodexAppServerTurnOptions {
   codexPath: string;
+  nativeCodexHome?: string;
   model: string;
   reasoningEffort: string | null;
   prompt: string;
@@ -326,7 +327,7 @@ export async function sweepStaleAppServerWorkdirs(options: SweepStaleAppServerWo
   return results.flatMap(result => (result.status === 'fulfilled' ? [result.value] : []));
 }
 
-function createPrivateRuntime(nativeCodexHome: string): PrivateRuntime {
+function createPrivateRuntime(nativeCodexHome: string, requireTokens = false): PrivateRuntime {
   if (!sweptStaleWorkdirs) {
     sweptStaleWorkdirs = true;
     // Not awaited: removing many leftover Codex homes must not delay this turn.
@@ -376,6 +377,9 @@ function createPrivateRuntime(nativeCodexHome: string): PrivateRuntime {
     if (!isObject(auth) || (auth.auth_mode !== 'chatgpt' && auth.auth_mode !== 'chatgptAuthTokens')) {
       throw codexSetupError('claude-mem requires Codex CLI to be logged in with ChatGPT, not an API key');
     }
+    if (requireTokens && (!isObject(auth.tokens) || typeof auth.tokens.access_token !== 'string' || !auth.tokens.access_token.trim())) {
+      throw codexSetupError('The selected Codex ChatGPT login has no access token');
+    }
 
     const scopedAuth = join(codexHome, 'auth.json');
     if (process.platform === 'win32') linkSync(nativeAuth, scopedAuth);
@@ -423,6 +427,8 @@ export class CodexAppServerClient {
   private privateRoot: string | null = null;
   private workspace: string | null = null;
   private codexPath = '';
+  private activeAuthHome = '';
+  private authFingerprint = '';
   private binaryFingerprint = '';
   private activeTurn: ActiveTurn | null = null;
   private queueTail: Promise<void> = Promise.resolve();
@@ -491,7 +497,7 @@ export class CodexAppServerClient {
 
   private async runTurnExclusive(options: CodexAppServerTurnOptions): Promise<CodexAppServerTurnResult> {
     options.beforeSend?.();
-    await this.ensureStarted(options.codexPath, options.timeoutMs, options.signal);
+    await this.ensureStarted(options.codexPath, options.timeoutMs, options.signal, options.nativeCodexHome);
     const workspace = this.workspace;
     if (!workspace) throw new Error('Codex app-server workspace is unavailable');
 
@@ -520,6 +526,9 @@ export class CodexAppServerClient {
 
     if (!isObject(threadResponse) || !isObject(threadResponse.thread)) {
       throw new Error('Codex app-server returned invalid thread/start response');
+    }
+    if (options.nativeCodexHome && threadResponse.model !== options.model) {
+      throw codexSetupError('Codex app-server did not confirm the selected model');
     }
     const instructionSources = threadResponse.instructionSources;
     if (!Array.isArray(instructionSources)) {
@@ -706,28 +715,38 @@ export class CodexAppServerClient {
     }
   }
 
-  private async ensureStarted(codexPath: string, timeoutMs: number, signal?: AbortSignal): Promise<void> {
+  private async ensureStarted(codexPath: string, timeoutMs: number, signal?: AbortSignal, selectedAuthHome?: string): Promise<void> {
     if (this.closed) throw new Error('Codex app-server client closed');
 
+    const authHome = selectedAuthHome ?? this.nativeCodexHome;
+    let authFingerprint = '';
+    if (selectedAuthHome) {
+      const auth = statSync(join(authHome, 'auth.json'), { throwIfNoEntry: false });
+      if (!auth?.isFile()) throw codexSetupError('The selected Codex ChatGPT login is unavailable');
+      authFingerprint = `${auth.ino}:${auth.mtimeMs}:${auth.size}`;
+    }
     const fingerprint = executableFingerprint(codexPath);
-    if (this.child && (this.codexPath !== codexPath || this.binaryFingerprint !== fingerprint)) {
-      this.invalidate(new Error('Codex executable changed; restarting app-server'));
+    if (this.child && (this.codexPath !== codexPath || this.binaryFingerprint !== fingerprint ||
+      this.activeAuthHome !== authHome || this.authFingerprint !== authFingerprint)) {
+      this.invalidate(new Error('Codex executable or login source changed; restarting app-server'));
     }
     if (this.child) return;
     if (this.startPromise) return this.startPromise;
 
-    this.startPromise = this.start(codexPath, fingerprint, timeoutMs, signal)
+    this.startPromise = this.start(codexPath, authHome, fingerprint, authFingerprint, timeoutMs, signal)
       .finally(() => { this.startPromise = null; });
     return this.startPromise;
   }
 
-  private async start(codexPath: string, fingerprint: string, timeoutMs: number, signal?: AbortSignal): Promise<void> {
+  private async start(codexPath: string, authHome: string, fingerprint: string, authFingerprint: string, timeoutMs: number, signal?: AbortSignal): Promise<void> {
     const supervisor = getSupervisor();
     supervisor.assertCanSpawn('codex');
-    const runtime = createPrivateRuntime(this.nativeCodexHome);
+    const runtime = createPrivateRuntime(authHome, Boolean(authFingerprint));
     this.privateRoot = runtime.root;
     this.workspace = runtime.workspace;
     this.codexPath = codexPath;
+    this.activeAuthHome = authHome;
+    this.authFingerprint = authFingerprint;
     this.binaryFingerprint = fingerprint;
     this.protocolBuffer = '';
     this.stderrTail = '';

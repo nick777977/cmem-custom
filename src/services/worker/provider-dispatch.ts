@@ -382,6 +382,12 @@ setQuotaFallbackResolver(quotaServingProvider);
 setUnservableProviderRouter((provider, message, window, profile) =>
   provider === 'cmem-gateway' ? null : routeAroundUnservableProvider(provider, message, window, profile));
 
+/** Legacy dispatch remains available to its existing callers. The main worker uses explicit profiles. */
+export function disableLegacyWorkerFallback(): void {
+  setQuotaFallbackResolver(null);
+  setUnservableProviderRouter(null);
+}
+
 /**
  * Dispatch for a caller that is about to start a generator, claiming the single
  * post-cooldown gateway re-probe.

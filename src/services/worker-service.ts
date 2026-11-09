@@ -16,7 +16,8 @@ import { HookSpoolRoutes } from './worker/http/routes/HookSpoolRoutes.js';
 import { HOOK_TIMEOUTS } from '../shared/hook-constants.js';
 import { getUptimeSeconds } from '../shared/uptime.js';
 import { SettingsDefaultsManager } from '../shared/SettingsDefaultsManager.js';
-import { describeObserverAuthMethod } from './worker/observer-auth-method.js';
+import { MainWorkerProfiles } from './worker/MainWorkerProfiles.js';
+import { disableLegacyWorkerFallback } from './worker/provider-dispatch.js';
 import { logger } from '../utils/logger.js';
 import { ChromaMcpManager } from './sync/ChromaMcpManager.js';
 import { ChromaSync } from './sync/ChromaSync.js';
@@ -116,7 +117,6 @@ import type { WorkerRef } from './worker/agents/types.js';
 import { GeminiProvider, classifyGeminiError } from './worker/GeminiProvider.js';
 import { OpenRouterProvider, classifyOpenRouterError } from './worker/OpenRouterProvider.js';
 import { OpenAICompatProvider } from './worker/OpenAICompatProvider.js';
-import { getSelectedProvider } from './worker/provider-dispatch.js';
 import { CodexProvider } from './worker/CodexProvider.js';
 import { ClassifiedProviderError, isClassified, type ProviderErrorClass } from './worker/provider-errors.js';
 import { PaginationHelper } from './worker/PaginationHelper.js';
@@ -285,6 +285,7 @@ export class WorkerService implements WorkerRef {
   private openRouterAgent: OpenRouterProvider;
   private openAICompatAgent: OpenAICompatProvider;
   private codexAgent: CodexProvider;
+  private mainProfiles: MainWorkerProfiles;
   private paginationHelper: PaginationHelper;
   private settingsManager: SettingsManager;
   private sessionEventBroadcaster: SessionEventBroadcaster;
@@ -313,6 +314,7 @@ export class WorkerService implements WorkerRef {
   private lastBroadcastQueueDepth: number | null = null;
 
   constructor() {
+    disableLegacyWorkerFallback();
     this.initializationComplete = new Promise((resolve) => {
       this.resolveInitialization = resolve;
     });
@@ -325,6 +327,10 @@ export class WorkerService implements WorkerRef {
     this.openRouterAgent = new OpenRouterProvider(this.dbManager, this.sessionManager);
     this.openAICompatAgent = new OpenAICompatProvider(this.dbManager, this.sessionManager);
     this.codexAgent = new CodexProvider(this.dbManager, this.sessionManager);
+    this.mainProfiles = new MainWorkerProfiles(this.dbManager, this.sessionManager, this.sdkAgent, {
+      gemini: this.geminiAgent, openrouter: this.openRouterAgent, codex: this.codexAgent,
+      'openai-compatible': this.openAICompatAgent,
+    });
 
     this.paginationHelper = new PaginationHelper(this.dbManager);
     this.settingsManager = new SettingsManager(this.dbManager);
@@ -374,10 +380,12 @@ export class WorkerService implements WorkerRef {
       onRestart: () => this.shutdown('restart'),
       workerPath: __filename,
       getAiStatus: () => {
-        const provider = getSelectedProvider();
+        const roles = this.mainProfiles.status();
+        const observer = roles.observer;
         return {
-          provider,
-          authMethod: describeObserverAuthMethod(provider),
+          provider: observer.state === 'configured' ? observer.provider : 'unconfigured',
+          authMethod: observer.state === 'configured' ? observer.auth : 'unconfigured',
+          roles,
           lastInteraction: this.lastAiInteraction
             ? {
                 timestamp: this.lastAiInteraction.timestamp,
@@ -578,7 +586,7 @@ export class WorkerService implements WorkerRef {
     });
     this.server.registerRoutes(this.workViewRoutes);
     this.server.registerRoutes(new ViewerRoutes(this.sseBroadcaster, this.dbManager, this.sessionManager));
-    const sessionRoutes = new SessionRoutes(this.sessionManager, this.dbManager, this.sdkAgent, this.geminiAgent, this.openRouterAgent, this.sessionEventBroadcaster, this, this.completionHandler, this.codexAgent, this.openAICompatAgent);
+    const sessionRoutes = new SessionRoutes(this.sessionManager, this.dbManager, this.sdkAgent, this.geminiAgent, this.openRouterAgent, this.sessionEventBroadcaster, this, this.completionHandler, this.codexAgent, this.openAICompatAgent, this.mainProfiles);
     this.server.registerRoutes(sessionRoutes);
     this.startPendingSessionResume(sessionRoutes);
     attachIngestGeneratorStarter((sessionDbId, source) =>

@@ -37,6 +37,8 @@ export interface ActiveSession {
    * changed while it ran.
    */
   observerProfile?: string;
+  /** Identity of the main worker's admitted profile snapshot. */
+  mainProfileFingerprint?: string;
   /**
    * The credential the latest Claude generator was spawned with; fixed at spawn
    * like observerProfile. Unset for a gateway token, which is neither.

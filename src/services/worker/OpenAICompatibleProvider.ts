@@ -33,6 +33,7 @@ import { recycleObserverConversation, loadSessionStartContext, openObserverGener
 import { optimizeObservationFields, buildFieldCompressionPrompt, type CompressedField } from './field-optimizer.js';
 import { resolveFieldOptimizeTimeoutMs } from './retry.js';
 import { buildTelegramWrapupPrompt, type TelegramWrapupFormatterInput } from '../integrations/TelegramWrapupNotifier.js';
+import type { MainModelRole, ModelProfile } from './model-profiles.js';
 
 import {
   processAgentResponse,
@@ -56,6 +57,7 @@ export interface ProviderQueryResult {
   costUsd?: number;
   /** The model that actually served the request, when reported. */
   servedModel?: string;
+  profileProvider?: string;
   /**
    * Why generation stopped, as the provider reported it: OpenRouter's
    * finish_reason ('stop', 'length', …) or Gemini's finishReason ('STOP',
@@ -63,6 +65,21 @@ export interface ProviderQueryResult {
    * the reply off (#3868).
    */
   finishReason?: string;
+}
+
+export interface ProfileTurnRequest {
+  session: ActiveSession;
+  history: ConversationMessage[];
+  signal: AbortSignal;
+  timeoutMs: number;
+  budget?: PaidSendBudget;
+  label: ObserverRequestLabel;
+}
+
+export interface ProfileRun {
+  contextWindow: () => Promise<number>;
+  send: (role: MainModelRole, request: ProfileTurnRequest) => Promise<ProviderQueryResult>;
+  timeoutMs: number;
 }
 
 /**
@@ -146,6 +163,19 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
   /** Resolve API key, model, and any per-provider request parameters. */
   protected abstract getConfig(): TConfig;
 
+  protected profileConfig(_profile: ModelProfile): TConfig {
+    throw new Error('Profile route is unsupported by this adapter');
+  }
+
+  startProfileSession(profile: ModelProfile, session: ActiveSession, worker: WorkerRef, run: ProfileRun): Promise<void> {
+    return this.startSession(session, worker, run, this.profileConfig(profile));
+  }
+
+  queryProfile(profile: ModelProfile, request: ProfileTurnRequest): Promise<ProviderQueryResult> {
+    const config = this.profileConfig(profile);
+    return this.query(request.history, config, request.signal, request.timeoutMs, request.budget, request.label);
+  }
+
   /** Throw a provider-specific "API key not configured" error. */
   protected abstract missingApiKeyError(): Error;
 
@@ -194,18 +224,19 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     signal: AbortSignal,
     deadlineMs?: number,
     label?: ObserverRequestLabel,
+    session?: ActiveSession,
+    profileRun?: ProfileRun,
   ): Promise<CompressedField | null> {
     // The field pass races `deadlineMs` (CLAUDE_MEM_FIELD_OPTIMIZE_TIMEOUT_MS).
     // Without it the request keeps the LLM per-attempt default, and a longer
     // field knob would never take effect on this path (#4134).
-    const result = await this.query(
-      [{ role: 'user', content: buildFieldCompressionPrompt(text, budgetChars) }],
-      config,
-      signal,
-      deadlineMs,
-      undefined,
-      label,
-    );
+    const history: ConversationMessage[] = [{ role: 'user', content: buildFieldCompressionPrompt(text, budgetChars) }];
+    const result = profileRun && session && label
+      ? await profileRun.send('compression', {
+          session, history, signal: AbortSignal.any([signal, session.abortController.signal]),
+          timeoutMs: deadlineMs ?? profileRun.timeoutMs, label,
+        })
+      : await this.query(history, config, signal, deadlineMs, undefined, label);
     if (!result.content) return null;
     return { text: result.content, truncated: result.finishReason === 'length' || result.finishReason === 'MAX_TOKENS' };
   }
@@ -353,8 +384,8 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     );
   }
 
-  async startSession(session: ActiveSession, worker?: WorkerRef): Promise<void> {
-    const config = this.getConfig();
+  async startSession(session: ActiveSession, worker?: WorkerRef, profileRun?: ProfileRun, profileConfig?: TConfig): Promise<void> {
+    const config = profileConfig ?? this.getConfig();
     const { apiKey, model } = config;
     session.lastModelId = model;
     this.prepareSessionExtras(session, config);
@@ -380,7 +411,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
 
     // Resolved once per generation: the generation budget and the per-field
     // cap both scale with the model's window (#3625).
-    session.observerContextWindowTokens = await this.resolveContextWindow(config);
+    session.observerContextWindowTokens = await (profileRun ? profileRun.contextWindow() : this.resolveContextWindow(config));
 
     const mode = ModeManager.getInstance().getActiveMode();
     // Seed the generation with what this session already observed, so a
@@ -406,7 +437,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
       try {
         session.lastPromptSentAt = Date.now();
         session.lastGeneratorSource = 'init';
-        const initResponse = await this.queryObserverTurn(session, config, undefined, 'init');
+        const initResponse = await this.queryObserverTurn(session, config, undefined, 'init', profileRun);
         this.handleInitResponse(initResponse, session, model);
       } catch (error: unknown) {
         if (await this.recycleOnContextOverflow(error, session, worker)) return;
@@ -424,7 +455,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     }
 
     try {
-      await this.runMessageLoop(session, worker, config, mode);
+      await this.runMessageLoop(session, worker, config, mode, profileRun);
     } catch (error: unknown) {
       if (await this.recycleOnContextOverflow(error, session, worker)) return;
       if (isClassified(error)) {
@@ -450,7 +481,8 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     session: ActiveSession,
     worker: WorkerRef | undefined,
     config: TConfig,
-    mode: ModeConfig
+    mode: ModeConfig,
+    profileRun?: ProfileRun,
   ): Promise<void> {
     let lastCwd: string | undefined;
 
@@ -464,9 +496,9 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
       const originalTimestamp = session.earliestPendingTimestamp;
 
       if (message.type === 'observation') {
-        await this.processObservationMessage(session, message, worker, config, originalTimestamp, lastCwd);
+        await this.processObservationMessage(session, message, worker, config, originalTimestamp, lastCwd, profileRun);
       } else if (message.type === 'summarize') {
-        await this.processSummaryMessage(session, message, worker, config, mode, originalTimestamp, lastCwd);
+        await this.processSummaryMessage(session, message, worker, config, mode, originalTimestamp, lastCwd, profileRun);
       }
     }
   }
@@ -512,7 +544,8 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     worker: WorkerRef | undefined,
     config: TConfig,
     originalTimestamp: number | null,
-    lastCwd: string | undefined
+    lastCwd: string | undefined,
+    profileRun?: ProfileRun,
   ): Promise<void> {
     if (!session.memorySessionId) {
       throw new Error('Cannot process observations: memorySessionId not yet captured. This session may need to be reinitialized.');
@@ -545,7 +578,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     const optimized = await optimizeObservationFields(
       { toolInput: message.tool_input, toolOutput: message.tool_response },
       (text, budgetChars, signal, deadlineMs) => this.compressField(
-        text, budgetChars, config, signal, deadlineMs, generationLabel(session, 'field_compression'),
+        text, budgetChars, config, signal, deadlineMs, generationLabel(session, 'field_compression'), session, profileRun,
       ),
       { sessionDbId: session.sessionDbId, toolName: message.tool_name },
       fieldMaxChars,
@@ -573,7 +606,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
 
     session.lastPromptSentAt = Date.now();
     session.lastGeneratorSource = 'ingest';
-    const obsResponse = await this.queryObserverTurn(session, config, paidSendBudgetForClaimedBatch(session), 'observation');
+    const obsResponse = await this.queryObserverTurn(session, config, paidSendBudgetForClaimedBatch(session), 'observation', profileRun);
 
     // Billed usage counts even when the reply came back empty.
     accumulateObserverUsage(session, obsResponse);
@@ -609,7 +642,8 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     config: TConfig,
     mode: ModeConfig,
     originalTimestamp: number | null,
-    lastCwd: string | undefined
+    lastCwd: string | undefined,
+    profileRun?: ProfileRun,
   ): Promise<void> {
     if (!session.memorySessionId) {
       throw new Error('Cannot process summary: memorySessionId not yet captured. This session may need to be reinitialized.');
@@ -630,15 +664,15 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
 
     session.lastPromptSentAt = Date.now();
     session.lastGeneratorSource = 'summarize';
-    const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
-    const summaryModel = resolveSummaryTierModel(config.model, settings);
+    const summaryModel = profileRun ? config.model
+      : resolveSummaryTierModel(config.model, SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH));
     const summaryConfig = summaryModel === config.model ? config : { ...config, model: summaryModel };
     if (summaryConfig !== config) {
       logger.debug('SESSION', 'Tier routing: summary model', {
         sessionId: session.sessionDbId, model: summaryModel
       });
     }
-    const summaryResponse = await this.queryObserverTurn(session, summaryConfig, paidSendBudgetForClaimedBatch(session), 'summary');
+    const summaryResponse = await this.queryObserverTurn(session, summaryConfig, paidSendBudgetForClaimedBatch(session), 'summary', profileRun);
 
     accumulateObserverUsage(session, summaryResponse);
     this.recordMeasuredContext(session, summaryResponse);
@@ -650,7 +684,8 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
       session.lastFinishReason = summaryResponse.finishReason ?? null;
       await processAgentResponse(
         summaryResponse.content || '', session, this.dbManager, this.sessionManager,
-        worker, tokensUsed, originalTimestamp, this.providerName, lastCwd, summaryResponse.servedModel ?? summaryConfig.model, responseContext
+        worker, tokensUsed, originalTimestamp, summaryResponse.profileProvider ?? this.providerName,
+        lastCwd, summaryResponse.servedModel ?? summaryConfig.model, responseContext
       );
     } else {
       logger.warn('SDK', `Empty ${this.providerName} summary response, leaving queue intact`, {
@@ -673,7 +708,14 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     config: TConfig,
     paidSendBudget: PaidSendBudget | undefined,
     kind: ObserverRequestLabel['kind'],
+    profileRun?: ProfileRun,
   ): Promise<ProviderQueryResult> {
+    if (profileRun) {
+      return profileRun.send(kind === 'summary' ? 'summary' : 'observer', {
+        session, history: session.conversationHistory, signal: session.abortController.signal,
+        timeoutMs: profileRun.timeoutMs, budget: paidSendBudget, label: generationLabel(session, kind),
+      });
+    }
     try {
       return await this.query(
         session.conversationHistory, config, undefined, undefined, paidSendBudget, generationLabel(session, kind),

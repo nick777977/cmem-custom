@@ -437,6 +437,7 @@ export interface OpenRouterConfig {
   appName?: string;
   /** Per-call output mode for the wrap-up; never a persisted setting. */
   plainText?: boolean;
+  explicitProfile?: boolean;
   /**
    * CLAUDE_MEM_OPENROUTER_EXTRA_BODY, parsed (src/shared/openrouter-extra-body.ts),
    * with a valid CLAUDE_MEM_OPENROUTER_TEMPERATURE merged over it.
@@ -841,6 +842,18 @@ export class OpenRouterProvider extends OpenAICompatibleProvider<OpenRouterConfi
     return resolveOpenRouterConfig();
   }
 
+  protected override profileConfig(profile: import('./model-profiles.js').ModelProfile): OpenRouterConfig {
+    if (profile.provider !== 'openrouter') return super.profileConfig(profile);
+    return {
+      apiKey: profile.apiKey,
+      apiKeys: [profile.apiKey],
+      model: profile.model,
+      fallbackModels: [],
+      apiUrl: resolveOpenRouterChatCompletionsUrl(profile.endpoint),
+      explicitProfile: true,
+    };
+  }
+
   protected missingApiKeyError(): Error {
     return new Error('OpenRouter API key not configured. Set CLAUDE_MEM_OPENROUTER_API_KEY in settings or OPENROUTER_API_KEY environment variable.');
   }
@@ -892,7 +905,7 @@ export class OpenRouterProvider extends OpenAICompatibleProvider<OpenRouterConfi
       { poolId: 'openrouter', keys: resolvePoolKeys(config), label: 'OpenRouter', rateLimitUntilNextKey },
       ({ key, poolSize }) => this.queryOpenRouterMultiTurn(
         history, key, poolSize, config.model, config.fallbackModels, config.apiUrl, config.siteUrl, config.appName,
-        signal, config.plainText, perAttemptTimeoutMs, config.extraBody, config.reasoningEffort, paidSendBudget, label,
+        signal, config.plainText, perAttemptTimeoutMs, config.extraBody, config.reasoningEffort, paidSendBudget, label, config.explicitProfile,
       ),
     );
   }
@@ -968,6 +981,7 @@ export class OpenRouterProvider extends OpenAICompatibleProvider<OpenRouterConfi
     reasoningEffort?: OpenRouterReasoningEffort,
     paidSendBudget?: PaidSendBudget,
     label?: ObserverRequestLabel,
+    explicitProfile?: boolean,
   ): Promise<ProviderQueryResult> {
     const messages = this.conversationToOpenAIMessages(history);
     const totalChars = history.reduce((sum, m) => sum + m.content.length, 0);
@@ -1068,7 +1082,7 @@ export class OpenRouterProvider extends OpenAICompatibleProvider<OpenRouterConfi
     // withRetry would have armed; a streamed one is already capped by liveness.
     // Already-disabled requests (openrouter.ai, cmem, effort "none") give up
     // loudly instead of sending the same body again.
-    if (isLengthTruncatedEmptyReply(content, finishReason) && !disabledOnSend) {
+    if (!explicitProfile && isLengthTruncatedEmptyReply(content, finishReason) && !disabledOnSend) {
       if (!claimReasoningBudgetRetry(paidSendBudget)) {
         logger.error('SDK', reasoningBudgetSkippedMessage('OpenRouter', paidSendBudget?.spentPaidSends ?? 0), {
           model: data.model ?? model,

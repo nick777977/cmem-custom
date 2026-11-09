@@ -874,12 +874,16 @@ export function normalizeSpawnSdkCwd(sessionDbId: number): string {
 
 export function spawnSdkProcess(
   sessionDbId: number,
-  options: SpawnSdkOptions
+  options: SpawnSdkOptions,
+  selectedRoute?: { executable: string; env: NodeJS.ProcessEnv },
 ): { process: SpawnedSdkProcess; pid: number; pgid: number } | null {
   const registry = getProcessRegistry();
 
   const useCmdWrapper = process.platform === 'win32' && options.command.endsWith('.cmd');
-  const env = sanitizeEnv(options.env ?? process.env);
+  const env = selectedRoute?.env ?? sanitizeEnv(options.env ?? process.env);
+  if (selectedRoute && (!path.isAbsolute(options.command) || path.resolve(options.command) !== path.resolve(selectedRoute.executable))) {
+    throw new Error('Claude SDK did not use the selected executable');
+  }
   const filteredArgs = normalizeSpawnSdkArgs(options.args, options.extraArgs);
   const cwd = normalizeSpawnSdkCwd(sessionDbId);
   try {
@@ -935,12 +939,14 @@ export function spawnSdkProcess(
   // worker happens to run at DEBUG.
   const STDERR_TAIL_MAX_CHARS = 2048;
   let stderrTail = '';
-  if (child.stderr) {
+  if (child.stderr && !selectedRoute) {
     child.stderr.on('data', (data: Buffer) => {
       const text = data.toString();
       stderrTail = (stderrTail + text).slice(-STDERR_TAIL_MAX_CHARS);
       logger.debug('SDK_SPAWN', `[session-${sessionDbId}] stderr: ${text.trim()}`);
     });
+  } else if (selectedRoute) {
+    child.stderr?.resume();
   }
 
   const recordId = `sdk:${sessionDbId}:${pid}`;
@@ -1027,7 +1033,8 @@ function sigtermDuplicateSdkProcess(record: ManagedProcessRecord, sessionDbId: n
   });
 }
 
-export function createSdkSpawnFactory(sessionDbId: number, slotReservation?: SlotReservation, extraArgs: string[] = []) {
+export function createSdkSpawnFactory(sessionDbId: number, slotReservation?: SlotReservation, extraArgs: string[] = [],
+  selectedRoute?: { executable: string; env: NodeJS.ProcessEnv }) {
   return (spawnOptions: SpawnSdkOptions): SpawnedSdkProcess => {
     const registry = getProcessRegistry();
 
@@ -1055,7 +1062,7 @@ export function createSdkSpawnFactory(sessionDbId: number, slotReservation?: Slo
       result = spawnSdkProcess(sessionDbId, {
         ...spawnOptions,
         extraArgs: [...(spawnOptions.extraArgs ?? []), ...extraArgs],
-      });
+      }, selectedRoute);
     } finally {
       // The waitForSlot() reservation is consumed here: on success the
       // process is now a registry record (registered inside spawnSdkProcess)

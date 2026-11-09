@@ -321,6 +321,7 @@ interface GeminiConfig {
   apiKeys: string[];
   model: GeminiModel;
   rateLimitingEnabled: boolean;
+  useKeyHeader?: boolean;
 }
 
 export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
@@ -334,6 +335,12 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
 
   protected getConfig(): GeminiConfig {
     return this.getGeminiConfig();
+  }
+
+  protected override profileConfig(profile: import('./model-profiles.js').ModelProfile): GeminiConfig {
+    if (profile.provider !== 'gemini') return super.profileConfig(profile);
+    return { apiKey: profile.apiKey, apiKeys: [profile.apiKey], model: profile.model as GeminiModel,
+      rateLimitingEnabled: true, useKeyHeader: true };
   }
 
   protected missingApiKeyError(): Error {
@@ -412,7 +419,7 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     return withKeyPool(
       { poolId: 'gemini', keys: resolvePoolKeys(config), label: 'Gemini', rateLimitUntilNextKey },
       ({ key, poolSize }) => this.queryGeminiMultiTurn(
-        history, key, poolSize, config.model, config.rateLimitingEnabled, signal, perAttemptTimeoutMs, paidSendBudget,
+        history, key, poolSize, config.model, config.rateLimitingEnabled, signal, perAttemptTimeoutMs, paidSendBudget, config.useKeyHeader,
       ),
     );
   }
@@ -425,11 +432,14 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     clientAttemptId: string,
     attemptSignal: AbortSignal,
     disableThinking: boolean = false,
+    apiKeyHeader?: string,
   ): Promise<Response> {
     return fetch(url, {
       method: 'POST',
+      redirect: 'error',
       headers: {
         'Content-Type': 'application/json',
+        ...(apiKeyHeader ? { 'x-goog-api-key': apiKeyHeader } : {}),
         // Tracing only; never treated as server-side idempotency.
         'x-client-request-id': clientAttemptId,
       },
@@ -460,6 +470,7 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     signal?: AbortSignal,
     perAttemptTimeoutMs?: number,
     paidSendBudget?: PaidSendBudget,
+    useKeyHeader?: boolean,
   ): Promise<ProviderQueryResult> {
     // An observer generation's framing prompt goes out as systemInstruction,
     // its user request as the first user turn (anchorFraming, #3868).
@@ -474,7 +485,8 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
       maxOutputTokens,
     });
 
-    const url = `${GEMINI_API_URL}/${model}:generateContent?key=${apiKey}`;
+    const url = `${GEMINI_API_URL}/${model}:generateContent${useKeyHeader ? '' : `?key=${apiKey}`}`;
+    const apiKeyHeader = useKeyHeader ? apiKey : undefined;
 
     await enforceRateLimitForModel(model, rateLimitingEnabled, signal);
 
@@ -485,7 +497,7 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     let data = await withRetry<GeminiResponse>(async (attemptSignal) => {
       let response: Response;
       try {
-        response = await this.fetchGenerateContent(url, contents, system, maxOutputTokens, clientAttemptId, attemptSignal);
+        response = await this.fetchGenerateContent(url, contents, system, maxOutputTokens, clientAttemptId, attemptSignal, false, apiKeyHeader);
       } catch (networkError: unknown) {
         // Network failures, aborts, DNS, etc.
         const err = networkError instanceof Error ? networkError : new Error(String(networkError));
@@ -546,7 +558,7 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     // reply. Retry once with thinking off, on the same paid-send allowance and
     // the same per-attempt deadline as the first request. Not the default:
     // mandatory-thinking models reject thinkingBudget 0.
-    if (isLengthTruncatedEmptyReply(text, finishReason)) {
+    if (!useKeyHeader && isLengthTruncatedEmptyReply(text, finishReason)) {
       if (!claimReasoningBudgetRetry(paidSendBudget)) {
         logger.error('SDK', reasoningBudgetSkippedMessage('Gemini', paidSendBudget?.spentPaidSends ?? 0), { model, finishReason });
       } else {
@@ -555,7 +567,7 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
         const deadline = startReasoningRetryDeadline(signal, perAttemptTimeoutMs);
         try {
           const response = await this.fetchGenerateContent(
-            url, contents, system, maxOutputTokens, clientAttemptId, deadline.signal, true,
+            url, contents, system, maxOutputTokens, clientAttemptId, deadline.signal, true, apiKeyHeader,
           );
           finalRequestId = response.headers.get('x-goog-request-id') ?? response.headers.get('x-request-id') ?? finalRequestId;
           if (!response.ok) {

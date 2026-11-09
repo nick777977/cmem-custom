@@ -26,6 +26,7 @@ import { USER_SETTINGS_PATH, ensureObserverSessionsDir } from '../../../../share
 import { getProjectContext, isProjectKeySource } from '../../../../utils/project-name.js';
 import { isProjectExcluded } from '../../../../utils/project-filter.js';
 import { startGeneratorWithProvider } from '../../session/GeneratorRunner.js';
+import type { MainWorkerProfiles } from '../../MainWorkerProfiles.js';
 import { captureEvent } from '../../../telemetry/telemetry.js';
 import { recordWorkStatePrompt, recordWorkStatePrivacy } from '../../../telemetry/work-state.js';
 import { firstPartySkillFromSlashPrompt } from '../../../telemetry/skill-id.js';
@@ -93,9 +94,10 @@ export class SessionRoutes extends BaseRouteHandler {
     private codexAgent?: CodexProvider,
     // After codexAgent, so every existing positional caller keeps its argument order.
     private openAICompatAgent?: OpenAICompatProvider,
+    private mainProfiles?: MainWorkerProfiles,
   ) {
     super();
-    this.sessionManager.setTelegramWrapupFormatter?.(this.formatTelegramWrapup);
+    if (!mainProfiles) this.sessionManager.setTelegramWrapupFormatter?.(this.formatTelegramWrapup);
   }
 
   /**
@@ -195,7 +197,7 @@ export class SessionRoutes extends BaseRouteHandler {
    */
   public resumePendingSessions(source: string, includeOperatorOnly: boolean = false): number {
     let sessionIds = this.sessionManager.getResumableSessionIds(includeOperatorOnly);
-    if (!includeOperatorOnly && sessionIds.length > 0) {
+    if (!this.mainProfiles && !includeOperatorOnly && sessionIds.length > 0) {
       const provider = getSelectedProvider();
       const cooldown = getQuotaCooldown(provider);
       // The quota-fallback credential serves while the primary one is held, so it paces nothing.
@@ -257,6 +259,31 @@ export class SessionRoutes extends BaseRouteHandler {
     // buffered there is nothing to resume.
     if (this.sessionManager.getMessageBuffer().getPendingCount(sessionDbId) === 0) {
       logger.debug('SESSION', 'Skipping generator start with an empty queue', { sessionId: sessionDbId, source });
+      return;
+    }
+
+    if (this.mainProfiles) {
+      const profiles = this.mainProfiles;
+      const snapshot = profiles.snapshot();
+      const fingerprint = profiles.fingerprint(snapshot);
+      if (session.generatorPromise) {
+        session.providerSwitchPending = session.mainProfileFingerprint !== fingerprint;
+        return;
+      }
+      if (snapshot.observer.state === 'paused') {
+        if (session.mainProfileFingerprint !== fingerprint || session.pausedReason !== 'setup_required') {
+          profiles.recordIssue(this.workerService, 'observer', snapshot.observer.issue);
+        }
+        session.mainProfileFingerprint = fingerprint;
+        session.pausedReason = 'setup_required';
+        return;
+      }
+      session.mainProfileFingerprint = fingerprint;
+      const provider = snapshot.observer.profile.provider;
+      await this.startGeneratorWithProvider(session, provider, source, null, null, {
+        start: () => profiles.startSession(snapshot, session, this.workerService),
+        onFailure: error => profiles.recordSessionFailure(snapshot, session, error, this.workerService),
+      });
       return;
     }
 
@@ -557,6 +584,7 @@ export class SessionRoutes extends BaseRouteHandler {
     quotaProbeClaimId: number | null,
     /** The cmem-gateway re-probe this run claimed, or null when it took none. */
     gatewayProbeClaimId: number | null = null,
+    profileRun?: Parameters<typeof startGeneratorWithProvider>[5]['profileRun'],
   ): Promise<void> {
     return startGeneratorWithProvider(session, provider, source, quotaProbeClaimId, gatewayProbeClaimId, {
       sessionManager: this.sessionManager,
@@ -569,6 +597,7 @@ export class SessionRoutes extends BaseRouteHandler {
       completionHandler: this.completionHandler,
       ensureGeneratorRunning: (id, trigger) => this.ensureGeneratorRunning(id, trigger),
       maybeSelfHealStaleClaudeSpawn: (error, trigger, id) => this.maybeSelfHealStaleClaudeSpawn(error, trigger, id),
+      profileRun,
     });
   }
 

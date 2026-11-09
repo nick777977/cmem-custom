@@ -21,6 +21,7 @@ import { updateFolderClaudeMdFiles } from '../../../utils/claude-md-utils.js';
 import { getWorkerPort } from '../../../shared/worker-utils.js';
 import { recordObserverFailure, recordObserverSuccess } from '../../../shared/observer-health.js';
 import { clearQuotaCooldown, routeAroundUnservableProviderIfLoaded } from '../../../shared/quota-cooldown.js';
+import { ClassifiedProviderError } from '../provider-errors.js';
 import { recycleObserverConversation } from '../session/recycle-conversation.js';
 import { clearRejectedOutput, recordRejectedOutput } from '../session/OutputRecovery.js';
 import { SettingsDefaultsManager } from '../../../shared/SettingsDefaultsManager.js';
@@ -468,6 +469,11 @@ export async function processAgentResponse(
     'claude';
 
   if (!parsed.valid) {
+    if (session.mainProfileFingerprint) {
+      throw new ClassifiedProviderError('The selected model returned an invalid memory response', {
+        kind: 'unrecoverable', cause: null, code: 'profile_invalid_reply',
+      });
+    }
     // The conversation filled up. Retire it and start a fresh generation
     // seeded with this session's own observations, rather than re-queueing into
     // a conversation that can only keep growing.
@@ -836,7 +842,7 @@ export async function processAgentResponse(
   if (result.observationIds.length > 0 || result.summaryId !== null) {
     recordObserverSuccess();
     // A quota-fallback run proves its own credential works, not the spent primary one.
-    if (session.currentProvider && session.currentProvider !== 'codex' && !session.claudeAuthOverride) {
+    if (!session.mainProfileFingerprint && session.currentProvider && session.currentProvider !== 'codex' && !session.claudeAuthOverride) {
       clearQuotaCooldown(session.currentProvider);
     }
   }

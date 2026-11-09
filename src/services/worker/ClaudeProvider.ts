@@ -2,6 +2,7 @@
 import { DatabaseManager } from './DatabaseManager.js';
 import { SessionManager } from './SessionManager.js';
 import { logger } from '../../utils/logger.js';
+import { assistantText } from '../../shared/assistant-text.js';
 import { buildInitPrompt, buildObservationPrompt, buildSummaryPrompt, buildContinuationPrompt } from '../../sdk/prompts.js';
 import { SettingsDefaultsManager } from '../../shared/SettingsDefaultsManager.js';
 import { USER_SETTINGS_PATH, OBSERVER_WORKING_DIRECTORY_ERROR_PREFIX, paths } from '../../shared/paths.js';
@@ -1062,58 +1063,79 @@ export class ClaudeProvider {
       thinkingStripped?: boolean;
       /** The session's quota-fallback credential (ActiveSession.claudeAuthOverride). */
       standIn?: ClaudeCredential;
+      profileEnv?: NodeJS.ProcessEnv;
+      profileSignal?: AbortSignal;
     },
     modelId: string,
     claudePath: string,
   ): Promise<string | null> {
-    const isolatedEnv = sanitizeEnv(await buildIsolatedEnvWithFreshOAuth(true, { standIn: context.standIn }));
+    const isolatedEnv = context.profileEnv ?? sanitizeEnv(await buildIsolatedEnvWithFreshOAuth(true, { standIn: context.standIn }));
     const controller = new AbortController();
     const abort = () => controller.abort();
-    const signals = context.signals ?? [];
+    const signals = context.profileSignal ? [context.profileSignal] : context.signals ?? [];
     for (const source of signals) {
       source.addEventListener('abort', abort, { once: true });
       if (source.aborted) abort();
     }
     try {
       if (controller.signal.aborted) return null;
-      const result = query({
-        prompt,
-        options: {
-          ...buildHardenedSdkOptions({
-            source: 'Observer',
-            sessionDbId: context.sessionDbId,
-            contentSessionId: context.contentSessionId,
-            project: context.project,
-            model: modelId,
-            env: isolatedEnv,
-            pathToClaudeCodeExecutable: claudePath,
-            abortController: controller,
-            // Same thinking policy as the generation path (#4732): the
-            // operator's setting, overridden by a session that already had
-            // the param refused once.
-            thinking: resolveObserverThinkingOption(
-              context.thinkingStripped
-                ? 'omit'
-                : SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH).CLAUDE_MEM_OBSERVER_THINKING,
-            ),
-          }),
-          maxTurns: 1,
-        },
-      });
+      const slot = context.profileEnv ? await waitForSlot(
+        () => parseInt(SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH).CLAUDE_MEM_MAX_CONCURRENT_AGENTS, 10) || 2,
+        controller.signal, context.sessionDbId,
+      ) : undefined;
+      try {
+        const result = query({
+          prompt,
+          options: {
+            ...buildHardenedSdkOptions({
+              source: 'Observer',
+              sessionDbId: context.sessionDbId,
+              contentSessionId: context.contentSessionId,
+              project: context.project,
+              model: modelId,
+              env: isolatedEnv,
+              pathToClaudeCodeExecutable: claudePath,
+              abortController: controller,
+              ...(slot && context.profileEnv ? {
+                spawnClaudeCodeProcess: createSdkSpawnFactory(context.sessionDbId, slot, ['--no-session-persistence'], {
+                  executable: claudePath, env: context.profileEnv,
+                }),
+              } : {}),
+              thinking: resolveObserverThinkingOption(
+                context.thinkingStripped || context.profileEnv
+                  ? 'omit'
+                  : SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH).CLAUDE_MEM_OBSERVER_THINKING,
+              ),
+            }),
+            maxTurns: 1,
+          },
+        });
 
-      let out = '';
-      for await (const message of result) {
-        if (message.type === 'assistant') {
-          const content = (message as any).message.content;
-          out += Array.isArray(content)
-            ? content.filter((c: any) => c.type === 'text').map((c: any) => c.text).join('\n')
-            : typeof content === 'string' ? content : '';
+        let out = '';
+        for await (const message of result) {
+          if (context.profileEnv && message.type === 'result' && message.is_error) {
+            throw classifyClaudeError(new Error('errors' in message ? message.errors.join('\n') : message.result));
+          }
+          if (message.type === 'assistant') {
+            out += assistantText(message.message.content);
+          }
         }
+        context.profileSignal?.throwIfAborted();
+        return out || null;
+      } finally {
+        slot?.release();
       }
-      return out || null;
     } finally {
       for (const source of signals) source.removeEventListener('abort', abort);
     }
+  }
+
+  async queryProfileTurn(prompt: string, session: ActiveSession, model: string, executable: string,
+    env: NodeJS.ProcessEnv, signal: AbortSignal): Promise<string> {
+    return (await this.runStandaloneObserverPrompt(prompt, {
+      sessionDbId: session.sessionDbId, contentSessionId: session.contentSessionId, project: session.project,
+      profileEnv: env, profileSignal: signal,
+    }, model, executable)) ?? '';
   }
 
   private async compressField(
