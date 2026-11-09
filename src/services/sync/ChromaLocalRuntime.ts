@@ -1,4 +1,8 @@
 import path from 'node:path';
+import type { SettingsDefaults } from '../../shared/SettingsDefaultsManager.js';
+
+type LocalChromaConfiguration = Partial<Pick<SettingsDefaults,
+  'CLAUDE_MEM_CHROMA_MODE' | 'CLAUDE_MEM_CHROMA_EMBEDDING_FUNCTION' | 'CLAUDE_MEM_CHROMA_EXECUTABLE'>>;
 
 /** Node-side launch description only; this is not a Python API or an approval manifest. */
 export interface LocalChromaLaunch {
@@ -15,7 +19,7 @@ export class ChromaLocalRuntimeError extends Error {
 }
 
 /** Validate even legacy configuration before touching a client, store or executable. */
-export function assertLocalChromaConfiguration(settings: Record<string, string>): void {
+export function assertLocalChromaConfiguration(settings: LocalChromaConfiguration): void {
   if ((settings.CLAUDE_MEM_CHROMA_MODE || 'local') !== 'local') {
     throw new ChromaLocalRuntimeError('Remote Chroma is forbidden; CLAUDE_MEM_CHROMA_MODE must be local');
   }
@@ -30,7 +34,7 @@ export function assertLocalEmbeddingFunction(name: unknown): void {
   }
 }
 
-export function requireApprovedLocalChromaRuntime(settings: Record<string, string>): LocalChromaLaunch {
+export function requireApprovedLocalChromaRuntime(settings: LocalChromaConfiguration): LocalChromaLaunch {
   assertLocalChromaConfiguration(settings);
   const executable = settings.CLAUDE_MEM_CHROMA_EXECUTABLE || '';
   if (!path.isAbsolute(executable) || executable.startsWith('\\\\') || executable.startsWith('//')) {

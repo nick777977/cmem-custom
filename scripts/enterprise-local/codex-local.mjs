@@ -1,0 +1,356 @@
+import { spawn, spawnSync } from 'node:child_process';
+import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, rmdirSync, rmSync, writeFileSync } from 'node:fs';
+import { isAbsolute, join, resolve, win32 } from 'node:path';
+import { setTimeout as delay } from 'node:timers/promises';
+import { fileURLToPath } from 'node:url';
+import { parseArgs } from 'node:util';
+
+const here = fileURLToPath(new URL('.', import.meta.url));
+const script = fileURLToPath(import.meta.url);
+const marketplace = 'cmem-light-private';
+const pluginId = 'claude-mem@' + marketplace;
+const hostSettings = ['-c', 'analytics.enabled=false', '-c', 'feedback.enabled=false'];
+const hookEvents = {
+  SessionStart: 'context',
+  UserPromptSubmit: 'session-init',
+  PreToolUse: 'file-context',
+  PostToolUse: 'observation',
+  Stop: 'summarize',
+  PostCompact: 'post-compact',
+  SubagentStart: 'subagent-context',
+};
+const metadata = 'cmem-light-local.json';
+const readJson = file => JSON.parse(readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
+const writeJson = (file, value) => writeFileSync(file, JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
+
+function windowsPath(value) {
+  // Codex's Windows hook command is interpreted by cmd.exe. Reject shell
+  // metacharacters before quoting the absolute arguments.
+  if (!/^[a-z]:[\\/]/i.test(value ?? '') || /[\x00-\x1f"'`$%!*?<>|;&^]/.test(value)) {
+    throw new Error('Expected a literal local Windows drive path');
+  }
+  return win32.resolve(value);
+}
+
+function executable(value) {
+  const file = realpathSync(windowsPath(value));
+  if (!/\.exe$/i.test(file) || !lstatSync(file).isFile()) throw new Error('Select a direct .exe');
+  return windowsPath(file);
+}
+
+function baseEnv(root) {
+  const env = {};
+  for (const key of ['SystemRoot', 'WINDIR', 'ComSpec', 'PATHEXT', 'PATH']) {
+    if (process.env[key]) env[key] = process.env[key];
+  }
+  return {
+    ...env,
+    HOME: join(root, 'home'),
+    USERPROFILE: join(root, 'home'),
+    APPDATA: join(root, 'home', 'appdata'),
+    LOCALAPPDATA: join(root, 'home', 'localappdata'),
+    TMP: join(root, 'temp'),
+    TEMP: join(root, 'temp'),
+    CODEX_HOME: join(root, 'codex'),
+    CLAUDE_CONFIG_DIR: join(root, 'home', '.claude'),
+    DO_NOT_TRACK: '1',
+    BUN_INSTALL_AUTO: 'disable',
+  };
+}
+
+function appEnv(root, port) {
+  return {
+    ...baseEnv(root),
+    CLAUDE_MEM_DATA_DIR: join(root, 'data'),
+    CLAUDE_MEM_WORKER_HOST: '127.0.0.1',
+    CLAUDE_MEM_WORKER_PORT: String(port),
+    CLAUDE_MEM_RUNTIME: 'worker',
+    CLAUDE_MEM_WORKER_AUTOSTART: 'false',
+    CLAUDE_MEM_CHROMA_MODE: 'local',
+    CLAUDE_MEM_CLOUD_SYNC_TOKEN: '',
+    CLAUDE_MEM_CLOUD_SYNC_USER_ID: '',
+    CLAUDE_MEM_CLOUD_SYNC_HUB_URL: '',
+    CLAUDE_MEM_TEAMBRAIN_URL: '',
+    CLAUDE_MEM_TEAMBRAIN_TEAM_ID: '',
+    CLAUDE_MEM_NOTION_ENABLED: 'false',
+    CLAUDE_MEM_GROK_BOT_AWARENESS_ENABLED: 'false',
+    CLAUDE_MEM_GROK_BOT_WEBHOOK_URL: '',
+    CLAUDE_MEM_TRANSCRIPTS_ENABLED: 'false',
+    CLAUDE_MEM_WORK_VIEW_AUTO_REFRESH: 'false',
+    CLAUDE_MEM_WORK_VIEW_COPY_PROVIDER: 'off',
+    CLAUDE_MEM_QUOTA_FALLBACK_PROVIDER: 'off',
+    CLAUDE_MEM_QUOTA_FALLBACK_AUTH_METHOD: '',
+  };
+}
+
+function profileEnv(profile, config) {
+  if (typeof profile.model !== 'string' || !profile.model.trim()) {
+    throw new Error('The observer profile requires an explicit model');
+  }
+  if (profile.provider === 'codex') {
+    return {
+      CODEX_HOME: realpathSync(windowsPath(profile.authHome)),
+      CLAUDE_MEM_PROVIDER: 'codex',
+      CLAUDE_MEM_CODEX_PATH: config.codex,
+      CLAUDE_MEM_CODEX_MODEL: profile.model,
+    };
+  }
+  if (profile.provider === 'openai-compatible') {
+    const url = new URL(profile.baseUrl);
+    const hostname = url.hostname.replace(/\.$/, '');
+    if (hostname === 'cmem.ai' || hostname.endsWith('.cmem.ai')) {
+      throw new Error('The private launcher does not support CMEM endpoints');
+    }
+    if (url.username || url.password || url.search || url.hash ||
+        (url.protocol !== 'https:' && !(url.protocol === 'http:' && url.hostname === '127.0.0.1'))) {
+      throw new Error('Use an explicit HTTPS endpoint or a 127.0.0.1 HTTP endpoint');
+    }
+    const key = process.env.CLAUDE_MEM_OPENAI_COMPAT_API_KEY;
+    if (!key?.trim()) throw new Error('Set CLAUDE_MEM_OPENAI_COMPAT_API_KEY for the selected endpoint');
+    return {
+      CLAUDE_MEM_PROVIDER: 'openai-compatible',
+      CLAUDE_MEM_OPENAI_COMPAT_PRESET: '',
+      CLAUDE_MEM_OPENAI_COMPAT_BASE_URL: url.href,
+      CLAUDE_MEM_OPENAI_COMPAT_MODEL: profile.model,
+      CLAUDE_MEM_OPENAI_COMPAT_API_KEY: key,
+      CLAUDE_MEM_OPENAI_COMPAT_API_KEYS: '',
+    };
+  }
+  throw new Error('Select a codex or openai-compatible observer profile for this launcher');
+}
+
+function cli(config, root, args, interactive = false) {
+  const result = spawnSync(config.codex, [...hostSettings, ...args], {
+    cwd: join(root, 'workspace'),
+    env: baseEnv(root),
+    stdio: interactive ? 'inherit' : 'pipe',
+    windowsHide: !interactive,
+    timeout: interactive ? undefined : 30_000,
+    encoding: 'utf8',
+  });
+  if (result.error) throw result.error;
+  if (result.status !== 0) {
+    throw new Error(`Codex ${args.slice(0, 3).join(' ')} failed (exit ${result.status})${interactive ? '' : ': ' + result.stderr.trim()}`);
+  }
+  return result.stdout;
+}
+
+function install({ root, codex, bun, port, bundle }) {
+  if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('Specify a free port from 1024 to 65535');
+  const config = { kind: marketplace, codex: executable(codex), bun: executable(bun), node: executable(process.execPath), port };
+  const source = realpathSync(windowsPath(bundle));
+  const manifest = readJson(join(source, '.codex-plugin', 'plugin.json'));
+  const catalog = readJson(join(source, 'hooks', 'codex-hooks.json'));
+  if (manifest.name !== 'claude-mem') throw new Error('Expected the compiled claude-mem plugin directory');
+  for (const event of Object.keys(hookEvents)) {
+    if (catalog.hooks[event]?.length !== 1 || catalog.hooks[event][0].hooks?.length !== 1) {
+      throw new Error(`Unexpected build hook shape for ${event}`);
+    }
+  }
+  const required = ['scripts/worker-service.cjs', 'scripts/mcp-server.cjs', 'scripts/context-read-worker.cjs',
+    'sqlite', 'modes', 'ui', 'skills'];
+  for (const file of required) lstatSync(join(source, file));
+  mkdirSync(root); // A dedicated, new root prevents overwriting a user's Codex profile.
+  root = windowsPath(realpathSync(root));
+  writeJson(join(root, metadata), config);
+  for (const dir of ['home/appdata', 'home/localappdata', 'temp', 'workspace', 'codex', 'data',
+    'catalog/.agents/plugins', 'catalog/plugin/.codex-plugin', 'catalog/plugin/hooks', 'catalog/plugin/scripts']) {
+    mkdirSync(join(root, dir), { recursive: true });
+  }
+  const plugin = join(root, 'catalog', 'plugin');
+  for (const file of required) cpSync(join(source, file), join(plugin, file), { recursive: true });
+  cpSync(script, join(root, 'codex-local.mjs'));
+  for (const [event, handler] of Object.entries(hookEvents)) {
+    const hook = catalog.hooks[event][0].hooks[0];
+    // Codex uses a Windows command shell for commandWindows. The launcher
+    // receives stdin unchanged and spawns Bun without involving a shell.
+    hook.commandWindows = `"${config.node}" "${join(root, 'codex-local.mjs')}" hook ${handler}`;
+    hook.command = 'exit 1';
+  }
+  writeJson(join(plugin, 'hooks', 'codex-hooks.json'), catalog);
+  writeJson(join(plugin, '.mcp.json'), { mcpServers: { 'mcp-search': {
+    type: 'stdio',
+    command: config.node,
+    args: [join(root, 'codex-local.mjs'), 'mcp'],
+  } } });
+  writeJson(join(plugin, '.codex-plugin', 'plugin.json'), manifest);
+  writeJson(join(root, 'catalog', '.agents', 'plugins', 'marketplace.json'), {
+    name: marketplace,
+    interface: { displayName: 'CMEM Light (private local build)' },
+    plugins: [{ name: 'claude-mem', source: { source: 'local', path: './plugin' },
+      policy: { installation: 'AVAILABLE', authentication: 'ON_INSTALL' }, category: 'Productivity' }],
+  });
+  // Keep all CLI configuration under the installation. Codex owns the catalog
+  // and cache registration, including uninstall.
+  const catalogPath = join(root, 'catalog');
+  cli(config, root, ['plugin', 'marketplace', 'add', catalogPath]);
+  try {
+    cli(config, root, ['plugin', 'add', pluginId]);
+  } catch (error) {
+    try {
+      cli(config, root, ['plugin', 'marketplace', 'remove', marketplace]);
+    } catch (rollback) {
+      throw new AggregateError([error, rollback], 'Plugin add and catalog rollback failed');
+    }
+    throw error;
+  }
+  console.log(`Installed ${pluginId} in ${join(root, 'codex')}`);
+}
+
+async function ownedHealth(config, pid, resource = '/api/health', method = 'GET') {
+  const response = await fetch(`http://127.0.0.1:${config.port}${resource}`, {
+    method, signal: AbortSignal.timeout(750), redirect: 'error',
+  });
+  if (!response.ok) return false;
+  const result = await response.json();
+  return resource === '/api/health'
+    ? result.pid === pid && result.workerPath?.toLowerCase() === workerPath(config.root).toLowerCase()
+    : result.status === 'shutting_down';
+}
+
+const workerPath = root => join(root, 'catalog', 'plugin', 'scripts', 'worker-service.cjs');
+const active = root => join(root, 'worker-active');
+
+function usingLock(root, callback) {
+  const lock = active(root);
+  mkdirSync(lock);
+  return (async () => {
+    try {
+      return await callback(lock);
+    } finally {
+      for (const name of ['pid', 'stop']) rmSync(join(lock, name), { force: true });
+      rmdirSync(lock);
+    }
+  })();
+}
+
+function launch(command, args, options) {
+  const child = spawn(command, args, { ...options, windowsHide: true });
+  const done = new Promise(resolve => {
+    child.once('error', error => resolve({ error }));
+    child.once('exit', code => resolve({ code }));
+  });
+  return { child, done };
+}
+
+async function runWorker(config, profile, lifecycleOnly) {
+  const { root } = config;
+  if (lifecycleOnly && (profile.provider !== 'openai-compatible' || new URL(profile.baseUrl).hostname !== '127.0.0.1')) {
+    throw new Error('The lifecycle fixture requires a loopback OpenAI-compatible endpoint');
+  }
+  const env = { ...appEnv(root, config.port), ...profileEnv(profile, config) };
+  if (lifecycleOnly) env.CLAUDE_MEM_CHROMA_ENABLED = 'false';
+  return usingLock(root, async lock => {
+    const { child, done } = launch(config.bun, [workerPath(root), '--daemon'], {
+      cwd: join(root, 'data'), env, stdio: ['ignore', 'inherit', 'inherit'],
+    });
+    let stopping = false;
+    let result;
+    done.then(value => { result = value; });
+    const stop = () => { stopping = true; };
+    process.on('SIGINT', stop);
+    process.on('SIGTERM', stop);
+    const requested = () => stopping || existsSync(join(lock, 'stop'));
+    try {
+      const deadline = Date.now() + 30_000;
+      while (!requested() && !result && Date.now() < deadline) {
+        if (await ownedHealth(config, child.pid).catch(() => false)) {
+          const response = await fetch(`http://127.0.0.1:${config.port}/api/readiness`, {
+            signal: AbortSignal.timeout(750), redirect: 'error',
+          }).catch(() => null);
+          const ready = response?.ok;
+          await response?.body?.cancel();
+          if (ready) {
+            writeFileSync(join(lock, 'pid'), String(child.pid), { flag: 'wx' });
+            console.log(`Worker ready at http://127.0.0.1:${config.port}/`);
+            while (!requested() && !result) await delay(200);
+            break;
+          }
+        }
+        await delay(200);
+      }
+      if (!requested()) throw result?.error ?? new Error(`Worker stopped or failed readiness (exit ${result?.code ?? 'timeout'})`);
+    } finally {
+      process.off('SIGINT', stop);
+      process.off('SIGTERM', stop);
+      if (!result && await ownedHealth(config, child.pid).catch(() => false)) {
+        await ownedHealth(config, child.pid, '/api/admin/shutdown', 'POST').catch(() => false);
+        await Promise.race([done, delay(12_000, undefined, { ref: false })]);
+      }
+      if (!result) {
+        child.kill();
+        if (!await Promise.race([done.then(() => true), delay(3000, false, { ref: false })])) {
+          child.unref();
+          throw new Error('Worker exit could not be confirmed');
+        }
+        throw new Error('Worker required forced termination');
+      }
+    }
+  });
+}
+
+async function hostEntry(config, command, args) {
+  const { root } = config;
+  const pidFile = join(active(root), 'pid');
+  const pid = existsSync(pidFile) && Number(readFileSync(pidFile, 'utf8'));
+  if (!pid || !await ownedHealth(config, pid).catch(() => false)) {
+    throw new Error('Start the dedicated local worker before opening the plugin');
+  }
+  const env = appEnv(root, config.port);
+  const options = { env, stdio: 'inherit' };
+  let invocation;
+  if (command === 'hook' && args.length === 1 && Object.values(hookEvents).includes(args[0])) {
+    env.CLAUDE_MEM_CODEX_HOOK = '1';
+    env.CLAUDE_MEM_HOOK_ORIGINAL_CWD = process.cwd();
+    invocation = launch(config.bun, [workerPath(root), 'hook', 'codex', args[0]], { ...options, cwd: join(root, 'data') });
+  } else if (command === 'mcp' && args.length === 0) {
+    invocation = launch(config.node, [join(root, 'catalog', 'plugin', 'scripts', 'mcp-server.cjs')], options);
+  } else {
+    throw new Error('Unknown host entry');
+  }
+  const stop = () => invocation.child.kill();
+  process.once('SIGINT', stop);
+  process.once('SIGTERM', stop);
+  const result = await invocation.done;
+  if (result.error) throw result.error;
+  process.exitCode = result.code ?? 1;
+}
+
+async function main() {
+  if (process.platform !== 'win32') throw new Error('This installer targets Windows');
+  const [command, ...args] = process.argv.slice(2);
+  if (command === 'install') {
+    const { values } = parseArgs({ args, options: {
+      root: { type: 'string' }, codex: { type: 'string' }, bun: { type: 'string' },
+      port: { type: 'string' }, bundle: { type: 'string' },
+    } });
+    install({ ...values, root: windowsPath(values.root), port: Number(values.port), bundle: values.bundle ?? resolve(here, '../../plugin') });
+    return;
+  }
+  const root = realpathSync(here);
+  const config = { ...readJson(join(root, metadata)), root };
+  if (config.kind !== marketplace || !isAbsolute(root)) throw new Error('Run the installer first');
+  if (command === 'hook' || command === 'mcp') return hostEntry(config, command, args);
+  if (command === 'host') {
+    cli(config, root, args, true);
+  } else if (command === 'start') {
+    const { values } = parseArgs({ args, options: { profile: { type: 'string' }, 'lifecycle-only': { type: 'boolean' } } });
+    if (!values.profile) throw new Error('Specify --profile with an explicit observer model and auth route');
+    await runWorker(config, readJson(resolve(values.profile)), values['lifecycle-only']);
+  } else if (command === 'stop' && args.length === 0) {
+    writeFileSync(join(active(root), 'stop'), '', { flag: 'wx' });
+  } else if (command === 'uninstall' && args.length === 0) {
+    await usingLock(root, async () => {
+      cli(config, root, ['plugin', 'remove', pluginId]);
+      cli(config, root, ['plugin', 'marketplace', 'remove', marketplace]);
+      console.log('Removed Codex registration. Installation files and local data are preserved.');
+    });
+  } else {
+    throw new Error('Commands: install, start, stop, host, uninstall');
+  }
+}
+
+main().catch(error => {
+  console.error(`cmem-light: ${error.message}`);
+  process.exitCode = 1;
+});

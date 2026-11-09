@@ -367,6 +367,7 @@ export class WorkerService implements WorkerRef {
     this.tvToken = tvToken;
 
     this.server = new Server({
+      externallyManagedWorker: isWorkerAutostartDisabled(workerSettings),
       getInitializationComplete: () => this.initializationCompleteFlag,
       initPhaseSource: this.initPhaseTracker,
       getMcpReady: () => this.mcpReady,
@@ -1901,6 +1902,10 @@ async function main() {
       // port — the port cannot be faked by a stale or clobbered file. Exit 0:
       // duplicate suppression is a success, not a failure.
       if (await isPortInUse(port)) {
+        if (isWorkerAutostartDisabled(SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH))) {
+          logger.error('SYSTEM', 'Managed worker port is occupied; refusing to reclaim it', { port });
+          process.exit(WORKER_BOOT_FAILED_EXIT_CODE);
+        }
         // A live worker answers health — this is a genuine duplicate.
         if (await waitForHealth(port, getPlatformTimeout(HOOK_TIMEOUTS.HEALTH_CHECK))) {
           logger.info('SYSTEM', 'Worker already running (health verified), refusing to start duplicate', { port });

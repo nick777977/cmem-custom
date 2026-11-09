@@ -131,6 +131,7 @@ export interface ServerOptions {
   onRestart: () => Promise<void>;
   workerPath: string;
   runtime?: string;
+  externallyManagedWorker?: boolean;
   getAiStatus: () => AiStatus;
   getDependencyHealth?: () => DependencyHealthSnapshot;
   getChromaCrashState?: () => ChromaCrashState | undefined;
@@ -286,7 +287,9 @@ export class Server {
         this.server = server;
         // #3300: stop Windows children from inheriting the listen socket so a
         // crashed daemon's port frees instead of staying LISTENING under a dead PID.
-        clearWindowsListenSocketInherit(server);
+        // The private launcher owns normal shutdown. The legacy Bun HTTP
+        // handle scan can raise STATUS_INVALID_HANDLE before JS can catch it.
+        if (!this.options.externallyManagedWorker) clearWindowsListenSocketInherit(server);
         logger.info('SYSTEM', 'HTTP server started', { host, port, pid: process.pid });
         resolve();
       };
@@ -516,6 +519,10 @@ export class Server {
     });
 
     this.app.post('/api/admin/restart', requireLocalhost, async (_req: Request, res: Response) => {
+      if (this.options.externallyManagedWorker) {
+        res.status(409).json({ error: 'Restart this worker through its process manager' });
+        return;
+      }
       const isWindowsManaged = process.platform === 'win32' &&
         process.env.CLAUDE_MEM_MANAGED === 'true' &&
         process.send;
@@ -533,7 +540,7 @@ export class Server {
       // Closed-enum mapping for worker_stopped telemetry: only the exact
       // 'restart' tag (set by the CLI restart path) upgrades the reason;
       // anything else stays 'stop'.
-      const shutdownReason: 'stop' | 'restart' = req.query.reason === 'restart' ? 'restart' : 'stop';
+      const shutdownReason = !this.options.externallyManagedWorker && req.query.reason === 'restart' ? 'restart' : 'stop';
       const isWindowsManaged = process.platform === 'win32' &&
         process.env.CLAUDE_MEM_MANAGED === 'true' &&
         process.send;
