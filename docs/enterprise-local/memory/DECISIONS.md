@@ -158,6 +158,11 @@ mock relabelling or false readiness. Historical A21-A26 checks/commits are prese
 Current task updates the existing plan/checks tools; it does not implement or close
 steps5/6/7/8/9, change application behavior or deploy to the user's main profile.
 
+A27 follow-up (2026-11-09): user accepted gpt-6-luna and an initial limit of three
+short synthetic live turns using the authorized Codex login. Check model availability
+first. No automatic retries, fallback or use of actual memories. This is test scope,
+not a new production model default. Zero live turns used in PHASE1-DATA-CHECK.
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

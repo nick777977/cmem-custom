@@ -1,11 +1,21 @@
 # Shared execution board
 
-Updated: 2026-11-04. Single place for active ownership and file reservations.
+Updated: 2026-11-09. Single place for active ownership and file reservations.
 Dependencies/waves remain solely in [roadmap](../../roadmap.md); decisions in
 [DECISIONS](DECISIONS.md); current resumable handoff in [STATE](STATE.md).
 This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
+
+2026-11-09 completed claim: **PHASE1-DATA-CHECK**, serial coordinator, clean entry
+4df2b8f5ef3fb9b79b9f7401bd1fb42bc6936328. Read source only. Check Bun SQLite/FTS5
+with synthetic files and query Chroma package metadata from the selected Python
+installation and its ordinary user site. Record approved model/budget and checks
+in memory/{STATE,TASKS,WORKLOG,DECISIONS}.md, DEV-ENVIRONMENT.md, NEXT-SESSION.md,
+VALIDATION.md and LLM-PROFILES.md. Scratch: .scratch/enterprise-local/phase1-data-check/.
+No application changes, real data, Chroma service or model requests in this slice.
+SQLite 3.53.4/WAL/reopen/FTS5 passed. Checked Python metadata lacked both packages.
+Model and budget approved. Reservations released. WINDOWS-09-LOCAL remains next.
 
 2026-11-04 completed claim: **PHASE1-ALIGN**, coordinator serial on feat/cmem-light-local,
 clean entry d055fea4c3487e6010bbb35adb6f69c68b578215. Scope: align the existing plan

@@ -1,9 +1,10 @@
 # Current handoff
 
-Updated 2026-11-04 after PHASE1-ALIGN. feat/cmem-light-local, one coordinator serial;
-clean entry/source inspected d055fea4c3487e6010bbb35adb6f69c68b578215. A27 is current
+Updated 2026-11-09 after PHASE1-DATA-CHECK on feat/cmem-light-local by one coordinator.
+Clean entry/source inspected 4df2b8f5ef3fb9b79b9f7401bd1fb42bc6936328. A27 is current
 scope; historical blanket refusals and native-sandbox prerequisites are superseded.
-Current task changed docs/plan only and ran inert version/help probes. No application,
+PHASE1-ALIGN changed the plan and ran tool probes. PHASE1-DATA-CHECK recorded the
+model approval and checked embedded SQLite and Chroma package presence. No application,
 harness, generated, manifest or lock change. Claims released at closure.
 
 ## Accepted first deliverable
@@ -35,8 +36,12 @@ was retained. No model catalog, credential-file inspection/copying, inference, r
 worker/MCP/listener, dependency install or compile/typecheck/test replay. No Windows
 elevation requested; no-admin full setup acceptance is still pending.
 
-Chroma/embedding/SQLite runtime readiness and chosen Python compatibility remain
-unverified. Three previous TS2345 errors are SettingsDefaults vs Record<string,string>
+PHASE1-DATA-CHECK at 4df2b8f5e confirmed Bun SQLite 3.53.4, WAL, file reopen and
+FTS5 query on a synthetic file. Neither chromadb nor chroma-mcp package metadata
+was found in the selected Python 3.13 installation, its ordinary user site or
+the repo .venv/venv paths. No SQLite system installation needed. Select a compatible
+project/user-local Chroma environment during implementation. Chroma, embeddings and
+integrated app readiness remain unverified. Three previous TS2345 errors are SettingsDefaults vs Record<string,string>
 type mismatches, not missing Chrome. Last application compile/viewer checks passed;
 root typecheck failed those three; no new app result claimed. 09/09B/09C/09D/09E/09F
 commits and exact previous source/compile evidence preserved.
@@ -44,12 +49,11 @@ commits and exact previous source/compile evidence preserved.
 ## Auth/model decisions
 
 User authorizes existing Codex/ChatGPT login for minimal synthetic live tests via
-normal auth, with low token usage. They request model and budget proposal BEFORE
-inference. Candidate gpt-6-luna is documented for economical summarization/extraction,
-but account availability is unverified; proposed initial maximum three short turns,
-no automatic retries/fallback, report usage. No model selected or live call yet.
+normal auth, with low token usage. On 2026-11-09 they approved gpt-6-luna and a
+maximum of three short synthetic turns, with no automatic retries or fallback.
+Check availability before inference and report usage. Live calls remain not run.
 Corporate Bedrock/SSO live acceptance remains for the authorized corporate environment.
-No further general policy questions; model selection remains the narrow live gate.
+No further policy questions. Account model availability remains unverified.
 
 ## One next implementation task
 

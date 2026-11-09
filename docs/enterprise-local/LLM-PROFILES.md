@@ -10,9 +10,9 @@ Codex test choices into the installer or let host login implicitly select observ
 provider/model. Build/install/run are ordinary-user Windows operations, no admin/UAC.
 Necessary dependency and local embedding-model downloads/bootstrap are permitted;
 special native OS sandbox/CI proof is deferred from first functional delivery.
-Current Codex login is authorized for minimal synthetic tests; propose exact model
-and limit first. Proposed gpt-6-luna/three short turns remains pending selection and
-actual account compatibility; no live call or credential inspection in PHASE1-ALIGN.
+Current Codex login and gpt-6-luna are approved for up to three short synthetic
+turns (2026-11-09). Verify account availability first. No automatic retries or
+fallback. No live calls have been run.
 Supersedes the Bedrock-only target in the supplied initial plan and old session
 prompts. Historical evidence/commits remain unchanged. Dependencies and execution
 waves live only in [roadmap](../roadmap.md); runtime evidence requirements live in

@@ -871,3 +871,36 @@ pins, 18 dependency edges preserved (labels clarified), balanced fences/whitespa
 All app/harness/generated/manifest/lock bytes and historical handoffs unchanged in
 tracked diff. One local documentation concern/commit, hooks/signing disabled; no
 application tests or build promoted from these document/tool checks.
+
+## PHASE1-DATA-CHECK (2026-11-09)
+
+Clean entry 4df2b8f5ef3fb9b79b9f7401bd1fb42bc6936328. User approved gpt-6-luna
+and three short synthetic calls. Availability is pending and zero turns were used.
+Checked commands on PATH and selected Python 3.13 install/user and repo `.venv`/`venv`
+package metadata. No SQLite/Chroma CLI on PATH. Neither `chromadb` nor `chroma-mcp`
+was found in the checked Python sites. Other environments/caches were outside scope.
+Reviewed direct executable probe scripts in `.scratch/enterprise-local/phase1-data-check/`.
+Bun SQLite 3.53.4 opened a synthetic file, enabled WAL, inserted an FTS5 row and
+retrieved it after close/reopen. Python `-I -S` read metadata without importing Chroma.
+Both probes exited normally. No package install, service, real memory, build or live
+request. Use embedded SQLite and provision Chroma in a user-local Python environment.
+
+Static trace at 4df2b8f5e: `src/shared/paths.ts:21` resolves the memory root and :57
+names the DB, :150 names the Chroma directory. `scripts/build-hooks.js:224` defines
+Codex hook purposes. `src/utils/project-name.ts:358` derives project keys from cwd.
+`src/cli/handlers/session-init.ts:224` passes the primary key to session init.
+`src/shared/hook-spool.ts:215` locates the queue, `src/cli/handlers/summarize.ts:202`
+extracts the last assistant turn and :254 spools summary work. The Codex adapter
+extends the shared observer pipeline (`src/services/worker/CodexProvider.ts:203`),
+whose summary path starts at `src/services/worker/OpenAICompatibleProvider.ts:605`.
+`src/services/worker/DatabaseManager.ts:29` opens canonical SQLite, :51 uses a shared
+Chroma collection. `src/services/sync/ChromaSync.ts:949`, :1021 and :1097 mirror rows,
+:486 handles corrupt collections and :2033 backfills. The Chroma launch remains
+blocked in `src/services/sync/ChromaLocalRuntime.ts:33`. Project scoping, aliases and
+cross-project search are existing behavior, outside this check's change scope.
+
+Recorded test scope and results in STATE/TASKS/DECISIONS/DEV-ENVIRONMENT and current
+contracts. Existing setup/runtime work remains unclaimed. NEXT-SESSION carries the
+next no-admin Windows bootstrap and Codex integration task. Docs-only change, with
+source/generated/dependency and historical evidence preserved. Rollback is reverting
+this documentation commit. Scratch files are synthetic and disposable.

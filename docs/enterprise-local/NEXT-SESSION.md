@@ -43,11 +43,16 @@ preparation отдельно от compile, без build-and-sync/dev/deploy сю
 Затем реальные bounded compiled-process/local setup checks в synthetic data.
 Не считать step9 готовым без рабочего no-admin host setup/lifecycle evidence.
 
-Codex login пользователя разрешён для минимальных synthetic live tests; сначала
-предложить точный model ID и лимит. Пока предложение gpt-6-luna/max3 коротких calls
-не принято и доступность не проверена — никаких inference/fallback/automatic retries.
+Codex login и gpt-6-luna одобрены для максимум 3 коротких synthetic live calls.
+Проверить доступность модели до inference. При недоступности показать результат и
+предложить вариант. Без fallback/automatic retries. Сохранить общий бюджет на всю проверку.
 Секреты не выводить; штатная auth только выбранного профиля. Большую регрессию гонять
 с deterministic fake LLM, настоящие вызовы только для связки/setup acceptance.
+
+Bun SQLite 3.53.4, WAL, reopen и FTS5 уже проверены на отдельном файле. Системный
+SQLite не нужен. В проверенных Python 3.13/user-site/.venv/venv каталогах нет
+chromadb/chroma-mcp. Для шага 7 выбрать совместимое пользовательское окружение
+Python и локальные embeddings, установить туда и проверить реальную связку.
 
 Документировать actual checks/no-admin limits, preservation/rollback и следующую
 конкретную задачу в STATE/TASKS/WORKLOG/DECISIONS/contracts/environment/NEXT-SESSION.

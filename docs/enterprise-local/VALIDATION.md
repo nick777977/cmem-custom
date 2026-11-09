@@ -29,10 +29,10 @@ requirements below are historical/release-hardening targets where they conflict.
 V4 requires real local SQLite + Chroma + local embeddings, synthetic capture/index/
 retrieval/restart/viewer checks and a deterministic fake LLM for broad regressions.
 Add only a few real Codex ChatGPT-login turns for selected-model integration. User
-authorizes the current login for synthetic tests, with minimal subscription usage;
-exact model and initial limit must be proposed before inference. Candidate (not yet
-selected/entitlement-verified): gpt-6-luna; proposed initial maximum three short turns,
-no automatic retries/model fallback, record reported token usage. API pricing is not
+authorizes the current login for synthetic tests, with minimal subscription usage.
+On 2026-11-09 the user approved gpt-6-luna and a maximum of three short synthetic
+turns. Verify availability before inference, disable retries and fallback, and
+record reported token usage. API pricing is not
 a promise about subscription quota. Do not read/print token files for investigation.
 Bedrock/AWS SSO remains a separately configured retained route, tested live only in
 the authorized corporate environment. No real memory corpus used for test prompts.
@@ -40,8 +40,10 @@ the authorized corporate environment. No real memory corpus used for test prompt
 PHASE1-ALIGN performed selected tool version/help checks with empty synthetic
 HOME/CODEX_HOME and, after explicit user authorization, one native login-status probe
 retaining only CHATGPT_LOGIN_PRESENT/exit0. No model catalog/inference, app startup, compile,
-package installation or admin-rights acceptance test. Chroma/embedding/SQLite runtime
-readiness and target Python compatibility remain unverified. Prior evidence stays
+package installation or admin-rights acceptance test. PHASE1-DATA-CHECK subsequently
+verified Bun SQLite/FTS5/WAL/reopen with synthetic data. Chroma package metadata was
+absent in the checked Python locations. Chroma/embeddings and integrated runtime
+readiness remain unverified. Prior evidence stays
 historical. [Current environment](DEV-ENVIRONMENT.md), [delivery route](../roadmap.md).
 
 ## Historical levels and evidence

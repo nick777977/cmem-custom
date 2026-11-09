@@ -1,10 +1,20 @@
 # Development baseline and user-provided execution evidence
 
-Updated: 2026-11-04. Supersedes the pre-install assumption in the 2026-10-30 launcher.
+Updated: 2026-11-09. Supersedes the pre-install assumption in the 2026-10-30 launcher.
 This is not full runtime acceptance. Session 02 subsequently ran authorized step-2
 compile/targeted checks; see the current section below and [BUILD-02](handoffs/BUILD-02.md).
 
 ## Preferred local toolchain
+
+**PHASE1-DATA-CHECK, 2026-11-09**, entry 4df2b8f5e. The selected Bun `bun:sqlite` reports
+SQLite 3.53.4. On a synthetic file, creation with WAL, FTS5 insert, close/reopen and
+`MATCH` read passed. The app uses embedded SQLite. A system sqlite3 executable is
+unnecessary. Python 3.13 metadata-only probe with `-I -S` found neither `chromadb`
+nor `chroma-mcp` in its install site, ordinary user site or repo `.venv`/`venv`.
+Use a compatible project/user-local Python environment and local model files for
+step 7. This check did not execute Chroma, start the app, install packages or send
+inference. User accepted gpt-6-luna and at most three short synthetic live turns.
+Account model availability and combined application readiness remain unverified.
 
 Current **PHASE1-ALIGN, 2026-11-04** (source entry d055fea4c): docs/plan and inert
 tool availability checks only. Direct Codex desktop binary (not the Volta codex.cmd
