@@ -163,8 +163,11 @@ and SQLite data stay under `$local` for inspection and backup.
 ## Claude Code and Bedrock preparation
 
 The Codex instructions above are verified for the documented build. This
-Claude Code section is a preparation template for the intended Windows
-instance. The Codex stage renders Codex-specific hook commands. The checkout's
+section is a Claude Code preparation template. The bound stage and its
+receipt can be prepared on the development Windows machine without Claude
+Code. The actual CLI version, policy, loading and Bedrock are verified
+later on the intended Windows instance. The Codex stage renders
+Codex-specific hook commands. The checkout's
 Claude hook and MCP templates still have empty commands. The next source
 task must produce a separate bound stage before these instructions can be
 exercised. [Codex stage renderer](../../scripts/enterprise-local/codex-local.mjs#L170)

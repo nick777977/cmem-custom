@@ -7,7 +7,7 @@ default and optional role overrides. A19 supersedes Bedrock-only; no hidden mode
 account/gateway fallback, CMEM registration/subscription, telemetry or cloud sync.
 Local persistence does not imply offline generative inference.
 
-**Current plan authority: A27 (2026-11-04).** Build/install/bootstrap may download
+**Phase-one scope follows A27 and its A29–A31 clarifications.** Build/install/bootstrap may download
 necessary dependencies and local embedding assets. Everything must build/install/run
 under an ordinary Windows user without admin/UAC. Test Codex first here; retain
 Claude Code Enterprise/Bedrock/AWS SSO. Load our local build through local host
@@ -20,11 +20,12 @@ checks remain required. Old refusal work below is historical, not desired functi
 ## Local completion path
 
 Build from this checkout and connect the compiled plugin locally. The
-existing Codex CLI check covers the Codex target. Next prepare Claude Code
-CLI on the Windows instance that holds the projects and runs the worker.
-Claude Code with Amazon Web Services (AWS) Bedrock is verified in its
-authorized environment. The worker's model for observations and summaries
-is configured separately. [Windows preparation](WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation)
+existing Codex CLI check covers the Codex target. Next prepare the Claude
+Code plugin on the development Windows machine, which currently has Codex
+only. Claude Code host verification and Amazon Web Services (AWS) Bedrock
+testing are pending on the authorized Windows instance where the projects
+and worker will run. The worker's model for observations and summaries is
+configured separately. [Windows preparation](WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation)
 · [Model profiles](LLM-PROFILES.md).
 
 SQLite keeps the original memory records. Chroma maintains a local search

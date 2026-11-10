@@ -39,8 +39,8 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | Done-bounded for the local worker and request-progress CLI. PROFILE-06A covers observer, summary and field compression. PROFILE-06B covers refresh, copy, judges, knowledge and the Telegram refusal. Step 10 owns separate server/helper admission and step 11 owns live provider evidence. [Evidence](enterprise-local/handoffs/PROFILE-06B.md) |
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Done-bounded for Windows x64 with separately staged multilingual MiniLM and persistent synthetic retrieval. [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | Done-bounded for the local viewer on Windows x64. Settings shows effective role choices and Chroma health. A copied worker and browser distinguished missing assets from a passing probe backed by semantic retrieval. [VIEWER-08-LOCAL](enterprise-local/handoffs/VIEWER-08-LOCAL.md) |
-| 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28/A31 | M | Codex CLI host check accepted for this delivery. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Claude Code CLI stage and host acceptance remain open. |
-| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29 | M | Done-bounded for Windows x64. The inventory and software bill of materials (SBOM) describe the verified local copy. [ARTIFACT-10-LOCAL](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md) |
+| 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28/A31 | M | Codex CLI host check accepted for this delivery. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Next prepare the Claude Code stage on the current development Windows machine without running Claude Code. |
+| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29/A31 | M | The existing inventory and software bill of materials (SBOM) cover the Codex stage and shared Windows x64 inputs. Record a separate receipt for the Claude Code stage before target runtime. Refresh the receipt if recovery work changes any staged bytes. [ARTIFACT-10-LOCAL](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md) |
 | 11 | Verify local memory, Claude Code CLI and the selected Bedrock route | IP P6/P7; A20; A29–A31 | M | Exact Codex-stage verification is complete for the successful memory path. Prepare the Claude Code Windows stage and implement pending-event recovery. Verify the intended Claude Code host and Bedrock separately in the authorized environment. [Remaining work](#what-remains-in-step-11) |
 | 12 | Document regular local setup, updates and data-preserving rollback | IP P8; A19/A20; A29 | S | Pending step 11. Formal packaging and redistribution are optional follow-up work. |
 
@@ -77,13 +77,16 @@ apply. Chroma is part of full local acceptance.
 Codex CLI has supplied the local host baseline. Claude Code CLI on the
 intended Windows instance is the second host. Its interactive Bedrock
 settings and the worker's generative profile are separate choices. The
-Claude plugin preparation uses simulated worker generation. Any live
-worker check needs an explicit model, auth route and budget.
+Claude plugin preparation can run on the current development Windows machine
+without Claude Code installed. Use simulated worker generation for the
+separately scoped host test. Any live worker check needs an explicit model,
+auth route and budget.
 [A31](enterprise-local/memory/DECISIONS.md#a31--accept-the-codex-cli-check-and-target-claude-code-on-windows-2026-11-10).
 
 Completed evidence and input-preservation limits remain in [DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md)
 and the HOSTED-03 / CHROMA-07 / TELEMETRY-04 handoffs. Do not repeat completed source
-work. The Windows x64 artifact and local Chroma inputs are pinned in step 10.
+work. Step 10 pins the Codex artifact and shared Windows x64 Chroma inputs.
+Record the Claude stage's own receipt for its bound files and inputs.
 A SQLite-only product mode (D11) stays outside current scope. The local setup
 reports missing Chroma assets and preserves SQLite data.
 
@@ -95,7 +98,7 @@ reports missing Chroma assets and preserves SQLite data.
 | Recovery of events waiting for generation | **Failed. Implementation required before daily use.** Two events stayed in the in-memory queue after a simulated 401 and redirect, then disappeared on graceful stop. Committed SQLite records and the derived index survived. Verify whether the intended host's existing transcript/spool can support a deliberate recovery operation under the current capture policy. Implement the smallest verified path. Check restart, exactly-once storage when recovering, and no automatic resend after an ambiguous provider outcome. |
 | Private worker auth endpoint | **Separate defect.** The retained local endpoint returned HTTP 500 when it loaded Better Auth from the checkout. Hook capture, MCP, local search and viewer worked independently. Resolve the route before relying on it. |
 | Codex CLI host | **Accepted.** Reuse the private CLI install, hook discovery, MCP and removal evidence. Codex Desktop is outside the current scope. Repeat affected CLI regressions if shared runtime or staging changes. |
-| Claude Code CLI on Windows | **Next.** Produce a bound local stage for the existing worker, hook adapter and MCP. Verify the intended CLI's local loading and project/worktree behavior in a separate bounded runtime launch with simulated worker generation. |
+| Claude Code CLI on Windows | **Pending target runtime.** Prepare the bound local stage under steps 9 and 10 on the development machine. In step 11, verify the intended CLI's actual version, managed policy, local loading and project/worktree behavior in a separately authorized runtime launch with simulated worker generation. |
 | Bedrock in the corporate environment | **Separate checks.** Confirm Claude Code's interactive Bedrock route and test the worker's explicit Bedrock profile if that profile is selected. Record model, AWS profile/region, SSO behavior and approved scope for each. Keep embeddings and storage on the Windows instance. |
 
 The local synthetic workflow is called V4 in the validation contract. Its full
@@ -204,7 +207,7 @@ flowchart TD
   s6 -->|all model roles and retained adapters finalized| s10
   s7 -->|Python and local model contract finalized| s10
   s8 -->|API and viewer boundary finalized| s10
-  s9 -->|local host integration and bounded lifecycle verified| s10
+  s9 -->|private host bindings and staging checks| s10
   s10 -->|test exact packaged entrypoints| s11["11 Exact-artifact E2E and profile evidence"]
   s11 -->|functional and traffic evidence for intended profiles| s12["12 Daily setup, update and rollback"]
 ~~~
@@ -226,16 +229,16 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 6 | 6 | Existing providers/dispatch/env/settings/roles and effective status. PROFILE-06A then PROFILE-06B, V1/V2/V3 | All model tasks obey explicit profiles |
 | 7 | 8 | Worker API/viewer network and profile settings presentation, identity semantics retained; V3/browser checks | Local-only interface with visible routing |
 | 8 | 10 | Build scripts, manifests, dependency records and inventory of the local install | Verified local build contents |
-| 9 | 9, 11 | Claude Code Windows stage preparation → pending-event recovery → authorized Claude host and Bedrock checks | Host loading and recovery evidence, then approved live results |
+| 9 | 9 → 10 → 11 | Prepare the Claude Code Windows stage and record its separate receipt → implement pending-event recovery and re-pin any changed staged files → verify the exact stage on the intended Claude host → verify Bedrock under separate scope | Host loading and recovery evidence, then approved live results |
 | 10 | 12 | Local Windows build, install, configuration, update and data-preserving rollback instructions | Daily local use with validated profiles |
 
 The bounded checks for step 8 and the Codex CLI part of step 9 are complete.
 Step 9 established the private Codex CLI and worker baseline on Windows x64.
-Step 10 pinned and verified
-the candidate and separate Chroma assets. VERIFY-11-LOCAL exercised those bytes
-with real Chroma and a simulated model. The
+Step 10 pinned and verified the Codex candidate and separate Chroma assets.
+VERIFY-11-LOCAL exercised those bytes with real Chroma and a simulated model. The
 [next implementation prompt](enterprise-local/NEXT-SESSION.md) covers the
-Claude Code Windows staging work before any corporate launch.
+Claude Code Windows staging and its receipt. Actual Claude CLI loading and
+Bedrock remain pending on the authorized target.
 [Windows CLI evidence and limits](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 
 ## Shipped

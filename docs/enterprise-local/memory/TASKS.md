@@ -7,6 +7,16 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **CLAUDE-WINDOWS-STAGE launch alignment**, done. One
+coordinator on clean `feat/cmem-light-local` at `2caef143d`. Reserve
+`docs/{roadmap,PATCH-SEQUENCE}.md` and
+`docs/enterprise-local/{README,NEXT-SESSION,SESSION-PROMPTS,WINDOWS-LOCAL-SETUP,memory/STATE,memory/TASKS,memory/WORKLOG}.md`.
+Separated source/staging and the step-10 receipt from target CLI/Bedrock
+acceptance. Corrected the README status and aligned steps 9–12.
+Documentation only. Reservations released.
+[CLAUDE-WINDOWS-STAGE](../NEXT-SESSION.md) is ready-unclaimed on the
+development Windows machine without Claude Code.
+
 2026-11-10 **CLI target and Claude Windows preparation**, done. One
 coordinator on clean `feat/cmem-light-local` at `26cf8b536`.
 Reserve `docs/{roadmap,PATCH-SEQUENCE}.md`,

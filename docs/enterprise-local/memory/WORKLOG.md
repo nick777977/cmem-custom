@@ -1145,3 +1145,22 @@ Checked the documentation diff, 20 local link targets in the new launch
 and runbook, and JSON parsing of the placeholder AWS SSO profile.
 Released documentation reservations. [CLAUDE-WINDOWS-STAGE](../NEXT-SESSION.md)
 is the next source task.
+
+### CLAUDE-WINDOWS-STAGE launch alignment
+
+Clean entry `2caef143d7939f3210c87384bf5e3b65bb355feb`. The development
+Windows machine has Codex only. Clarified that this is sufficient for
+source changes, local staging and synthetic fixture checks. The actual
+Claude CLI version, plugin policy and runtime loading remain target checks.
+Corrected the README to show Bedrock verification as pending.
+
+Made the step-10 receipt explicit between source staging and exact-artifact
+runtime. The Codex inventory remains the reference, and the Claude stage
+needs its own receipt. Pending-event recovery remains an implementation
+requirement before daily use. Refresh the receipt after relevant emitted
+changes before running the exact candidate. Corporate AWS and real Claude
+runtime remain separately scoped. No new decision or ADR is required.
+
+Documentation only. No build, installation, registration, host startup or
+AWS call. Checked the diff and added local link targets. Released
+reservations. [Final launch](../NEXT-SESSION.md).

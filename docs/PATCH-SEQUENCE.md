@@ -285,6 +285,10 @@ in worker mode, and the build checks the excluded sources.
 Windows x64 candidate and its separate inputs, records the CycloneDX SBOM and
 verifies the transferred bytes. This completes the local inventory slice.
 The software bill of materials (SBOM) records what the tested build contains.
+The receipt covers the Codex bindings. Record the Claude Code Windows
+stage separately, including its source build, bound files, exact hashes and
+prerequisites. Re-stage and refresh the receipt after any relevant emitted
+file changes before the target runtime check.
 
 Prove reachability before pruning. Keep SDK/Codex/API modules and dependencies required
 by any retained explicit profile/role or host integration. Remove unused remote-memory
@@ -310,8 +314,10 @@ outside local acceptance.
 
 ## 11. Exact-artifact runtime, E2E and selected-profile acceptance
 
-Verify the [inventory receipt](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md#recheck-on-a-matching-windows-x64-host)
-before using VALIDATION V3-V6 against the exact step-10 candidate. Earlier checkpoint evidence
+Verify the receipt for the actual host stage before using VALIDATION V3-V6
+against the exact step-10 candidate. The
+[Codex verification procedure](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md#recheck-on-a-matching-windows-x64-host)
+is the reference for the separate Claude Code receipt. Earlier checkpoint evidence
 must be repeated if relevant emitted bytes changed. Real compiled-process startup/MCP /
 worker/API/viewer/stop is required; unit mocks/typecheck/compile are not runtime proof.
 

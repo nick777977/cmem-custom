@@ -5,8 +5,9 @@ Historical blanket refusals and native-sandbox prerequisites are superseded.
 
 The target is daily local use from this checkout. The owner accepts the
 existing Codex CLI host result and sets aside Codex Desktop. Next prepare
-Claude Code CLI for the Windows instance where the projects and worker run.
-Verify the host and its AWS Bedrock route under separate authorized scope.
+and fingerprint the Claude Code plugin on the development Windows machine,
+which has Codex only. Verify Claude Code CLI loading and its AWS Bedrock
+route later on the authorized instance where the projects and worker run.
 The daily-use handoff covers setup, updates and data-preserving rollback.
 [Local route](../../roadmap.md) · [A31](DECISIONS.md#a31--accept-the-codex-cli-check-and-target-claude-code-on-windows-2026-11-10).
 
@@ -132,9 +133,9 @@ elevation was requested in those probes.
 PHASE1-DATA-CHECK at 4df2b8f5e confirmed Bun SQLite 3.53.4, WAL, file reopen and
 FTS5 query on a synthetic file. Neither chromadb nor chroma-mcp package metadata
 was found in the selected Python 3.13 installation, its ordinary user site or
-the repo .venv/venv paths. No SQLite system installation needed. Select a compatible
-project/user-local Chroma environment during implementation. Chroma and embeddings
-remain unverified. WINDOWS-09-LOCAL corrected the three SettingsDefaults TS2345
+the repo .venv/venv paths. No SQLite system installation was needed. Local Chroma
+and embedding verification came later in CHROMA-07-LOCAL and VERIFY-11-LOCAL.
+WINDOWS-09-LOCAL corrected the three SettingsDefaults TS2345
 errors. 09/09B/09C/09D/09E/09F
 commits and exact previous source/compile evidence preserved.
 
@@ -148,9 +149,11 @@ for the next task. [Windows profile template](../WINDOWS-LOCAL-SETUP.md#claude-c
 
 ## One next implementation task
 
-**CLAUDE-WINDOWS-STAGE: bind a private Claude Code CLI stage on Windows.**
-The current Codex renderer binds only Codex hooks. Prepare the Claude hook
-and MCP bindings for the existing local worker. [NEXT-SESSION](../NEXT-SESSION.md)
-defines scope and completion. Keep the pending-event recovery implementation
-before daily-use acceptance and corporate execution separately scoped.
+**CLAUDE-WINDOWS-STAGE: bind a private Claude Code CLI stage and record its
+receipt on the development Windows machine.** The current renderer binds
+Codex hooks. Prepare the Claude hook and MCP bindings using synthetic
+fixtures. [NEXT-SESSION](../NEXT-SESSION.md) defines scope and completion.
+Keep the actual Claude CLI version, managed policy, host runtime and AWS
+checks pending. Implement pending-event recovery before daily use and
+refresh the receipt if the staged worker changes.
 [Local delivery route](../../roadmap.md).
