@@ -291,10 +291,12 @@ shutdown and restart. Existing SQLite records and Chroma vectors survived.
 The full V4 result remains open with other cases still unexercised. The
 private auth HTTP 500 is a separate entrypoint finding. TCP samples, viewer
 resource entries and the deny proxy have the coverage described in the
-[handoff](handoffs/VERIFY-11-LOCAL.md). The recovery regression must cover
-stopping after a provider failure, recoverable work after restart, a
-deliberate replay with no duplicate SQLite record, and zero automatic
-resend after an ambiguous provider outcome.
+[handoff](handoffs/VERIFY-11-LOCAL.md). RECOVERY-11-LOCAL passed the
+staged recovery cases with simulated loopback generation and SQLite.
+It verified graceful stop after both refusals, interruption after
+dispatch, deliberate recovery, atomic result storage and zero automatic
+resends. Chroma and native provider execution were outside that run.
+[Recovery checks](handoffs/RECOVERY-11-LOCAL.md).
 
 ## V5: unavailable Bedrock and honest supported-provider status
 

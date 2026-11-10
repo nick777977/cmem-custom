@@ -464,6 +464,17 @@ cache and outputs in scratch. Staging and verification used a synthetic root
 and the actual selected executable hashes. The candidate, wheelhouse and model
 checks performed file I/O only. [Hashes and limits](handoffs/ARTIFACT-10-LOCAL.md).
 
+## RECOVERY-11-LOCAL on Windows x64
+
+The existing Node 22.23.4, npm 10.9.9 and Bun 1.4.4 passed both
+typechecks and guarded compilation. The focused tests used isolated
+scratch home, config, data and temp directories. The staged worker
+fixtures used ordinary-user loopback approval and disposable installs
+with SQLite and synthetic model responses. The separate in-checkout auth
+HTTP 500 persisted. The refreshed Claude receipt verifies the paired
+outputs on the same Windows x64 environment.
+[Results and limits](handoffs/RECOVERY-11-LOCAL.md).
+
 ## Historical CHROMA-07 environment and results
 
 Source/tests 8fa9979797b5478ec8b36eebd6c52533112aec83; generated b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf.

@@ -315,6 +315,20 @@ under the selected model. The old automatic v12.4.3 cleanup is retired at
 worker startup. The explicit maintenance command remains available.
 [Runtime evidence](../handoffs/CHROMA-07-LOCAL.md). D11 remains open.
 
+### Step 11 deliberate generation recovery (2026-11-10)
+
+The private explicit-profile worker keeps the live buffer in RAM and
+records accepted, filtered generation input in SQLite before acknowledging
+its spool handoff. Keep the original session and enqueue time. After
+dispatch admission without a committed result, require the operator to
+acknowledge that the provider may have processed the request. A versioned
+selection authorizes one action. Completion and result storage share a
+SQLite transaction, then the existing integrations handle indexing. The
+SQLite receipt keeps deduplication metadata and drops the completed payload.
+The transcript path remains a source of captures and the retired
+`pending_messages` queue stays outside recovery.
+[Implementation and checks](../handoffs/RECOVERY-11-LOCAL.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

@@ -1,8 +1,8 @@
 # Session prompts and bounded handoffs
 
-The [current handoff](NEXT-SESSION.md) is RECOVERY-11-LOCAL. Implement
-deliberate recovery for the pending events lost in
-[VERIFY-11-LOCAL](handoffs/VERIFY-11-LOCAL.md).
+The [current handoff](NEXT-SESSION.md) is CLAUDE-WINDOWS-VERIFY. Start with
+the [recovery evidence](handoffs/RECOVERY-11-LOCAL.md) and the refreshed
+Claude inventory before running the authorized target fixture.
 A27 permits required downloads and ordinary-user build/install/run.
 Claude Code/Bedrock/AWS SSO adapters are retained.
 Strong native OS sandbox and CI are deferred from phase-one prerequisites.
@@ -88,7 +88,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | RECOVERY-11-LOCAL implements pending-event recovery before exact target verification |
+| `docs/enterprise-local/NEXT-SESSION.md` | CLAUDE-WINDOWS-VERIFY checks the refreshed stage on the intended host |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Profile contract and implemented main worker configuration |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "source": {
-    "pairedBuild": "2bb4746b2d1ab20f06501b80358cbc6ecbe490d9",
+    "pairedBuild": "bc8ae2f5770798435f0cefd0cd6f929a26620cd6",
     "renderer": "fc0484bf6e48440875207fb2bc3a67194e5e5a90",
     "platform": "win32-x64"
   },
@@ -30,8 +30,8 @@
       "bytes": 180,
       "sha256": "9a1dedc2b0dece9c3d47654f9a07cb867637618b4a701e1a52a561bf2e3f308d",
       "reference": {
-        "bytes": 370,
-        "sha256": "a08a92ef69a0cfd35638bf76f52416c7894d48590dd6a852e8034faf16b67d2c"
+        "bytes": 376,
+        "sha256": "f04ed80ef1d76c5c235546b1bdb33b6d7135325e45c11442fc8fda1d77b16eee"
       }
     },
     {
@@ -39,8 +39,8 @@
       "bytes": 2884,
       "sha256": "52bb301c0420cd34719b6382d7092fcf2c1ccd352f1e1f61bda20a13a0f96a73",
       "reference": {
-        "bytes": 4404,
-        "sha256": "978ce90d0c64eb8eee883835696f5db19bf6cfe92940f50fabb9c2326a0f199e"
+        "bytes": 4452,
+        "sha256": "c0bcd9821efbcbfdfb4d23fa66cfa63bef1a8a7170b3c62fb135173dfe2badf9"
       }
     },
     {
@@ -235,13 +235,13 @@
     },
     {
       "path": "catalog/plugin/scripts/mcp-server.cjs",
-      "bytes": 869061,
-      "sha256": "d829f9386b10094fd47974d2d66b2d8c4e9f1349e5d84d2e04c65af5e678cfc5"
+      "bytes": 869063,
+      "sha256": "77b2e82bcd0d9d5d2c9fb0537fa59dc2db2a4014cc2127d93edd3854e1bb9eef"
     },
     {
       "path": "catalog/plugin/scripts/worker-service.cjs",
-      "bytes": 4005925,
-      "sha256": "6cd629fd7b21374387e8a664ec0c8dfb1da4aa3d25e3d3f234575ca9be5781e7"
+      "bytes": 4012047,
+      "sha256": "dfcad03b037eaca65f1c5aba71c056b3550a3c23d3e8e917a97caabc036e762b"
     },
     {
       "path": "catalog/plugin/skills/knowledge-agent/SKILL.md",
@@ -285,13 +285,13 @@
     },
     {
       "path": "catalog/plugin/sqlite/SessionStore.js",
-      "bytes": 191083,
-      "sha256": "07f680471c61ded03e6fa25db46a56a135a0d202239e7a828ed8d0ebfd109530"
+      "bytes": 191444,
+      "sha256": "2dbc251ce4287f2bfda3714d539eaeac8d97dbacbde6d6a31f028446f9160d20"
     },
     {
       "path": "catalog/plugin/sqlite/SessionStore.js.map",
-      "bytes": 158481,
-      "sha256": "37c0f7e2846923a5cf567e3bcb0e12aa5a71c1fb511773e9311c1259a801a578"
+      "bytes": 158890,
+      "sha256": "4aaec86c304c878244f96f241df551e719227587e7f72638f4793b20b112a476"
     },
     {
       "path": "catalog/plugin/sqlite/observations/files.js",
@@ -428,10 +428,10 @@
       "bytes": 128,
       "sha256": "05e3e75445165b646347e557fb0e2009bff61b7a5226360fe6d7951e1272d1e5",
       "reference": {
-        "bytes": 352,
-        "sha256": "fea18e61a29fdd8fd26f529ef483109ac13f457fb53b1e3a6c6d9ab344748cf5"
+        "bytes": 358,
+        "sha256": "56706d55cf5b4ebdf966ac4086780ffcf2a7b9f76498184d4e095b538dbc8e0c"
       }
     }
   ],
-  "referenceStageSha256": "cd6c19192bdba5af1577f654e88602fe730341aef1e163d51c98104f4227f554"
+  "referenceStageSha256": "d6eb46155ee516d6c390c79da376f775f85990758670715137a80f1cd7b853a3"
 }

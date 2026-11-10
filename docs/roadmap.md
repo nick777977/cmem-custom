@@ -40,8 +40,8 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Done-bounded for Windows x64 with separately staged multilingual MiniLM and persistent synthetic retrieval. [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | Done-bounded for the local viewer on Windows x64. Settings shows effective role choices and Chroma health. A copied worker and browser distinguished missing assets from a passing probe backed by semantic retrieval. [VIEWER-08-LOCAL](enterprise-local/handoffs/VIEWER-08-LOCAL.md) |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28/A31 | M | Codex CLI host check accepted for this delivery. The private Claude Code Windows stage and direct command fixtures are complete. Actual Claude CLI loading and dispatch are step-11 target checks. [CLAUDE-WINDOWS-STAGE](enterprise-local/handoffs/CLAUDE-WINDOWS-STAGE.md) |
-| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29/A31 | M | The Codex inventory and SBOM cover that stage and shared Windows x64 inputs. The separate 80-file Claude inventory passed raw-copy and re-binding checks. Refresh it if recovery work changes any staged bytes. [Claude inventory](enterprise-local/artifacts/claude-windows-x64-inventory.json) |
-| 11 | Verify local memory, Claude Code CLI and the selected Bedrock route | IP P6/P7; A20; A29–A31 | M | Exact Codex-stage verification is complete for the successful memory path. Implement pending-event recovery. Verify the intended Claude Code host and Bedrock separately in the authorized environment. [Remaining work](#what-remains-in-step-11) |
+| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29/A31 | M | The Codex inventory and SBOM cover that stage and shared Windows x64 inputs. The refreshed 80-file Claude inventory passed raw-copy and rebinding checks on the paired recovery build. [Claude inventory](enterprise-local/artifacts/claude-windows-x64-inventory.json) |
+| 11 | Verify local memory, Claude Code CLI and the selected Bedrock route | IP P6/P7; A20; A29–A31 | M | Successful memory flow and deliberate recovery passed their local fixtures. Verify the intended Claude Code host and Bedrock separately in the authorized environment. [Remaining work](#what-remains-in-step-11) |
 | 12 | Document regular local setup, updates and data-preserving rollback | IP P8; A19/A20; A29 | S | Pending step 11. Formal packaging and redistribution are optional follow-up work. |
 
 ## Phase-one delivery route (A27, 2026-11-04)
@@ -95,9 +95,9 @@ reports missing Chroma assets and preserves SQLite data.
 | Check | Status and impact |
 |---|---|
 | Exact Windows build and successful local memory flow | **Verification complete.** The staged build captured synthetic tool events and stored observations and a summary in SQLite. The local MiniLM encoder and real Chroma supported semantic retrieval after restart. MCP, viewer and cleanup were exercised. |
-| Recovery of events waiting for generation | **Failed. Implementation required before daily use.** Two events stayed in the in-memory queue after a simulated 401 and redirect, then disappeared on graceful stop. Committed SQLite records and the derived index survived. Verify whether the intended host's existing transcript/spool can support a deliberate recovery operation under the current capture policy. Implement the smallest verified path. Check restart, exactly-once storage when recovering, and no automatic resend after an ambiguous provider outcome. |
+| Recovery of events waiting for generation | **Passed the staged loopback recovery fixture.** The 401 and redirect survived graceful restart. An interruption after dispatch left an unknown outcome and a separate undispatched summary. Deliberate recovery stored each result once. Startup and ordinary retry made zero automatic resends. [Recovery evidence](enterprise-local/handoffs/RECOVERY-11-LOCAL.md) |
 | Private worker auth endpoint | **Separate defect.** The retained local endpoint returned HTTP 500 when it loaded Better Auth from the checkout. Hook capture, MCP, local search and viewer worked independently. Resolve the route before relying on it. |
-| Codex CLI host | **Accepted.** Reuse the private CLI install, hook discovery, MCP and removal evidence. Codex Desktop is outside the current scope. Repeat affected CLI regressions if shared runtime or staging changes. |
+| Codex CLI host | **Accepted.** Reuse the private CLI install, hook discovery, MCP and removal evidence. The staged Codex hook and MCP paths passed again after the recovery build. Codex Desktop is outside the current scope. |
 | Claude Code CLI on Windows | **Pending target runtime.** The bound local stage and receipt passed steps 9 and 10 fixtures. Verify the intended CLI's actual version, managed policy, loading, hook dispatch and project/worktree behavior in a separately authorized runtime launch with simulated worker generation. |
 | Bedrock in the corporate environment | **Separate checks.** Confirm Claude Code's interactive Bedrock route and test the worker's explicit Bedrock profile if that profile is selected. Record model, AWS profile/region, SSO behavior and approved scope for each. Keep embeddings and storage on the Windows instance. |
 
@@ -229,16 +229,17 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 6 | 6 | Existing providers/dispatch/env/settings/roles and effective status. PROFILE-06A then PROFILE-06B, V1/V2/V3 | All model tasks obey explicit profiles |
 | 7 | 8 | Worker API/viewer network and profile settings presentation, identity semantics retained; V3/browser checks | Local-only interface with visible routing |
 | 8 | 10 | Build scripts, manifests, dependency records and inventory of the local install | Verified local build contents |
-| 9 | 9 → 10 → 11 | Claude Code Windows stage and receipt prepared → implement pending-event recovery and re-pin any changed staged files → verify the exact stage on the intended Claude host → verify Bedrock under separate scope | Host loading and recovery evidence, then approved live results |
+| 9 | 9 → 10 → 11 | Claude stage and receipt refreshed after the recovery checks → verify the exact stage on the intended Claude host → verify Bedrock under separate scope | Host loading and recovery evidence, then approved live results |
 | 10 | 12 | Local Windows build, install, configuration, update and data-preserving rollback instructions | Daily local use with validated profiles |
 
 The bounded checks for step 8 and the Codex CLI part of step 9 are complete.
 Step 9 established the private Codex CLI and worker baseline on Windows x64.
 Step 10 pinned and verified the Codex candidate and separate Chroma assets.
 VERIFY-11-LOCAL exercised those bytes with real Chroma and a simulated model. The
-[next implementation prompt](enterprise-local/NEXT-SESSION.md) covers the
-Claude Code Windows staging and its receipt. Actual Claude CLI loading and
-Bedrock remain pending on the authorized target.
+[recovery run](enterprise-local/handoffs/RECOVERY-11-LOCAL.md) passed and
+refreshed the Claude receipt. The [next launch](enterprise-local/NEXT-SESSION.md)
+checks actual Claude CLI loading on the authorized target. Bedrock remains
+separately scoped.
 [Windows CLI evidence and limits](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 
 ## Shipped

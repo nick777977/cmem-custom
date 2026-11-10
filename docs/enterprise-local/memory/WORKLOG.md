@@ -1193,3 +1193,24 @@ Reservations released. Next launch RECOVERY-11-LOCAL implements deliberate,
 idempotent pending-event recovery, with no automatic resend on ambiguous
 provider outcome. Refresh any affected stage receipt before target runtime.
 See [checks, limits and rollback](../handoffs/CLAUDE-WINDOWS-STAGE.md).
+
+## 2026-11-10 — RECOVERY-11-LOCAL
+
+One coordinator on clean feat/cmem-light-local at `922eeb841`. Paired
+source, focused tests and generated artifacts in `bc8ae2f57`. Added durable
+receipt handoff, transport admission and atomic result completion. The
+local API lists dormant receipts and accepts one versioned selection.
+Ambiguous receipts require acknowledgement.
+
+Guarded compile and both typechecks passed. Ten Bun files passed with 189
+tests and 794 assertions. Four compiled Node fixtures passed in the
+ordinary-user loopback lane. They covered 401 and redirect on graceful
+restart, worker interruption after dispatch, an undispatched summary,
+deduplicated recovery and the direct Claude and Codex hook/MCP paths.
+The first recovery fixture timed out its own launcher. The corrected run
+completed. The separate local auth endpoint still returned HTTP 500.
+
+Re-staged and verified the refreshed 80-file Claude inventory, raw
+transfer and rebound copy. Reservations released.
+[Checks, receipt and rollback](../handoffs/RECOVERY-11-LOCAL.md).
+[Next target](../NEXT-SESSION.md) is CLAUDE-WINDOWS-VERIFY.

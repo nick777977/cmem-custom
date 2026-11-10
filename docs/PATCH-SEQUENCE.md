@@ -326,11 +326,12 @@ V4 without Bedrock: fake loopback LLM with explicit test profiles, actual approv
 Chroma/embedding assets, synthetic hook capture -> SQLite -> observations/summaries ->
 index/query -> restart/replay -> viewer. Check errors, private input, unchanged identity /
 sharing/filter semantics, concurrency, missing/corrupt assets, bounded retries/cleanup.
-VERIFY-11-LOCAL finished the exact-artifact run. The successful memory path
-passed. Two pending events were lost on graceful shutdown, so the V4 recovery
-case failed. The retained local auth endpoint is a separate private-entrypoint
-defect. See [observations and remaining tests](enterprise-local/handoffs/VERIFY-11-LOCAL.md)
-and [step 11 status](roadmap.md#what-remains-in-step-11).
+VERIFY-11-LOCAL passed the successful memory path and exposed the pending
+generation loss. RECOVERY-11-LOCAL passed deliberate recovery in a staged
+SQLite and loopback fixture and refreshed the Claude receipt. The local
+auth HTTP 500 remains a separate defect.
+[Recovery evidence](enterprise-local/handoffs/RECOVERY-11-LOCAL.md)
+· [Step 11 status](roadmap.md#what-remains-in-step-11).
 
 V5: separate actual provider/auth/model rows for intended enabled profiles, including
 Bedrock/SSO when available, selected Claude/Codex logins and direct API paths. Unsupported
@@ -340,8 +341,7 @@ tracked evidence. Currently unavailable Bedrock stays NOT RUN/BLOCKED; one live 
 cannot certify another. Reuse fixture/process work meanwhile rather than wait on AWS.
 Under A31, reuse the accepted Codex CLI result. Exercise the staged Claude
 Code CLI Windows binding with simulated worker generation
-under the appropriate runtime scope. Resolve pending-event recovery before
-daily use. Confirm exact model, auth, synthetic payload and budget only for
+under the appropriate runtime scope. Confirm exact model, auth, synthetic payload and budget only for
 the later authorized Bedrock checks. Local MiniLM handles Chroma embeddings.
 
 Process-tree DNS/connection and browser request evidence across startup/capture/index/

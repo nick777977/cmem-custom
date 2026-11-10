@@ -1,5 +1,8 @@
 # CLAUDE-WINDOWS-STAGE — Windows x64 private stage
 
+This handoff records the original stage. The current inventory uses the
+paired recovery build. [Refreshed stage and checks](RECOVERY-11-LOCAL.md).
+
 Closed 2026-11-10 on `feat/cmem-light-local`. Entry
 `327980a4f4a45d41edfda005f80b765371c5a646`, renderer and tests
 `fc0484bf6e48440875207fb2bc3a67194e5e5a90`, paired compiled plugin
@@ -46,7 +49,7 @@ receipt with its [pinned renderer](ARTIFACT-10-LOCAL.md#recheck-on-a-matching-wi
 
 ## Step 10 — separate Claude inventory
 
-[Claude Windows x64 inventory](../artifacts/claude-windows-x64-inventory.json)
+The original Claude Windows x64 inventory at commit `922eeb841`
 records the source and renderer SHAs, 80 staged files, prerequisite Node
 and Bun hashes, separate local Chroma assets and the provisional Claude
 host contract. All 75 shared copied files matched the prior Codex receipt.
@@ -93,8 +96,6 @@ and for the worker are separate acceptance checks.
 · [Plugin loading](https://code.claude.com/docs/en/plugins)
 · [Plugin manifest reference](https://code.claude.com/docs/en/plugins-reference).
 
-Step 11 next implements pending-event recovery, including no duplicates
-and no automatic resend after an ambiguous outcome. Refresh the Claude
-receipt if the shared worker or another staged file changes before target
-acceptance. The separate auth HTTP 500 remains open.
-[Next launch](../NEXT-SESSION.md).
+Step 11 recovery and the refreshed receipt are recorded separately. The
+auth HTTP 500 remains open. [Recovery evidence](RECOVERY-11-LOCAL.md)
+· [Next launch](../NEXT-SESSION.md).

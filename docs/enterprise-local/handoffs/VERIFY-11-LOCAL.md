@@ -82,9 +82,9 @@ The pending-event result concerns work whose observation or summary has yet
 to be generated. It makes recovery after a provider error and restart
 unreliable for those events. Stored observations, summaries and Chroma
 vectors remained available. A31 retains recovery as a separate
-implementation requirement before daily use. Verify the available
-transcript/spool path under the existing capture policy. Recovery must
-avoid duplicate storage and automatic resend after an ambiguous outcome.
+implementation requirement before daily use. The later recovery slice
+traces the spool handoff and verifies deliberate recovery separately.
+[Recovery evidence](RECOVERY-11-LOCAL.md).
 
 Additional V4 cases still unexercised include linked-worktree sharing,
 provider timeout/429/malformed/unknown-model/unreachable responses and an

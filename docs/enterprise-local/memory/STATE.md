@@ -11,6 +11,15 @@ where the projects and worker run. The daily-use handoff covers setup,
 updates and data-preserving rollback.
 [Local route](../../roadmap.md) · [A31](DECISIONS.md#a31--accept-the-codex-cli-check-and-target-claude-code-on-windows-2026-11-10).
 
+RECOVERY-11-LOCAL completed the paired implementation at `bc8ae2f57`.
+The worker retains accepted pending generation in SQLite and exposes
+undispatched and unknown outcomes for deliberate recovery. Staged loopback
+checks passed after graceful stop and interruption before a result. Four
+selected items committed three observations and a summary. Startup and
+ordinary retry sent zero repeats. The 80-file Claude inventory was
+refreshed and verified. The separate local auth HTTP 500 remains open.
+[Checks and rollback](../handoffs/RECOVERY-11-LOCAL.md).
+
 CLAUDE-WINDOWS-STAGE completed the bounded Windows x64 staging and receipt
 checks. Renderer `fc0484bf6` binds eight Claude hook events and stdio MCP
 to the foreground loopback worker from paired build `2bb4746b2`. Direct
@@ -27,8 +36,8 @@ real Chroma search and persistence, missing/corrupt model refusal and a
 browser rendering probe passed within their fixture scope. Two events
 waiting for generation after provider errors disappeared on graceful
 shutdown. Committed observations, summaries and the index survived. That
-failed case keeps the full local workflow matrix (V4) open. Implement and
-test deliberate recovery before daily-use acceptance. The retained
+failed case was addressed by RECOVERY-11-LOCAL above. Other cases keep
+the full local workflow matrix (V4) open. The retained
 auth endpoint separately returned HTTP 500 when it resolved Better Auth
 from the checkout. The tested hooks, search and viewer work independently.
 [Runtime evidence and coverage](../handoffs/VERIFY-11-LOCAL.md).
@@ -154,14 +163,14 @@ commits and exact previous source/compile evidence preserved.
 Chroma already uses the local MiniLM embedding model. The Windows user's
 file permissions and Claude Code's plugin/trust policy govern local
 project access. Interactive Claude Code Bedrock auth and the worker's
-explicit Bedrock profile are separate. The next recovery task uses a
-simulated loopback profile. [Windows profile template](../WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation).
+explicit Bedrock profile are separate. The target host fixture uses
+simulated worker generation first.
+[Windows profile template](../WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation).
 
-## One next implementation task
+## One next target task
 
-**RECOVERY-11-LOCAL: implement deliberate pending-event recovery.**
-Verify persistence across worker restart, idempotent storage and no
-automatic resend after an ambiguous provider outcome. Refresh the Claude
-receipt for changed staged bytes before target checks.
-[NEXT-SESSION](../NEXT-SESSION.md) defines scope and completion.
-[Local delivery route](../../roadmap.md).
+**CLAUDE-WINDOWS-VERIFY** checks the refreshed stage on the separately
+authorized Windows instance. Confirm CLI version and managed trust policy.
+Run real hook dispatch, MCP, synthetic two-project search and data-preserving
+removal with simulated worker generation.
+[Scope and completion](../NEXT-SESSION.md).

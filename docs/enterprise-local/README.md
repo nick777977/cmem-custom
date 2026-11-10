@@ -35,10 +35,10 @@ text and queries with local multilingual MiniLM on the CPU. A missing
 Chroma runtime or model leaves committed records in SQLite and surfaces a
 setup error. [Chroma setup](WINDOWS-LOCAL-SETUP.md#prepare-local-chroma).
 
-The exact build passed synthetic capture, search, restart and viewer checks.
-Two events waiting after provider errors disappeared on shutdown.
-Recovery is a planned implementation task before daily-use acceptance.
-[Results](handoffs/VERIFY-11-LOCAL.md) · [Step 11](../roadmap.md#what-remains-in-step-11).
+The earlier exact build passed synthetic capture, search, restart and viewer
+checks, and exposed loss of pending generation at shutdown. The worker now
+retains accepted work for deliberate recovery. [Original results](handoffs/VERIFY-11-LOCAL.md)
+· [Recovery](handoffs/RECOVERY-11-LOCAL.md) · [Step 11](../roadmap.md#what-remains-in-step-11).
 
 Continuous integration (CI) would run checks through an automation service.
 The local plan runs checks directly. The software bill of materials (SBOM) is

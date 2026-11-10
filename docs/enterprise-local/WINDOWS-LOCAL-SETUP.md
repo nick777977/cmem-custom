@@ -160,6 +160,41 @@ and SQLite data stay under `$local` for inspection and backup.
 
 [Local plugin catalogs in OpenAI Docs](https://developers.openai.com/plugins/build/plugins)
 
+## Recover pending generation
+
+With the private worker running, list available receipts from the same
+machine. The response contains item IDs, versions, session IDs, event types
+and timestamps. Use the port bound to this worker.
+
+```powershell
+$recovery = 'http://127.0.0.1:43985/api/processing/recovery'
+(Invoke-RestMethod $recovery).items | Format-Table
+```
+
+Review the selected profile in `/api/health` before authorizing a new call.
+`undispatched` means the worker never admitted the generation request to the
+transport. `outcome_unknown` means it reached that boundary and the worker
+has no committed result. The provider may already have processed or billed
+the call. Explicitly acknowledge that possibility to resend such an item.
+Use the ID and version from the list and recover related observations before
+their summary.
+
+```powershell
+$id = 1       # Use the selected item's ID.
+$version = 0  # Use the selected item's version.
+Invoke-RestMethod $recovery -Method Post -ContentType 'application/json' -Body (
+  @{ id = $id; version = $version; acknowledgeUnknown = $false } | ConvertTo-Json
+)
+```
+
+HTTP 202 means the item was queued for processing. A stale or already queued
+selection returns 409, and a completed or unavailable item returns 404.
+The list omits work already buffered in the live worker and completed
+receipts. Restart leaves previously accepted work available for this action.
+The API uses the worker's local control surface. The separate Better Auth
+HTTP 500 observed in the checkout remains open.
+[Recovery checks](handoffs/RECOVERY-11-LOCAL.md).
+
 ## Claude Code and Bedrock preparation
 
 Stage and verify the private copy on a matching Windows x64 host with

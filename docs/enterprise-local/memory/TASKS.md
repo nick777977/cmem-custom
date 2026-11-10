@@ -7,6 +7,15 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **RECOVERY-11-LOCAL**, done-bounded. One coordinator on clean
+`feat/cmem-light-local` at `922eeb841a74e4ca59303048e36722f35355e8fc`.
+Reserve the worker session, provider dispatch, response storage and spool handoff
+paths, focused recovery fixtures, the guarded compile outputs and the Claude
+inventory. Use `.scratch/enterprise-local/recovery-11-local/` for synthetic
+staging and runtime. Paired `bc8ae2f57`, focused and staged checks
+passed, and the Claude inventory is refreshed. Reservations released.
+[Evidence](../handoffs/RECOVERY-11-LOCAL.md) · [Next target](../NEXT-SESSION.md).
+
 2026-11-10 **CLAUDE-WINDOWS-STAGE**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `327980a4f4a45d41edfda005f80b765371c5a646`.
 Reserve `scripts/enterprise-local/{codex-local,verify-claude-stage}.mjs`,
@@ -19,7 +28,7 @@ and `artifacts/claude-windows-x64-inventory.json`. Staged and pinned the
 private Claude copy using renderer `fc0484bf6` and paired build `2bb4746b2`.
 Bound command and receipt checks passed. Real Claude CLI version, policy,
 loading and hooks await the target. [Evidence](../handoffs/CLAUDE-WINDOWS-STAGE.md).
-Reservations released. [RECOVERY-11-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+Reservations released. [RECOVERY-11-LOCAL](../handoffs/RECOVERY-11-LOCAL.md) followed.
 
 2026-11-10 **CLAUDE-WINDOWS-STAGE launch alignment**, done. One
 coordinator on clean `feat/cmem-light-local` at `2caef143d`. Reserve
