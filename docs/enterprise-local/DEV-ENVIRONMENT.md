@@ -6,6 +6,14 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
+**CLAUDE-WINDOWS-STAGE, 2026-11-10.** Reused the pinned Windows x64 Node
+22.23.4 and Bun 1.4.4 binaries. The default sandbox did not confirm the
+worker's loopback readiness. An ordinary-user rerun passed compiled
+direct hook/MCP and worker shutdown checks for both host bindings.
+The existing Codex admission fixture passed with local scratch TEMP/TMP.
+Claude Code version and policy are still unknown on the target. No tool
+change or build was needed. [Evidence](handoffs/CLAUDE-WINDOWS-STAGE.md).
+
 **VERIFY-11-LOCAL, 2026-11-10.** Reused the pinned Node 22.23.4, Bun 1.4.4,
 Codex 0.167.0-alpha.3.2 and CPython 3.13.15 executable inputs. The exact
 Windows x64 stage and the 93-wheel Chroma input matched their receipt. A

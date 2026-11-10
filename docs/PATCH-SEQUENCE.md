@@ -285,10 +285,11 @@ in worker mode, and the build checks the excluded sources.
 Windows x64 candidate and its separate inputs, records the CycloneDX SBOM and
 verifies the transferred bytes. This completes the local inventory slice.
 The software bill of materials (SBOM) records what the tested build contains.
-The receipt covers the Codex bindings. Record the Claude Code Windows
-stage separately, including its source build, bound files, exact hashes and
-prerequisites. Re-stage and refresh the receipt after any relevant emitted
-file changes before the target runtime check.
+The Codex receipt covers its bindings. The separate
+[Claude Code Windows inventory](enterprise-local/artifacts/claude-windows-x64-inventory.json)
+records its paired build, renderer, bound files, exact hashes and prerequisites.
+Re-stage and refresh the receipt after any relevant emitted file changes
+before the target runtime check.
 
 Prove reachability before pruning. Keep SDK/Codex/API modules and dependencies required
 by any retained explicit profile/role or host integration. Remove unused remote-memory
@@ -316,8 +317,8 @@ outside local acceptance.
 
 Verify the receipt for the actual host stage before using VALIDATION V3-V6
 against the exact step-10 candidate. The
-[Codex verification procedure](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md#recheck-on-a-matching-windows-x64-host)
-is the reference for the separate Claude Code receipt. Earlier checkpoint evidence
+[Claude verification procedure](enterprise-local/handoffs/CLAUDE-WINDOWS-STAGE.md#step-10--separate-claude-inventory)
+covers the separate Claude stage. Earlier checkpoint evidence
 must be repeated if relevant emitted bytes changed. Real compiled-process startup/MCP /
 worker/API/viewer/stop is required; unit mocks/typecheck/compile are not runtime proof.
 
@@ -337,8 +338,8 @@ combinations reject. Failures cannot switch to another profile/model/account; op
 role overrides must be explicit and observable. No live credentials in CI PR jobs or
 tracked evidence. Currently unavailable Bedrock stays NOT RUN/BLOCKED; one live backend
 cannot certify another. Reuse fixture/process work meanwhile rather than wait on AWS.
-Under A31, reuse the accepted Codex CLI result. Prepare the separate Claude
-Code CLI Windows binding and exercise it with simulated worker generation
+Under A31, reuse the accepted Codex CLI result. Exercise the staged Claude
+Code CLI Windows binding with simulated worker generation
 under the appropriate runtime scope. Resolve pending-event recovery before
 daily use. Confirm exact model, auth, synthetic payload and budget only for
 the later authorized Bedrock checks. Local MiniLM handles Chroma embeddings.

@@ -162,17 +162,32 @@ and SQLite data stay under `$local` for inspection and backup.
 
 ## Claude Code and Bedrock preparation
 
-The Codex instructions above are verified for the documented build. This
-section is a Claude Code preparation template. The bound stage and its
-receipt can be prepared on the development Windows machine without Claude
-Code. The actual CLI version, policy, loading and Bedrock are verified
-later on the intended Windows instance. The Codex stage renders
-Codex-specific hook commands. The checkout's
-Claude hook and MCP templates still have empty commands. The next source
-task must produce a separate bound stage before these instructions can be
-exercised. [Codex stage renderer](../../scripts/enterprise-local/codex-local.mjs#L170)
-· [Claude hook template](../../plugin/hooks/hooks.json#L3)
-· [MCP template](../../plugin/.mcp.json#L2).
+Stage and verify the private copy on a matching Windows x64 host with
+the pinned direct Node and Bun executables. Use a new destination with an
+existing parent, a free loopback port, and the paired compiled `plugin/`
+directory. Staging only writes files. The renderer prints the directory
+to pass to Claude Code later. The exact receipt should be stored outside
+the staged tree and created before adding settings or starting the worker.
+[Stage evidence](handoffs/CLAUDE-WINDOWS-STAGE.md)
+· [Claude inventory](artifacts/claude-windows-x64-inventory.json).
+
+```powershell
+$boundClaudePluginDirectory = & $node scripts/enterprise-local/codex-local.mjs stage-claude `
+  --root $claudeStage --bun $bun --port $port
+if ($LASTEXITCODE -ne 0) { throw 'Claude stage failed' }
+$receipt = & $node scripts/enterprise-local/verify-claude-stage.mjs `
+  --candidate $claudeStage --bun $bun --port $port
+if ($LASTEXITCODE -ne 0) { throw 'Claude stage verification failed' }
+$receipt | Set-Content -LiteralPath $receiptPath -Encoding utf8
+```
+
+The bindings use absolute paths. Re-stage at the intended destination
+and verify again after moving the tree or changing paths or port. If a
+new compiled worker or renderer changes staged bytes, review the diff
+and regenerate the inventory from a clean verified stage before target
+acceptance. A raw transfer can be checked for byte equality with
+`--bound-root` set to the original destination. It still needs binding
+at the operational location.
 
 ### Windows host and project access
 
@@ -190,13 +205,36 @@ exercised. [Codex stage renderer](../../scripts/enterprise-local/codex-local.mjs
   [Claude Code settings scopes](https://code.claude.com/docs/en/settings)
   · [Claude CLI plugin flags](https://code.claude.com/docs/en/cli-reference).
 
-The eventual session command uses an absolute Claude executable and a bound
-stage. The variables below are placeholders to be supplied by the approved
-test. Run from the intended synthetic project directory.
+On the authorized target, confirm the exact Claude CLI version and managed
+policy for session-local plugins, Windows exec-form hooks (`command` plus
+`args`) and stdio MCP. Both entry points expect the CLI to export
+`CLAUDE_PLUGIN_ROOT`. Keep a scoped Claude configuration for the test.
+Set up local Chroma and stage-specific settings as above, then start the
+worker in a dedicated terminal with an explicit loopback fixture profile.
+Wait for readiness before loading the plugin.
+
+```powershell
+$claudeLauncher = Join-Path $claudeStage 'claude-local.mjs'
+& $node $claudeLauncher start --profile $fixtureProfile
+```
+
+Use the approved Claude executable from each synthetic project directory.
+The host's own model activity requires separate scope.
 
 ```powershell
 & $claudeExecutable --plugin-dir $boundClaudePluginDirectory
 ```
+
+Check actual SessionStart, prompt, tool success/failure, Stop and end
+dispatch with the intended CLI. Verify the two projects' stored sessions,
+observation/summary capture, SQLite and semantic search filters, and MCP
+search. Include a subdirectory launch to verify project anchoring. Record
+async hook timing and trust prompts, and keep the same worker for both
+projects. Close both sessions and run `& $node $claudeLauncher stop`. Confirm
+the process and listener exit. Future sessions can omit `--plugin-dir`;
+keep the stage's `data` directory for data-preserving rollback.
+[Hook execution forms](https://code.claude.com/docs/en/hooks#exec-form-and-shell-form)
+· [Plugin loading](https://code.claude.com/docs/en/plugins).
 
 ### Two Bedrock settings surfaces
 

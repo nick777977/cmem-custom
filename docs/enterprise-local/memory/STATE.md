@@ -4,12 +4,22 @@ Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 and A29–A3
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 
 The target is daily local use from this checkout. The owner accepts the
-existing Codex CLI host result and sets aside Codex Desktop. Next prepare
-and fingerprint the Claude Code plugin on the development Windows machine,
-which has Codex only. Verify Claude Code CLI loading and its AWS Bedrock
-route later on the authorized instance where the projects and worker run.
-The daily-use handoff covers setup, updates and data-preserving rollback.
+existing Codex CLI host result and sets aside Codex Desktop. The private
+Claude Code CLI stage is prepared and fingerprinted. Verify actual Claude
+CLI loading and its AWS Bedrock route later on the authorized instance
+where the projects and worker run. The daily-use handoff covers setup,
+updates and data-preserving rollback.
 [Local route](../../roadmap.md) · [A31](DECISIONS.md#a31--accept-the-codex-cli-check-and-target-claude-code-on-windows-2026-11-10).
+
+CLAUDE-WINDOWS-STAGE completed the bounded Windows x64 staging and receipt
+checks. Renderer `fc0484bf6` binds eight Claude hook events and stdio MCP
+to the foreground loopback worker from paired build `2bb4746b2`. Direct
+Claude/Codex command fixtures passed SQLite prompt capture and MCP
+initialization/listing without model requests. Invalid binding, missing
+worker and wrong worker path were refused. The 80-file Claude inventory
+verified reference, raw transfer and fresh binding. Real Claude CLI
+version, managed policy, loading and hook dispatch remain target checks.
+[Evidence](../handoffs/CLAUDE-WINDOWS-STAGE.md).
 
 VERIFY-11-LOCAL completed the exact-artifact test run on Windows x64.
 Direct Codex hooks and MCP, simulated observer and summary profiles, FTS5,
@@ -144,16 +154,14 @@ commits and exact previous source/compile evidence preserved.
 Chroma already uses the local MiniLM embedding model. The Windows user's
 file permissions and Claude Code's plugin/trust policy govern local
 project access. Interactive Claude Code Bedrock auth and the worker's
-explicit Bedrock profile are separate. No live model or budget is selected
-for the next task. [Windows profile template](../WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation).
+explicit Bedrock profile are separate. The next recovery task uses a
+simulated loopback profile. [Windows profile template](../WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation).
 
 ## One next implementation task
 
-**CLAUDE-WINDOWS-STAGE: bind a private Claude Code CLI stage and record its
-receipt on the development Windows machine.** The current renderer binds
-Codex hooks. Prepare the Claude hook and MCP bindings using synthetic
-fixtures. [NEXT-SESSION](../NEXT-SESSION.md) defines scope and completion.
-Keep the actual Claude CLI version, managed policy, host runtime and AWS
-checks pending. Implement pending-event recovery before daily use and
-refresh the receipt if the staged worker changes.
+**RECOVERY-11-LOCAL: implement deliberate pending-event recovery.**
+Verify persistence across worker restart, idempotent storage and no
+automatic resend after an ambiguous provider outcome. Refresh the Claude
+receipt for changed staged bytes before target checks.
+[NEXT-SESSION](../NEXT-SESSION.md) defines scope and completion.
 [Local delivery route](../../roadmap.md).

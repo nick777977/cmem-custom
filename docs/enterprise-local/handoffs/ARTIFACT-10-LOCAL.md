@@ -58,10 +58,15 @@ an existing parent under task scratch. Set `$node`, `$bun`, `$codex`, and
 to the prepared input directories, and `$port` to the intended loopback port.
 To stage the paired checkout bytes without registering the plugin, call the
 staging function directly. Keep the resulting receipt with the test evidence.
+This receipt pins the original renderer from `2bb4746b2`. For an exact
+replay, supply that revision's `scripts/enterprise-local/codex-local.mjs`
+as `$launcher` and use the paired compiled bundle. The shared renderer
+used for Claude staging changed in `fc0484bf6`. Its fresh Codex launcher
+bytes are outside this historical receipt.
 
 ```powershell
 $bundle = (Resolve-Path -LiteralPath plugin).Path
-$launcher = (Resolve-Path -LiteralPath scripts/enterprise-local/codex-local.mjs).Path
+# $launcher is the absolute path to the pinned 2bb4746b2 renderer.
 $stageScript = Join-Path (Split-Path -Parent $candidate) ('.stage-' + [guid]::NewGuid() + '.mjs')
 @'
 import { pathToFileURL } from 'node:url';

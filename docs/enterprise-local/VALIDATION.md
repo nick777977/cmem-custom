@@ -41,8 +41,10 @@ V4 requires real local SQLite, Chroma and MiniLM embeddings, synthetic capture,
 retrieval, restart and viewer checks, and a deterministic stand-in for the
 generative worker model. V5 covers a real provider for an explicitly selected
 generative profile. Under A31, the existing Codex CLI result covers Codex.
-Prepare the Claude Code CLI binding for Windows. Its first host check uses
-a simulated worker model. Before a separately requested live test,
+The private Windows Claude Code stage passed direct command fixtures and
+has a separate inventory. Its first target host check uses a simulated
+worker model. [Stage evidence](handoffs/CLAUDE-WINDOWS-STAGE.md).
+Before a separately requested live test,
 confirm the model, auth route, synthetic payload and budget. Verify availability
 and resend/fallback behavior before sending a live request. Do not read or
 print token files for investigation. Bedrock/AWS SSO is tested live only in its

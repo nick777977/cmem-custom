@@ -20,12 +20,13 @@ checks remain required. Old refusal work below is historical, not desired functi
 ## Local completion path
 
 Build from this checkout and connect the compiled plugin locally. The
-existing Codex CLI check covers the Codex target. Next prepare the Claude
-Code plugin on the development Windows machine, which currently has Codex
-only. Claude Code host verification and Amazon Web Services (AWS) Bedrock
+existing Codex CLI check covers the Codex target. The private Claude Code
+stage and its separate inventory are ready for later target verification.
+Claude Code host verification and Amazon Web Services (AWS) Bedrock
 testing are pending on the authorized Windows instance where the projects
 and worker will run. The worker's model for observations and summaries is
 configured separately. [Windows preparation](WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation)
+· [Stage evidence](handoffs/CLAUDE-WINDOWS-STAGE.md)
 · [Model profiles](LLM-PROFILES.md).
 
 SQLite keeps the original memory records. Chroma maintains a local search

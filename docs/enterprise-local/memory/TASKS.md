@@ -7,6 +7,20 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **CLAUDE-WINDOWS-STAGE**, done-bounded. One coordinator on clean
+`feat/cmem-light-local` at `327980a4f4a45d41edfda005f80b765371c5a646`.
+Reserve `scripts/enterprise-local/{codex-local,verify-claude-stage}.mjs`,
+`tests/enterprise-local/claude-windows-stage.test.mjs`,
+`.scratch/enterprise-local/claude-windows-stage/`, and
+`docs/{roadmap,PATCH-SEQUENCE}.md` plus
+`docs/enterprise-local/{README,WINDOWS-LOCAL-SETUP,NEXT-SESSION,SESSION-PROMPTS,DEV-ENVIRONMENT,VALIDATION}.md`,
+`memory/{STATE,TASKS,WORKLOG}.md`, `handoffs/{CLAUDE-WINDOWS-STAGE,ARTIFACT-10-LOCAL}.md`
+and `artifacts/claude-windows-x64-inventory.json`. Staged and pinned the
+private Claude copy using renderer `fc0484bf6` and paired build `2bb4746b2`.
+Bound command and receipt checks passed. Real Claude CLI version, policy,
+loading and hooks await the target. [Evidence](../handoffs/CLAUDE-WINDOWS-STAGE.md).
+Reservations released. [RECOVERY-11-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+
 2026-11-10 **CLAUDE-WINDOWS-STAGE launch alignment**, done. One
 coordinator on clean `feat/cmem-light-local` at `2caef143d`. Reserve
 `docs/{roadmap,PATCH-SEQUENCE}.md` and
@@ -14,8 +28,7 @@ coordinator on clean `feat/cmem-light-local` at `2caef143d`. Reserve
 Separated source/staging and the step-10 receipt from target CLI/Bedrock
 acceptance. Corrected the README status and aligned steps 9–12.
 Documentation only. Reservations released.
-[CLAUDE-WINDOWS-STAGE](../NEXT-SESSION.md) is ready-unclaimed on the
-development Windows machine without Claude Code.
+[CLAUDE-WINDOWS-STAGE](../handoffs/CLAUDE-WINDOWS-STAGE.md) followed.
 
 2026-11-10 **CLI target and Claude Windows preparation**, done. One
 coordinator on clean `feat/cmem-light-local` at `26cf8b536`.
@@ -25,10 +38,9 @@ and `memory/{DECISIONS,STATE,TASKS,WORKLOG}.md`. Prepare the host and
 worker profile examples, preserve recovery evidence and align the next
 implementation task. Documentation scope. A31 accepts the existing CLI
 result and records the Windows target. Added private-load and AWS SSO
-profile templates. Runtime/source behavior remains unverified for this
-Claude stage. Reservations released. [CLAUDE-WINDOWS-STAGE](../NEXT-SESSION.md)
-is ready-unclaimed. Pending-event recovery remains an implementation task
-before daily use.
+profile templates. Reservations released.
+[CLAUDE-WINDOWS-STAGE](../handoffs/CLAUDE-WINDOWS-STAGE.md) followed.
+Pending-event recovery remains an implementation task before daily use.
 
 2026-11-10 **VERIFY-11-LOCAL closeout**, done. One coordinator on
 `feat/cmem-light-local` at `045ac7a05`, with the previous session's

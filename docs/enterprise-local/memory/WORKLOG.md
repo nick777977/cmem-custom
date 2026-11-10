@@ -1164,3 +1164,32 @@ runtime remain separately scoped. No new decision or ADR is required.
 Documentation only. No build, installation, registration, host startup or
 AWS call. Checked the diff and added local link targets. Released
 reservations. [Final launch](../NEXT-SESSION.md).
+
+## 2026-11-10 — CLAUDE-WINDOWS-STAGE
+
+One coordinator on clean feat/cmem-light-local at
+327980a4f4a45d41edfda005f80b765371c5a646. Source/test commit fc0484bf6 adds
+stage-only private Claude binding and the separate inventory verifier.
+The paired compiled plugin at 2bb4746b2 is unchanged. No compile was needed.
+
+Executed three Node fixtures. Stage composition and refusal passed in
+the default sandbox. Both worker lifecycles lacked readiness there and
+passed in the ordinary-user loopback rerun. The Claude and Codex bound
+prompt commands recorded synthetic SQLite sessions with the expected cwd
+and source. Both stdio MCP instances initialized, listed tools and exited
+on EOF. Both workers stopped, with zero model requests. The Codex
+admission suite passed nine tests and 55 assertions after pointing TEMP/TMP
+at local scratch. No Claude or Codex CLI host process, registration, real
+state, AWS, live model, CI or publication was used.
+
+Recorded the separate 80-file inventory and confirmed all 75 shared copied
+hashes against the prior receipt. Verified the reference stage, raw copy
+with its original binding and a separately bound destination. The verifier
+rejected the moved binding and modified hooks. The original Codex receipt
+remains tied to its paired renderer. Claude CLI version, managed policy,
+real dispatch and Bedrock remain for the intended Windows instance.
+
+Reservations released. Next launch RECOVERY-11-LOCAL implements deliberate,
+idempotent pending-event recovery, with no automatic resend on ambiguous
+provider outcome. Refresh any affected stage receipt before target runtime.
+See [checks, limits and rollback](../handoffs/CLAUDE-WINDOWS-STAGE.md).

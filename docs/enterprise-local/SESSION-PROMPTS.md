@@ -1,14 +1,14 @@
 # Session prompts and bounded handoffs
 
-The [current handoff](NEXT-SESSION.md) is CLAUDE-WINDOWS-STAGE after
-[VERIFY-11-LOCAL](handoffs/VERIFY-11-LOCAL.md) exercised the pinned Windows x64
-candidate with a simulated model and real Chroma.
+The [current handoff](NEXT-SESSION.md) is RECOVERY-11-LOCAL. Implement
+deliberate recovery for the pending events lost in
+[VERIFY-11-LOCAL](handoffs/VERIFY-11-LOCAL.md).
 A27 permits required downloads and ordinary-user build/install/run.
 Claude Code/Bedrock/AWS SSO adapters are retained.
 Strong native OS sandbox and CI are deferred from phase-one prerequisites.
-The accepted Codex CLI check covers Codex. Prepare and fingerprint the
-private Claude Code stage on the current development Windows machine,
-which has Codex only. Later host checks on the intended Windows instance use
+The accepted Codex CLI check covers Codex. The private Claude Code stage
+and receipt passed [staging fixtures](handoffs/CLAUDE-WINDOWS-STAGE.md).
+Later host checks on the intended Windows instance use
 simulated worker generation first. Corporate Bedrock needs a separate
 launch. No public publication, CMEM account or real-memory test data.
 Historical refusal/source-only restrictions below are superseded where they conflict
@@ -88,7 +88,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | CLAUDE-WINDOWS-STAGE binds and fingerprints private Claude hooks and MCP without a local Claude installation, then hands off to recovery and target verification |
+| `docs/enterprise-local/NEXT-SESSION.md` | RECOVERY-11-LOCAL implements pending-event recovery before exact target verification |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Profile contract and implemented main worker configuration |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |
