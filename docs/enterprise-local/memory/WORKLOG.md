@@ -987,3 +987,22 @@ Aligned the next-session prompt, roadmap and private setup guide with separate
 model asset preparation and synthetic Russian-to-English retrieval after
 offline restart. Documentation and links reviewed. Runtime, model compatibility
 and end-to-end verification remain assigned to CHROMA-07-LOCAL. Reservations released.
+
+## 2026-11-10 — CHROMA-07-LOCAL implementation
+
+Clean entry `80a6b0868` on `feat/cmem-light-local`. One coordinator reserved
+the exact source, tests, emitted paths and task scratch. Paired implementation
+`c476b5cd0` selects the pinned local MiniLM encoder for index writes and
+queries. Separate user-local preparation stages the hashed Python wheels and
+model files. The derived store and checkpoint have their own namespace.
+The worker no longer runs the v12.4.3 purge during startup.
+
+214 focused tests and 822 assertions, root/viewer typechecks and the guarded
+build passed. The copied worker refused missing/corrupt assets, backfilled all
+three SQLite row kinds and returned SQLite ID 1 for the Russian paraphrase
+before and after restart. The vector snapshot and both legacy artifacts were
+preserved. Shutdown released the lock and the Windows process check found zero
+owned processes. The separate legacy cleanup test reported six `EBUSY` teardown
+failures. No generative turns used. D11 remains open.
+[Evidence, limits and rollback](../handoffs/CHROMA-07-LOCAL.md). Reservations
+released. Next [VIEWER-08-LOCAL](../NEXT-SESSION.md).

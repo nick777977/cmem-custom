@@ -37,7 +37,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 4 | Local diagnostics without remote telemetry | IP W2; A18 | S | done-bounded; TELEMETRY-04 S 0abd4180b / G 6bb7c6995, 206 tests + compile PASS |
 | 5 | Local SQLite/Chroma without cloud sync | IP W3; A27 | S | done-bounded for local worker. Legacy credentials and queues inert in compiled loopback checks. Real Chroma activation remains step 7. [CLOUD-05](enterprise-local/handoffs/CLOUD-05.md) |
 | 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | Done-bounded for the local worker and request-progress CLI. PROFILE-06A covers observer, summary and field compression. PROFILE-06B covers refresh, copy, judges, knowledge and the Telegram refusal. Step 10 owns separate server/helper admission and step 11 owns live provider evidence. [Evidence](enterprise-local/handoffs/PROFILE-06B.md) |
-| 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Source refusal done-bounded, S 8fa997979 / G b8734d9b2. U1/D9 open. [CHROMA-07-LOCAL](enterprise-local/NEXT-SESSION.md) starts with local multilingual MiniLM and separately staged assets. |
+| 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Done-bounded for Windows x64 with separately staged multilingual MiniLM and persistent synthetic retrieval. [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | not started; retain identity/sharing/filter/capture/retrieval behavior |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28 | M | done-bounded for private Codex CLI on Windows x64. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Desktop and Claude host acceptance remain open. |
 | 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | not started; preserve needed SDK/Codex/API adapters, prune proved-unused closures only |
@@ -133,7 +133,7 @@ required; this is separate from the selected summary LLM.
 | D5 | A28 verifies dedicated Codex CLI local catalog and rollback. Confirm desktop and Claude Code local directory loading and target coexistence on their intended hosts | agent; user-level target scope | remaining host and packaged acceptance, 11/12 |
 | D7 | Exact selected profile(s): auth mode, endpoint/Region, model, proxy/CA and allowed infrastructure? No secrets in docs | human | actual live provider rows, 6/11 |
 | D8 | Approved local data location, retention/backup rules? | human | deployment, 8/12 |
-| D9 | Select/test compatible Python/Chroma/local embedding packages and versions; record source/license/hash/API as engineering work under A27 download permission, no manual user-supplied ABI required | agent | functioning local Chroma, 7/V4/10/12 |
+| D9 | Resolved for the tested Windows x64 Chroma/MiniLM stack. Versions, sources, hashes, licenses and APIs are in [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). | agent | exact release closure and transfer, 10/12 |
 | D10 | Complete remaining dynamic clients/entrypoints/connectors and retained-provider closure? | agent | 1/10 |
 | D11 | Missing Chroma may enter explicitly visible SQLite-only degraded product mode? Still unselected | human | proposed product-mode change, 7/11 |
 | D12 | Approved CI execution location, runner inputs/network/control plane and artifact retention? | human | actual CI provisioning/execution and hosted uploads, 9/10 |
@@ -141,8 +141,7 @@ required; this is separate from the selected summary LLM.
 These are scoped gates, not a new up-front interview. Bedrock is unavailable now;
 continue source, fixtures and isolated process test preparation. Do not invent a model,
 account or auth permission; do not request a credential dump. Per-profile live checks
-remain pending until explicitly available. D9 research still requires artifact-read
-permission; installed files alone are not permission.
+remain pending until explicitly available.
 
 ## Decisions and retained evidence
 
@@ -193,7 +192,7 @@ own concrete reviewed scope and cleanup/evidence contract.
 |:---:|---|---|---|
 | 1 | 1 | Existing audit/contracts; targeted new deltas only | Agreed evidence/policy |
 | 2 | 2 | Existing scripts/compile boundary, retain inputs | Safe compile |
-| 3 | 3 and 7 | Hosted done; Chroma source refusal done, activation awaits D9 | Hosted-free core and eventual local-index candidate |
+| 3 | 3 and 7 | Hosted removal and bounded Windows local Chroma activation complete | Hosted-free core and persistent local index |
 | 4 | 4 and 9 | Telemetry done; Windows launcher/generators/CLI preflight; author synthetic process/CI runner, scoped early V3 when launched | Deterministic entrypoints and quick runtime feedback |
 | 5 | 5 | DatabaseManager/CloudSync/SyncClient/routes and worker; V1/V2, safe V3 slice | Local data without cloud sync |
 | 6 | 6 | Existing providers/dispatch/env/settings/roles and effective status. PROFILE-06A then PROFILE-06B, V1/V2/V3 | All model tasks obey explicit profiles |
@@ -202,9 +201,9 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 9 | 11 | Exact artifact, disposable local E2E, process-tree/network evidence, separate V5 rows | Tested configuration; unavailable live routes remain pending |
 | 10 | 12 | Windows bundle/SBOM/runbook/install/rollback on exact final hashes | Release candidate for validated profiles |
 
-Remaining implementation covers local index and API/viewer wiring in 7/8,
-followed by artifact, E2E and install acceptance in 10/11/12. The
-[next implementation prompt](enterprise-local/NEXT-SESSION.md) is CHROMA-07-LOCAL.
+Remaining implementation starts with API/viewer wiring in step 8, followed by
+artifact, E2E and install acceptance in 10/11/12. The
+[next implementation prompt](enterprise-local/NEXT-SESSION.md) is VIEWER-08-LOCAL.
 The tested Windows lane and its limitations are recorded in
 [WINDOWS-09-LOCAL](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 

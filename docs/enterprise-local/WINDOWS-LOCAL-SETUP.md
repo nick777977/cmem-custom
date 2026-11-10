@@ -6,15 +6,13 @@ dedicated Codex CLI home. The launcher runs the worker in the foreground on
 IPv4 loopback and binds the installed hooks and MCP entry to that instance.
 Codex requires the user to review and trust plugin hooks in `/hooks`.
 
-This setup currently covers the Windows host and worker lifecycle. SQLite is
-embedded in Bun. Local Chroma and embeddings still require the step 7 runtime.
+This setup covers the Windows host and worker lifecycle. SQLite is embedded in
+Bun. Chroma uses the separately prepared Windows x64 runtime below.
 Use synthetic data for setup acceptance until the remaining phase-one checks
 are complete. See [WINDOWS-09-LOCAL evidence](handoffs/WINDOWS-09-LOCAL.md).
 
-The fork build and registration copy the plugin code and assets. Python/Chroma
-packages and embedding weights are a separate preparation step. The verified
-preparation instructions are a deliverable of
-[CHROMA-07-LOCAL](NEXT-SESSION.md), which starts with local multilingual MiniLM.
+The fork build and registration copy the compiled worker and its Python adapter.
+Prepare Python packages and embedding weights separately on the target machine.
 
 ## Prepare the build
 
@@ -30,6 +28,44 @@ preparation commands are `npm.cmd ci --ignore-scripts --no-audit --no-fund` and
 The compile command is `npm.cmd run build:compile`. Keep the chosen Node
 directory first on this terminal's PATH for npm and build subprocesses.
 Compilation does not use the marketplace synchronization or worker restart scripts.
+
+## Prepare local Chroma
+
+Run once from the checkout in an ordinary PowerShell terminal. Use the direct
+64-bit CPython 3.13.15 executable installed for your user. Substitute its actual
+path. Keep this venv on the machine where you create it.
+
+```powershell
+$python = 'C:\Tools\Python313\python.exe'
+$chromaRuntime = Join-Path $env:LOCALAPPDATA 'cmem-light\chroma-runtime'
+& .\scripts\prepare-local-chroma.ps1 -Python $python -RuntimeDir $chromaRuntime
+```
+
+The preparation script installs the [hash-locked Windows wheels](../../scripts/chroma-local-requirements.txt)
+from PyPI into `$chromaRuntime\venv` and verifies dependencies with `pip check`.
+It stages the pinned model into `$chromaRuntime\model\model.onnx` and
+`$chromaRuntime\model\tokenizer.json` over HTTPS. It verifies SHA-256 before
+moving each partial file into place and reuses assets whose hashes match.
+The wheel lock and publisher revision are recorded in
+[CHROMA-07-LOCAL](handoffs/CHROMA-07-LOCAL.md).
+
+After private registration, add these values to `$local\data\settings.json`
+while the worker is stopped. Preserve other settings. Replace the path with
+the value printed by the preparation command and escape backslashes in JSON.
+
+```json
+{
+  "CLAUDE_MEM_CHROMA_ENABLED": "true",
+  "CLAUDE_MEM_CHROMA_RUNTIME_DIR": "C:\\Users\\You\\AppData\\Local\\cmem-light\\chroma-runtime"
+}
+```
+
+Start the private worker without `--lifecycle-only` to exercise Chroma.
+Check `/api/chroma/status?deep=true` after at least one memory is indexed.
+A missing or invalid asset appears as a local setup error. Worker startup
+never invokes the preparation script. Keep `claude-mem.db` as the canonical
+data. The derived vector store is `$local\data\chroma-minilm-v1` and its
+checkpoint is `$local\data\chroma-minilm-v1-sync-state.json`.
 
 ## Register the local copy
 

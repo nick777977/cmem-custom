@@ -230,7 +230,18 @@ is `all-MiniLM-L6-v2`. The worker's
 [local Chroma gate](../../../src/services/sync/ChromaLocalRuntime.ts#L37)
 still refuses activation. Selection as the first candidate records priority,
 with compatibility and actual offline retrieval to be established in
-[CHROMA-07-LOCAL](../NEXT-SESSION.md).
+[CHROMA-07-LOCAL](../handoffs/CHROMA-07-LOCAL.md).
+
+### Step 7 runtime selection and store identity (2026-11-10)
+
+D9 is resolved for the verified Windows x64 stack. Use CPython 3.13.15,
+Chroma 1.5.9 and the pinned MiniLM CPU ONNX assets. The worker's historical
+`default` selector maps to one packaged encoder for writes and queries.
+Each collection carries the encoder identity. A separate derived store and
+checkpoint preserve the old index and ensure the worker backfills SQLite
+under the selected model. The old automatic v12.4.3 cleanup is retired at
+worker startup. The explicit maintenance command remains available.
+[Runtime evidence](../handoffs/CHROMA-07-LOCAL.md). D11 remains open.
 
 ## Proposed architecture, pending confirmation/implementation
 
@@ -241,7 +252,7 @@ with compatibility and actual offline retrieval to be established in
 | P03 | A28 implements private Codex identity `claude-mem@cmem-light-private` with fresh dedicated profile and data path | Full release identity and target portability remain in step 12 |
 | P04 | Superseded by A06: retain local viewer | Remove its hosted routes/actions and external assets while preserving local functionality |
 | P05 | Rejected for this release: introduce separate repository/worktree scopes | A06 preserves upstream identity, sharing and filtering behavior; scope redesign deferred |
-| P06 | Compile boundary A11; CHROMA-07/A17 removes uvx and refuses unverified runtime; approved Python/model activation pending | U1/D9 lack approved artifacts and local-only embedding/telemetry API. A path/config attestation cannot enable launch; actual runtime acceptance remains open |
+| P06 | Compile boundary A11; CHROMA-07-LOCAL activates the pinned Windows runtime with separate setup | Exact release and native egress acceptance remain with steps 10–12 |
 | P07 | Review existing capture and allowed per-profile payload before live inference | No new capture/redaction redesign is scheduled; any required policy-driven behavior change must be separately scoped |
 | P08 | Preserve schema compatibility; avoid destructive migration in initial release | Preserve existing identity semantics too; no identity migration is planned |
 | P09 | Historical recommendation A not adopted; owner selected and implemented C under A14 | No pending choice. Preserve [review](../handoffs/BUILD-02-TRUST.md) as evidence of alternatives/risks; latest result in [BUILD-02-TRUST-APPLY](../handoffs/BUILD-02-TRUST-APPLY.md) |

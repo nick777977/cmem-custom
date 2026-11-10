@@ -7,6 +7,42 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **CHROMA-07-LOCAL**, done-bounded. One coordinator on clean
+`feat/cmem-light-local` at `80a6b0868867ad017a19580a7fedb8e334cd647d`.
+Step 7 reserves:
+
+- `src/services/sync/{ChromaLocalRuntime,ChromaMcpManager,ChromaSync}.ts`,
+  `src/services/sync/ChromaSyncState.ts`, `src/services/worker-service.ts`,
+  `src/shared/{paths,SettingsDefaultsManager}.ts`,
+  `src/services/worker/http/routes/ChromaRoutes.ts`,
+  `plugin/scripts/chroma-local.py`, `scripts/prepare-local-chroma.ps1`,
+  `scripts/chroma-local-requirements.txt`.
+- `tests/services/sync/{chroma-local-runtime,chroma-mcp-manager-path,chroma-mcp-manager-ssl,chroma-sync-embedding-function}.test.ts`
+  plus `tests/services/sync/{chroma-mcp-manager-singleton,chroma-sync-watermarks,chroma-sync-state-atomic,chroma-sync-state-shape}.test.ts`
+  and `tests/integration/chroma-local-worker.mjs`. Scratch, venv, wheel/model
+  staging, synthetic home/data and copied worker under
+  `.scratch/enterprise-local/chroma-07-local/`.
+- Compile lane reserves `plugin/scripts/{context-generator,context-read-worker,mcp-server,server-service,transcript-watcher,worker-service}.cjs`
+  and each matching `.cjs.map`, `plugin/sqlite/SessionStore.js{,.map}`, and
+  `plugin/skills/request-progress/scripts/request-groups.mjs`. Fingerprint the
+  remaining outputs and review any additional delta before retaining it.
+- `docs/roadmap.md`, `docs/enterprise-local/{README,WINDOWS-LOCAL-SETUP,DEV-ENVIRONMENT,NEXT-SESSION}.md`,
+  `docs/enterprise-local/handoffs/CHROMA-07-LOCAL.md` and
+  `docs/enterprise-local/memory/{STATE,TASKS,DECISIONS,WORKLOG}.md`.
+
+Paired implementation `c476b5cd0`. Preparation, focused tests, guarded build,
+and copied-worker retrieval and restart are recorded in
+[CHROMA-07-LOCAL](../handoffs/CHROMA-07-LOCAL.md). Reservations released.
+[VIEWER-08-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+
+Compile review extended the reservation to
+`plugin/sqlite/observations/files.js{,.map}` for the inlined settings change.
+Copied-worker review extended the reservation to
+`src/services/worker/dependency-preflight.ts`, `src/shared/dependency-health.ts`
+and `tests/worker/dependency-preflight.test.ts` to replace obsolete uvx advice.
+Session close adds `docs/PATCH-SEQUENCE.md` and
+`docs/enterprise-local/SESSION-PROMPTS.md` to refresh the step 7 and next-task links.
+
 2026-11-10 completed **CHROMA-07-LOCAL handoff alignment** claim. One coordinator
 on clean `feat/cmem-light-local` at `b34f55189dfca2b1411bee89d72fbad9b38365c5`.
 Documentation scope: `docs/{roadmap,PATCH-SEQUENCE}.md`,

@@ -146,28 +146,23 @@ preserve pending events and all local data. See VALIDATION for CI/runtime scope.
 
 ## 7. Offline Chroma and model
 
-CHROMA-07 **source refusal done-bounded**, not operational activation. Source
-8fa997979, paired generated b8734d9b2; [evidence/rollback](enterprise-local/handoffs/CHROMA-07.md).
-The [CHROMA-07-LOCAL launch](enterprise-local/NEXT-SESSION.md) owns the active
-multilingual MiniLM priority, separate model preparation and bilingual offline check.
+CHROMA-07-LOCAL **done-bounded** for Windows x64, paired implementation
+`c476b5cd0`. [Preparation](enterprise-local/WINDOWS-LOCAL-SETUP.md#prepare-local-chroma)
+and [evidence and rollback](enterprise-local/handoffs/CHROMA-07-LOCAL.md).
 
 - [x] Remove manager uvx/package resolution, prewarm/cache deletion, certificate
   acquisition and HTTP launch; reject legacy remote/unknown modes and vendor embeddings.
-- [x] New absolute local executable setting, no discovery/repair/fallback. All candidates
-  refuse before store/client/process pending actual approved artifact/embedding/telemetry
-  API evidence. No config flag or self-attested manifest can unblock this boundary.
-- [x] 127 mocked/synthetic tests / 383 assertions PASS; one compile PASS; 16 inputs
-  unchanged and 15 generated outputs paired. Existing query/filter/typed selection,
-  checkpoint, writer-lock/mutation/teardown regressions checked with fixtures.
-- [ ] U1/D9: approved paths, resolved Python/native/model graph/hashes/licenses and
-  supported offline embedding/telemetry-disable API evidence. No artifacts supplied.
-- [ ] Actual cold-cache index/query/restart/telemetry/error/no-orphan evidence requires
-  separate approved assets/runtime permission. No real Python process ran. D11 open.
+- [x] Bind the prepared local Python and model files. Both directions use the
+  same encoder and explicit Chroma vectors. Resolve D9 for the tested stack.
+- [x] Verify missing and corrupt assets, synthetic indexing and bilingual search,
+  persistence across restart, and ordinary owned-process shutdown on Windows x64.
+- [ ] Exact release closure, native egress proof and transfer remain in steps 10–12.
+  D11 remains open.
 
-Full runtime/OS acceptance stays 11; closure/provenance/reproducibility stays 10/12.
-Graph/waves unchanged. Rollback G then S restores unsafe resolution/remote capability;
-retain SQLite/Chroma data, never delete the sync directory or real cache. Next independent
-increment is in current STATE/NEXT-SESSION; do not rerun completed TELEMETRY-04.
+Historical source refusal 8fa997979 and paired build b8734d9b2 recorded 127 tests,
+383 assertions and the compile boundary. [Historical evidence](enterprise-local/handoffs/CHROMA-07.md).
+The current rollback is the paired MiniLM commit and retains both derived stores
+and canonical SQLite.
 
 ## 8. Local API/viewer boundary; preserve memory behavior
 

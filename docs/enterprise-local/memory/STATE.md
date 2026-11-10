@@ -3,11 +3,14 @@
 Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 is current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 
-The owner selected local `paraphrase-multilingual-MiniLM-L12-v2` as the first
-step 7 candidate. Prepare model assets separately from the private fork install.
-Verify Russian-to-English retrieval and offline restart with synthetic records.
-Chroma activation and this model's compatibility are still pending.
-[Decision](DECISIONS.md#step-7-initial-model-and-setup-boundary-2026-11-10).
+The worker now indexes SQLite observations, summaries and prompts with
+`paraphrase-multilingual-MiniLM-L12-v2` in local persistent Chroma on Windows
+x64. The copied compiled worker retrieved the expected SQLite observation
+from a Russian paraphrase before and after restart. Missing and corrupt
+assets produced a setup error. The legacy store and checkpoint were preserved.
+Source and paired build `c476b5cd0`. D11 remains open.
+[Preparation](../WINDOWS-LOCAL-SETUP.md#prepare-local-chroma),
+[provenance and checks](../handoffs/CHROMA-07-LOCAL.md).
 
 The local worker now resolves refresh, copy, request and focus judges, and
 knowledge through explicit profiles. The separate request-progress judge
@@ -101,9 +104,7 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**CHROMA-07-LOCAL: verify local multilingual MiniLM with persistent Chroma.**
+**VIEWER-08-LOCAL: show effective profiles and Chroma health in the local viewer.**
 [NEXT-SESSION](../NEXT-SESSION.md) gives bounded source and validation scope.
-Then follow the [phase-one roadmap](../../roadmap.md) for local API/viewer and
-release acceptance. The local launcher evidence
-covers the tested private CLI configuration. Desktop integration, full memory
-acceptance and release packaging remain separate checks.
+Desktop integration, full memory acceptance and release packaging remain
+separate [roadmap](../../roadmap.md) checks.

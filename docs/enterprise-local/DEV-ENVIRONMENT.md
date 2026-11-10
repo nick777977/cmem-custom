@@ -411,7 +411,15 @@ push. Installed-tree/provenance/reproducibility and full memory/Chroma/Bedrock a
 remain unproved. Exact commands, hashes, generated delta, failures resolved and rollback:
 [HOSTED-03](handoffs/HOSTED-03.md). Next proposed task: CHROMA-07, no acquisition implied.
 
-## Current CHROMA-07 environment and results
+## CHROMA-07-LOCAL runtime on Windows x64
+
+The worker sidecar uses CPython 3.13.15 and a user-local venv. Chroma 1.5.9,
+MCP 1.26.0, ONNX Runtime 1.24.4 and Tokenizers 0.22.2 were verified together
+with the pinned multilingual MiniLM model. The Node/npm/Bun baseline stays
+22.23.4/10.9.9/1.4.4. [Provenance and validation](handoffs/CHROMA-07-LOCAL.md),
+[preparation](WINDOWS-LOCAL-SETUP.md#prepare-local-chroma).
+
+## Historical CHROMA-07 environment and results
 
 Source/tests 8fa9979797b5478ec8b36eebd6c52533112aec83; generated b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf.
 Entry 46c12bfe7 clean, selected branch. Existing Node 22.23.4/npm 10.9.9/Bun 1.4.4

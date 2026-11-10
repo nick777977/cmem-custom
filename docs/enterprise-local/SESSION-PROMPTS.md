@@ -1,7 +1,7 @@
 # Session prompts and bounded handoffs
 
-The [current handoff](NEXT-SESSION.md) is CHROMA-07-LOCAL after the bounded
-[PROFILE-06B](handoffs/PROFILE-06B.md) implementation.
+The [current handoff](NEXT-SESSION.md) is VIEWER-08-LOCAL after the bounded
+[CHROMA-07-LOCAL](handoffs/CHROMA-07-LOCAL.md) implementation.
 A27 permits required downloads and ordinary-user build/install/run.
 Claude Code/Bedrock/AWS SSO adapters are retained.
 Strong native OS sandbox and CI are deferred from phase-one prerequisites. Current
@@ -84,7 +84,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | CHROMA-07-LOCAL selects and verifies a local Chroma and embedding runtime |
+| `docs/enterprise-local/NEXT-SESSION.md` | VIEWER-08-LOCAL exposes Chroma and effective profile status |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Profile contract and implemented main worker configuration |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |
@@ -280,9 +280,9 @@ live modes проверять отдельными rows при доступе; B
 
 ### Session 07 — offline Chroma (step 7)
 
-Use the [CHROMA-07-LOCAL launch](NEXT-SESSION.md) with PATCH-SEQUENCE §7 and
-E08–E11. The current launch owns the model priority, separate preparation
-procedure and offline retrieval acceptance.
+Completed within the Windows x64 worker boundary. See
+[CHROMA-07-LOCAL](handoffs/CHROMA-07-LOCAL.md) for the selected runtime,
+separate preparation procedure and persistent retrieval acceptance.
 
 ### Session 08 — local API/viewer (step 8)
 

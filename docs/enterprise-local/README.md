@@ -52,11 +52,13 @@ See [HOSTED-03 evidence](handoffs/HOSTED-03.md) and [DEV-ENVIRONMENT.md](DEV-ENV
 limitations. Other attempted Node versions were unsuccessful for the user; this is
 not a complete compatibility matrix. Do not reinstall/update by default.
 
-Current CHROMA-07: source 8fa997979, generated b8734d9b2; 127 targeted tests /
+Historical CHROMA-07: source 8fa997979, generated b8734d9b2; 127 targeted tests /
 383 assertions and one compile PASS, 16 inputs unchanged. Acquisition/remote launch
 removed; **local Chroma activation blocked** pending approved Python/model/offline
 embedding/telemetry API evidence U1/D9. No actual Chroma acceptance.
-[Contract/limits](handoffs/CHROMA-07.md).
+[Contract/limits](handoffs/CHROMA-07.md). The subsequent
+[local MiniLM implementation](handoffs/CHROMA-07-LOCAL.md) replaces that refusal
+on the prepared Windows x64 runtime.
 
 TELEMETRY-04: source 0abd4180b / generated 6bb7c6995; E03/E04 Node telemetry
 removed, local diagnostics retained. 206 tests / 728 assertions and one compile PASS;
