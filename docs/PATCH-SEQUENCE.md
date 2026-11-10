@@ -280,8 +280,10 @@ preserve existing upstream/fork data and user install.
 [RUNTIME-10-LOCAL](enterprise-local/handoffs/RUNTIME-10-LOCAL.md) closed the
 private launcher admission slice. The standalone server and installer CLI
 are outside the staged package, the compiled worker refuses server delegation
-in worker mode, and the build checks the excluded sources. Exact provenance,
-SBOM and D12 admission are pending.
+in worker mode, and the build checks the excluded sources.
+[ARTIFACT-10-LOCAL](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md) pins the
+Windows x64 candidate and its separate inputs, records the CycloneDX SBOM and
+verifies the transferred bytes. Release provenance gaps and D12 remain open.
 
 Prove reachability before pruning. Keep SDK/Codex/API modules and dependencies required
 by any retained explicit profile/role or host integration. Remove unused remote-memory
@@ -306,7 +308,8 @@ final OS evidence remain 11. Rollback matched source/locks/artifacts, preserve a
 
 ## 11. Exact-artifact runtime, E2E and selected-profile acceptance
 
-Use VALIDATION V3-V6 against the exact step-10 candidate. Earlier checkpoint evidence
+Verify the [inventory receipt](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md#recheck-on-a-matching-windows-x64-host)
+before using VALIDATION V3-V6 against the exact step-10 candidate. Earlier checkpoint evidence
 must be repeated if relevant emitted bytes changed. Real compiled-process startup/MCP /
 worker/API/viewer/stop is required; unit mocks/typecheck/compile are not runtime proof.
 

@@ -1045,4 +1045,31 @@ viewer, imported a synthetic SQLite row and stopped cleanly after loopback
 sandbox approval. The row reopened and the worker PID exited. Zero provider
 or legacy server requests and no registration. Separate historical tests
 failed on unchanged expectations. [Exact evidence and rollback](../handoffs/RUNTIME-10-LOCAL.md).
-Reservations released. Next [ARTIFACT-10-LOCAL](../NEXT-SESSION.md).
+Reservations released. [ARTIFACT-10-LOCAL](../handoffs/ARTIFACT-10-LOCAL.md) followed.
+
+## 2026-11-10 — ARTIFACT-10-LOCAL inventory and SBOM
+
+One coordinator on clean `feat/cmem-light-local` at `cb9738a27`, using
+source and paired output `2bb4746b2`. Pinned 81 staged files and 30 directories,
+selected tools, 201 bundled npm package instances, 1,019 other installed
+build-environment instances and separate Chroma inputs. Scratch build replay
+matched 29 files. Instrumented Node socket attempts were zero.
+
+The transferred stage and raw copy passed exact byte and path verification.
+Five negative cases failed as expected. All 93 Chroma wheels and both model
+files matched. The inventory and CycloneDX SBOM cross-reference checks passed.
+[Receipts, gaps, D12 and rollback](../handoffs/ARTIFACT-10-LOCAL.md). D11 stays
+open. No runtime acceptance or inference was performed. All three approved
+turns remain unused. Reservations released. [VERIFY-11-LOCAL](../NEXT-SESSION.md)
+is ready for a fresh bounded launch.
+
+### ARTIFACT-10-LOCAL closeout
+
+Rechecked branch, HEAD and the pending task paths. The Windows x64 copy
+fixture passed again with 81 files and five expected refusals. Ran the
+documented staging-only and verification commands from the checkout root in
+a fresh scratch path. Its receipt verified 81 candidate files, 93 wheels
+and two model files. No application runtime, registration or inference was
+used. Clarified that D11 and D12 do not block local V3/V4 and recorded the
+step 11 launch in [NEXT-SESSION](../NEXT-SESSION.md). The closeout is included
+in the local artifact commit.

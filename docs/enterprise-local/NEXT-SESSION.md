@@ -1,26 +1,32 @@
-# Next implementation — ARTIFACT-10-LOCAL
+# Next implementation — VERIFY-11-LOCAL
 
-Continue step 10 on `feat/cmem-light-local` with one coordinator. Recheck
-branch, status and HEAD. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md),
-[RUNTIME-10-LOCAL](handoffs/RUNTIME-10-LOCAL.md), step 10 of the
-[patch sequence](../PATCH-SEQUENCE.md#10-retained-runtime-closure-artifact-and-fork-ci)
-and the [Chroma inputs](handoffs/CHROMA-07-LOCAL.md).
+Continue on `feat/cmem-light-local` with one coordinator. Check branch, status
+and HEAD. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md), the
+[artifact handoff](handoffs/ARTIFACT-10-LOCAL.md), [step 11](../PATCH-SEQUENCE.md#11-exact-artifact-runtime-e2e-and-selected-profile-acceptance)
+and [V3/V4](VALIDATION.md#v4-real-local-workflow-without-a-cloud-account).
 
-Produce a verifiable artifact inventory and SBOM for the exact private
-Windows x64 distribution. Start from the staging allowlist and paired build.
-Separate staged bytes, build-only dependencies, bundled libraries, selected
-user-level executables and the independently prepared Chroma wheels/model.
-Record SHA-256, version, source and license for admitted inputs and outputs.
-List missing provenance explicitly. Keep the standalone server, legacy
-installer and other excluded entrypoints outside the candidate.
+Under a fresh, explicitly scoped launch, verify the inventory receipt for the
+exact staged Windows x64 candidate and independent Chroma inputs before opening
+the candidate. Reuse the prepared wheelhouse and model and the pinned
+executables. Use the [staging-only procedure](handoffs/ARTIFACT-10-LOCAL.md#recheck-on-a-matching-windows-x64-host).
+The verifier accepts a fresh destination through its pinned binding templates.
+An unexpected payload, prerequisite or executable hash requires renewed
+artifact review before runtime checks. Reserve fixture paths and use disposable
+home, config, data and loopback ports.
 
-Reserve exact paths before edits. Use reviewed existing inputs and task-owned
-scratch under a fresh launch. Verify that a matching copied candidate matches
-the inventory byte for byte and that out-of-lane files are rejected or excluded.
-Record D12 inputs still requiring approval. This task prepares step 11's
-exact-artifact verification and leaves D11 open.
+Exercise the retained private entrypoints, then use an explicit loopback LLM
+profile and real local Chroma. Check synthetic capture, observation and summary
+storage, SQLite and semantic retrieval, restart, viewer, missing/corrupt input
+refusal, and bounded process and port cleanup. Preserve project/worktree behavior.
+Record process and egress observations at their actual coverage level. Keep V5
+provider rows separate from loopback results and retain D11 as open.
 
-Use the existing user-level Windows toolchain. This handoff grants no
-registration, admin/UAC, CI dispatch, publication, push, external inference,
-real state or additional agents. All three approved `gpt-6-luna` turns remain
-unused. Prove retry disablement on the exact native route before a live turn.
+The local loopback check can proceed without a D11 degraded-mode decision or
+D12 CI approval. D12 gates CI provisioning, execution and hosted artifacts.
+Release provenance and redistribution remain step 12 work.
+
+This handoff grants no registration, live inference, real state, admin/UAC, CI,
+push, publication or agents. Obtain a new bounded launch for registration or
+runtime work where required. All three approved `gpt-6-luna` turns remain
+unused. Verify retry disablement on the exact worker, queue and native
+app-server route before a live turn. D12 remains blocked.

@@ -438,6 +438,16 @@ fixture and did not grant Windows elevation. The fixture used disposable
 config and data and left the Codex home empty.
 [Results, limits and emitted hashes](handoffs/RUNTIME-10-LOCAL.md).
 
+## ARTIFACT-10-LOCAL inventory replay on Windows x64
+
+Version probes used direct existing Node 22.23.4, npm 10.9.9, Bun 1.4.4,
+Codex CLI 0.167.0-alpha.3.2 and CPython 3.13.15 with disposable environment
+paths. An instrumented scratch compile reused the two installed npm trees.
+The matching Vite replay kept the original source scan base and wrote its
+cache and outputs in scratch. Staging and verification used a synthetic root
+and the actual selected executable hashes. The candidate, wheelhouse and model
+checks performed file I/O only. [Hashes and limits](handoffs/ARTIFACT-10-LOCAL.md).
+
 ## Historical CHROMA-07 environment and results
 
 Source/tests 8fa9979797b5478ec8b36eebd6c52533112aec83; generated b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf.

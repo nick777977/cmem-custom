@@ -3,6 +3,15 @@
 Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 is current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 
+The private Windows x64 candidate has a byte-level inventory and CycloneDX
+SBOM at the paired `2bb4746b2` build. The transferred stage and its raw copy
+matched across all 81 files. The verifier checked the separate 93-wheel
+Chroma input and two model files. Release provenance gaps and D12 CI admission
+remain open. [Inventory, verification and limits](../handoffs/ARTIFACT-10-LOCAL.md).
+The closeout reran the copy fixture and tested the documented staging-only
+procedure for a fresh candidate. D11 and D12 do not block step 11's local
+loopback verification with real Chroma.
+
 The private Windows installer stages the reviewed local worker, MCP, context
 reader and Chroma adapter with its selected assets and skills. Worker mode
 refuses standalone server delegation. The guarded build verifies that the
@@ -121,7 +130,8 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**ARTIFACT-10-LOCAL: enumerate and pin the exact private Windows distribution.**
-[NEXT-SESSION](../NEXT-SESSION.md) gives the artifact and SBOM scope.
-Desktop integration, full memory acceptance and release packaging remain
-separate [roadmap](../../roadmap.md) checks.
+**VERIFY-11-LOCAL: exercise the verified Windows x64 candidate with a loopback
+LLM and real local Chroma.** [NEXT-SESSION](../NEXT-SESSION.md) gives the bounded
+runtime scope. D11 remains open. Native retry disablement gates the first live
+turn. Desktop integration and release packaging remain separate
+[roadmap](../../roadmap.md) checks.

@@ -92,4 +92,5 @@ loopback check leaves external provider behavior and OS-wide egress unverified.
 To roll back, stop the private worker and revert `2bb4746b2` as a unit with
 its emitted files. Re-stage the intended version in a separate root using
 the setup runbook. Keep the existing data and prepared Chroma assets.
-The next task is [ARTIFACT-10-LOCAL](../NEXT-SESSION.md).
+The subsequent [ARTIFACT-10-LOCAL](ARTIFACT-10-LOCAL.md) slice pins and
+verifies the private Windows x64 distribution and its independent inputs.

@@ -7,6 +7,38 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **ARTIFACT-10-LOCAL**, done-bounded. One coordinator on clean
+`feat/cmem-light-local` at `cb9738a2778860b66ed604c887b243231d39935a`.
+
+- Verification: `scripts/enterprise-local/verify-windows-artifact.mjs`.
+- Deliverables: `docs/enterprise-local/artifacts/windows-x64-inventory.json`,
+  `docs/enterprise-local/artifacts/windows-x64-sbom.json`, and
+  `docs/enterprise-local/handoffs/ARTIFACT-10-LOCAL.md`.
+- Closure: `docs/roadmap.md`, `docs/PATCH-SEQUENCE.md`,
+  `docs/enterprise-local/{NEXT-SESSION,DEV-ENVIRONMENT}.md`, and
+  `docs/enterprise-local/memory/{STATE,TASKS,WORKLOG}.md`.
+- Closure link alignment also reserves `docs/enterprise-local/SESSION-PROMPTS.md`
+  and `docs/enterprise-local/handoffs/RUNTIME-10-LOCAL.md`.
+- Disposable copies, build attribution probes, wheel metadata, and comparison
+  receipts: `.scratch/enterprise-local/artifact-10-local/`. Read existing paired
+  outputs, dependencies and prepared Chroma input files. Any attribution replay
+  writes only to task scratch. No application, lock or tracked build-output edits.
+
+The 81-file transferred stage and raw copy matched the inventory. The verifier
+rejected out-of-lane and altered candidates. [Evidence and provenance gaps](../handoffs/ARTIFACT-10-LOCAL.md).
+Reservations released. [VERIFY-11-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+
+2026-11-10 **ARTIFACT-10-LOCAL closeout**, done. One coordinator at
+`cb9738a27` on the same branch. The only incoming changes are this task's
+uncommitted deliverables and handoff updates. Reuse the existing synthetic
+copy fixture in `.scratch/enterprise-local/artifact-10-local/`. Reserve
+`docs/enterprise-local/handoffs/ARTIFACT-10-LOCAL.md`,
+`docs/enterprise-local/NEXT-SESSION.md`, and
+`docs/enterprise-local/memory/{STATE,TASKS,WORKLOG}.md` for closeout edits.
+The fixture rerun and the documented fresh staging procedure passed. All
+reservations released. The local artifact commit includes the verifier,
+inventory, SBOM and handoff. Step 11 remains ready-unclaimed.
+
 2026-11-10 **RUNTIME-10-LOCAL**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `d26953ec07659fc52c88ac772396fef8514c9610`.
 
@@ -26,7 +58,7 @@ This board does not grant permission or duplicate the dependency graph.
 Source, focused tests and paired worker outputs in `2bb4746b2`. The copied
 private launcher passed the synthetic lifecycle with zero provider or legacy
 server requests. [Evidence and separate legacy test failures](../handoffs/RUNTIME-10-LOCAL.md).
-Reservations released. [ARTIFACT-10-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+Reservations released. [ARTIFACT-10-LOCAL](../handoffs/ARTIFACT-10-LOCAL.md) followed.
 
 2026-11-10 **VIEWER-08-LOCAL documentation clarification**, one coordinator on
 clean `feat/cmem-light-local` at `1a4497f2fb3d1a36b340df142673b886844c2daa`.

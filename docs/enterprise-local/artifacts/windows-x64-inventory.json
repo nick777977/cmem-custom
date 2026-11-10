@@ -1,0 +1,2024 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "branch": "feat/cmem-light-local",
+    "checkout": "cb9738a2778860b66ed604c887b243231d39935a",
+    "pairedBuild": "2bb4746b2d1ab20f06501b80358cbc6ecbe490d9",
+    "version": "15.5.0",
+    "platform": "win32-x64",
+    "repository": "private checkout",
+    "license": "Apache-2.0"
+  },
+  "files": [
+    {"path":"catalog/.agents/plugins/marketplace.json","kind":"generated","bytes":388,"sha256":"f1d095662bf6951056993be3d0dcbd62e7c76a606839f90f686d01c2b60afc7d","version":"15.5.0","license":"Apache-2.0","source":["scripts/enterprise-local/codex-local.mjs"]},
+    {"path":"catalog/plugin/.codex-plugin/plugin.json","kind":"generated","bytes":1542,"sha256":"a93566ab9a19aa6a3adf35117eed76f37d6bdbb3d4c2d7cd285c6d80f93de1eb","version":"15.5.0","license":"Apache-2.0","source":["scripts/enterprise-local/codex-local.mjs","plugin/.codex-plugin/plugin.json"]},
+    {"path":"catalog/plugin/.mcp.json","kind":"destination-bound","bytes":179,"sha256":"6efccbbf5c15ce8b96438f0dd7cb3010bf0c04c5324ebbc7fd4dcd42b6ee7005","referenceBytes":371,"referenceSha256":"918bfe8fce9ba6ede0f4642434af3a66f5d3bf684eecacb29e4861301319e79b","version":"15.5.0","license":"Apache-2.0","source":["scripts/enterprise-local/codex-local.mjs"],"template":"{\n  \"mcpServers\": {\n    \"mcp-search\": {\n      \"type\": \"stdio\",\n      \"command\": \"@@NODE@@\",\n      \"args\": [\n        \"@@ROOT@@\\\\codex-local.mjs\",\n        \"mcp\"\n      ]\n    }\n  }\n}\n"},
+    {"path":"catalog/plugin/hooks/codex-hooks.json","kind":"destination-bound","bytes":2192,"sha256":"cc09559eba242f1c6ad7a09df1237f8653564aa3f0492791dfda9b489b9ccda2","referenceBytes":3536,"referenceSha256":"26168c0c2be2cfee50939f7cefcb6b5d4abf7cf8edc0e930d21d2a08dc714859","version":"15.5.0","license":"Apache-2.0","source":["scripts/enterprise-local/codex-local.mjs","plugin/hooks/codex-hooks.json"],"template":"{\n  \"hooks\": {\n    \"SessionStart\": [\n      {\n        \"matcher\": \"startup|resume|clear|compact\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"timeout\": 20,\n            \"command\": \"exit 1\",\n            \"commandWindows\": \"\\\"@@NODE@@\\\" \\\"@@ROOT@@\\\\codex-local.mjs\\\" hook context\"\n          }\n        ]\n      }\n    ],\n    \"UserPromptSubmit\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"timeout\": 20,\n            \"command\": \"exit 1\",\n            \"commandWindows\": \"\\\"@@NODE@@\\\" \\\"@@ROOT@@\\\\codex-local.mjs\\\" hook session-init\"\n          }\n        ]\n      }\n    ],\n    \"PreToolUse\": [\n      {\n        \"matcher\": \"^Bash$|^mcp__.+__(read|view|cat)(_file|_files)?$|^Grep$|^Glob$|^memory_search$|^memory$|^mcp__.+__memory_search$\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"timeout\": 30,\n            \"command\": \"exit 1\",\n            \"commandWindows\": \"\\\"@@NODE@@\\\" \\\"@@ROOT@@\\\\codex-local.mjs\\\" hook file-context\"\n          }\n        ]\n      }\n    ],\n    \"PostToolUse\": [\n      {\n        \"matcher\": \".*\",\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"timeout\": 5,\n            \"command\": \"exit 1\",\n            \"commandWindows\": \"\\\"@@NODE@@\\\" \\\"@@ROOT@@\\\\codex-local.mjs\\\" hook observation\"\n          }\n        ]\n      }\n    ],\n    \"Stop\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"timeout\": 60,\n            \"command\": \"exit 1\",\n            \"commandWindows\": \"\\\"@@NODE@@\\\" \\\"@@ROOT@@\\\\codex-local.mjs\\\" hook summarize\"\n          }\n        ]\n      }\n    ],\n    \"PostCompact\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"timeout\": 20,\n            \"command\": \"exit 1\",\n            \"commandWindows\": \"\\\"@@NODE@@\\\" \\\"@@ROOT@@\\\\codex-local.mjs\\\" hook post-compact\"\n          }\n        ]\n      }\n    ],\n    \"SubagentStart\": [\n      {\n        \"hooks\": [\n          {\n            \"type\": \"command\",\n            \"timeout\": 20,\n            \"command\": \"exit 1\",\n            \"commandWindows\": \"\\\"@@NODE@@\\\" \\\"@@ROOT@@\\\\codex-local.mjs\\\" hook subagent-context\"\n          }\n        ]\n      }\n    ]\n  }\n}\n"},
+    {"path":"catalog/plugin/modes/code--ar.json","kind":"copied","bytes":3286,"sha256":"7d5e7b90395e446e43f6107c153af9f1a61647bef826cd07a465e65167dad354","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--ar.json"},
+    {"path":"catalog/plugin/modes/code--bn.json","kind":"copied","bytes":4080,"sha256":"a565481eaf4e88b65d921f56f3258615302832d793ddc632a9530719d596e3ac","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--bn.json"},
+    {"path":"catalog/plugin/modes/code--chill.json","kind":"copied","bytes":2026,"sha256":"69fb26c9b028c136fd62756b91248f64d9e2a1041d45fdd816ed21b3bf63e8ea","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--chill.json"},
+    {"path":"catalog/plugin/modes/code--cs.json","kind":"copied","bytes":3022,"sha256":"77bc75997d77eb4c7a0ab9ea6dbc92cbd9e8b28f0e72a251ed6737e8a96f42a1","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--cs.json"},
+    {"path":"catalog/plugin/modes/code--da.json","kind":"copied","bytes":3062,"sha256":"e8daa7b67363b1ea554356c018d7e2b829b5ab9ba6d2db196b1ee1edb1049949","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--da.json"},
+    {"path":"catalog/plugin/modes/code--de.json","kind":"copied","bytes":3069,"sha256":"569e489204da64e6ccbd9ae104207ae2e90f9ec69b033036c842e341b87ee816","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--de.json"},
+    {"path":"catalog/plugin/modes/code--el.json","kind":"copied","bytes":3593,"sha256":"b55a06465911cb1b330224fe536cc4285351494292fb11728f7ec7c4295bd575","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--el.json"},
+    {"path":"catalog/plugin/modes/code--es.json","kind":"copied","bytes":3075,"sha256":"71c1c39f4bd82d25a408b690998c5a97ae8d525e8f0f522e75bf681e770b34f3","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--es.json"},
+    {"path":"catalog/plugin/modes/code--fi.json","kind":"copied","bytes":3016,"sha256":"2f1c14b7001b65001e37280d7dbb58025d4cded6e0a995890024e988c9a0a56e","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--fi.json"},
+    {"path":"catalog/plugin/modes/code--fr.json","kind":"copied","bytes":3156,"sha256":"31b01e1581ebfc6b2530fe9d84d262097cfd0112840a5cb2308bd9149812d372","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--fr.json"},
+    {"path":"catalog/plugin/modes/code--he.json","kind":"copied","bytes":3129,"sha256":"a53930d092e346d5482f4139a42c51abea0756618b29c310088acdc4aca43809","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--he.json"},
+    {"path":"catalog/plugin/modes/code--hi.json","kind":"copied","bytes":3968,"sha256":"9037287139d780d45e1c2f8c28761ec2a7a32da888c919cc789d5cd8de56008f","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--hi.json"},
+    {"path":"catalog/plugin/modes/code--hu.json","kind":"copied","bytes":3053,"sha256":"aaf4431a02b60822d058e9c797073c6b530a8d783c5832aa40df83bb8c0dccb1","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--hu.json"},
+    {"path":"catalog/plugin/modes/code--id.json","kind":"copied","bytes":3111,"sha256":"f61d00ad4d3ebc6cd45bacdb13101b75af3a6bbfd568c497dcc8e96890e1b743","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--id.json"},
+    {"path":"catalog/plugin/modes/code--it.json","kind":"copied","bytes":3071,"sha256":"d0d2bb7374398e441a20cfdeff1eabfbc117b7a1cd2492b949ca732c4346d596","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--it.json"},
+    {"path":"catalog/plugin/modes/code--ja.json","kind":"copied","bytes":3193,"sha256":"9ce449432433d6a896aeb03a3605652bbc29fa0be7f34946734e10982c5247ac","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--ja.json"},
+    {"path":"catalog/plugin/modes/code--ko.json","kind":"copied","bytes":3112,"sha256":"5091c9066de07263ef6a5dc826407a0a05d1ad6fefb8d3a1154bcbcba5de7d22","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--ko.json"},
+    {"path":"catalog/plugin/modes/code--nl.json","kind":"copied","bytes":3036,"sha256":"39ba73790eb7b06ad7e7347d895ac0622d5dba4826c645d59613af43b696556b","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--nl.json"},
+    {"path":"catalog/plugin/modes/code--no.json","kind":"copied","bytes":3030,"sha256":"19ea566f4221b3dc2c45c391306cfb249c8bd05ccb9370761d71c0c3ecd24093","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--no.json"},
+    {"path":"catalog/plugin/modes/code--pl.json","kind":"copied","bytes":3047,"sha256":"8d6b812f849ee35d0f1cc9c520b8eec8ff8dec32b73bc0fa199731b60f3c5c22","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--pl.json"},
+    {"path":"catalog/plugin/modes/code--pt-br.json","kind":"copied","bytes":3081,"sha256":"7d6dd23ae78c47aacee83bb52372fc57953f536a15311be803661e70a92813fa","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--pt-br.json"},
+    {"path":"catalog/plugin/modes/code--ro.json","kind":"copied","bytes":3075,"sha256":"278c1079304e3882230e60c46903f70b60d5508e3d0bada7eb47a7c99c06956f","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--ro.json"},
+    {"path":"catalog/plugin/modes/code--ru.json","kind":"copied","bytes":3560,"sha256":"8c5059c832147a9121930622a7c75e20de0e540a60d68ff4ceda8b1c7d082625","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--ru.json"},
+    {"path":"catalog/plugin/modes/code--sv.json","kind":"copied","bytes":3024,"sha256":"1aa060765191bcfff35ef8546f44fba89a65eeb61d2797deba7e616afa14d058","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--sv.json"},
+    {"path":"catalog/plugin/modes/code--th.json","kind":"copied","bytes":4016,"sha256":"bb0b6240730908506ad8a51e90174eb45cd5c6142f112d32fa2088e8f544454f","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--th.json"},
+    {"path":"catalog/plugin/modes/code--tr.json","kind":"copied","bytes":3031,"sha256":"6a8fa5e091967927e88276665daf46501aec8922da9fd2da20b5784fbad70ede","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--tr.json"},
+    {"path":"catalog/plugin/modes/code--uk.json","kind":"copied","bytes":3522,"sha256":"877f861d5c23fda59f8da4573bd237dbdd5292d165c9a7401229cf27f116d9b9","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--uk.json"},
+    {"path":"catalog/plugin/modes/code--ur.json","kind":"copied","bytes":3379,"sha256":"9a7ba954bef289c2165198f580f68290d64f4bacac71f849e5f36cebce189c1e","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--ur.json"},
+    {"path":"catalog/plugin/modes/code--vi.json","kind":"copied","bytes":3314,"sha256":"41eaf41d2842b43d6980452eaa711b6dae91388cfec3245b3ce786fbaca44bd9","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--vi.json"},
+    {"path":"catalog/plugin/modes/code--zh.json","kind":"copied","bytes":2904,"sha256":"e1adf63a74cb960f0dfa20d4c496774fbd544e0aa93c1d8c6f79e99986dfeb86","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code--zh.json"},
+    {"path":"catalog/plugin/modes/code.json","kind":"copied","bytes":12297,"sha256":"dd3ca1d042efba9902e6c5b607eefce6f0fe83aa7810436063d5b97a2ebf0b0d","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/code.json"},
+    {"path":"catalog/plugin/modes/email-investigation.json","kind":"copied","bytes":11255,"sha256":"585908ecc22847c46fe65878846f7c28b8b6d0f4845bc89b8ff8438c617a39c7","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/email-investigation.json"},
+    {"path":"catalog/plugin/modes/law-study--chill.json","kind":"copied","bytes":1371,"sha256":"7a7baeef2effd38dd95d894ebe13897fd2ff774aca03e01b5ab718ad71e9491a","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/law-study--chill.json"},
+    {"path":"catalog/plugin/modes/law-study-CLAUDE.md","kind":"copied","bytes":3325,"sha256":"b01c0aa4a1da1f64f40b2051abb21f158cdcf269c5b0e680134b7c6627ee974f","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/law-study-CLAUDE.md"},
+    {"path":"catalog/plugin/modes/law-study.json","kind":"copied","bytes":12474,"sha256":"553783941a63beac94875c3ed2d6adbd125a0178384ba221b59d275694feb526","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/law-study.json"},
+    {"path":"catalog/plugin/modes/meme-tokens.json","kind":"copied","bytes":13121,"sha256":"517fb47bdb272a28811ac22501de8be59ce9c0e46560acdba91fa7a17f7b9b39","version":"15.5.0","license":"Apache-2.0","source":"plugin/modes/meme-tokens.json"},
+    {"path":"catalog/plugin/scripts/chroma-local.py","kind":"copied","bytes":8282,"sha256":"f2500a72d736c6a2fdadd55fc3cd792659f4f9e343c7885ab68df036e4f63bf8","version":"15.5.0","license":"Apache-2.0","source":"plugin/scripts/chroma-local.py"},
+    {"path":"catalog/plugin/scripts/context-read-worker.cjs","kind":"copied","bytes":150692,"sha256":"391469a08ca0802b57d042af3368541edfc93f8100aa931bfdb7cead8e1639fb","version":"15.5.0","license":"Apache-2.0","source":"plugin/scripts/context-read-worker.cjs"},
+    {"path":"catalog/plugin/scripts/mcp-server.cjs","kind":"copied","bytes":869061,"sha256":"d829f9386b10094fd47974d2d66b2d8c4e9f1349e5d84d2e04c65af5e678cfc5","version":"15.5.0","license":"Apache-2.0","source":"plugin/scripts/mcp-server.cjs"},
+    {"path":"catalog/plugin/scripts/worker-service.cjs","kind":"copied","bytes":4005925,"sha256":"6cd629fd7b21374387e8a664ec0c8dfb1da4aa3d25e3d3f234575ca9be5781e7","version":"15.5.0","license":"Apache-2.0","source":"plugin/scripts/worker-service.cjs"},
+    {"path":"catalog/plugin/skills/knowledge-agent/SKILL.md","kind":"copied","bytes":2488,"sha256":"538de006ebe2619b8a47dd47b09c5afa51ccbe0f806f5fd17ab348609eef6fd1","version":"15.5.0","license":"Apache-2.0","source":"plugin/skills/knowledge-agent/SKILL.md"},
+    {"path":"catalog/plugin/skills/mem-search/SKILL.md","kind":"copied","bytes":7923,"sha256":"29dce09590fda3f3b7de61d617cdc7c22730863576dab8c5795782870079d682","version":"15.5.0","license":"Apache-2.0","source":"plugin/skills/mem-search/SKILL.md"},
+    {"path":"catalog/plugin/skills/owner-goals/SKILL.md","kind":"copied","bytes":10997,"sha256":"b96927c6a0dbc8b8066a34a1f94734de79a7f39544f96105b3050227a1bfb546","version":"15.5.0","license":"Apache-2.0","source":"plugin/skills/owner-goals/SKILL.md"},
+    {"path":"catalog/plugin/skills/owner-goals/scripts/export_owner_prompts.py","kind":"copied","bytes":15662,"sha256":"6935820b3e53e14a591940a9aea044fca229f782a5bca8faeb21ada83c322300","version":"15.5.0","license":"Apache-2.0","source":"plugin/skills/owner-goals/scripts/export_owner_prompts.py"},
+    {"path":"catalog/plugin/skills/owner-goals/scripts/save_goals.py","kind":"copied","bytes":26268,"sha256":"487f602aa4303117fa044bdf5d299d92e24b2ac043a8731ad5cd413417f225e2","version":"15.5.0","license":"Apache-2.0","source":"plugin/skills/owner-goals/scripts/save_goals.py"},
+    {"path":"catalog/plugin/skills/request-progress/SKILL.md","kind":"copied","bytes":18031,"sha256":"789a5a49cd2df9ee503544603389e786355098c809d0e5b25d2701527cfce2d5","version":"15.5.0","license":"Apache-2.0","source":"plugin/skills/request-progress/SKILL.md"},
+    {"path":"catalog/plugin/skills/request-progress/scripts/request-groups.mjs","kind":"copied","bytes":198818,"sha256":"b72f06e68c6b894146bb7f91581acefed03b1dfc4c29967d26dc0e9c3fb6f219","version":"15.5.0","license":"Apache-2.0","source":"plugin/skills/request-progress/scripts/request-groups.mjs"},
+    {"path":"catalog/plugin/skills/smart-explore/SKILL.md","kind":"copied","bytes":8580,"sha256":"daa83c762252e294fc0168165c0f5052007c97dabe93e13a23d6b9a73da3216c","version":"15.5.0","license":"Apache-2.0","source":"plugin/skills/smart-explore/SKILL.md"},
+    {"path":"catalog/plugin/sqlite/SessionStore.js","kind":"copied","bytes":191083,"sha256":"07f680471c61ded03e6fa25db46a56a135a0d202239e7a828ed8d0ebfd109530","version":"15.5.0","license":"Apache-2.0","source":"plugin/sqlite/SessionStore.js"},
+    {"path":"catalog/plugin/sqlite/SessionStore.js.map","kind":"copied","bytes":158481,"sha256":"37c0f7e2846923a5cf567e3bcb0e12aa5a71c1fb511773e9311c1259a801a578","version":"15.5.0","license":"Apache-2.0","source":"plugin/sqlite/SessionStore.js.map"},
+    {"path":"catalog/plugin/sqlite/observations/files.js","kind":"copied","bytes":9362,"sha256":"9b11878b7fcadefa48ebcf9b433b361f546594d00f76a5d6a78817901ee87dcf","version":"15.5.0","license":"Apache-2.0","source":"plugin/sqlite/observations/files.js"},
+    {"path":"catalog/plugin/sqlite/observations/files.js.map","kind":"copied","bytes":12453,"sha256":"ad2f801164e1b48e5a0577ae5e94116932438d6fb1afe7827de3e5ce4c789fc8","version":"15.5.0","license":"Apache-2.0","source":"plugin/sqlite/observations/files.js.map"},
+    {"path":"catalog/plugin/ui/assets/fonts/monaspace-radon-var.woff","kind":"copied","bytes":563460,"sha256":"53f10af290acc1b92a86fe0bdcee5ba30bc5bd59f8520dc4f3b8b7e48a5e6331","version":null,"license":"OFL-1.1 (upstream family)","source":"plugin/ui/assets/fonts/monaspace-radon-var.woff","upstream":"https://github.com/githubnext/monaspace","provenance":"Exact upstream release and font license notice unavailable"},
+    {"path":"catalog/plugin/ui/assets/fonts/monaspace-radon-var.woff2","kind":"copied","bytes":426972,"sha256":"e39d928ee130a11fe6e026365873c9ba65667ce7e6cc536c056ecd28c2abff17","version":null,"license":"OFL-1.1 (upstream family)","source":"plugin/ui/assets/fonts/monaspace-radon-var.woff2","upstream":"https://github.com/githubnext/monaspace","provenance":"Exact upstream release and font license notice unavailable"},
+    {"path":"catalog/plugin/ui/claude-mem-logo-for-dark-mode.webp","kind":"copied","bytes":79780,"sha256":"3023678274b47ec5c92e6d9f75c0fa0adfbb7ee2b06228c83b1a2b7a1833cef5","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/claude-mem-logo-for-dark-mode.webp"},
+    {"path":"catalog/plugin/ui/claude-mem-logo-stylized.png","kind":"copied","bytes":132855,"sha256":"9e3edf3a9ae37585228a009da9c456336664e15153e0a67d65d0d7cf11a29117","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/claude-mem-logo-stylized.png"},
+    {"path":"catalog/plugin/ui/claude-mem-logomark.webp","kind":"copied","bytes":42656,"sha256":"492326602690178cfdd17715f54d0002812e1753e1f7f3d8e49cfb1a9c66a3d7","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/claude-mem-logomark.webp"},
+    {"path":"catalog/plugin/ui/icon-thick-completed.svg","kind":"copied","bytes":4777,"sha256":"8083cb2c8fbbfe8e2ef939515819db9ca1b6bd381212f638664dc0d80f4d10c1","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/icon-thick-completed.svg"},
+    {"path":"catalog/plugin/ui/icon-thick-investigated.svg","kind":"copied","bytes":3953,"sha256":"ee16883185a2858e3a3caf83307b4e712979ead409f838fe29ff6a822d855709","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/icon-thick-investigated.svg"},
+    {"path":"catalog/plugin/ui/icon-thick-learned.svg","kind":"copied","bytes":5339,"sha256":"4adf399f8ff82f4c142533cb2dcb0532ceea5a8c9eb7c240dcc2a7e67fc4e5b4","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/icon-thick-learned.svg"},
+    {"path":"catalog/plugin/ui/icon-thick-next-steps.svg","kind":"copied","bytes":3830,"sha256":"e6fc09109596f4a0eb9321ebfad5cd45487f4b3f3d83504b9445ce6f8634833a","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/icon-thick-next-steps.svg"},
+    {"path":"catalog/plugin/ui/icon-thick-notes.svg","kind":"copied","bytes":939,"sha256":"7f099526d67c53a588a8cc7748df5aaea331830a60b8fda488e8b7ee552fcd28","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/icon-thick-notes.svg"},
+    {"path":"catalog/plugin/ui/tv.html","kind":"copied","bytes":15637,"sha256":"7d0c9592d609299b94d992c566be6fd9be2069a9f99ee6a78b73d255e7def401","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/tv.html"},
+    {"path":"catalog/plugin/ui/viewer-bundle.js","kind":"copied","bytes":412796,"sha256":"f00b469771ac650d13f828ab6a0431d151c5d2229b3d22955d5407a5cc6a99f8","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/viewer-bundle.js"},
+    {"path":"catalog/plugin/ui/viewer.html","kind":"copied","bytes":83477,"sha256":"42786ccdee25aa3ef97f3dae518b38614b13ce7a5b4a5dbb7cd643922d212036","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/viewer.html"},
+    {"path":"catalog/plugin/ui/work-view/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2","kind":"copied","bytes":7420,"sha256":"2317fa4bb293c9c0b110e18315d529235c47a0ddd3338cea3d8c7955e927899e","version":"5.3.0","license":"OFL-1.1","source":"plugin/ui/work-view/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2","upstream":"https://www.npmjs.com/package/@fontsource-variable/geist"},
+    {"path":"catalog/plugin/ui/work-view/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2","kind":"copied","bytes":15084,"sha256":"6894439694946a589d157ece003086960a6a4013d74a813dab7602efdb3d8c09","version":"5.3.0","license":"OFL-1.1","source":"plugin/ui/work-view/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2","upstream":"https://www.npmjs.com/package/@fontsource-variable/geist"},
+    {"path":"catalog/plugin/ui/work-view/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2","kind":"copied","bytes":16512,"sha256":"824f485b5d26e2f2da3c2b236132ece1bc8e4e43373452950bb0e40548b4313f","version":"5.3.0","license":"OFL-1.1","source":"plugin/ui/work-view/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2","upstream":"https://www.npmjs.com/package/@fontsource-variable/geist"},
+    {"path":"catalog/plugin/ui/work-view/assets/geist-latin-wght-normal-BgDaEnEv.woff2","kind":"copied","bytes":29400,"sha256":"19f9c92546aa300c312235e3125af1b81394d8db9a4bc4a425cd5b641d2d54e1","version":"5.3.0","license":"OFL-1.1","source":"plugin/ui/work-view/assets/geist-latin-wght-normal-BgDaEnEv.woff2","upstream":"https://www.npmjs.com/package/@fontsource-variable/geist"},
+    {"path":"catalog/plugin/ui/work-view/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2","kind":"copied","bytes":8004,"sha256":"8fa40e5d248247735eb97a0bd593b8852440430600d6ba01364c31fe0abc1fe1","version":"5.3.0","license":"OFL-1.1","source":"plugin/ui/work-view/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2","upstream":"https://www.npmjs.com/package/@fontsource-variable/geist"},
+    {"path":"catalog/plugin/ui/work-view/assets/index-DInrJkv2.js","kind":"copied","bytes":1028143,"sha256":"6d2db59355f9ab27f8bebe7de2defcd7fd98eb6a2a45c5d9b2ca0137c45a893c","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/work-view/assets/index-DInrJkv2.js"},
+    {"path":"catalog/plugin/ui/work-view/assets/index-Ddyc58ua.css","kind":"copied","bytes":144973,"sha256":"17820c501afbd654760f044cc1043c1615410dc4ac0bb86a1f63068353706019","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/work-view/assets/index-Ddyc58ua.css"},
+    {"path":"catalog/plugin/ui/work-view/favicon.svg","kind":"copied","bytes":9522,"sha256":"61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/work-view/favicon.svg"},
+    {"path":"catalog/plugin/ui/work-view/icons.svg","kind":"copied","bytes":5031,"sha256":"b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/work-view/icons.svg"},
+    {"path":"catalog/plugin/ui/work-view/index.html","kind":"copied","bytes":501,"sha256":"4d047c7f8d10cafad7319b1805b4d710372eebaa38e8b68876fe59f6ed393827","version":"15.5.0","license":"Apache-2.0","source":"plugin/ui/work-view/index.html"},
+    {"path":"cmem-light-local.json","kind":"destination-bound","bytes":123,"sha256":"8b24b08d0276b925b838dfb00ed99c0b22b86f67080dba932f5aacea50c506de","referenceBytes":319,"referenceSha256":"caf82571eb93142409dd19a2da925e5135aa381af7df73a99606b6d65085b3b7","version":"15.5.0","license":"Apache-2.0","source":["scripts/enterprise-local/codex-local.mjs"],"template":"{\n  \"kind\": \"cmem-light-private\",\n  \"codex\": \"@@CODEX@@\",\n  \"bun\": \"@@BUN@@\",\n  \"node\": \"@@NODE@@\",\n  \"port\": \"@@PORT@@\"\n}\n"},
+    {"path":"codex-local.mjs","kind":"copied","bytes":17997,"sha256":"6132747a0d98a02461d0be34305bf4310c3d02b340d679e2a2560ef7956846e7","version":"15.5.0","license":"Apache-2.0","source":"scripts/enterprise-local/codex-local.mjs"}
+  ],
+  "directories": [
+    "catalog",
+    "catalog/.agents",
+    "catalog/.agents/plugins",
+    "catalog/plugin",
+    "catalog/plugin/.codex-plugin",
+    "catalog/plugin/hooks",
+    "catalog/plugin/modes",
+    "catalog/plugin/scripts",
+    "catalog/plugin/skills",
+    "catalog/plugin/skills/knowledge-agent",
+    "catalog/plugin/skills/mem-search",
+    "catalog/plugin/skills/owner-goals",
+    "catalog/plugin/skills/owner-goals/scripts",
+    "catalog/plugin/skills/request-progress",
+    "catalog/plugin/skills/request-progress/scripts",
+    "catalog/plugin/skills/smart-explore",
+    "catalog/plugin/sqlite",
+    "catalog/plugin/sqlite/observations",
+    "catalog/plugin/ui",
+    "catalog/plugin/ui/assets",
+    "catalog/plugin/ui/assets/fonts",
+    "catalog/plugin/ui/work-view",
+    "catalog/plugin/ui/work-view/assets",
+    "codex",
+    "data",
+    "home",
+    "home/appdata",
+    "home/localappdata",
+    "temp",
+    "workspace"
+  ],
+  "inputs": [
+    {"path":"LICENSE","bytes":11358,"sha256":"cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"NOTICE","bytes":242,"sha256":"35003c303ee484c77872fd45eb5d590ce679d1ae7ac5bb672d33069cca66685b","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"package.json","bytes":10457,"sha256":"dcdaa006f8b245ece40c6f3c5b7f9217204f597a891bb88514f5a0f0bf4c981d","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"package-lock.json","bytes":435861,"sha256":"52f962015654cdf33c008e1f5cf786a2786ec96113dd1484e37880bd8613ed99","version":"15.5.0","source":"local npm preparation","license":null},
+    {"path":"node_modules/.package-lock.json","bytes":373461,"sha256":"11b9f03d031d670fa4968e8217c08c378786c03c9ebb50a2a21147a344584e79","version":"15.5.0","source":"local npm preparation","license":null},
+    {"path":"src/ui/my-work/package.json","bytes":1301,"sha256":"2759077e8ffdb654ce09fc40ebcfcb59c99dab81cce79d435bba541b9b3098ae","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"src/ui/my-work/package-lock.json","bytes":299020,"sha256":"ec0f529c410222930462e8994e33a2367450c1d179b75dc0df969dfb4599c1e3","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"src/ui/my-work/node_modules/.package-lock.json","bytes":260915,"sha256":"47cc1cd49a4cbc7ba06bbb02ebe6fff29aaf3414b395f865e399ee563a45bdad","version":"15.5.0","source":"local npm preparation","license":null},
+    {"path":"src/ui/my-work/vite.config.ts","bytes":1028,"sha256":"e43a2d2971e64aeaf02614ea3a65286f75b744a914ceec7ab4a9e363e0bbfab4","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"src/ui/my-work/src/index.css","bytes":14060,"sha256":"f9f59e7501bcc5950052f93101dbff236a68292243e1350d97f44b2a3d762f4b","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"scripts/enterprise-local/codex-local.mjs","bytes":17997,"sha256":"6132747a0d98a02461d0be34305bf4310c3d02b340d679e2a2560ef7956846e7","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"scripts/build-hooks.js","bytes":57149,"sha256":"8967c0fb66cfefe02ea41e45fe6ec6c980e23b5150e934753b55aa94e4bff5a1","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"scripts/build-viewer.js","bytes":3785,"sha256":"e0d20fdfc4b9ade7bf007152c76cf33247c9d72951a86c088a94aa0eb886a16d","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"scripts/sync-plugin-manifests.js","bytes":5837,"sha256":"95a7bf15e0b7dd9138940088712dbac9be479d63a276958d1e0cd903691011ea","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"scripts/prepare-local-chroma.ps1","bytes":3259,"sha256":"fff295d9667b6f639839efb2e5d2f20b3afb1f5a99aa26ccf95cfb15bd71b9d9","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"scripts/chroma-local-requirements.txt","bytes":9328,"sha256":"b93f4e4243652623ac8eb8354a1b9b5c40e54b5016f61788048a933f7f3d1f18","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"plugin/package.json","bytes":3317,"sha256":"d54291d304e4d47208c83b3380e1ff53568de57d2fa08397bc5d936493f552d7","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"plugin/bun.lock","bytes":30637,"sha256":"8db1a1527dd3a784622fcbe1ed7d036b67c0b807f7fd28a6aa9faa5f8bc2388e","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"plugin/.codex-plugin/plugin.json","bytes":1542,"sha256":"6a50c92b8d47098a25b44f25fee359643aafadfd81899719ca13bdd1ca95b075","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"plugin/hooks/codex-hooks.json","bytes":1819,"sha256":"0f23c6ddb9a82d9d6f7adcf7ba1cfdd7a22457bf3b080d2eb98c71578c763ac4","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"plugin/scripts/worker-service.cjs.map","bytes":4085682,"sha256":"b9cbe4cc0b0af820af567c330e1fbc668c50467258363d6785e7a6e5cbbfac35","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"plugin/scripts/mcp-server.cjs.map","bytes":1006163,"sha256":"3aff62072ecde6511499bd4bc892754be02abd81c09e19e8cc004e9ad6992969","version":"15.5.0","source":"private checkout","license":"Apache-2.0"},
+    {"path":"plugin/scripts/context-read-worker.cjs.map","bytes":190420,"sha256":"3b8eb5de89a9a134e7436531c24bba70517c047a8d1ec988f23b4177f7737edc","version":"15.5.0","source":"private checkout","license":"Apache-2.0"}
+  ],
+  "tools": [
+    {"id":"node","name":"Node.js","version":"22.23.4","scope":"runtime-tool","file":"node.exe","bytes":87034184,"sha256":"dccc52de28d8df2ee22d2062424f8c563070d95d8ad70c54c4bf01d590dec14f","source":"https://nodejs.org/dist/v22.23.4/","license":"MIT plus bundled notices","provenance":"Local Node distribution LICENSE","arch":"PE AMD64","localLicenseSha256":"8cc9bb466b19fc7e7cc99d03e9df1132021fda8b01eea2624c58bb372dbef576"},
+    {"id":"bun","name":"Bun","version":"1.4.4","scope":"runtime-tool","file":"bun.exe","bytes":115281496,"sha256":"cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244","source":"https://github.com/oven-sh/bun/releases/tag/bun-v1.4.4","license":"MIT (upstream project)","provenance":"Archive and bundled notices unverified","arch":"PE AMD64"},
+    {"id":"codex","name":"Codex CLI","version":"0.167.0-alpha.3.2","scope":"runtime-tool","file":"codex.exe","bytes":369018160,"sha256":"4f91ae86895ff124760d70ed1630e2354ca874765c9bb61ae524b600327efc17","source":"https://github.com/openai/codex","license":null,"provenance":"Local desktop-bundled build. Exact published artifact, license terms and notices unverified","arch":"PE AMD64"},
+    {"id":"python","name":"CPython","version":"3.13.15","scope":"chroma-tool","file":"python.exe","bytes":105696,"sha256":"85b71d8c6ec1905935f74be0c9869aae198d00e98f39df699ec66f9c5a84cecd","source":"https://www.python.org/downloads/release/python-31315/","license":"PSF-2.0 plus bundled notices","provenance":"Exact binary matches CHROMA-07-LOCAL signature evidence","arch":"PE AMD64"},
+    {"id":"pythonDll","name":"CPython runtime DLL","version":"3.13.15","scope":"chroma-tool","file":"python313.dll","bytes":6135008,"sha256":"e820bf024efd2b56bb2b82791e6b6ddc7303f070f8e72cba7637482a8a906238","source":"https://www.python.org/downloads/release/python-31315/","license":"PSF-2.0 plus bundled notices","provenance":"Exact DLL matches CHROMA-07-LOCAL","arch":"PE AMD64"},
+    {"id":"npm","name":"npm CLI entrypoint","version":"10.9.9","scope":"build-tool","file":"npm-cli.js","bytes":56,"sha256":"3ce7cba6f5128dd5f54c98b6a5036b0f850496878cc2e21044b675fe3c594e3e","source":"https://registry.npmjs.org/npm/-/npm-10.9.9.tgz","license":"Artistic-2.0","provenance":"Local npm LICENSE","localLicenseSha256":"af1573a67c9d9051fbf8a9c123a22b7f51ec58cb6a588b4c23bead776dd046ab"},
+    {"id":"npmShim","name":"npm Windows shim","version":"10.9.9","scope":"build-tool","file":"npm.cmd","bytes":538,"sha256":"21b46c69ad6e2f231f02a9e120f4ba6c8e75fef5a45637103002eab99f888ab8","source":"https://nodejs.org/dist/v22.23.4/","license":"MIT plus bundled notices","provenance":"Local Node distribution LICENSE"}
+  ],
+  "chroma": {
+    "wheels": [
+      {
+        "path": "aiohappyeyeballs-2.7.1-py3-none-any.whl",
+        "bytes": 15038,
+        "sha256": "9243213661e29250eb41368e5daa826fc017156c3b8a11440826b2e3ed376472",
+        "name": "aiohappyeyeballs",
+        "version": "2.7.1",
+        "license": "PSF-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/aiohappyeyeballs/2.7.1/"
+      },
+      {
+        "path": "aiohttp-3.14.5-cp313-cp313-win_amd64.whl",
+        "bytes": 505985,
+        "sha256": "d05e94cdfe0d15d0206f970722d2554780ce562787b21b218b275447f8751319",
+        "name": "aiohttp",
+        "version": "3.14.5",
+        "license": "Apache-2.0 AND MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "2e4be5fc6c4c72a466fcb665d726e049a6891981fe536c4f04b6366749461d23"
+          },
+          {
+            "path": "vendor/llhttp/LICENSE",
+            "sha256": "628168d68bb5a8a17e0bbefb3bd74e326e1edc20583d76f52f457c82c921867d"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/aiohttp/3.14.5/"
+      },
+      {
+        "path": "aiohttp_retry-2.9.1-py3-none-any.whl",
+        "bytes": 9981,
+        "sha256": "66d2759d1921838256a05a3f80ad7e724936f083e35be5abb5e16eed6be6dc54",
+        "name": "aiohttp-retry",
+        "version": "2.9.1",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "aca6126cf5c5e84cab41ea3bc61f53578616316a83ebe130cde0d4b766e8a1fe"
+          },
+          {
+            "path": "AUTHORS",
+            "sha256": "1a52515c19e8828777780cc5acbdd8063f25acdcb53d5a1e68a0a7366db33793"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/aiohttp-retry/2.9.1/"
+      },
+      {
+        "path": "aiosignal-1.4.0-py3-none-any.whl",
+        "bytes": 7490,
+        "sha256": "053243f8b92b990551949e63930a839ff0cf0b0ebbe0597b0f3fb19e1a0fe82e",
+        "name": "aiosignal",
+        "version": "1.4.0",
+        "license": "Apache 2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "6fd5243e92dd7f98ec69c7ac377728e74905709ff527a5bf98d6d0263c04f5b6"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/aiosignal/1.4.0/"
+      },
+      {
+        "path": "annotated_doc-0.0.5-py3-none-any.whl",
+        "bytes": 5302,
+        "sha256": "117bac03a25ede5df5440e855b32d556049ca169ead221505badf432fed4b101",
+        "name": "annotated-doc",
+        "version": "0.0.5",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "fff170779a6acbf65abdb405c087f1cee1786691e4a96a4034517e4a504a0cdf"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/annotated-doc/0.0.5/"
+      },
+      {
+        "path": "annotated_types-0.8.0-py3-none-any.whl",
+        "bytes": 13427,
+        "sha256": "f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0",
+        "name": "annotated-types",
+        "version": "0.8.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "fe1049884b1a0d9342901e88e07f32925d24b3121d9972b6a6805fb9824b095d"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/annotated-types/0.8.0/"
+      },
+      {
+        "path": "anyio-4.16.0-py3-none-any.whl",
+        "bytes": 134521,
+        "sha256": "c66ae634e0b8228396b801741beb3294326d4b6102f7bba4041c0dfb58c29026",
+        "name": "anyio",
+        "version": "4.16.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "5361ac9dc58f2ef5fd2e9b09c68297c17f04950909bbc8023bdb82eacf22c2b0"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/anyio/4.16.0/"
+      },
+      {
+        "path": "attrs-26.1.0-py3-none-any.whl",
+        "bytes": 67548,
+        "sha256": "c647aa4a12dfbad9333ca4e71fe62ddc36f4e63b2d260a37a8b83d2f043ac309",
+        "name": "attrs",
+        "version": "26.1.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "882115c95dfc2af1eeb6714f8ec6d5cbcabf667caff8729f42420da63f714e9f"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/attrs/26.1.0/"
+      },
+      {
+        "path": "bcrypt-5.0.0-cp39-abi3-win_amd64.whl",
+        "bytes": 150912,
+        "sha256": "64ee8434b0da054d830fa8e89e1c8bf30061d539044a39524ff7dec90481e5c2",
+        "name": "bcrypt",
+        "version": "5.0.0",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "8173d5c29b4f956d532781d2b86e4e30f83e6b7878dce18c919451d6ba707c90"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/bcrypt/5.0.0/"
+      },
+      {
+        "path": "build-1.6.1-py3-none-any.whl",
+        "bytes": 31179,
+        "sha256": "ecd351a4be9d35a9eaaba244a7687143c9c7d4aea6ac964e7e7ddab20cbcf4e7",
+        "name": "build",
+        "version": "1.6.1",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "aaf9a29ca5907971ccf07de025375db34539a8d5eeebce20b46099805722106f"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/build/1.6.1/"
+      },
+      {
+        "path": "certifi-2026.10.23-py3-none-any.whl",
+        "bytes": 135082,
+        "sha256": "e9b54de76e530bb6cf0ccd036787103acb58fd42ba930ea8bf948ddbaa2f61d1",
+        "name": "certifi",
+        "version": "2026.10.23",
+        "license": "MPL-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/certifi/2026.10.23/"
+      },
+      {
+        "path": "cffi-2.1.1-cp313-cp313-win_amd64.whl",
+        "bytes": 185688,
+        "sha256": "1aa5645c30469b09530c4ebca77ebf8f17618293c58f8549cb1a543a50236e7d",
+        "name": "cffi",
+        "version": "2.1.1",
+        "license": "MIT-0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "5ba24ddc57067f9249add644c3afc41a5d6dc37e23433ef759d95df370b0af63"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/cffi/2.1.1/"
+      },
+      {
+        "path": "charset_normalizer-3.5.2-cp313-cp313-win_amd64.whl",
+        "bytes": 206489,
+        "sha256": "78456a747de8dc58360ffa581f30a002baf5aa28cb262536545e91f113ed7639",
+        "name": "charset-normalizer",
+        "version": "3.5.2",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "18577485d3704f1a479ded8e573c0976cfed315fd2fd17983fa988da4c2f70d1"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/charset-normalizer/3.5.2/"
+      },
+      {
+        "path": "chromadb-1.5.9-cp39-abi3-win_amd64.whl",
+        "bytes": 23542454,
+        "sha256": "4fd0b560e56761b7f3cb4d5c6205fd5f20814484b4a3e4e9af9038c2b428fc6c",
+        "name": "chromadb",
+        "version": "1.5.9",
+        "license": "Apache Software License",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/chromadb/1.5.9/"
+      },
+      {
+        "path": "click-8.5.1-py3-none-any.whl",
+        "bytes": 126163,
+        "sha256": "8bb5376d2006950386f8c6427613334a2acadc5f559cb80e638d00b4df957e37",
+        "name": "click",
+        "version": "8.5.1",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "9a8ad106a394e853bfe21f42f4e72d592819a22805d991b5f3275029292b658d"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/click/8.5.1/"
+      },
+      {
+        "path": "colorama-0.4.6-py2.py3-none-any.whl",
+        "bytes": 25335,
+        "sha256": "4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6",
+        "name": "colorama",
+        "version": "0.4.6",
+        "license": "BSD License",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "cac35c02686e5d04a5a7140bfb3b36e73aed496656e891102e428886d7930318"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/colorama/0.4.6/"
+      },
+      {
+        "path": "cryptography-50.0.2-cp311-abi3-win_amd64.whl",
+        "bytes": 3824692,
+        "sha256": "7afa5a6602a9f29af1f3a2965f831bae7c9d5d597b7cbb716d41ab3b7d89879c",
+        "name": "cryptography",
+        "version": "50.0.2",
+        "license": "Apache-2.0 OR BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "3e0c7c091a948b82533ba98fd7cbb40432d6f1a9acbf85f5922d2f99a93ae6bb"
+          },
+          {
+            "path": "LICENSE.APACHE",
+            "sha256": "aac73b3148f6d1d7111dbca32099f68d26c644c6813ae1e4f05f6579aa2663fe"
+          },
+          {
+            "path": "LICENSE.BSD",
+            "sha256": "602c4c7482de6479dd2e9793cda275e5e63d773dacd1eca689232ab7008fb4fb"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/cryptography/50.0.2/"
+      },
+      {
+        "path": "durationpy-0.11-py3-none-any.whl",
+        "bytes": 4133,
+        "sha256": "a739fe2b8972c250ff72f8e2c488d18cf25f7b852f49ee76048775d5171df30c",
+        "name": "durationpy",
+        "version": "0.11",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "b6c5adfeed4ba4385ea6ab33c4e9b730fd22937350b2e17f862ae169f8d90dc9"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/durationpy/0.11/"
+      },
+      {
+        "path": "filelock-4.2.10-py3-none-any.whl",
+        "bytes": 218040,
+        "sha256": "9479aaeb4db20b5a53e3da28493edd24720b66b8a0b84030aa56ccdf243d6857",
+        "name": "filelock",
+        "version": "4.2.10",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "608c89d5060ae9921adccf3236695bc654a9946e12323ef6c021dfa04e294d48"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/filelock/4.2.10/"
+      },
+      {
+        "path": "flatbuffers-25.12.19-py2.py3-none-any.whl",
+        "bytes": 26661,
+        "sha256": "7634f50c427838bb021c2d66a3d1168e9d199b0607e6329399f04846d42e20b4",
+        "name": "flatbuffers",
+        "version": "25.12.19",
+        "license": "Apache 2.0",
+        "licenseFiles": [],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/flatbuffers/25.12.19/"
+      },
+      {
+        "path": "frozenlist-1.8.0-cp313-cp313-win_amd64.whl",
+        "bytes": 43882,
+        "sha256": "878be833caa6a3821caf85eb39c5ba92d28e85df26d57afb06b35b2efd937231",
+        "name": "frozenlist",
+        "version": "1.8.0",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "6fd5243e92dd7f98ec69c7ac377728e74905709ff527a5bf98d6d0263c04f5b6"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/frozenlist/1.8.0/"
+      },
+      {
+        "path": "fsspec-2026.9.0-py3-none-any.whl",
+        "bytes": 221738,
+        "sha256": "8dd6e646e99ea382bd85f97a45e6b526a442d79423a7dc673f1e2756d05fcb5f",
+        "name": "fsspec",
+        "version": "2026.9.0",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "2dc35496ce53a7307915c008a844aad53e772b49b34cdd00445067691407ec94"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/fsspec/2026.9.0/"
+      },
+      {
+        "path": "googleapis_common_protos-1.76.0-py3-none-any.whl",
+        "bytes": 307707,
+        "sha256": "59e13344a9f3651aa201a03e2bee815a3bf43a4baf1f9ff8a9b62a840ce25fac",
+        "name": "googleapis-common-protos",
+        "version": "1.76.0",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/googleapis-common-protos/1.76.0/"
+      },
+      {
+        "path": "grpcio-1.85.1-cp313-cp313-win_amd64.whl",
+        "bytes": 5606831,
+        "sha256": "c17d61af28b322c48ab3881c685e5f6e7e367c56844cf589ee7707be9477b969",
+        "name": "grpcio",
+        "version": "1.85.1",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "ed9abc49f1fa3e3ce962d8ac42e176125c0ab0051ec5783dfcc807dd2a4c1f0f"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/grpcio/1.85.1/"
+      },
+      {
+        "path": "h11-0.16.0-py3-none-any.whl",
+        "bytes": 37515,
+        "sha256": "63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86",
+        "name": "h11",
+        "version": "0.16.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "37db5bb85926db28a427a25867f10b1232003aea1be69ccb851138adb8e6f361"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/h11/0.16.0/"
+      },
+      {
+        "path": "hf_xet-1.8.0-cp38-abi3-win_amd64.whl",
+        "bytes": 3911559,
+        "sha256": "92188598dedc1e1f5609bd718d4db8687a6c89915553912571e2f587892eecec",
+        "name": "hf-xet",
+        "version": "1.8.0",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "1eb85fc97224598dad1852b5d6483bbcf0aa8608790dcc657a5a2a761ae9c8c6"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/hf-xet/1.8.0/"
+      },
+      {
+        "path": "httpcore-1.0.9-py3-none-any.whl",
+        "bytes": 78784,
+        "sha256": "2d400746a40668fc9dec9810239072b40b4484b640a8c38fd654a024c7a1bf55",
+        "name": "httpcore",
+        "version": "1.0.9",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.md",
+            "sha256": "fdcb59154c74cbaba16a11242f7740bea9f23d6feb5547917d8c5f94a80392a5"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/httpcore/1.0.9/"
+      },
+      {
+        "path": "httptools-0.9.0-cp313-cp313-win_amd64.whl",
+        "bytes": 91549,
+        "sha256": "805b0f2618e5d4c3e28f45b731eb1a0539691ae4a2f97b4ce014de0bf96a1ff5",
+        "name": "httptools",
+        "version": "0.9.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "1c028b059d7a58e14ccda38cabced698c591fe614ffbe4f721430446e86c8d69"
+          },
+          {
+            "path": "vendor/http-parser/LICENSE-MIT",
+            "sha256": "5cd1b682c0ccbac0cb31b86a9a1104c3e2e7b1377a282b8169d2694b400db7c2"
+          },
+          {
+            "path": "vendor/llhttp/LICENSE",
+            "sha256": "279012e02a10acfd59a3f2d8f13a497332535d871c2b27c89988985b06a3a438"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/httptools/0.9.0/"
+      },
+      {
+        "path": "httpx-0.28.1-py3-none-any.whl",
+        "bytes": 73517,
+        "sha256": "d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad",
+        "name": "httpx",
+        "version": "0.28.1",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/httpx/0.28.1/"
+      },
+      {
+        "path": "httpx_sse-0.4.3-py3-none-any.whl",
+        "bytes": 8960,
+        "sha256": "0ac1c9fe3c0afad2e0ebb25a934a59f4c7823b60792691f779fad2c5568830fc",
+        "name": "httpx-sse",
+        "version": "0.4.3",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "beec67e4ee83a7af26f242bed9987aa863d6d2dfb776106aa2360c4187f31901"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/httpx-sse/0.4.3/"
+      },
+      {
+        "path": "huggingface_hub-1.33.0-py3-none-any.whl",
+        "bytes": 846435,
+        "sha256": "04e434b06e100eddbce9a6e817d72693a7884b10a79bd67ab48080d5c07eb899",
+        "name": "huggingface_hub",
+        "version": "1.33.0",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/huggingface-hub/1.33.0/"
+      },
+      {
+        "path": "idna-3.20-py3-none-any.whl",
+        "bytes": 69583,
+        "sha256": "ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c",
+        "name": "idna",
+        "version": "3.20",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.md",
+            "sha256": "1a9a4f0e3d479a27240ddd59a9137a66ab4a0f9dfdc8ca6188cc0bfd85187f04"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/idna/3.20/"
+      },
+      {
+        "path": "importlib_resources-7.1.0-py3-none-any.whl",
+        "bytes": 37232,
+        "sha256": "1bd7b48b4088eddb2cd16382150bb515af0bd2c70128194392725f82ad2c96a1",
+        "name": "importlib_resources",
+        "version": "7.1.0",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "e2f7bb0557e7a381499f15baa7c1d776d83d6616599179d71d3109b8e39f7b25"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/importlib-resources/7.1.0/"
+      },
+      {
+        "path": "jsonschema-4.26.0-py3-none-any.whl",
+        "bytes": 90630,
+        "sha256": "d489f15263b8d200f8387e64b4c3a75f06629559fb73deb8fdfb525f2dab50ce",
+        "name": "jsonschema",
+        "version": "4.26.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "COPYING",
+            "sha256": "4f92a015a13c4d1a040bef018aa13430b4f1bc73b41b16bb846c346766de7439"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/jsonschema/4.26.0/"
+      },
+      {
+        "path": "jsonschema_specifications-2025.9.1-py3-none-any.whl",
+        "bytes": 18437,
+        "sha256": "98802fee3a11ee76ecaca44429fda8a41bff98b00a0f2838151b113f210cc6fe",
+        "name": "jsonschema-specifications",
+        "version": "2025.9.1",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "COPYING",
+            "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/jsonschema-specifications/2025.9.1/"
+      },
+      {
+        "path": "kubernetes-37.0.2-py2.py3-none-any.whl",
+        "bytes": 7511679,
+        "sha256": "d72683392fc10f59fb78b89bd91cb3be60a05d6ff0bbb2150966a224af6edc03",
+        "name": "kubernetes",
+        "version": "37.0.2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "5f52a7f9e6a13f7ce4ec84fe72fbf1f7a9827bee85dd991026aaaccfe2bd655c"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/kubernetes/37.0.2/"
+      },
+      {
+        "path": "markdown_it_py-4.2.0-py3-none-any.whl",
+        "bytes": 91687,
+        "sha256": "9f7ebbcd14fe59494226453aed97c1070d83f8d24b6fc3a3bcf9a38092641c4a",
+        "name": "markdown-it-py",
+        "version": "4.2.0",
+        "license": "MIT License",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "4a2260d6e2cd0f5a151a1e86dbfe7d3ed552b1e2beabf9941c1ba5c49cbce484"
+          },
+          {
+            "path": "LICENSE.markdown-it",
+            "sha256": "792c48c5a849a15fdf9e37e8bcf9e6d1dd13b32b46c642a748a0a46a9919d473"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/markdown-it-py/4.2.0/"
+      },
+      {
+        "path": "mcp-1.26.0-py3-none-any.whl",
+        "bytes": 233615,
+        "sha256": "904a21c33c25aa98ddbeb47273033c435e595bbacfdb177f4bd87f6dceebe1ca",
+        "name": "mcp",
+        "version": "1.26.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/mcp/1.26.0/"
+      },
+      {
+        "path": "mdurl-0.1.2-py3-none-any.whl",
+        "bytes": 9979,
+        "sha256": "84008a41e51615a49fc9966191ff91509e3c40b939176e643fd50a5c2196b8f8",
+        "name": "mdurl",
+        "version": "0.1.2",
+        "license": "MIT License",
+        "licenseFiles": [],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/mdurl/0.1.2/"
+      },
+      {
+        "path": "mmh3-5.3.1-cp313-cp313-win_amd64.whl",
+        "bytes": 41754,
+        "sha256": "6759c43a90729a963ab5503779e07cd000c372ebd2d80196f78da2bf2d4101f1",
+        "name": "mmh3",
+        "version": "5.3.1",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "3bb6a905a54b7e1fbcaf21f60c35cbec5d19355e0ad428666e8e24017c2e52cd"
+          }
+        ],
+        "licenseEvidence": "wheel LICENSE",
+        "source": "https://pypi.org/project/mmh3/5.3.1/"
+      },
+      {
+        "path": "mpmath-1.3.0-py3-none-any.whl",
+        "bytes": 536198,
+        "sha256": "a0b2b9fe80bbcd81a6647ff13108738cfb482d481d826cc0e02f5b35e5c88d2c",
+        "name": "mpmath",
+        "version": "1.3.0",
+        "license": "BSD",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c26cae81da4508e5e249985777a33821f183223ebb74d7f8cfbf90fe7eef2fb7"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/mpmath/1.3.0/"
+      },
+      {
+        "path": "multidict-7.2.1-cp313-cp313-win_amd64.whl",
+        "bytes": 95078,
+        "sha256": "ce0f884408938fbd72e764031d0e23a8f5e438a7bf73641089c7a6465cb84456",
+        "name": "multidict",
+        "version": "7.2.1",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "2e4be5fc6c4c72a466fcb665d726e049a6891981fe536c4f04b6366749461d23"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/multidict/7.2.1/"
+      },
+      {
+        "path": "numpy-2.5.4-cp313-cp313-win_amd64.whl",
+        "bytes": 12566113,
+        "sha256": "8b4d2fd2d34e5f8c9235ee787de5631a37a28402b15cb80814df973d2be54129",
+        "name": "numpy",
+        "version": "2.5.4",
+        "license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "a804dff0ead9fadc5293456410bcbfc32bf024be9c4513459663fb7b442d2341"
+          },
+          {
+            "path": "numpy/_core/include/numpy/libdivide/LICENSE.txt",
+            "sha256": "d544761558b510866c21f7e8a2d5716fca76e0b98117e3b6b86314db7244d150"
+          },
+          {
+            "path": "numpy/_core/src/common/pythoncapi-compat/COPYING",
+            "sha256": "aea41976c720f91bd19725c16916a1ace40eb1ea42620d340e587a5de4bbcea0"
+          },
+          {
+            "path": "numpy/_core/src/highway/LICENSE",
+            "sha256": "d208152e2777ffd0126eacc1bd21c0320d69e4e6b622d21a2a12a47e8ef73763"
+          },
+          {
+            "path": "numpy/_core/src/multiarray/dragon4_LICENSE.txt",
+            "sha256": "b0fd592d4ead563148e3977e7b589169d46a5ef2ff133c755a81af880a3fc919"
+          },
+          {
+            "path": "numpy/_core/src/npysort/x86-simd-sort/LICENSE.md",
+            "sha256": "a732977853530066790c42817087f4829b518dd98d340c916acbfd227e39d3cb"
+          },
+          {
+            "path": "numpy/_core/src/umath/svml/LICENSE",
+            "sha256": "585483905b13d4b42f800c55ba99e89d6e2e33ccd5f503e201c07531d148ff41"
+          },
+          {
+            "path": "numpy/fft/pocketfft/LICENSE.md",
+            "sha256": "8db000e158c162e7249787852d8c69764706502ccee725c06641b31c1e95c8af"
+          },
+          {
+            "path": "numpy/linalg/lapack_lite/LICENSE.txt",
+            "sha256": "19060ef465e1797d682ee0fc3081bd25ab1395e995e43d25c9d13c95d9a3cd6b"
+          },
+          {
+            "path": "numpy/ma/LICENSE",
+            "sha256": "d78dbb208b80d92b4d333e41a4baae50d12444f46e53199fa7726a91de6e2da7"
+          },
+          {
+            "path": "numpy/random/LICENSE.md",
+            "sha256": "b4bc2f4fa1c95778f1ed3dd8f14706bece399475b978f9f34b5d3cd72521b48a"
+          },
+          {
+            "path": "numpy/random/src/distributions/LICENSE.md",
+            "sha256": "cf5619f25b112d5ce7c896efffc8e610bcb345dfadcc19f2c1460aa48fff2c9e"
+          },
+          {
+            "path": "numpy/random/src/mt19937/LICENSE.md",
+            "sha256": "92c10699884321f1c2947fe2a70ab23b0fbf1507f756d89dd08f38c61fc3d4fa"
+          },
+          {
+            "path": "numpy/random/src/pcg64/LICENSE.md",
+            "sha256": "41190663b77bee5302386495a07b7eabfbfa571aa0ae2f11da6764162062fc4f"
+          },
+          {
+            "path": "numpy/random/src/philox/LICENSE.md",
+            "sha256": "322ac46d870c8aeead6c53adcccc839296fb3c8e456eae155081297daf7f8013"
+          },
+          {
+            "path": "numpy/random/src/sfc64/LICENSE.md",
+            "sha256": "28cad82ce1379dc529df30da78ec012d7d0d1d576b03ddcb93388aee53659f59"
+          },
+          {
+            "path": "numpy/random/src/splitmix64/LICENSE.md",
+            "sha256": "454ec7350e478e037061850b67395753b425b1cb0a34bbc26290b020bf89d763"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/numpy/2.5.4/"
+      },
+      {
+        "path": "oauthlib-4.0.1-py3-none-any.whl",
+        "bytes": 161934,
+        "sha256": "498a298876e996301950a5b053d12c31628bb7b895db03666430c69ce182eb61",
+        "name": "oauthlib",
+        "version": "4.0.1",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "0028aa4763a8a0b09ca4c68d585263474cf9aaa6ec69ffbef3a31a9eccdd3b91"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/oauthlib/4.0.1/"
+      },
+      {
+        "path": "onnxruntime-1.24.4-cp313-cp313-win_amd64.whl",
+        "bytes": 12597435,
+        "sha256": "3b6ba8b0181a3aa88edab00eb01424ffc06f42e71095a91186c2249415fcff93",
+        "name": "onnxruntime",
+        "version": "1.24.4",
+        "license": "MIT License",
+        "licenseFiles": [],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/onnxruntime/1.24.4/"
+      },
+      {
+        "path": "opentelemetry_api-1.45.2-py3-none-any.whl",
+        "bytes": 60335,
+        "sha256": "2cbd737377e710ee740d261c94e93fa0f08e6d037c18f17513cc0a2d94479a34",
+        "name": "opentelemetry-api",
+        "version": "1.45.2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/opentelemetry-api/1.45.2/"
+      },
+      {
+        "path": "opentelemetry_exporter_otlp_common-0.66b2-py3-none-any.whl",
+        "bytes": 12385,
+        "sha256": "ace86efb75489f925f1ef809856ae5f0c7db534e4afdc624530222228b1236a5",
+        "name": "opentelemetry-exporter-otlp-common",
+        "version": "0.66b2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/opentelemetry-exporter-otlp-common/0.66b2/"
+      },
+      {
+        "path": "opentelemetry_exporter_otlp_proto_common-1.45.2-py3-none-any.whl",
+        "bytes": 15392,
+        "sha256": "af483b24217028892f017096731b794b196b785025d2e6808874720fd0b05a80",
+        "name": "opentelemetry-exporter-otlp-proto-common",
+        "version": "1.45.2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/opentelemetry-exporter-otlp-proto-common/1.45.2/"
+      },
+      {
+        "path": "opentelemetry_exporter_otlp_proto_grpc-1.45.2-py3-none-any.whl",
+        "bytes": 19490,
+        "sha256": "8a48d60835e90536846bd82de487bfbd81bccb5a1b3d0fb82edeea17db07395c",
+        "name": "opentelemetry-exporter-otlp-proto-grpc",
+        "version": "1.45.2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/opentelemetry-exporter-otlp-proto-grpc/1.45.2/"
+      },
+      {
+        "path": "opentelemetry_proto-1.45.2-py3-none-any.whl",
+        "bytes": 72484,
+        "sha256": "03a7ca1b43f89fd5b965d5975902bb2515c0c86e2428b456836e9a6149c6235a",
+        "name": "opentelemetry-proto",
+        "version": "1.45.2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/opentelemetry-proto/1.45.2/"
+      },
+      {
+        "path": "opentelemetry_sdk-1.45.2-py3-none-any.whl",
+        "bytes": 141756,
+        "sha256": "ff974ea70ee4f1d51e2ec152db37c2b626c7bf82bb3f7d86114fd8704e7199c6",
+        "name": "opentelemetry-sdk",
+        "version": "1.45.2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/opentelemetry-sdk/1.45.2/"
+      },
+      {
+        "path": "opentelemetry_semantic_conventions-0.66b2-py3-none-any.whl",
+        "bytes": 206280,
+        "sha256": "4cbe61e5f9275d57ab31708446e7938ef4291ebbe6a7fca6f7a629c5acae87d8",
+        "name": "opentelemetry-semantic-conventions",
+        "version": "0.66b2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/opentelemetry-semantic-conventions/0.66b2/"
+      },
+      {
+        "path": "orjson-3.13.0-cp313-cp313-win_amd64.whl",
+        "bytes": 121371,
+        "sha256": "4ee06e53b998c71ce3eb93b86222912fdd9dcced685ac64d4525d36fac338ea4",
+        "name": "orjson",
+        "version": "3.13.0",
+        "license": "MPL-2.0 AND (Apache-2.0 OR MIT)",
+        "licenseFiles": [
+          {
+            "path": "LICENSE-APACHE",
+            "sha256": "7cfd738c53d61c79f07e348f622bf7707c9084237054d37fbe07788a75f5881c"
+          },
+          {
+            "path": "LICENSE-MIT",
+            "sha256": "36516aefdc84c5d5a1e7485425913a22dbda69eb1930c5e84d6ae4972b5194b9"
+          },
+          {
+            "path": "LICENSE-MPL-2.0",
+            "sha256": "9303ea1cfbf049945652668089d753fb1a7e1f2e52c680615c3d2cea7515c118"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/orjson/3.13.0/"
+      },
+      {
+        "path": "overrides-7.7.0-py3-none-any.whl",
+        "bytes": 17832,
+        "sha256": "c7ed9d062f78b8e4c1a7b70bd8796b35ead4d9f510227ef9c5dc7626c60d7e49",
+        "name": "overrides",
+        "version": "7.7.0",
+        "license": "Apache License, Version 2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/overrides/7.7.0/"
+      },
+      {
+        "path": "packaging-26.3-py3-none-any.whl",
+        "bytes": 129956,
+        "sha256": "d7193f7c8e4e93f444fde0262bf90af30e16fa0ad0ad44cb553c87339b23cd1c",
+        "name": "packaging",
+        "version": "26.3",
+        "license": "Apache-2.0 OR BSD-2-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48"
+          },
+          {
+            "path": "LICENSE.APACHE",
+            "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+          },
+          {
+            "path": "LICENSE.BSD",
+            "sha256": "b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/packaging/26.3/"
+      },
+      {
+        "path": "propcache-0.5.4-cp313-cp313-win_amd64.whl",
+        "bytes": 45342,
+        "sha256": "0c889f6fa84957bc7e8b4eab71fd16a0455068d5045e3aa40c733071d2b2fd77",
+        "name": "propcache",
+        "version": "0.5.4",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+          },
+          {
+            "path": "NOTICE",
+            "sha256": "56d6ac6c8105c0a51304c21db060e361af9a8ea0af9a75c239c28b5d13693838"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/propcache/0.5.4/"
+      },
+      {
+        "path": "protobuf-7.36.2-cp310-abi3-win_amd64.whl",
+        "bytes": 456514,
+        "sha256": "a300819d441e078a5608c0d3c709796bb548136058fda017ae51d425b44fd353",
+        "name": "protobuf",
+        "version": "7.36.2",
+        "license": "3-Clause BSD License",
+        "licenseFiles": [],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/protobuf/7.36.2/"
+      },
+      {
+        "path": "pybase64-1.5.1-cp313-cp313-win_amd64.whl",
+        "bytes": 44636,
+        "sha256": "541f23f3139179bcff0aec38aedb01b7b60c76720b9a21213cdeac0b72c79100",
+        "name": "pybase64",
+        "version": "1.5.1",
+        "license": "BSD-2-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "848c5f17f9de60ca340a2cb89f97b97136eed6ab4cb919020cf2038646aa1c25"
+          },
+          {
+            "path": "base64/LICENSE",
+            "sha256": "42871ad9f4e5e9255a4ec80b6c5ec9989bab6964693cf5fee6bb33f3afe39220"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pybase64/1.5.1/"
+      },
+      {
+        "path": "pycparser-3.12-py3-none-any.whl",
+        "bytes": 62600,
+        "sha256": "a076f3f489b39b43ed13563a1dafe42447445bec2e294154ec5c57fcdda4c85e",
+        "name": "pycparser",
+        "version": "3.12",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "0a9e78156ae8b96caf1b4f11ac2df424b83de29736f9e757630548a6272fdf90"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pycparser/3.12/"
+      },
+      {
+        "path": "pydantic-2.14.3-py3-none-any.whl",
+        "bytes": 494071,
+        "sha256": "3f7b347782ab7e4cf4c798496ae3a82787d9f21ec12676a9c564355eeef8daa8",
+        "name": "pydantic",
+        "version": "2.14.3",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "a9e186f3ca16b5eef84318e7a701721351a00cb7b8ae3a4394b67b49e3529ef3"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pydantic/2.14.3/"
+      },
+      {
+        "path": "pydantic_core-2.50.4-cp313-cp313-win_amd64.whl",
+        "bytes": 2262887,
+        "sha256": "4c29b8f2d6417069bb1f257e6b9113f5d64dc2f554cc200ea90b4fe2c5cdb733",
+        "name": "pydantic_core",
+        "version": "2.50.4",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "fbe7f615f18d135c07000e5a86325db27f42c7729699ef166ac1f7a3f4586bf4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pydantic-core/2.50.4/"
+      },
+      {
+        "path": "pydantic_settings-2.16.2-py3-none-any.whl",
+        "bytes": 81994,
+        "sha256": "8d523e5c129b097686bde019bd6109bff53f4c8c3f63f1ddf9933ffa42e5ab4f",
+        "name": "pydantic-settings",
+        "version": "2.16.2",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "eb355a753e020346d33d83bf9769135b89fc610568ac531a01c295bcee7fd998"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pydantic-settings/2.16.2/"
+      },
+      {
+        "path": "pygments-2.21.0-py3-none-any.whl",
+        "bytes": 1250147,
+        "sha256": "2363c69b61c4a97c838da3b130dcd6468f4848992b21a82f2a63ec34377137d9",
+        "name": "Pygments",
+        "version": "2.21.0",
+        "license": "BSD-2-Clause",
+        "licenseFiles": [
+          {
+            "path": "AUTHORS",
+            "sha256": "71a83872ad82f57be692cf827e048e2cd51d45169cfa1ea3f28706d97a872c0f"
+          },
+          {
+            "path": "LICENSE",
+            "sha256": "a9d66f1d526df02e29dce73436d34e56e8632f46c275bbdffc70569e882f9f17"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pygments/2.21.0/"
+      },
+      {
+        "path": "pyjwt-2.15.1-py3-none-any.whl",
+        "bytes": 33860,
+        "sha256": "42d59d631f7768a1028a64c7ff581a9bf7519804daf91fc5b6c56e30eec5e193",
+        "name": "PyJWT",
+        "version": "2.15.1",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "797a7a20231d4c433e9f1911db1731d06b5828b98f499819a034f7c0f56f5ce5"
+          },
+          {
+            "path": "AUTHORS.rst",
+            "sha256": "925ce43461029eedbf558ec0b7cf7fc4b045def5120ebb97937c70814071cf07"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pyjwt/2.15.1/"
+      },
+      {
+        "path": "pypika-0.51.1-py2.py3-none-any.whl",
+        "bytes": 60585,
+        "sha256": "77985b4d7ce71b9905255bf12468cf598349e98837c037541cfc240e528aec46",
+        "name": "PyPika",
+        "version": "0.51.1",
+        "license": "Apache License Version 2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "c5accbbd8546e94c34aed24afe689a617627d18eed5a6c48277e48db57c23851"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pypika/0.51.1/"
+      },
+      {
+        "path": "pyproject_hooks-1.3.3-py3-none-any.whl",
+        "bytes": 10724,
+        "sha256": "5fc53fdac9f7bd63fbcdc868fb5f90b4784d78a53a3d3388cd738b807441a20b",
+        "name": "pyproject_hooks",
+        "version": "1.3.3",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "1b22b049b5267d6dfc23a67bf4a84d8ec04b9fdfb1a51d360e42b4342c8b4154"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pyproject-hooks/1.3.3/"
+      },
+      {
+        "path": "python_dateutil-4.0.0-py3-none-any.whl",
+        "bytes": 92853,
+        "sha256": "a5e246f79eb80475e691bf93862cead98decd8a498cf53ba0516fcdc0f50dc1c",
+        "name": "python-dateutil",
+        "version": "4.0.0",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "AUTHORS.md",
+            "sha256": "56004c45a95e9ee5582ea60f9a7ee42179c8594c7b9c245bbfb4a3445b4af640"
+          },
+          {
+            "path": "LICENSE",
+            "sha256": "ba00f51a0d92823b5a1cde27d8b5b9d2321e67ed8da9bc163eff96d5e17e577e"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/python-dateutil/4.0.0/"
+      },
+      {
+        "path": "python_dotenv-1.2.4-py3-none-any.whl",
+        "bytes": 23266,
+        "sha256": "42269a8a5b3fd54ffa6f3d84b18abed50064717576b4ecf03dc4a55d8aa04fdc",
+        "name": "python-dotenv",
+        "version": "1.2.4",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "80619b7049f08c81683ad0e01f08f257a840652dd71ee83146d36658c7d2c2b9"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/python-dotenv/1.2.4/"
+      },
+      {
+        "path": "python_multipart-0.0.33-py3-none-any.whl",
+        "bytes": 32253,
+        "sha256": "8f16c07b36add9da6b2ee87d3efcaf0a45a6de9c3d0a5dd94e9ccf7675a7bc45",
+        "name": "python-multipart",
+        "version": "0.0.33",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/python-multipart/0.0.33/"
+      },
+      {
+        "path": "pywin32-312-cp313-cp313-win_amd64.whl",
+        "bytes": 6914298,
+        "sha256": "c53e878d15a1c44788082bfe712a905433473aa38f86375b7cf8b45e3acbaaf9",
+        "name": "pywin32",
+        "version": "312",
+        "license": "PSF",
+        "licenseFiles": [
+          {
+            "path": "adodbapi/license.txt",
+            "sha256": "5ea2f23c7f00c3006bacf267183e816d8d4b6dc95ea57a4ddb0ff81de6d8719e"
+          },
+          {
+            "path": "com/License.txt",
+            "sha256": "fad39c18fc3825fa278db1c86fd52cf88d7c525b3c2fbf7817fa383cbae4d423"
+          },
+          {
+            "path": "pythonwin/License.txt",
+            "sha256": "a74d826efb242db087b850348e20abbfd591b51e2081f2048735290913872924"
+          },
+          {
+            "path": "pythonwin/Scintilla/License.txt",
+            "sha256": "57ec79bbeab4fd1cf7460a7ad450d2ab01471810459aeae9e75e4c66b472095f"
+          },
+          {
+            "path": "pythonwin/pywin/idle/LICENSE.txt",
+            "sha256": "a0fa1e7b8a4230055685e796548ac084a6c0eea395294574093bba72efd9191b"
+          },
+          {
+            "path": "win32/License.txt",
+            "sha256": "a74d826efb242db087b850348e20abbfd591b51e2081f2048735290913872924"
+          },
+          {
+            "path": "com/win32comext/mapi/src/MAPIStubLibrary/LICENSE",
+            "sha256": "1c4cf44d2fb8bf2d10214d6da80cc9e05502824cc4460f35be4c7bcb4cde53da"
+          },
+          {
+            "path": "isapi/README.txt",
+            "sha256": "41383bcc95edb8138d37077ae54bfdcbd2a3b77bf745a8529a9c161146e22303"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pywin32/312/"
+      },
+      {
+        "path": "pyyaml-6.0.3-cp313-cp313-win_amd64.whl",
+        "bytes": 154090,
+        "sha256": "79005a0d97d5ddabfeeea4cf676af11e647e41d81c9a7722a193022accdb6b7c",
+        "name": "PyYAML",
+        "version": "6.0.3",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "8d3928f9dc4490fd635707cb88eb26bd764102a7282954307d3e5167a577e8a4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/pyyaml/6.0.3/"
+      },
+      {
+        "path": "referencing-0.37.0-py3-none-any.whl",
+        "bytes": 26766,
+        "sha256": "381329a9f99628c9069361716891d34ad94af76e461dcb0335825aecc7692231",
+        "name": "referencing",
+        "version": "0.37.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "COPYING",
+            "sha256": "42dcd63495f87b4eb7c7757afa379bb55a53f94afd7a5f657d9adf57236e515c"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/referencing/0.37.0/"
+      },
+      {
+        "path": "requests-2.34.2-py3-none-any.whl",
+        "bytes": 73075,
+        "sha256": "2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0",
+        "name": "requests",
+        "version": "2.34.2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b"
+          },
+          {
+            "path": "NOTICE",
+            "sha256": "f5110972dedad2b4e9d314518daf3b7d72d6e02e499acd802181de6f74571dcc"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/requests/2.34.2/"
+      },
+      {
+        "path": "requests_oauthlib-2.0.0-py2.py3-none-any.whl",
+        "bytes": 24179,
+        "sha256": "7dd8a5c40426b779b0868c404bdef9768deccf22749cde15852df527e6269b36",
+        "name": "requests-oauthlib",
+        "version": "2.0.0",
+        "license": "ISC",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "ae01846afad8a8291fe6a08966f3015af9a8ff675d84b981f9793c122f7876e8"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/requests-oauthlib/2.0.0/"
+      },
+      {
+        "path": "rich-15.0.0-py3-none-any.whl",
+        "bytes": 310654,
+        "sha256": "33bd4ef74232fb73fe9279a257718407f169c09b78a87ad3d296f548e27de0bb",
+        "name": "rich",
+        "version": "15.0.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "deed7c17a4318158190a3ea239cc879a5a50271cebb98ae7025f48fbe58dca15"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/rich/15.0.0/"
+      },
+      {
+        "path": "rpds_py-2026.9.1-cp313-cp313-win_amd64.whl",
+        "bytes": 222409,
+        "sha256": "3e93b2cd69a9830be33e03945cd7cda940a0a8bfcfbff41d6144f0cb0d3d8bd9",
+        "name": "rpds-py",
+        "version": "2026.9.1",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "8bcb72c82ea8ae74802293c41d93ad7d51434001b0ae45a603a5af0f507aee0a"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/rpds-py/2026.9.1/"
+      },
+      {
+        "path": "shellingham-1.5.4-py2.py3-none-any.whl",
+        "bytes": 9755,
+        "sha256": "7ecfff8f2fd72616f7481040475a65b2bf8af90a56c89140852d1120324e8686",
+        "name": "shellingham",
+        "version": "1.5.4",
+        "license": "ISC License",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "f388fd38cad13112c1dc0f669bbe80e7f84541edbafb72f3030d2ca7642c3c9d"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/shellingham/1.5.4/"
+      },
+      {
+        "path": "sse_starlette-3.7.0-py3-none-any.whl",
+        "bytes": 18432,
+        "sha256": "f1d3136caa12d129284fca3d2ded79bc9af943320b6472712955fea52a6d3eea",
+        "name": "sse-starlette",
+        "version": "3.7.0",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "80af6bfccbebd2c14d4aab96695cab9950e177190cc80f5ef819e99996883e8e"
+          },
+          {
+            "path": "AUTHORS",
+            "sha256": "c2ff63d2ecf128bbda8ab1b2016830a5da124202fbb97168685bb9946aed3f1a"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/sse-starlette/3.7.0/"
+      },
+      {
+        "path": "starlette-1.10.0-py3-none-any.whl",
+        "bytes": 80571,
+        "sha256": "478c0ab3b4ced6e82719849c118fa406f0278a3499c1a898cd15cd31bdc38ce4",
+        "name": "starlette",
+        "version": "1.10.0",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.md",
+            "sha256": "dcb95677a02240243187e964f941847d19b17821cf99e5afae684fab328c19bf"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/starlette/1.10.0/"
+      },
+      {
+        "path": "sympy-1.14.0-py3-none-any.whl",
+        "bytes": 6299353,
+        "sha256": "e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5",
+        "name": "sympy",
+        "version": "1.14.0",
+        "license": "BSD",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "07a5e9819f727b4986ad2829c7a29a6320d42575f720eb24d71b7fef573a0286"
+          },
+          {
+            "path": "AUTHORS",
+            "sha256": "82b1038521b0696c63c90b31ed4a0a2c9c4c16871c648b157b07ca44b6f18f8d"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/sympy/1.14.0/"
+      },
+      {
+        "path": "tenacity-9.2.1-py3-none-any.whl",
+        "bytes": 32310,
+        "sha256": "9e56f17539296baab7beabb08b92f6ee3d7be92d8be72d763360677c2ad6580e",
+        "name": "tenacity",
+        "version": "9.2.1",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "58d1e17ffe5109a7ae296caafcadfdbe6a7d176f0bc4ab01e12a689b0499d8bd"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/tenacity/9.2.1/"
+      },
+      {
+        "path": "tokenizers-0.22.2-cp39-abi3-win_amd64.whl",
+        "bytes": 2747786,
+        "sha256": "c9ea31edff2968b44a88f97d784c2f16dc0729b8b143ed004699ebca91f05c48",
+        "name": "tokenizers",
+        "version": "0.22.2",
+        "license": "Apache Software License",
+        "licenseFiles": [],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/tokenizers/0.22.2/"
+      },
+      {
+        "path": "tqdm-4.70.1-py3-none-any.whl",
+        "bytes": 80199,
+        "sha256": "c293e525e6fef9c20e8728fd4612df02a0aa31bb5fe91ecd93e123b1b7bffa73",
+        "name": "tqdm",
+        "version": "4.70.1",
+        "license": "MPL-2.0 AND MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENCE",
+            "sha256": "fcff87c3a47ce8028a8512aa182d4fcf0ad1c90544ee75cf9b343684cac194de"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/tqdm/4.70.1/"
+      },
+      {
+        "path": "typer-0.29.0-py3-none-any.whl",
+        "bytes": 121058,
+        "sha256": "b3c3de6e06a848274dc7bd56a433499e9cf25fa1d40aa3ba4eccfec4e1624c7b",
+        "name": "typer",
+        "version": "0.29.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "58992cebcf8dfb6e40c4e2112ed12126c243666dca3912a3d78b7ecac4859d49"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/typer/0.29.0/"
+      },
+      {
+        "path": "typing_extensions-4.16.0-py3-none-any.whl",
+        "bytes": 45571,
+        "sha256": "481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8",
+        "name": "typing_extensions",
+        "version": "4.16.0",
+        "license": "PSF-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/typing-extensions/4.16.0/"
+      },
+      {
+        "path": "typing_inspection-0.4.5-py3-none-any.whl",
+        "bytes": 14874,
+        "sha256": "bc210535442b39e1bf2805e0c7a17dfd6a4ace760c84c7f7d16245d23a6b1c39",
+        "name": "typing-inspection",
+        "version": "0.4.5",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "804b59b25f2c31bd278f9202a19ae49a3945aa2664387e2d0a128c7cacc61ec3"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/typing-inspection/0.4.5/"
+      },
+      {
+        "path": "tzdata-2026.6-py2.py3-none-any.whl",
+        "bytes": 348210,
+        "sha256": "0a10eec6e13ef16b627fabed9a5f2ba61a62b1c67f327305f4e7e412a70b4aec",
+        "name": "tzdata",
+        "version": "2026.6",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "df58f69ea88683035d720b5375bcef0cf5aeaa98a1d098d572e0992c378deb46"
+          },
+          {
+            "path": "licenses/LICENSE_APACHE",
+            "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/tzdata/2026.6/"
+      },
+      {
+        "path": "urllib3-2.8.0-py3-none-any.whl",
+        "bytes": 135717,
+        "sha256": "0cf3cae568d36aa9576b28dfb35f11328f1cb974ca7647d9475ebb86c75ac6e3",
+        "name": "urllib3",
+        "version": "2.8.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.txt",
+            "sha256": "130e3a64d5fdd5d096a752694634a7d9df284469de86e5732100268041e3d686"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/urllib3/2.8.0/"
+      },
+      {
+        "path": "uvicorn-0.54.0-py3-none-any.whl",
+        "bytes": 87427,
+        "sha256": "505bdb0f318731d45f1f712071fc781a8981f6847a31c902c9f5e652d4f67faf",
+        "name": "uvicorn",
+        "version": "0.54.0",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE.md",
+            "sha256": "efe1acf3e62fb99c288b0ec73e5a773b7268ef4320fe757ea994214e4b63c371"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/uvicorn/0.54.0/"
+      },
+      {
+        "path": "watchfiles-1.3.0-cp310-abi3-win_amd64.whl",
+        "bytes": 290643,
+        "sha256": "1acabde19b67e673274e89a04d613b7fb1f122e2c4b8ec9a581e59c149264b61",
+        "name": "watchfiles",
+        "version": "1.3.0",
+        "license": "MIT",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "2d40a03346bded8daa4bd22d23825a6f2568a0820fbef76ac05bae534421e189"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/watchfiles/1.3.0/"
+      },
+      {
+        "path": "websocket_client-1.9.2-py3-none-any.whl",
+        "bytes": 95786,
+        "sha256": "e1a673830a9c7bfa47b1cd3d5e4178f4c9651d80a4eab02c9c23a1c3ec6250ce",
+        "name": "websocket-client",
+        "version": "1.9.2",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "14214b7bbb6952ada76afea206b6c393f2563d4e7678be0232e1a1d216716679"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/websocket-client/1.9.2/"
+      },
+      {
+        "path": "websockets-17.4-cp313-cp313-win_amd64.whl",
+        "bytes": 219560,
+        "sha256": "203e42eb77e06f85778a908b34c5ad032f34e98a68ef33920d6685c1e65a9420",
+        "name": "websockets",
+        "version": "17.4",
+        "license": "BSD-3-Clause",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "0f44514998aca209d3482d10204a8adf2aa4296ff157a36a5c0922f2280632d3"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/websockets/17.4/"
+      },
+      {
+        "path": "yarl-1.25.1-cp313-cp313-win_amd64.whl",
+        "bytes": 101945,
+        "sha256": "1f51020b2eb8a003c84925638ec63c21a750a4bddd3a22ec8eac6a742dadf1b9",
+        "name": "yarl",
+        "version": "1.25.1",
+        "license": "Apache-2.0",
+        "licenseFiles": [
+          {
+            "path": "LICENSE",
+            "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+          },
+          {
+            "path": "NOTICE",
+            "sha256": "56d6ac6c8105c0a51304c21db060e361af9a8ea0af9a75c239c28b5d13693838"
+          }
+        ],
+        "licenseEvidence": "wheel METADATA",
+        "source": "https://pypi.org/project/yarl/1.25.1/"
+      }
+    ],
+    "model": [
+      {
+        "path": "model.onnx",
+        "name": "paraphrase-multilingual-MiniLM-L12-v2/model.onnx",
+        "bytes": 470301610,
+        "sha256": "10f7a088420252b26caf819236ca2c9d2987afd0fc06fec7553b542a5655a05a",
+        "version": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+        "source": "https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/blob/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/onnx/model.onnx",
+        "license": "Apache-2.0"
+      },
+      {
+        "path": "tokenizer.json",
+        "name": "paraphrase-multilingual-MiniLM-L12-v2/tokenizer.json",
+        "bytes": 9081518,
+        "sha256": "2c3387be76557bd40970cec13153b3bbf80407865484b209e655e5e4729076b8",
+        "version": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+        "source": "https://huggingface.co/sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2/blob/e8f8c211226b894fcb81acc59f3b34ba3efd5f42/tokenizer.json",
+        "license": "Apache-2.0"
+      }
+    ],
+    "wheelLock": "scripts/chroma-local-requirements.txt",
+    "committedLockSha256": "559a033c3552b81fa8fa9b545ddd61388324124ee48d2a8394b537629085ce91"
+  },
+  "excludes": [
+    "Standalone server and beta server, both maps, context generator, transcript watcher and legacy launchers/wrappers",
+    "NPX installer, bug-report, hosted/cloud entrypoints and non-Codex integration bundles",
+    "Worker, MCP and context-reader source maps, checkout node_modules, package manifests and plugin lockfiles",
+    "Unselected skills, tools and Chroma inputs, user configuration, auth, SQLite and derived data"
+  ],
+  "buildReplay": {
+    "matched": [
+      "plugin/.codex-plugin/plugin.json",
+      "plugin/hooks/codex-hooks.json",
+      "plugin/scripts/context-read-worker.cjs",
+      "plugin/scripts/context-read-worker.cjs.map",
+      "plugin/scripts/mcp-server.cjs",
+      "plugin/scripts/mcp-server.cjs.map",
+      "plugin/scripts/worker-service.cjs",
+      "plugin/scripts/worker-service.cjs.map",
+      "plugin/skills/request-progress/scripts/request-groups.mjs",
+      "plugin/sqlite/SessionStore.js",
+      "plugin/sqlite/SessionStore.js.map",
+      "plugin/sqlite/observations/files.js",
+      "plugin/sqlite/observations/files.js.map",
+      "plugin/ui/assets/fonts/monaspace-radon-var.woff",
+      "plugin/ui/assets/fonts/monaspace-radon-var.woff2",
+      "plugin/ui/tv.html",
+      "plugin/ui/viewer-bundle.js",
+      "plugin/ui/viewer.html",
+      "plugin/ui/work-view/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+      "plugin/ui/work-view/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+      "plugin/ui/work-view/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+      "plugin/ui/work-view/assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+      "plugin/ui/work-view/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+      "plugin/ui/work-view/assets/index-DInrJkv2.js",
+      "plugin/ui/work-view/assets/index-Ddyc58ua.css",
+      "plugin/ui/work-view/favicon.svg",
+      "plugin/ui/work-view/icons.svg",
+      "plugin/ui/work-view/index.html",
+      "scripts/chroma-local-requirements.txt"
+    ],
+    "emitted": {
+      "plugin/ui/viewer-bundle.js": {
+        "entryPoint": "src/ui/viewer/index.tsx",
+        "inputTreeSha256": "623220b6a88d3b50b1f75e59936ac5ffefc16fe827cb8a08d70fd4b030231eab",
+        "inputs": 65,
+        "externalImports": []
+      },
+      "plugin/scripts/worker-service.cjs": {
+        "entryPoint": "src/services/worker-service.ts",
+        "inputTreeSha256": "cf9dbebe11ab49d18a0e48a1008376114ea620758c47a264a4bf39e35d54f5f8",
+        "inputs": 717,
+        "externalImports": [
+          "@better-auth/api-key",
+          "async_hooks",
+          "better-auth",
+          "better-auth/node",
+          "better-auth/plugins",
+          "buffer",
+          "bun:ffi",
+          "bun:sqlite",
+          "child_process",
+          "crypto",
+          "events",
+          "fs",
+          "fs/promises",
+          "http",
+          "module",
+          "net",
+          "node:buffer",
+          "node:child_process",
+          "node:crypto",
+          "node:events",
+          "node:fs",
+          "node:fs/promises",
+          "node:http",
+          "node:module",
+          "node:net",
+          "node:os",
+          "node:path",
+          "node:process",
+          "node:querystring",
+          "node:stream",
+          "node:tty",
+          "node:util",
+          "node:worker_threads",
+          "node:zlib",
+          "os",
+          "path",
+          "readline",
+          "stream",
+          "string_decoder",
+          "tty",
+          "url",
+          "util"
+        ]
+      },
+      "plugin/scripts/context-read-worker.cjs": {
+        "entryPoint": "src/services/context/context-read-worker.ts",
+        "inputTreeSha256": "232fb70647117860d3cbd1e17c37d9467edb62cf2eaf4f18f98945c38f60ca71",
+        "inputs": 74,
+        "externalImports": [
+          "bun:sqlite",
+          "child_process",
+          "crypto",
+          "fs",
+          "node:child_process",
+          "node:fs",
+          "node:util",
+          "node:worker_threads",
+          "os",
+          "path",
+          "url",
+          "util"
+        ]
+      },
+      "plugin/sqlite/SessionStore.js": {
+        "entryPoint": "src/services/sqlite/SessionStore.ts",
+        "inputTreeSha256": "cc61a5ed96af6bd8138d6116e769cfdf10149c3b7e08621771592309f42bddea",
+        "inputs": 39,
+        "externalImports": [
+          "bun:sqlite",
+          "crypto",
+          "fs",
+          "os",
+          "path",
+          "url"
+        ]
+      },
+      "plugin/sqlite/observations/files.js": {
+        "entryPoint": "src/services/sqlite/observations/files.ts",
+        "inputTreeSha256": "d23ac876ccce3a195c38ba4d1839b07ffabb51b24f9555499690b02e8203ad60",
+        "inputs": 7,
+        "externalImports": [
+          "fs",
+          "os",
+          "path",
+          "url"
+        ]
+      },
+      "plugin/skills/request-progress/scripts/request-groups.mjs": {
+        "entryPoint": "src/services/work-view/request-groups-cli.mjs",
+        "inputTreeSha256": "53d66af1011822f9a5b327d5e40a02bde1fedc2d2e189c15798e7e81bcd19f82",
+        "inputs": 26,
+        "externalImports": [
+          "bun:sqlite",
+          "child_process",
+          "crypto",
+          "fs",
+          "node:crypto",
+          "node:fs",
+          "node:os",
+          "node:path",
+          "os",
+          "path",
+          "url"
+        ]
+      },
+      "plugin/scripts/mcp-server.cjs": {
+        "entryPoint": "src/servers/mcp-server.ts",
+        "inputTreeSha256": "26951aaa3feb140d37e181f0f861961e03876d60577d5d633c30054aeefcff30",
+        "inputs": 265,
+        "externalImports": [
+          "child_process",
+          "crypto",
+          "fs",
+          "module",
+          "net",
+          "node:async_hooks",
+          "node:child_process",
+          "node:crypto",
+          "node:fs",
+          "node:fs/promises",
+          "node:http",
+          "node:http2",
+          "node:os",
+          "node:path",
+          "node:process",
+          "node:stream",
+          "node:url",
+          "node:util",
+          "node:worker_threads",
+          "os",
+          "path",
+          "url",
+          "util"
+        ]
+      },
+      "plugin/ui/work-view/assets/index-DInrJkv2.js": {
+        "renderedModules": 785,
+        "physicalInputs": 783,
+        "inputTreeSha256": "5070c2547dca82e664e91fdf027b287bc1eba1673063e347c6dc1a98828547aa"
+      }
+    }
+  },
+  "provenanceGaps": {
+    "bundledOrBuildPackagesWithoutLicense": [],
+    "packagesWithoutSourceOrIntegrity": [],
+    "installedLockMismatches": [],
+    "wheelsWithoutLicenseDeclaration": [],
+    "wheelLicenseEntriesWithoutUniqueBytes": [],
+    "stagedFontsWithoutExactUpstreamRelease": [
+      "catalog/plugin/ui/assets/fonts/monaspace-radon-var.woff",
+      "catalog/plugin/ui/assets/fonts/monaspace-radon-var.woff2"
+    ]
+  }
+}
