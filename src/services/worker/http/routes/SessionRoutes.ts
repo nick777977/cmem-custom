@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { ingestObservation, ingestSummarize, ingestSessionEnd, type IngestContext } from '../shared.js';
 import { validateBody } from '../middleware/validateBody.js';
 import { requireLocalhost } from '../middleware.js';
+import { isSameHostOrigin } from '../origin-policy.js';
 import { logger } from '../../../../utils/logger.js';
 import { logChromaWriteFailure } from '../../search/errors.js';
 import { stripMemoryTags, isCodexInternalPrompt, isGrokBotInternalPrompt, isInternalProtocolPayload } from '../../../../utils/tag-stripping.js';
@@ -563,6 +564,27 @@ export class SessionRoutes extends BaseRouteHandler {
   }
 
   setupRoutes(app: express.Application): void {
+    if (this.mainProfiles) {
+      app.get('/api/processing/recovery', requireLocalhost, this.wrapHandler(async (_req, res) => {
+        res.json({ items: this.sessionManager.listGenerationRecovery() });
+      }));
+      app.post('/api/processing/recovery', requireLocalhost, validateBody(SessionRoutes.recoverySchema),
+        this.wrapHandler(async (req, res) => {
+          const origin = req.get('origin');
+          if (origin !== undefined && !isSameHostOrigin(origin, req.get('host'))) {
+            res.status(403).json({ status: 'foreign_origin' });
+            return;
+          }
+          const { id, version, acknowledgeUnknown } = req.body;
+          const result = this.sessionManager.recoverGeneration(id, version, acknowledgeUnknown);
+          if (result.status !== 'scheduled') {
+            res.status(result.status === 'unavailable' ? 404 : 409).json(result);
+            return;
+          }
+          await this.ensureGeneratorRunning(result.sessionDbId, 'operator-recovery');
+          res.status(202).json(result);
+        }));
+    }
     // Operator repair route: it starts generators and retries auth/transport
     // pauses that the automatic sweep leaves alone, so it is localhost-only
     // like the other admin routes.
@@ -600,6 +622,12 @@ export class SessionRoutes extends BaseRouteHandler {
 
   private static readonly processingSchema = z.object({
     isProcessing: z.boolean(),
+  });
+
+  private static readonly recoverySchema = z.object({
+    id: z.number().int().positive().max(Number.MAX_SAFE_INTEGER),
+    version: z.number().int().nonnegative().max(Number.MAX_SAFE_INTEGER),
+    acknowledgeUnknown: z.boolean().default(false),
   });
 
   private handleProcessing = this.wrapHandler(async (req: Request, res: Response): Promise<void> => {

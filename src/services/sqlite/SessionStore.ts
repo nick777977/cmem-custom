@@ -5,6 +5,7 @@ import { DATA_DIR, DB_PATH, ensureDir, OBSERVER_SESSIONS_PROJECT, USER_SETTINGS_
 import { logger } from '../../utils/logger.js';
 import type { ProjectKeySource } from '../../utils/project-name.js';
 import { projectReadKeys, projectScopeSql, scopedProjects } from './project-read-keys.js';
+import { completeGeneration } from './GenerationRecovery.js';
 import {
   TableColumnInfo,
   IndexInfo,
@@ -4073,7 +4074,7 @@ export class SessionStore {
     discoveryTokens: number = 0,
     overrideTimestampEpoch?: number,
     generatedByModel?: string,
-    options: { skipTitleDedup?: boolean } = {}
+    options: { skipTitleDedup?: boolean; generationIds?: readonly number[] } = {}
   ): {
     observationIds: number[];
     /** Parallel to observationIds: true where a Tier-0 merge reused an existing row (nothing new was stored). */
@@ -4239,6 +4240,9 @@ export class SessionStore {
         summaryId = Number(result.lastInsertRowid);
       }
 
+      if (options.generationIds && completeGeneration(this.db, options.generationIds) !== options.generationIds.length) {
+        throw new Error('Generation recovery receipt missing or already completed');
+      }
       return { observationIds, mergedIntoExisting, insertedObservationIds, summaryId, createdAtEpoch: timestampEpoch };
     });
 

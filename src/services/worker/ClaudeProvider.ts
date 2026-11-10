@@ -1064,6 +1064,7 @@ export class ClaudeProvider {
       standIn?: ClaudeCredential;
       profileEnv?: NodeJS.ProcessEnv;
       profileSignal?: AbortSignal;
+      beforeDispatch?: () => void;
     },
     modelId: string,
     claudePath: string,
@@ -1083,6 +1084,8 @@ export class ClaudeProvider {
         controller.signal, context.sessionDbId,
       ) : undefined;
       try {
+        controller.signal.throwIfAborted();
+        context.beforeDispatch?.();
         const result = query({
           prompt,
           options: {
@@ -1130,10 +1133,10 @@ export class ClaudeProvider {
   }
 
   async queryProfileTurn(prompt: string, session: Pick<ActiveSession, 'sessionDbId' | 'contentSessionId' | 'project'>, model: string, executable: string,
-    env: NodeJS.ProcessEnv, signal: AbortSignal): Promise<string> {
+    env: NodeJS.ProcessEnv, signal: AbortSignal, beforeDispatch?: () => void): Promise<string> {
     return (await this.runStandaloneObserverPrompt(prompt, {
       sessionDbId: session.sessionDbId, contentSessionId: session.contentSessionId, project: session.project,
-      profileEnv: env, profileSignal: signal,
+      profileEnv: env, profileSignal: signal, beforeDispatch,
     }, model, executable)) ?? '';
   }
 

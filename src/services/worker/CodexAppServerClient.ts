@@ -134,6 +134,7 @@ export interface CodexAppServerTurnOptions {
   signal?: AbortSignal;
   /** Recheck caller-owned admission after waiting in the serialized queue. */
   beforeSend?: () => void;
+  beforeDispatch?: () => void;
   /** Publish admission failures before releasing the queue to the next caller. */
   onFailure?: (error: unknown) => void;
 }
@@ -560,6 +561,7 @@ export class CodexAppServerClient {
 
     try {
       options.beforeSend?.();
+      options.beforeDispatch?.();
       const turnResponse = await this.request('turn/start', {
         threadId,
         input: [{ type: 'text', text: options.prompt }],

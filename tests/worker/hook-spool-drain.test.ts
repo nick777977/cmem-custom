@@ -105,7 +105,7 @@ describe('drainHookSpool', () => {
       ],
       errors: [{ sourcePath: '/repo/.scratch/huge.mov', error: 'over the limit' }],
     });
-    spool.enqueue('summarize', { contentSessionId: 'session-a', platformSource: 'claude', lastAssistantMessage: 'done <private>x</private>' });
+    const summaryFile = spool.enqueue('summarize', { contentSessionId: 'session-a', platformSource: 'claude', lastAssistantMessage: 'done <private>x</private>' });
     spool.enqueue('session_end', { contentSessionId: 'session-a', platformSource: 'claude' });
 
     const result = await drainHookSpool(spool);
@@ -123,7 +123,7 @@ describe('drainHookSpool', () => {
     expect(sessionManager.queueObservation).toHaveBeenCalledTimes(2);
     const sessionDbId = store.findSessionDbIdByContentSessionId('session-a', 'claude');
     expect(sessionDbId).not.toBeNull();
-    expect(sessionManager.queueSummarize).toHaveBeenCalledWith(sessionDbId, 'done', 0, expect.any(Number));
+    expect(sessionManager.queueSummarize).toHaveBeenCalledWith(sessionDbId, 'done', 0, expect.any(Number), summaryFile.split(/[\\/]/).pop()!.slice(0, -5));
     expect(sessionManager.requestSessionWrapup).toHaveBeenCalledWith(sessionDbId);
     expect(store.getAdvisorCalls(0, 10).items.map(call => call.tool_use_id)).toEqual(['srvtoolu_1']);
     expect(store.getDeliverable(1)).toMatchObject({ project: 'repo', content_session_id: 'session-a', bucket_path: bucketPath, kind: 'page' });

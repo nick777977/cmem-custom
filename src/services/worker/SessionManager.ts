@@ -13,6 +13,14 @@ import { planUnattendedGatewayResume, unattendedGatewayResumesSpent } from './se
 import { PROVIDER_SWITCH_BOUNDARY_ABORT_REASON } from './session/abort-reason.js';
 import { isSimpleTierMessage } from './session/tier-routing.js';
 import { claudeStandInStillServes } from '../../shared/claude-fallback-readiness.js';
+import { GenerationRecovery, completeGeneration, generationIds } from '../sqlite/GenerationRecovery.js';
+import { SettingsDefaultsManager } from '../../shared/SettingsDefaultsManager.js';
+import { USER_SETTINGS_PATH } from '../../shared/paths.js';
+import { isProjectExcluded } from '../../utils/project-filter.js';
+import { isToolSkipped } from '../../shared/is-tool-skipped.js';
+import { shouldSkipAgentObservation } from '../../shared/should-skip-agent-observation.js';
+import { isSummarizeDisabledByEnv } from '../../shared/hook-constants.js';
+import { PrivacyCheckValidator } from './validation/PrivacyCheckValidator.js';
 
 export const SESSION_END_WRAPUP_GRACE_MS = 5_000;
 
@@ -60,6 +68,8 @@ export class SessionManager {
   private transportResumeDispositionEpochs = new WeakMap<ActiveSession, number>();
   /** Sessions that already used their one summarize rescue (#3419). */
   private readonly summarizeRescues = new Set<number>();
+  private recoveryEnabled = false;
+  private recovery?: GenerationRecovery;
 
   constructor(
     dbManager: DatabaseManager,
@@ -70,6 +80,66 @@ export class SessionManager {
 
   setOnPendingMutate(cb: () => void): void {
     this.onPendingMutate = cb;
+  }
+
+  enableGenerationRecovery(): void {
+    this.recoveryEnabled = true;
+  }
+
+  private getRecovery(): GenerationRecovery | undefined {
+    if (this.recoveryEnabled) {
+      this.recovery ??= new GenerationRecovery(this.dbManager.getSessionStore().db);
+    }
+    return this.recovery;
+  }
+
+  private enqueueGeneration(sessionDbId: number, message: PendingMessage, enqueuedAt = Date.now(), spoolKey?: string): number {
+    const id = this.getRecovery()?.accept(sessionDbId, message, enqueuedAt, spoolKey);
+    if (id === 0) return 0;
+    return this.buffer.enqueue(sessionDbId, message, enqueuedAt, id);
+  }
+
+  listGenerationRecovery() {
+    return this.getRecovery()?.list().filter(item => !this.buffer.isGenerationBuffered(item.sessionDbId, item.id)) ?? [];
+  }
+
+  recoverGeneration(id: number, version: number, acknowledgeUnknown: boolean) {
+    const recovery = this.getRecovery();
+    const item = recovery?.get(id);
+    if (!recovery || !item) return { status: 'unavailable' } as const;
+    const { sessionDbId, message } = item;
+    if (item.version !== version || this.deletingSessions.has(sessionDbId)
+        || this.buffer.isGenerationBuffered(sessionDbId, id)) return { status: 'stale_or_busy' } as const;
+    if (item.state === 'outcome_unknown' && !acknowledgeUnknown) return { status: 'acknowledgement_required' } as const;
+
+    const store = this.dbManager.getSessionStore();
+    const dbSession = this.dbManager.getSessionById(sessionDbId);
+    const settings = SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH);
+    const cwd = message.cwd || store.getSessionCwd(sessionDbId);
+    if ((cwd && isProjectExcluded(cwd, settings.CLAUDE_MEM_EXCLUDED_PROJECTS))
+      || (message.type === 'observation' && (isToolSkipped(message.tool_name ?? '', settings.CLAUDE_MEM_SKIP_TOOLS)
+        || shouldSkipAgentObservation(message.agentId, message.agentType, settings).skip))
+      || (message.type === 'summarize' && isSummarizeDisabledByEnv('summarize'))) {
+      return { status: 'excluded' } as const;
+    }
+    const privacy = PrivacyCheckValidator.checkUserPromptPrivacy(
+      store, dbSession.content_session_id, message.prompt_number ?? 0, message.type, sessionDbId,
+    );
+    if (!privacy.allow) return { status: 'excluded' } as const;
+
+    if (!this.sessions.has(sessionDbId)) {
+      this.initializeSession(sessionDbId, privacy.prompt, message.prompt_number);
+    }
+    if (!recovery.authorize(id, version)) return { status: 'stale_or_busy' } as const;
+    this.buffer.enqueue(sessionDbId, { ...message, recoveryPrompt: privacy.prompt }, item.enqueuedAt, id);
+    return { status: 'scheduled', sessionDbId } as const;
+  }
+
+  markGenerationDispatched(sessionDbId: number): void {
+    const ids = generationIds(this.getClaimedMessages(sessionDbId));
+    if (ids.length === 0) return;
+    this.getRecovery()!.markDispatch(ids);
+    this.buffer.markDispatched(sessionDbId, ids);
   }
 
   setGeneratorStarter(starter: (sessionDbId: number, source: string) => void | Promise<void>): void {
@@ -468,11 +538,11 @@ export class SessionManager {
   }
 
   /**
-   * Synchronous on purpose: when this returns the message is in the buffer,
+   * Synchronous on purpose: when this returns the message has been accepted,
    * so ingest can record the hook-spool hand-off before any await (and before
    * the generator kick) — see HookSpool.drain.
    */
-  queueObservation(sessionDbId: number, data: ObservationData, enqueuedAtEpochMs?: number): void {
+  queueObservation(sessionDbId: number, data: ObservationData, enqueuedAtEpochMs?: number, spoolKey?: string): void {
     let session = this.sessions.get(sessionDbId);
     if (!session) {
       session = this.initializeSession(sessionDbId);
@@ -490,7 +560,7 @@ export class SessionManager {
       toolUseId: data.toolUseId,
     };
 
-    const messageId = this.buffer.enqueue(sessionDbId, message, enqueuedAtEpochMs);
+    const messageId = this.enqueueGeneration(sessionDbId, message, enqueuedAtEpochMs, spoolKey);
     const queueDepth = this.buffer.getPendingCount(sessionDbId);
     const toolSummary = redactForLog(logger.formatTool(data.tool_name, data.tool_input));
     if (messageId === 0) {
@@ -510,6 +580,7 @@ export class SessionManager {
     lastAssistantMessage?: string,
     promptNumber?: number,
     enqueuedAtEpochMs?: number,
+    spoolKey?: string,
   ): void {
     let session = this.sessions.get(sessionDbId);
     if (!session) {
@@ -522,7 +593,7 @@ export class SessionManager {
       last_assistant_message: lastAssistantMessage
     };
 
-    const messageId = this.buffer.enqueue(sessionDbId, message, enqueuedAtEpochMs);
+    const messageId = this.enqueueGeneration(sessionDbId, message, enqueuedAtEpochMs, spoolKey);
     const queueDepth = this.buffer.getPendingCount(sessionDbId);
     if (messageId === 0) {
       logger.debug('QUEUE', `DUP_SUPPRESSED | sessionDbId=${sessionDbId} | type=summarize | depth=${queueDepth}`, {
@@ -543,6 +614,7 @@ export class SessionManager {
     const session = this.sessions.get(sessionDbId);
     if (session) {
       session.claimedMessageIds = [];
+      if (this.recoveryEnabled) session.earliestPendingTimestamp = null;
     }
     return this.buffer.resetClaimed(sessionDbId);
   }
@@ -550,6 +622,11 @@ export class SessionManager {
   async confirmClaimedMessages(sessionDbId: number): Promise<number> {
     const session = this.sessions.get(sessionDbId);
     const claimedIds = session?.claimedMessageIds ?? [];
+    const ids = generationIds(this.getClaimedMessages(sessionDbId));
+    if (ids.length > 0) {
+      const db = this.dbManager.getSessionStore().db;
+      db.transaction(() => completeGeneration(db, ids))();
+    }
     let confirmed = 0;
     for (const messageId of claimedIds) {
       confirmed += this.buffer.confirm(messageId);

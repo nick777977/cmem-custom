@@ -309,6 +309,8 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
     signal?: AbortSignal,
     perAttemptTimeoutMs?: number,
     paidSendBudget?: PaidSendBudget,
+    _label?: import('./OpenAICompatibleProvider.js').ObserverRequestLabel,
+    beforeDispatch?: () => void,
   ): Promise<ProviderQueryResult> {
     const abortSignal = config.signal && signal
       ? AbortSignal.any([config.signal, signal])
@@ -319,7 +321,7 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
       'Follow the latest user request: XML for observations/summaries, plain text for payload compression.',
       ...history.map(message => `${message.role.toUpperCase()}:\n${message.content}`),
     ].join('\n\n');
-    if (config.nativeCodexHome) return this.runTurnWithRetry(prompt, config, timeoutMs, abortSignal, paidSendBudget);
+    if (config.nativeCodexHome) return this.runTurnWithRetry(prompt, config, timeoutMs, abortSignal, paidSendBudget, beforeDispatch);
     // Pool slots run concurrently: a success may only clear the breaker or
     // setup status it was admitted under, never a newer failure another slot
     // recorded meanwhile (each record installs a new object).
@@ -375,6 +377,7 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
     timeoutMs: number,
     abortSignal: AbortSignal | undefined,
     paidSendBudget: PaidSendBudget | undefined,
+    beforeDispatch?: () => void,
   ): Promise<CodexAppServerTurnResult> {
     return this.appServer.withClient((client, admittedSignal) => withRetry(async attemptSignal => {
       try {
@@ -386,6 +389,7 @@ export class CodexProvider extends OpenAICompatibleProvider<CodexConfig> {
           timeoutMs,
           prompt,
           signal: attemptSignal,
+          beforeDispatch,
           // Rechecked after the wait for the serialized app-server: the request
           // this one queued behind may have found setup broken or armed the
           // breaker.

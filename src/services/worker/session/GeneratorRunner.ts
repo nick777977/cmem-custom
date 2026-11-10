@@ -224,7 +224,6 @@ export async function startGeneratorWithProvider(
         if (myController.signal.aborted && session.abortReason && !isClassified(error)) return;
         skipGeneratorExitFinalization = true;
         session.pausedReason = 'setup_required';
-        await sessionManager.resetProcessingToPending(session.sessionDbId);
         deps.profileRun.onFailure(error);
         return;
       }
@@ -406,6 +405,9 @@ export async function startGeneratorWithProvider(
       }
     })
     .finally(async () => {
+      if (deps.profileRun && sessionManager.getSession(session.sessionDbId) === session) {
+        await sessionManager.resetProcessingToPending(session.sessionDbId);
+      }
       if (skipGeneratorExitFinalization) {
         // Setup needs operator repair. A transport timer from an earlier
         // failure must not restart Claude while that setup gate is active.

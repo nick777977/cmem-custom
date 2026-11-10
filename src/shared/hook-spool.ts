@@ -425,7 +425,7 @@ export class HookSpool {
    * marker is cleared once the file is gone.
    */
   async drain(
-    accept: (entry: HookSpoolEntry, markHandedOff: () => void) => HookSpoolAcceptance | Promise<HookSpoolAcceptance>,
+    accept: (entry: HookSpoolEntry, markHandedOff: () => void, entryKey: string) => HookSpoolAcceptance | Promise<HookSpoolAcceptance>,
     consumedMarkers?: HookSpoolConsumedMarkers,
     options: HookSpoolDrainOptions = {},
   ): Promise<HookSpoolDrainResult> {
@@ -490,7 +490,7 @@ export class HookSpool {
       };
       let accepted: HookSpoolAcceptance;
       try {
-        accepted = await accept(file.entry, markHandedOff);
+        accepted = await accept(file.entry, markHandedOff, entryKey);
       } catch (error) {
         logger.warn('HOOK', handedOff
           ? 'Hook spool entry failed after ingest accepted it; removing it (a retry would send it twice)'

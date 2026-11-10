@@ -1,6 +1,7 @@
 
 import { logger } from '../../../utils/logger.js';
 import { hasStorableTitle } from '../../sqlite/observations/store.js';
+import { generationIds } from '../../sqlite/GenerationRecovery.js';
 import { parseAgentXml, type ParsedObservation, type ParsedSummary } from '../../../sdk/parser.js';
 import {
   classifyObserverOutput,
@@ -768,7 +769,8 @@ export async function processAgentResponse(
       context.promptNumber,
       discoveryTokens,
       originalTimestamp ?? undefined,
-      modelId
+      modelId,
+      { generationIds: generationIds(claimedMessages) },
     );
   } finally {
     session.pendingAgentId = null;

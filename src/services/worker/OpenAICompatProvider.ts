@@ -584,13 +584,14 @@ export class OpenAICompatProvider extends OpenAICompatibleProvider<OpenAICompatC
     perAttemptTimeoutMs?: number,
     paidSendBudget?: PaidSendBudget,
     label?: ObserverRequestLabel,
+    beforeDispatch?: () => void,
   ): Promise<ProviderQueryResult> {
     if (!config.apiUrl || !config.model) {
       throw this.missingApiKeyError();
     }
     return withKeyPool(
       { poolId: 'openai-compatible', keys: resolvePoolKeys(config), label: config.preset.label, rateLimitUntilNextKey },
-      ({ key, poolSize }) => this.queryChatCompletions(history, key, poolSize, config, signal, perAttemptTimeoutMs, paidSendBudget, label?.sessionId),
+      ({ key, poolSize }) => this.queryChatCompletions(history, key, poolSize, config, signal, perAttemptTimeoutMs, paidSendBudget, label?.sessionId, beforeDispatch),
     );
   }
 
@@ -681,6 +682,7 @@ export class OpenAICompatProvider extends OpenAICompatibleProvider<OpenAICompatC
     paidSendBudget?: PaidSendBudget,
     /** anonymousSessionId() of the observed session, for preset.sessionHeader. */
     sessionId?: string,
+    beforeDispatch?: () => void,
   ): Promise<ProviderQueryResult> {
     const messages = this.conversationToOpenAIMessages(history);
     const label = config.preset.label;
@@ -705,6 +707,8 @@ export class OpenAICompatProvider extends OpenAICompatibleProvider<OpenAICompatC
       ? resolveStreamLiveness(perAttemptTimeoutMs, this.streamIdleTimeoutMs ?? resolveStreamIdleTimeoutMs())
       : null;
     let data = await withRetry<ChatCompletionResponse>(async (attemptSignal) => {
+      attemptSignal.throwIfAborted();
+      beforeDispatch?.();
       const exchange = await this.requestChatCompletion(config, apiKey, messages, maxOutputTokens, clientAttemptId, attemptSignal, liveness, sessionId);
       const responseData = exchange.body as ChatCompletionResponse;
 

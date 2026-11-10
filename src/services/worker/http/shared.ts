@@ -134,6 +134,7 @@ export const transcriptCheckpointGate: TranscriptCheckpointGate = {
  */
 export interface IngestHandoff {
   markHandedOff?: () => void;
+  spoolKey?: string;
 }
 
 export type IngestResult =
@@ -363,7 +364,7 @@ export async function ingestObservation(payload: ObservationPayload, handoff: In
     agentId: typeof payload.agentId === 'string' ? payload.agentId : undefined,
     agentType: typeof payload.agentType === 'string' ? payload.agentType : undefined,
     toolUseId: typeof payload.toolUseId === 'string' ? payload.toolUseId : undefined,
-  }, payload.enqueuedAtEpochMs);
+  }, payload.enqueuedAtEpochMs, handoff.spoolKey);
   // Enqueued: the hand-off point. Synchronously, before the generator kick.
   handoff.markHandedOff?.();
 
@@ -458,7 +459,7 @@ export async function ingestSummarize(
   const cleanedLastAssistantMessage = payload.lastAssistantMessage
     ? stripMemoryTags(String(payload.lastAssistantMessage))
     : payload.lastAssistantMessage;
-  sessionManager.queueSummarize(sessionDbId, cleanedLastAssistantMessage, promptNumber, payload.enqueuedAtEpochMs);
+  sessionManager.queueSummarize(sessionDbId, cleanedLastAssistantMessage, promptNumber, payload.enqueuedAtEpochMs, handoff.spoolKey);
   // Enqueued: the hand-off point. Synchronously, before the generator kick.
   handoff.markHandedOff?.();
 

@@ -895,6 +895,7 @@ export class OpenRouterProvider extends OpenAICompatibleProvider<OpenRouterConfi
     perAttemptTimeoutMs?: number,
     paidSendBudget?: PaidSendBudget,
     label?: ObserverRequestLabel,
+    beforeDispatch?: () => void,
   ): Promise<ProviderQueryResult> {
     // Rotation wraps withRetry rather than living inside it: the inner retry
     // still owns transient failures against one key, and this outer sweep moves
@@ -905,7 +906,7 @@ export class OpenRouterProvider extends OpenAICompatibleProvider<OpenRouterConfi
       { poolId: 'openrouter', keys: resolvePoolKeys(config), label: 'OpenRouter', rateLimitUntilNextKey },
       ({ key, poolSize }) => this.queryOpenRouterMultiTurn(
         history, key, poolSize, config.model, config.fallbackModels, config.apiUrl, config.siteUrl, config.appName,
-        signal, config.plainText, perAttemptTimeoutMs, config.extraBody, config.reasoningEffort, paidSendBudget, label, config.explicitProfile,
+        signal, config.plainText, perAttemptTimeoutMs, config.extraBody, config.reasoningEffort, paidSendBudget, label, config.explicitProfile, beforeDispatch,
       ),
     );
   }
@@ -982,6 +983,7 @@ export class OpenRouterProvider extends OpenAICompatibleProvider<OpenRouterConfi
     paidSendBudget?: PaidSendBudget,
     label?: ObserverRequestLabel,
     explicitProfile?: boolean,
+    beforeDispatch?: () => void,
   ): Promise<ProviderQueryResult> {
     const messages = this.conversationToOpenAIMessages(history);
     const totalChars = history.reduce((sum, m) => sum + m.content.length, 0);
@@ -1011,6 +1013,8 @@ export class OpenRouterProvider extends OpenAICompatibleProvider<OpenRouterConfi
       ? resolveStreamLiveness(perAttemptTimeoutMs, this.streamIdleTimeoutMs ?? resolveStreamIdleTimeoutMs())
       : null;
     let data = await withRetry<OpenRouterResponse>(async (attemptSignal) => {
+      attemptSignal.throwIfAborted();
+      beforeDispatch?.();
       const exchange = await this.requestChatCompletion(
         apiUrl, apiKey, model, fallbackModels, messages, siteUrl, appName, clientAttemptId, attemptSignal,
         maxOutputTokens, liveness, plainText, extraBody, reasoningEffort, label,

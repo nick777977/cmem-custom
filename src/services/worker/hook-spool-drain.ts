@@ -15,7 +15,7 @@ const SAFETY_SWEEP_INTERVAL_MS = 30_000;
  * `markHandedOff` goes to ingest, which calls it synchronously at the exact
  * point the entry is irrevocably accepted (see HookSpool.drain).
  */
-async function ingestHookSpoolEntry(entry: HookSpoolEntry, markHandedOff: () => void): Promise<boolean | 'expired'> {
+async function ingestHookSpoolEntry(entry: HookSpoolEntry, markHandedOff: () => void, spoolKey: string): Promise<boolean | 'expired'> {
   switch (entry.kind) {
     case 'work_state_telemetry': {
       const { payload } = entry;
@@ -29,7 +29,7 @@ async function ingestHookSpoolEntry(entry: HookSpoolEntry, markHandedOff: () => 
     case 'file_edit': {
       // Attribute it to the prompt that was current when the hook saw it, not
       // the one current now (the drain may run prompts later).
-      const result = await ingestObservation({ ...entry.payload, enqueuedAtEpochMs: entry.enqueuedAtEpochMs }, { markHandedOff });
+      const result = await ingestObservation({ ...entry.payload, enqueuedAtEpochMs: entry.enqueuedAtEpochMs }, { markHandedOff, spoolKey });
       if (!result.ok) {
         logger.warn('HOOK', 'Spooled observation was not ingested; keeping it for the next drain', {
           kind: entry.kind,
@@ -47,7 +47,7 @@ async function ingestHookSpoolEntry(entry: HookSpoolEntry, markHandedOff: () => 
       // never registered — the drain already holds a summarize behind any
       // retained observation of its session — and it would only be retried
       // until the retry window expires it, like session_end (#4629).
-      const outcome = (await ingestSummarize({ ...entry.payload, enqueuedAtEpochMs: entry.enqueuedAtEpochMs }, undefined, { markHandedOff })).status;
+      const outcome = (await ingestSummarize({ ...entry.payload, enqueuedAtEpochMs: entry.enqueuedAtEpochMs }, undefined, { markHandedOff, spoolKey })).status;
       if (outcome !== 'unknown_session') return true;
       return Date.now() - entry.enqueuedAtEpochMs > HOOK_SPOOL_SESSION_END_UNKNOWN_GRACE_MS ? 'expired' : false;
     }

@@ -161,7 +161,7 @@ class ProfileClaudeProvider extends OpenAICompatibleProvider<{ apiKey: string; m
     const prompt = this.conversationToOpenAIMessages(request.history)
       .map(message => `${message.role.toUpperCase()}:\n${message.content}`).join('\n\n');
     const session = request.session ?? { sessionDbId: nextStandaloneSessionId(), contentSessionId: '', project: '' };
-    const content = await this.claude.queryProfileTurn(prompt, session, profile.model, profile.executable, env, request.signal);
+    const content = await this.claude.queryProfileTurn(prompt, session, profile.model, profile.executable, env, request.signal, request.beforeDispatch);
     return { content };
   }
 }

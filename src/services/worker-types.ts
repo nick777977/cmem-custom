@@ -246,11 +246,14 @@ export interface PendingMessage {
   agentId?: string;
   agentType?: string;
   toolUseId?: string;
+  /** The archived prompt when an operator recovers a summary. */
+  recoveryPrompt?: string;
 }
 
 export interface PendingMessageWithId extends PendingMessage {
   _persistentId: number;
   _originalTimestamp: number;
+  _generationId?: number;
 }
 
 export interface ObservationData {

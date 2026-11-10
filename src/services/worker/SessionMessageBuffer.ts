@@ -18,6 +18,8 @@ interface BufferedMessage {
   /** The `x-client-request-id` of the batch's sends, so a parked message can be traced to them. */
   parkedClientAttemptId?: string;
   enqueuedAt: number;
+  generationId?: number;
+  dispatched?: boolean;
 }
 
 export interface DrainOptions {
@@ -36,17 +38,10 @@ export interface DrainOptions {
  * tool-uses into M observations using in-memory conversation context). The old
  * durable queue persisted the fragments but threw away the reducer state, so
  * "replaying" pending rows after a crash regenerated different/duplicate
- * observations or looped forever — that was the retry storm. The Claude Code
- * transcript JSONL is the real durable source of truth, and transcript replay
- * is the recovery path. So this buffer deliberately holds work only for the
- * worker process lifetime: no 'processing' state to resurrect on restart, no
- * startup sweep, no respawn-on-pending. If the worker dies, the buffer is gone
- * and recovery is a transcript replay.
- *
- * confirm()/resetClaimed() exist only as in-process control flow within a
- * single live generator pass (drop a stored batch; re-yield a batch that
- * couldn't be stored yet because the memory session id wasn't captured). They
- * never cross a process boundary.
+ * observations or looped forever. Transcript replay is a separate ingestion
+ * path. The explicit-profile worker records accepted
+ * input in SQLite for operator recovery. Its receipts never hydrate this buffer
+ * at startup, and a dispatched receipt leaves the buffer if the claim fails.
  */
 export class SessionMessageBuffer {
   private readonly buffers = new Map<number, BufferedMessage[]>();
@@ -61,10 +56,11 @@ export class SessionMessageBuffer {
    * duplicate. Dedup matches the old partial UNIQUE(content_session_id,
    * tool_use_id) index: only observations that carry a toolUseId are deduped,
    * and only against others in the same session for this worker's lifetime.
+   * Messages with generation receipts already passed durable dedup at ingest.
    */
-  enqueue(sessionDbId: number, message: PendingMessage, enqueuedAt = Date.now()): number {
+  enqueue(sessionDbId: number, message: PendingMessage, enqueuedAt = Date.now(), generationId?: number): number {
     const toolUseId = message.toolUseId;
-    if (toolUseId) {
+    if (toolUseId && generationId === undefined) {
       const seen = this.getSeen(sessionDbId);
       if (seen.has(toolUseId)) {
         return 0;
@@ -73,7 +69,7 @@ export class SessionMessageBuffer {
     }
 
     const id = this.nextId++;
-    this.getList(sessionDbId).push({ id, message, claimed: false, parked: false, enqueuedAt });
+    this.getList(sessionDbId).push({ id, message, claimed: false, parked: false, enqueuedAt, generationId });
     this.onMutate?.();
     this.signal(sessionDbId);
     return id;
@@ -92,14 +88,27 @@ export class SessionMessageBuffer {
     return 0;
   }
 
-  /** Un-claim all messages for a session so the iterator re-yields them. */
+  isGenerationBuffered(sessionDbId: number, generationId: number): boolean {
+    return this.buffers.get(sessionDbId)?.some(message => message.generationId === generationId) ?? false;
+  }
+
+  markDispatched(sessionDbId: number, ids: readonly number[]): void {
+    const wanted = new Set(ids);
+    for (const message of this.buffers.get(sessionDbId) ?? []) {
+      if (message.generationId !== undefined && wanted.has(message.generationId)) message.dispatched = true;
+    }
+  }
+
+  /** Release claims. Dispatched receipts are available only via deliberate recovery. */
   resetClaimed(sessionDbId: number): number {
     const list = this.buffers.get(sessionDbId);
     if (!list) return 0;
     let reset = 0;
-    for (const m of list) {
+    for (let i = list.length - 1; i >= 0; i--) {
+      const m = list[i];
       if (m.claimed) {
-        m.claimed = false;
+        if (m.dispatched) list.splice(i, 1);
+        else m.claimed = false;
         reset++;
       }
     }
@@ -195,6 +204,7 @@ export class SessionMessageBuffer {
         ...buffered.message,
         _persistentId: buffered.id,
         _originalTimestamp: buffered.enqueuedAt,
+        ...(buffered.generationId === undefined ? {} : { _generationId: buffered.generationId }),
       });
     }
 
@@ -233,7 +243,8 @@ export class SessionMessageBuffer {
         yield {
           ...claimed.message,
           _persistentId: claimed.id,
-          _originalTimestamp: claimed.enqueuedAt
+          _originalTimestamp: claimed.enqueuedAt,
+          ...(claimed.generationId === undefined ? {} : { _generationId: claimed.generationId }),
         };
         continue;
       }
@@ -260,7 +271,10 @@ export class SessionMessageBuffer {
   claimNextMatching(sessionDbId: number, accepts: (message: PendingMessageWithId) => boolean): PendingMessageWithId | null {
     const next = this.buffers.get(sessionDbId)?.find(message => !message.claimed && !message.parked);
     if (!next) return null;
-    const message = { ...next.message, _persistentId: next.id, _originalTimestamp: next.enqueuedAt };
+    const message = {
+      ...next.message, _persistentId: next.id, _originalTimestamp: next.enqueuedAt,
+      ...(next.generationId === undefined ? {} : { _generationId: next.generationId }),
+    };
     if (!accepts(message)) return null;
     next.claimed = true;
     this.onMutate?.();

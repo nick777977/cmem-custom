@@ -73,6 +73,7 @@ export interface ProfileTurnRequest {
   timeoutMs: number;
   budget?: PaidSendBudget;
   label?: ObserverRequestLabel;
+  beforeDispatch?: () => void;
 }
 
 export interface ProfileRun {
@@ -172,7 +173,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
 
   queryProfile(profile: ModelProfile, request: ProfileTurnRequest): Promise<ProviderQueryResult> {
     const config = this.profileConfig(profile);
-    return this.query(request.history, config, request.signal, request.timeoutMs, request.budget, request.label);
+    return this.query(request.history, config, request.signal, request.timeoutMs, request.budget, request.label, request.beforeDispatch);
   }
 
   /** Throw a provider-specific "API key not configured" error. */
@@ -207,6 +208,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
     perAttemptTimeoutMs?: number,
     paidSendBudget?: PaidSendBudget,
     label?: ObserverRequestLabel,
+    beforeDispatch?: () => void,
   ): Promise<ProviderQueryResult>;
 
   /**
@@ -611,7 +613,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
 
   private async processSummaryMessage(
     session: ActiveSession,
-    message: { last_assistant_message?: string; prompt_number?: number },
+    message: { last_assistant_message?: string; prompt_number?: number; recoveryPrompt?: string },
     worker: WorkerRef | undefined,
     config: TConfig,
     mode: ModeConfig,
@@ -626,7 +628,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
       id: session.sessionDbId,
       memory_session_id: session.memorySessionId,
       project: session.project,
-      user_prompt: session.userPrompt,
+      user_prompt: message.recoveryPrompt ?? session.userPrompt,
       last_assistant_message: message.last_assistant_message || ''
     }, mode);
     const responseContext = {
@@ -688,6 +690,7 @@ export abstract class OpenAICompatibleProvider<TConfig extends { apiKey: string;
       return profileRun.send(kind === 'summary' ? 'summary' : 'observer', {
         session, history: session.conversationHistory, signal: session.abortController.signal,
         timeoutMs: profileRun.timeoutMs, budget: paidSendBudget, label: generationLabel(session, kind),
+        beforeDispatch: kind === 'init' ? undefined : () => this.sessionManager.markGenerationDispatched(session.sessionDbId),
       });
     }
     try {

@@ -321,6 +321,7 @@ export class WorkerService implements WorkerRef {
 
     this.dbManager = new DatabaseManager();
     this.sessionManager = new SessionManager(this.dbManager);
+    this.sessionManager.enableGenerationRecovery();
     this.sseBroadcaster = new SSEBroadcaster();
     this.sdkAgent = new ClaudeProvider(this.dbManager, this.sessionManager);
     this.geminiAgent = new GeminiProvider(this.dbManager, this.sessionManager);

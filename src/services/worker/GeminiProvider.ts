@@ -412,6 +412,8 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     signal?: AbortSignal,
     perAttemptTimeoutMs?: number,
     paidSendBudget?: PaidSendBudget,
+    _label?: import('./OpenAICompatibleProvider.js').ObserverRequestLabel,
+    beforeDispatch?: () => void,
   ): Promise<ProviderQueryResult> {
     // Rotation wraps withRetry rather than living inside it: the inner retry
     // still owns transient failures against one key, and this outer sweep moves
@@ -419,7 +421,7 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     return withKeyPool(
       { poolId: 'gemini', keys: resolvePoolKeys(config), label: 'Gemini', rateLimitUntilNextKey },
       ({ key, poolSize }) => this.queryGeminiMultiTurn(
-        history, key, poolSize, config.model, config.rateLimitingEnabled, signal, perAttemptTimeoutMs, paidSendBudget, config.useKeyHeader,
+        history, key, poolSize, config.model, config.rateLimitingEnabled, signal, perAttemptTimeoutMs, paidSendBudget, config.useKeyHeader, beforeDispatch,
       ),
     );
   }
@@ -471,6 +473,7 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     perAttemptTimeoutMs?: number,
     paidSendBudget?: PaidSendBudget,
     useKeyHeader?: boolean,
+    beforeDispatch?: () => void,
   ): Promise<ProviderQueryResult> {
     // An observer generation's framing prompt goes out as systemInstruction,
     // its user request as the first user turn (anchorFraming, #3868).
@@ -495,6 +498,8 @@ export class GeminiProvider extends OpenAICompatibleProvider<GeminiConfig> {
     let finalRequestId: string | undefined;
 
     let data = await withRetry<GeminiResponse>(async (attemptSignal) => {
+      attemptSignal.throwIfAborted();
+      beforeDispatch?.();
       let response: Response;
       try {
         response = await this.fetchGenerateContent(url, contents, system, maxOutputTokens, clientAttemptId, attemptSignal, false, apiKeyHeader);
