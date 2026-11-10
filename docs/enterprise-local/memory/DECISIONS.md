@@ -162,6 +162,8 @@ A27 follow-up (2026-11-09): user accepted gpt-6-luna and an initial limit of thr
 short synthetic live turns using the authorized Codex login. Check model availability
 first. No automatic retries, fallback or use of actual memories. This is test scope,
 not a new production model default. Zero live turns used in PHASE1-DATA-CHECK.
+The model and budget are historical context for the previous test proposal.
+[A30](#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10) governs the next launch.
 
 ### A28 — private Codex CLI install and external worker lifecycle (2026-11-09)
 
@@ -193,6 +195,28 @@ Finish local verification, then document setup, updates and rollback. Codex
 desktop and Claude Code/Bedrock require separate evidence in their intended
 environments. Existing login, retry, network and data boundaries still apply.
 [Local delivery route](../../roadmap.md), [next launch](../NEXT-SESSION.md).
+
+### A30 — separate model roles and confirm the live profile (2026-11-10)
+
+The selected embedding model is local multilingual MiniLM
+(`paraphrase-multilingual-MiniLM-L12-v2`, CPU ONNX). The Chroma sidecar uses
+it to convert memory text and search queries to vectors. This is the
+implemented and verified step 7 selection. The Codex or Claude Code host
+is where the user works. A separately configured memory worker can use a
+generative model to extract observations from captured events and write
+summaries. Host login, embedding model and worker generation are three
+separate settings.
+
+The earlier Luna entry concerned a possible live check of Codex-backed
+worker generation. The initial Haiku recommendation concerned worker
+generation via Claude Code and AWS Bedrock. Neither is needed for Chroma
+embeddings. The earlier Luna budget was unused. Treat both model names as
+historical candidates. No live worker model, auth route or budget carries
+forward as an active selection. Use a simulated model for host verification.
+If a live worker check is requested later, confirm its model, provider,
+auth, synthetic payload and budget in a fresh launch. Prove resend and
+fallback behavior on the chosen route before using the live budget.
+[Model roles](../LLM-PROFILES.md#separate-the-host-observer-and-embeddings).
 
 ### CLOUD-05 implementation boundary (2026-11-09)
 

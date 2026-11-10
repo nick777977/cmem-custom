@@ -168,12 +168,15 @@ still blocks before execution. CI was not dispatched.
 
 D11 remains open. The step 11 loopback run uses real Chroma and tests visible
 refusal for unavailable assets. It does not require a degraded-mode decision
-or D12 approval. All three approved `gpt-6-luna` turns remain unused. The
+or D12 approval. This artifact check did not start the worker, Codex app-server
+or Chroma, or perform inference. [VERIFY-11-LOCAL](VERIFY-11-LOCAL.md) then
+exercised the staged worker with real Chroma and simulated generation.
+The next host check also uses simulated generation. Any future live native
+Codex worker check needs its own model, auth and budget under
+[A30](../memory/DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10)
+and proof of resend behavior through the worker, queue and app-server. The
 paired [provider source](../../../src/services/worker/CodexProvider.ts#L415)
-sets worker-level `maxRetries: 0` for explicit native auth. Step 11 must prove
-retry disablement through the exact app-server binary, provider/auth settings
-and queue path before spending a live turn. This artifact check did not start
-the worker, Codex app-server or Chroma, or perform inference.
+sets worker-level `maxRetries: 0` for explicit native auth.
 
 Rollback consists of retiring this inventory and verifier as a set and re-staging
 the intended paired build in a fresh root. Preserve SQLite and Chroma state.

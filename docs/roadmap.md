@@ -16,7 +16,7 @@ existing memory/viewer behavior, canonical SQLite/FTS5 and offline persistent Ch
 Every model task uses an explicit user-selected provider/auth/model profile, with
 visible role overrides and no hidden model/account/gateway fallback. It installs
 reversibly from a verified bundle with functional and egress evidence for the tested
-configuration. Bedrock is a likely initial profile, not the sole supported backend.
+configuration. Claude Code with Bedrock remains a separate route to verify.
 
 Scope contracts: [LLM profiles](enterprise-local/LLM-PROFILES.md),
 [build/runtime/CI evidence](enterprise-local/VALIDATION.md). These expand requirements;
@@ -41,7 +41,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | Done-bounded for the local viewer on Windows x64. Settings shows effective role choices and Chroma health. A copied worker and browser distinguished missing assets from a passing probe backed by semantic retrieval. [VIEWER-08-LOCAL](enterprise-local/handoffs/VIEWER-08-LOCAL.md) |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28 | M | done-bounded for private Codex CLI on Windows x64. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Desktop and Claude host acceptance remain open. |
 | 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29 | M | Done-bounded for Windows x64. The inventory and software bill of materials (SBOM) describe the verified local copy. [ARTIFACT-10-LOCAL](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md) |
-| 11 | Verify the full local memory workflow and each intended host and model connection | IP P6/P7; A20; A29 | M | Next. Test on the local machine with real Chroma and a simulated model, then verify the intended Codex and Claude Code connections separately. |
+| 11 | Verify local memory, the intended host and any selected model connection | IP P6/P7; A20; A29/A30 | M | The exact-artifact verification run is complete. Successful capture, search, restart and viewer checks passed. Pending-event recovery failed. Intended-host verification is next and uses a simulated model. [Remaining work](#what-remains-in-step-11) |
 | 12 | Document regular local setup, updates and data-preserving rollback | IP P8; A19/A20; A29 | S | Pending step 11. Formal packaging and redistribution are optional follow-up work. |
 
 ## Phase-one delivery route (A27, 2026-11-04)
@@ -74,9 +74,10 @@ required checks directly. CI, hosted publishing, exhaustive distribution
 provenance and stronger operating-system containment are outside this local
 completion path. Ordinary deadlines, cleanup and limits on network use still
 apply. Chroma is part of full local acceptance.
-Current Codex login is authorized for minimal synthetic live tests; exact model and
-budget must be proposed first. PHASE1-ALIGN only checked native login presence after
-authorization; no inference or manual credential-file inspection.
+Codex is the first local host. Its login and model do not select the worker's
+generative profile. The next host check uses a simulated worker model. Any future
+live worker check needs its own explicit model, auth route and budget.
+[A30](enterprise-local/memory/DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10).
 
 Completed evidence and input-preservation limits remain in [DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md)
 and the HOSTED-03 / CHROMA-07 / TELEMETRY-04 handoffs. Do not repeat completed source
@@ -84,11 +85,27 @@ work. The Windows x64 artifact and local Chroma inputs are pinned in step 10.
 A SQLite-only product mode (D11) stays outside current scope. The local setup
 reports missing Chroma assets and preserves SQLite data.
 
+## What remains in step 11
+
+| Check | Status and impact |
+|---|---|
+| Exact Windows build and successful local memory flow | **Verification complete.** The staged build captured synthetic tool events and stored observations and a summary in SQLite. The local MiniLM encoder and real Chroma supported semantic retrieval after restart. MCP, viewer and cleanup were exercised. |
+| Recovery of events waiting for generation | **Failed.** Two events stayed in the in-memory queue after a simulated 401 and redirect, then disappeared on graceful stop. This affects events whose observation or summary has yet to be generated. Committed SQLite records and the derived index survived. Before declaring daily-use acceptance, resolve whether pending work must survive a stop. If required, implement and verify durable recovery without duplicate records or an unapproved automatic resend. If the owner accepts the current limitation, record it explicitly in the operating guide and keep the test result. |
+| Private worker auth endpoint | **Separate defect.** The retained local endpoint returned HTTP 500 when it loaded Better Auth from the checkout. Hook capture, MCP, local search and viewer worked independently. Resolve the route before relying on it. |
+| Intended Codex host | **Next.** The private CLI install and removal already have bounded evidence. If daily use is through Codex Desktop, verify how the desktop loads the local copy and reaches its hooks and MCP, using synthetic inputs and a simulated worker model. |
+| Live model provider and corporate route | **Separate checks.** A selected worker profile needs its own live acceptance when requested. Claude Code with AWS Bedrock needs host and provider evidence in the authorized environment. Local embedding and host checks can proceed independently. |
+
+The local synthetic workflow is called V4 in the validation contract. Its full
+matrix also includes worktree sharing, more provider failure modes and index
+failure. The [verification handoff](enterprise-local/handoffs/VERIFY-11-LOCAL.md)
+lists the cases actually executed and the coverage limits.
+
 ## Validation checkpoints during development
 
-Tests, compile and bounded Windows private Codex lifecycle have run. The full
-local workflow and the intended live model connections remain open. Use runtime feedback
-within the remaining increments:
+Tests, compile and the bounded private Windows Codex lifecycle have run.
+The local success path is verified on the pinned candidate. The full local
+validation matrix and intended host checks remain open as described above.
+Use runtime feedback within the remaining increments:
 
 - Step 9 has historical mock runner and CI source evidence. WINDOWS-09-LOCAL
   adds real compiled worker and Codex/MCP checks in a dedicated installation.
@@ -136,7 +153,7 @@ required; this is separate from the selected summary LLM.
 | D1 | A27 permits required dependency/tool/model downloads; choose compatible versions and official or enterprise-approved sources, document lifecycle. CI runner policy remains D12 | agent; user supplies enterprise restrictions if applicable | concrete dependency setup, 7/10/12 |
 | D2 | Allowed stored/LLM payloads per enabled profile and role? | human | real data/live tests, 8/11 |
 | D5 | A28 verifies dedicated Codex CLI local catalog and rollback. Confirm desktop and Claude Code local directory loading and target coexistence on their intended hosts | agent; user-level target scope | remaining host and packaged acceptance, 11/12 |
-| D7 | Exact selected profile(s): auth mode, endpoint/Region, model, proxy/CA and allowed infrastructure? No secrets in docs | human | actual live provider rows, 6/11 |
+| D7 | Choose a generative worker profile and approved auth/destination if a live test is requested. The local embedding model is already selected. | human | only the applicable live provider rows, 11 |
 | D8 | Approved local data location, retention/backup rules? | human | deployment, 8/12 |
 | D9 | Resolved for the tested Windows x64 Chroma/MiniLM stack. Versions, sources, hashes, licenses and APIs are in [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). | agent | exact release closure and transfer, 10/12 |
 | D10 | Complete remaining dynamic clients/entrypoints/connectors and retained-provider closure? | agent | 1/10 |
@@ -152,6 +169,8 @@ remain pending until explicitly available.
 
 [A19/A20](enterprise-local/memory/DECISIONS.md) supersede Bedrock exclusivity and add
 staged runtime checks. A29 sets CI and distribution aside for local use.
+A30 separates the local embedding selection, intended host and optional live
+worker profile confirmation.
 A01/A02 branch/memory, A06/A07 local behavior and egress
 scope, A09 toolchain, A11/A14/A15 compile boundary, A16/A17/A18 remain in force within
 their documented bounds. The original plan and historical evidence are not rewritten.
@@ -209,9 +228,10 @@ own concrete reviewed scope and cleanup/evidence contract.
 
 The bounded checks for steps 8 and 9 are complete. Step 9 established the
 private Codex CLI and worker baseline on Windows x64. Step 10 pinned and verified
-the candidate and separate Chroma assets. The
-[next implementation prompt](enterprise-local/NEXT-SESSION.md) covers step 11's
-exact-artifact runtime checks. Desktop and Claude Code host acceptance remain open.
+the candidate and separate Chroma assets. VERIFY-11-LOCAL exercised those bytes
+with real Chroma and a simulated model. The
+[next implementation prompt](enterprise-local/NEXT-SESSION.md) covers the
+intended Codex host with a simulated worker model. Claude Code acceptance remains open.
 [Windows CLI evidence and limits](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 
 ## Shipped

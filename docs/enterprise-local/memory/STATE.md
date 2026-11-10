@@ -1,6 +1,6 @@
 # Current handoff
 
-Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 and A29 define current scope.
+Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27, A29 and A30 define current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 
 The target is daily local use from this checkout. Verify the full Codex memory
@@ -8,6 +8,17 @@ workflow first. Verify Claude Code with AWS Bedrock separately in its authorized
 environment. Automated workflow runs and a formal distribution are optional
 follow-ups. The daily-use handoff covers local setup, updates and rollback.
 [Local route](../../roadmap.md), [A29](DECISIONS.md#a29--prioritize-local-operation-2026-11-10).
+
+VERIFY-11-LOCAL completed the exact-artifact test run on Windows x64.
+Direct Codex hooks and MCP, simulated observer and summary profiles, FTS5,
+real Chroma search and persistence, missing/corrupt model refusal and a
+browser rendering probe passed within their fixture scope. Two events
+waiting for generation after provider errors disappeared on graceful
+shutdown. Committed observations, summaries and the index survived. That
+failed case keeps the full local workflow matrix (V4) open. The retained
+auth endpoint separately returned HTTP 500 when it resolved Better Auth
+from the checkout. The tested hooks, search and viewer work independently.
+[Runtime evidence and coverage](../handoffs/VERIFY-11-LOCAL.md).
 
 The private Windows x64 candidate has a byte-level inventory and CycloneDX
 SBOM at the paired `2bb4746b2` build. The transferred stage and its raw copy
@@ -84,7 +95,7 @@ worker's external mode skips the legacy handle scan that crashed under Bun and
 refuses port reclaim. Transfer was tested on the same x64 Windows host.
 
 PHASE1-ALIGN changed the plan and ran tool probes. PHASE1-DATA-CHECK recorded the
-model approval and checked embedded SQLite and Chroma package presence. No application,
+then-proposed live test scope and checked embedded SQLite and Chroma package presence. No application,
 harness, generated, manifest or lock change. Claims released at closure.
 
 ## Accepted first deliverable
@@ -127,18 +138,18 @@ commits and exact previous source/compile evidence preserved.
 
 ## Auth/model decisions
 
-User authorizes existing Codex/ChatGPT login for minimal synthetic live tests via
-normal auth, with low token usage. On 2026-11-09 they approved gpt-6-luna and a
-maximum of three short synthetic turns, with no automatic retries or fallback.
-Native catalog lists gpt-6-luna. Account entitlement is unverified. Strict CLI
-config rejects zero-retry overrides for the built-in provider. Zero turns used.
-Corporate Bedrock/SSO live acceptance remains for the authorized corporate environment.
+Chroma already uses the local MiniLM embedding model. The intended Codex
+host is an independent choice. Luna and Haiku are historical generative
+worker candidates, with zero live Luna turns used. No live model or budget
+is selected for the next task. A later live check needs a confirmed profile,
+including auth and budget, and a check of retry/fallback behavior on that route.
+[A30](DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10).
 
 ## One next implementation task
 
-**VERIFY-11-LOCAL: exercise the verified Windows x64 build with a simulated
-language model and real local Chroma.** [NEXT-SESSION](../NEXT-SESSION.md) gives
-the bounded runtime scope. Native retry disablement gates the first live turn.
-Check desktop integration if that is the intended Codex surface. Follow with
-the authorized Claude Code/Bedrock route and daily-use instructions.
+**CODEX-11-HOST: verify local plugin loading in the Codex surface intended
+for daily use, with a simulated worker model.** Reuse the existing CLI result
+if that is the target. [NEXT-SESSION](../NEXT-SESSION.md) gives the evidence,
+scope and completion criteria. Claude Code and AWS Bedrock require their
+separate authorized environment.
 [Local delivery route](../../roadmap.md).

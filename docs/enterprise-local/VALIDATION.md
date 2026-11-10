@@ -37,25 +37,25 @@ remains current source until a bounded implementation adapts the reused test sea
 do not relabel mocks or flip approval flags to manufacture V3. Existing stronger
 requirements below are historical/release-hardening targets where they conflict.
 
-V4 requires real local SQLite + Chroma + local embeddings, synthetic capture/index/
-retrieval/restart/viewer checks and a deterministic fake LLM for broad regressions.
-Add only a few real Codex ChatGPT-login turns for selected-model integration. User
-authorizes the current login for synthetic tests, with minimal subscription usage.
-On 2026-11-09 the user approved gpt-6-luna and a maximum of three short synthetic
-turns. Verify availability before inference, disable retries and fallback, and
-record reported token usage. API pricing is not
-a promise about subscription quota. Do not read/print token files for investigation.
-Bedrock/AWS SSO remains a separately configured retained route, tested live only in
-the authorized corporate environment. No real memory corpus used for test prompts.
+V4 requires real local SQLite, Chroma and MiniLM embeddings, synthetic capture,
+retrieval, restart and viewer checks, and a deterministic stand-in for the
+generative worker model. V5 covers a real provider for an explicitly selected
+generative profile. Under A30, the next Codex host check uses a simulated worker
+model and does not need a V5 selection. Before a separately requested live test,
+confirm the model, auth route, synthetic payload and budget. Verify availability
+and resend/fallback behavior before sending a live request. Do not read or
+print token files for investigation. Bedrock/AWS SSO is tested live only in its
+authorized environment. No real memory corpus is used for test prompts.
 
 PHASE1-ALIGN performed selected tool version/help checks with empty synthetic
 HOME/CODEX_HOME and, after explicit user authorization, one native login-status probe
 retaining only CHATGPT_LOGIN_PRESENT/exit0. No model catalog/inference, app startup, compile,
 package installation or admin-rights acceptance test. PHASE1-DATA-CHECK subsequently
 verified Bun SQLite/FTS5/WAL/reopen with synthetic data. Chroma package metadata was
-absent in the checked Python locations. Chroma/embeddings and integrated runtime
-readiness remain unverified. Prior evidence stays
-historical. [Current environment](DEV-ENVIRONMENT.md), [delivery route](../roadmap.md).
+absent in the checked Python locations. Those probes did not establish
+Chroma/embedding compatibility. The later VERIFY-11-LOCAL run exercised
+the integrated local path described in V4 below.
+[Current environment](DEV-ENVIRONMENT.md), [delivery route](../roadmap.md).
 
 ## Historical levels and evidence
 
@@ -279,6 +279,16 @@ With approved local Python/Chroma/embedding artifacts and runtime permission, ch
 
 If local assets are unavailable, V4 is BLOCKED by U1/D9, with earlier evidence retained.
 An isolated SQLite/queue test is valuable but must not be renamed full memory acceptance.
+
+VERIFY-11-LOCAL completed the exact-artifact run. The ordinary memory flow
+passed with simulated generation and real local retrieval. The V4 queue
+recovery case failed. Two events waiting for generation after a provider
+error were visible in the live queue and were absent after graceful
+shutdown and restart. Existing SQLite records and Chroma vectors survived.
+The full V4 result remains open with other cases still unexercised. The
+private auth HTTP 500 is a separate entrypoint finding. TCP samples, viewer
+resource entries and the deny proxy have the coverage described in the
+[handoff](handoffs/VERIFY-11-LOCAL.md).
 
 ## V5: unavailable Bedrock and honest supported-provider status
 

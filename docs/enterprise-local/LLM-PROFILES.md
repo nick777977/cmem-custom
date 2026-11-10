@@ -12,11 +12,10 @@ Codex test choices into the installer or let host login implicitly select observ
 provider/model. Build/install/run are ordinary-user Windows operations, no admin/UAC.
 Necessary dependency and local embedding-model downloads/bootstrap are permitted;
 special native OS sandbox/CI proof is deferred from first functional delivery.
-Current Codex login and gpt-6-luna are approved for up to three short synthetic
-turns (2026-11-09). Verify account availability first. No automatic retries or
-fallback. WINDOWS-09-LOCAL found the exact model in the native catalog.
-Account entitlement remains unverified. Strict config rejected disabling
-retries on the built-in provider, so the full three-turn budget remains unused.
+Under A30, the next Codex host check uses a simulated model. Any future live
+worker check needs a confirmed model, auth route and budget for that check.
+The historical Luna proposal spent zero turns.
+[Decision and prior scope](memory/DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10).
 Supersedes the Bedrock-only target in the supplied initial plan and old session
 prompts. Historical evidence/commits remain unchanged. Dependencies and execution
 waves live only in [roadmap](../roadmap.md); runtime evidence requirements live in
@@ -25,8 +24,8 @@ waves live only in [roadmap](../roadmap.md); runtime evidence requirements live 
 ## Outcome and scope
 
 The owner chooses exactly where each model task runs and can see the effective
-provider, model and auth mode before enabling it. Bedrock is a likely first profile,
-not the sole supported route. Preserve existing Claude Code and Codex integrations,
+provider, model and auth mode before enabling it. Bedrock remains a supported
+route to verify separately. Preserve existing Claude Code and Codex integrations,
 provider adapters, memory/viewer behavior and local SQLite/Chroma architecture.
 Do not replace working SDKs/providers just to introduce configuration flexibility.
 
@@ -49,7 +48,7 @@ organization approval separate from the user's choice of a profile.
 | Interactive host | Claude Code/Codex session where the owner works | Existing host integration remains; its login/model does not silently choose observer routing |
 | Memory observer | Extract observations, compress fields, create session summaries | Explicit default profile/model, with optional explicit role overrides |
 | Other model jobs | Knowledge/standalone work, viewer refresh, copy and judges | Same profile policy; no independent detector or preset may bypass it |
-| Embeddings | Turn documents/queries into vectors for Chroma search | Local embedding model/runtime; necessary packages/weights may download during setup/bootstrap under A27, no remote embedding inference |
+| Embeddings | Turn documents/queries into vectors for Chroma search | `paraphrase-multilingual-MiniLM-L12-v2` in the local Chroma sidecar. Runs on CPU through ONNX. Setup can obtain the packages and weights under A27. |
 | Persistence/API/viewer | Canonical SQLite/FTS5, derived Chroma, local UI and spool | Local; existing identity/sharing/filter semantics retained |
 
 A user may deliberately make the observer match the host's provider, or choose a
@@ -57,6 +56,15 @@ different configured profile. Initial implementation should use one explicit glo
 observer default plus role overrides, reusing existing config. Do not invent automatic
 per-project/worktree/host credential selection or change memory identity. Per-host
 routing, if needed later, must be explicit and separately scoped.
+
+For example, the worker can turn a tool event into a short observation and
+write it to SQLite. MiniLM then embeds that text locally. When the user
+searches, MiniLM embeds the query locally and Chroma finds similar records.
+The verified loopback run used an imitation of the first step and the real
+local encoder for both embedding operations. Daily use of automatic observation
+and summary generation requires a compatible generative worker profile chosen
+by the owner. The staged artifact check did not choose that profile.
+[Exact-artifact evidence](handoffs/VERIFY-11-LOCAL.md).
 
 ## Profile contract
 

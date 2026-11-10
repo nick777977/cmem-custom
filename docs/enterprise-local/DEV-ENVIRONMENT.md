@@ -1,10 +1,18 @@
 # Development baseline and user-provided execution evidence
 
-Updated: 2026-11-09. Supersedes the pre-install assumption in the 2026-10-30 launcher.
+Updated: 2026-11-10. Supersedes the pre-install assumption in the 2026-10-30 launcher.
 This is not full runtime acceptance. Session 02 subsequently ran authorized step-2
 compile/targeted checks; see the current section below and [BUILD-02](handoffs/BUILD-02.md).
 
 ## Preferred local toolchain
+
+**VERIFY-11-LOCAL, 2026-11-10.** Reused the pinned Node 22.23.4, Bun 1.4.4,
+Codex 0.167.0-alpha.3.2 and CPython 3.13.15 executable inputs. The exact
+Windows x64 stage and the 93-wheel Chroma input matched their receipt. A
+scratch venv built from the verified wheelhouse without an index and passed
+`pip check`. No change to the baseline tools. The sandboxed launch could not
+confirm worker readiness. The ordinary-user loopback reruns exercised the
+staged worker and real Chroma. [Checks and limits](handoffs/VERIFY-11-LOCAL.md).
 
 **PROFILE-06B, 2026-11-09.** Reused Node 22.23.4, npm 10.9.9 and Bun 1.4.4
 with existing dependencies. Root/viewer typechecks, guarded compile and 146

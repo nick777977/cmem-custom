@@ -21,13 +21,21 @@ checks remain required. Old refusal work below is historical, not desired functi
 
 Build from this checkout and connect the compiled plugin locally. Codex is the
 first host. Claude Code with Amazon Web Services (AWS) Bedrock is a separate
-host and model route to verify in its authorized environment. The host's
-login and the memory worker's model profile are separate choices. [Model profiles](LLM-PROFILES.md).
+host and model route to verify in its authorized environment. The host is
+where the user works. The worker's optional external model route is chosen
+separately to generate observations and summaries. The next host check
+uses a simulated worker model. [Model profiles](LLM-PROFILES.md).
 
 SQLite keeps the original memory records. Chroma maintains a local search
-index that can find memories phrased in different words. Full local acceptance
-requires that search to work. The setup error for a missing Chroma runtime or
-model leaves the original records in SQLite. [Chroma setup](WINDOWS-LOCAL-SETUP.md#prepare-local-chroma).
+index that can find memories phrased in different words. It embeds memory
+text and queries with local multilingual MiniLM on the CPU. A missing
+Chroma runtime or model leaves committed records in SQLite and surfaces a
+setup error. [Chroma setup](WINDOWS-LOCAL-SETUP.md#prepare-local-chroma).
+
+The exact build passed synthetic capture, search, restart and viewer checks.
+Two events waiting after provider errors disappeared on shutdown. The
+verification run is complete and the remaining acceptance work is tracked
+under step 11. [Results](handoffs/VERIFY-11-LOCAL.md) · [Step 11](../roadmap.md#what-remains-in-step-11).
 
 Continuous integration (CI) would run checks through an automation service.
 The local plan runs checks directly. The software bill of materials (SBOM) is

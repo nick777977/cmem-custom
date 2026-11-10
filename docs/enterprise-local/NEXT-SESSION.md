@@ -1,34 +1,46 @@
-# Next implementation — VERIFY-11-LOCAL
+# Next implementation — CODEX-11-HOST
 
 Continue on `feat/cmem-light-local` with one coordinator. Check branch, status
-and HEAD. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md), the
-[artifact handoff](handoffs/ARTIFACT-10-LOCAL.md), [step 11](../PATCH-SEQUENCE.md#11-exact-artifact-runtime-e2e-and-selected-profile-acceptance)
-and [V3/V4](VALIDATION.md#v4-real-local-workflow-without-a-cloud-account).
+and HEAD. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md),
+[step 11 status](../roadmap.md#what-remains-in-step-11),
+[WINDOWS-09-LOCAL](handoffs/WINDOWS-09-LOCAL.md), and
+[VERIFY-11-LOCAL](handoffs/VERIFY-11-LOCAL.md).
 
-Under a fresh, explicitly scoped launch, verify the inventory receipt for the
-exact staged Windows x64 candidate and independent Chroma inputs before opening
-the candidate. Reuse the prepared wheelhouse and model and the pinned
-executables. Use the [staging-only procedure](handoffs/ARTIFACT-10-LOCAL.md#recheck-on-a-matching-windows-x64-host).
-The verifier accepts a fresh destination through its pinned binding templates.
-An unexpected payload, prerequisite or executable hash requires renewed
-artifact review before runtime checks. Reserve fixture paths and use disposable
-home, config, data and loopback ports.
+Verify local plugin loading in the Codex surface intended for daily use.
+Confirm whether that surface is Desktop or CLI if the choice is unclear.
+The private CLI already loaded the plugin from a dedicated catalog, exposed
+its MCP tools and discovered the hooks. It saved and retrieved synthetic
+SQLite memory and was removed without deleting the data. Reuse that
+evidence if the tested CLI is the intended surface. If Desktop is the
+target, check the Desktop loading mechanism under a fresh bounded launch.
 
-Exercise the retained private entrypoints, then use a simulated language model
-on `127.0.0.1` and real local Chroma. Check synthetic capture, observation and summary
-storage, SQLite and semantic retrieval, restart, viewer, missing/corrupt input
-refusal, and bounded process and port cleanup. Preserve project/worktree behavior.
-Record process and network observations at their actual coverage level.
-Keep actual provider tests (V5) separate from the simulated-model result.
+For any new runtime, verify the [pinned stage](handoffs/ARTIFACT-10-LOCAL.md#recheck-on-a-matching-windows-x64-host)
+before opening the candidate. Use disposable home, config, data and loopback
+ports. For a separately authorized host registration, verify that the
+intended host loads the staged plugin, discovers its hooks and calls the
+staged MCP server. Save and retrieve one synthetic note. Exercise a supported
+hook lifecycle event that needs no live turn, if the host exposes one.
+Record separately hooks discovered by the host, hooks dispatched by the
+host and commands invoked directly by the fixture. Verify removal, preservation
+of synthetic data and bounded cleanup. If the host cannot be tested with
+disposable state, document the concrete limitation and stop that lane.
 
-This is the next test for daily local use. Leave SQLite-only operation (D11)
-deferred. Continuous integration (CI, D12) and a formal distribution are
-optional follow-ups. After this check, verify the intended Codex host and
-model route, then Claude Code and AWS Bedrock under separate scope in the
-authorized environment. Use those results for the local operating guide.
+Use a simulated worker model on `127.0.0.1` for any generation fixture.
+Chroma already uses real local MiniLM. No generative model or live budget is
+selected. If a live worker test is requested later, get explicit scope for
+the model, auth, payload and budget. For the native Codex route this includes
+proving resend/fallback behavior through the worker, queue and app-server.
+The earlier Luna and Haiku references are historical model candidates.
+[A30](memory/DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10).
 
-This handoff grants no registration, live inference, real state, admin/UAC, CI,
-push, publication or agents. Obtain a new bounded launch for registration or
-runtime work where required. All three approved `gpt-6-luna` turns remain
-unused. Verify retry disablement on the exact worker, queue and native
-app-server route before a live turn.
+Close this task with evidence for the intended surface or a specific
+loading/cleanup blocker. Keep the verified local workflow result, the
+failed pending-event recovery case and the separate local auth defect
+visible. Before daily-use acceptance, decide whether events waiting after a
+provider failure must survive worker shutdown. Stored SQLite records and
+Chroma vectors survived the verified restart. Claude Code with AWS Bedrock
+is a separate check in its authorized environment. D11 stays deferred.
+
+This handoff does not authorize host registration or a new runtime launch.
+Obtain scope as needed. No live inference, real state, admin/UAC, AWS, CI,
+push, publication or agents in this task.

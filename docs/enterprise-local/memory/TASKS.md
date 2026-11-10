@@ -7,6 +7,29 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **VERIFY-11-LOCAL closeout**, done. One coordinator on
+`feat/cmem-light-local` at `045ac7a05`, with the previous session's
+uncommitted verification docs. Reserve those files, `docs/PATCH-SEQUENCE.md`
+and `docs/enterprise-local/{README,LLM-PROFILES,memory/DECISIONS,handoffs/ARTIFACT-10-LOCAL}.md`
+for the model-role clarification, acceptance status, next launch and local commit.
+Recorded A30 and separated the finished test run from the open daily-use
+criteria. Reservations released. [CODEX-11-HOST](../NEXT-SESSION.md) is
+ready-unclaimed under separate scope.
+
+2026-11-10 **VERIFY-11-LOCAL**, closed with bounded results. One coordinator on clean
+`feat/cmem-light-local` at `045ac7a0559a4c7125a90ebddf0d5f49bf37fd80`.
+Reserve fresh fixtures and receipts under `.scratch/enterprise-local/verify-11-local/`
+and the step 11 handoff, `NEXT-SESSION.md`, `DEV-ENVIRONMENT.md`,
+`VALIDATION.md`, `memory/{STATE,TASKS,WORKLOG}.md` and `docs/roadmap.md` for
+closeout. Extend to `SESSION-PROMPTS.md` for the next-task link. Read the
+pinned stage inputs and prepared wheelhouse/model. Stage
+without registration and require a successful receipt before candidate runtime.
+The staged private runtime passed capture, retrieval, restart and viewer
+checks with real local Chroma and simulated model roles. Queue replay failed
+across a graceful stop and local auth returned HTTP 500. See
+[runtime evidence](../handoffs/VERIFY-11-LOCAL.md). Reservations released.
+See the closeout above for the current next task.
+
 2026-11-10 **Local-use plan alignment**, done. One coordinator at
 `3ff812350b842812446ee9e769d8ada28f6e3d24` on clean `feat/cmem-light-local`.
 Reserve `docs/{roadmap,PATCH-SEQUENCE}.md`,
@@ -15,7 +38,7 @@ Reserve `docs/{roadmap,PATCH-SEQUENCE}.md`,
 `docs/enterprise-local/memory/{STATE,TASKS,DECISIONS,WORKLOG}.md`.
 Documentation only. Clarify the local completion path, optional automation and
 distribution, and the scope of the Chroma and artifact checks.
-Reservations released. [VERIFY-11-LOCAL](../NEXT-SESSION.md) remains ready-unclaimed.
+Reservations released. [VERIFY-11-LOCAL](../handoffs/VERIFY-11-LOCAL.md) followed.
 
 2026-11-10 **ARTIFACT-10-LOCAL**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `cb9738a2778860b66ed604c887b243231d39935a`.
@@ -36,7 +59,7 @@ Reservations released. [VERIFY-11-LOCAL](../NEXT-SESSION.md) remains ready-uncla
 
 The 81-file transferred stage and raw copy matched the inventory. The verifier
 rejected out-of-lane and altered candidates. [Evidence and provenance gaps](../handoffs/ARTIFACT-10-LOCAL.md).
-Reservations released. [VERIFY-11-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+Reservations released. [VERIFY-11-LOCAL](../handoffs/VERIFY-11-LOCAL.md) followed.
 
 2026-11-10 **ARTIFACT-10-LOCAL closeout**, done. One coordinator at
 `cb9738a27` on the same branch. The only incoming changes are this task's
@@ -47,7 +70,7 @@ copy fixture in `.scratch/enterprise-local/artifact-10-local/`. Reserve
 `docs/enterprise-local/memory/{STATE,TASKS,WORKLOG}.md` for closeout edits.
 The fixture rerun and the documented fresh staging procedure passed. All
 reservations released. The local artifact commit includes the verifier,
-inventory, SBOM and handoff. Step 11 remains ready-unclaimed.
+inventory, SBOM and handoff. Step 11 continued in VERIFY-11-LOCAL.
 
 2026-11-10 **RUNTIME-10-LOCAL**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `d26953ec07659fc52c88ac772396fef8514c9610`.

@@ -1060,7 +1060,7 @@ Five negative cases failed as expected. All 93 Chroma wheels and both model
 files matched. The inventory and CycloneDX SBOM cross-reference checks passed.
 [Receipts, gaps, D12 and rollback](../handoffs/ARTIFACT-10-LOCAL.md). D11 stays
 open. No runtime acceptance or inference was performed. All three approved
-turns remain unused. Reservations released. [VERIFY-11-LOCAL](../NEXT-SESSION.md)
+turns remain unused. Reservations released. [VERIFY-11-LOCAL](../handoffs/VERIFY-11-LOCAL.md)
 is ready for a fresh bounded launch.
 
 ### ARTIFACT-10-LOCAL closeout
@@ -1082,4 +1082,40 @@ steps 10–12 around local build, host integration, memory verification and
 daily-use instructions. Continuous integration and formal distribution move
 to optional follow-up scope. SQLite-only operation remains deferred. Preserved
 the artifact evidence and explained the disposable negative checks. No runtime,
-build, workflow or profile configuration change. [Next launch](../NEXT-SESSION.md).
+build, workflow or profile configuration change. [Next launch at the time](../handoffs/VERIFY-11-LOCAL.md).
+
+## 2026-11-10 — VERIFY-11-LOCAL exact-artifact runtime
+
+Clean entry `045ac7a0559a4c7125a90ebddf0d5f49bf37fd80`, one coordinator.
+Staged and verified 81 files, 30 directories, five runtime executable/DLL
+hashes, 93 wheels and two model files for paired build `2bb4746b2`.
+Prepared a fresh scratch Python environment from the verified wheelhouse.
+The sandboxed launch failed readiness and cleaned up. Scoped ordinary-user
+reruns exercised the private launcher, hooks, MCP, context reader, fake
+observer and summary routes, SQLite FTS5, real Chroma, restart, absent and
+corrupt model inputs and browser rendering through an instrumented loopback
+bridge. All 81 payload files and both restored model assets rehashed cleanly.
+Sampled PIDs exited and the task loopback listeners could be rebound.
+
+The 401 and redirect cases caused no fallback request or extra stored memory.
+Both paused events disappeared after shutdown. The in-checkout auth endpoint
+returned HTTP 500 with a Better Auth schema mismatch. Full V4 remains open.
+No V5 live provider request was sent. No source, bundle, inventory or lock changes.
+[Results, process/network coverage and remaining checks](../handoffs/VERIFY-11-LOCAL.md).
+Released the runtime reservations.
+
+### VERIFY-11-LOCAL closeout
+
+Reviewed the prior uncommitted results and prepared one local documentation
+commit. Clarified that MiniLM already handles both Chroma embedding
+operations locally. The earlier Luna and Haiku entries concerned possible
+generative profiles. A30 records the distinction and requires a fresh
+model, auth and budget selection for any separately requested live check.
+
+Separated the completed artifact run from the remaining daily-use
+acceptance. Pending events were lost from the RAM buffer on shutdown and
+already stored data survived. The local auth error is separate from the
+successful memory path. Updated the roadmap, state, validation contract
+and next launch. [CODEX-11-HOST](../NEXT-SESSION.md) is next, with simulated
+generation and earlier CLI evidence available for reuse. This closeout
+ran no application, registration, build or live inference.
