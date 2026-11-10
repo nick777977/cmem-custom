@@ -277,6 +277,12 @@ preserve existing upstream/fork data and user install.
 
 ## 10. Retained runtime closure, artifact and fork CI
 
+[RUNTIME-10-LOCAL](enterprise-local/handoffs/RUNTIME-10-LOCAL.md) closed the
+private launcher admission slice. The standalone server and installer CLI
+are outside the staged package, the compiled worker refuses server delegation
+in worker mode, and the build checks the excluded sources. Exact provenance,
+SBOM and D12 admission are pending.
+
 Prove reachability before pruning. Keep SDK/Codex/API modules and dependencies required
 by any retained explicit profile/role or host integration. Remove unused remote-memory
 server/cloud/telemetry/connector/setup/recovery capabilities and proved-unused modules,

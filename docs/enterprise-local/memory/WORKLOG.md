@@ -1031,3 +1031,18 @@ HTML's dependency on the JavaScript bundle. Corrected the setup guide to open
 the worker-served `/viewer` URL and removed the obsolete next-step paragraph
 from the roadmap. Step 9 retains bounded private Codex CLI evidence, with
 Desktop and Claude Code host acceptance open. Documentation-only change.
+
+## 2026-11-10 — RUNTIME-10-LOCAL implementation
+
+Clean entry `d26953ec0` on `feat/cmem-light-local`. One coordinator reserved
+the launcher, worker, build guard, focused tests and paired outputs. Commit
+`2bb4746b2` restricts the private catalog, refuses server delegation in
+worker mode and checks the worker and installer build graphs.
+
+21 focused tests with 167 assertions, root and viewer typechecks and the
+guarded build passed. The copied launcher reached readiness, served the
+viewer, imported a synthetic SQLite row and stopped cleanly after loopback
+sandbox approval. The row reopened and the worker PID exited. Zero provider
+or legacy server requests and no registration. Separate historical tests
+failed on unchanged expectations. [Exact evidence and rollback](../handoffs/RUNTIME-10-LOCAL.md).
+Reservations released. Next [ARTIFACT-10-LOCAL](../NEXT-SESSION.md).

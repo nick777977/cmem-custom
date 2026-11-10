@@ -7,6 +7,27 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **RUNTIME-10-LOCAL**, done-bounded. One coordinator on clean
+`feat/cmem-light-local` at `d26953ec07659fc52c88ac772396fef8514c9610`.
+
+- Source: `scripts/enterprise-local/codex-local.mjs`, `scripts/build-hooks.js`,
+  `src/services/worker-service.ts`.
+- Test: `tests/enterprise-local/runtime-10-local.test.mjs`. Guard and lifecycle
+  fixture use `.scratch/enterprise-local/runtime-10-local/`.
+- Expected emitted changes: `plugin/scripts/worker-service.cjs` and
+  `plugin/scripts/worker-service.cjs.map`. The reviewed compile also rewrites
+  its other declared outputs, including ignored `dist/npx-cli/index.js`.
+  Fingerprint tracked outputs and extend the claim before retaining other deltas.
+- Closure: `docs/roadmap.md`, `docs/PATCH-SEQUENCE.md`,
+  `docs/enterprise-local/{DEV-ENVIRONMENT,NEXT-SESSION,SESSION-PROMPTS,WINDOWS-LOCAL-SETUP}.md`,
+  `docs/enterprise-local/memory/{STATE,TASKS,WORKLOG}.md` and
+  `docs/enterprise-local/handoffs/RUNTIME-10-LOCAL.md`.
+
+Source, focused tests and paired worker outputs in `2bb4746b2`. The copied
+private launcher passed the synthetic lifecycle with zero provider or legacy
+server requests. [Evidence and separate legacy test failures](../handoffs/RUNTIME-10-LOCAL.md).
+Reservations released. [ARTIFACT-10-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+
 2026-11-10 **VIEWER-08-LOCAL documentation clarification**, one coordinator on
 clean `feat/cmem-light-local` at `1a4497f2fb3d1a36b340df142673b886844c2daa`.
 Reserved `docs/roadmap.md`, `docs/enterprise-local/WINDOWS-LOCAL-SETUP.md` and

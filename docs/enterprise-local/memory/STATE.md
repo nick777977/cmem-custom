@@ -3,6 +3,14 @@
 Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 is current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 
+The private Windows installer stages the reviewed local worker, MCP, context
+reader and Chroma adapter with its selected assets and skills. Worker mode
+refuses standalone server delegation. The guarded build verifies that the
+worker excludes the server factory and that both the worker and NPX CLI exclude
+the dormant installer credential probe. Source and paired build `2bb4746b2`.
+21 focused tests, both typechecks and the copied-worker lifecycle passed.
+[Checks, separate legacy test failures and rollback](../handoffs/RUNTIME-10-LOCAL.md).
+
 The local viewer now shows effective worker profiles and Chroma search health
 under **Settings → Local runtime**. A copied compiled worker and Chrome on
 Windows x64 showed setup required with missing assets. With the prepared
@@ -113,7 +121,7 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**RUNTIME-10-LOCAL: gate separate server and installer paths from the local package.**
-[NEXT-SESSION](../NEXT-SESSION.md) gives bounded source and validation scope.
+**ARTIFACT-10-LOCAL: enumerate and pin the exact private Windows distribution.**
+[NEXT-SESSION](../NEXT-SESSION.md) gives the artifact and SBOM scope.
 Desktop integration, full memory acceptance and release packaging remain
 separate [roadmap](../../roadmap.md) checks.

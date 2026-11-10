@@ -14,6 +14,13 @@ are complete. See [WINDOWS-09-LOCAL evidence](handoffs/WINDOWS-09-LOCAL.md).
 The fork build and registration copy the compiled worker and its Python adapter.
 Prepare Python packages and embedding weights separately on the target machine.
 
+The private catalog includes the worker, search MCP, context reader, SQLite
+helpers, viewer and modes. It exposes the memory search, smart explore,
+knowledge agent, request progress and owner goals skills. The launcher generates
+the hook and MCP commands for that installation. Standalone server, legacy
+installer and other host artifacts stay outside the catalog.
+[Package boundary and checks](handoffs/RUNTIME-10-LOCAL.md).
+
 ## Prepare the build
 
 Use direct user-accessible Node 22.23.4, npm 10.9.9, Bun 1.4.4 and Codex

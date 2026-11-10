@@ -429,6 +429,15 @@ owned browser process tree and retries transient profile file locks. The
 copied worker reused the previously prepared local Chroma venv and assets.
 [Executed checks](handoffs/VIEWER-08-LOCAL.md).
 
+## RUNTIME-10-LOCAL package admission on Windows x64
+
+Existing Node 22.23.4, npm 10.9.9 and Bun 1.4.4 passed the guarded build and
+both typechecks. The copied launcher completed startup, a synthetic SQLite
+write and stop after loopback sandbox approval. Approval applied to that
+fixture and did not grant Windows elevation. The fixture used disposable
+config and data and left the Codex home empty.
+[Results, limits and emitted hashes](handoffs/RUNTIME-10-LOCAL.md).
+
 ## Historical CHROMA-07 environment and results
 
 Source/tests 8fa9979797b5478ec8b36eebd6c52533112aec83; generated b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf.

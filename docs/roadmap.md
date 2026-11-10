@@ -40,7 +40,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Done-bounded for Windows x64 with separately staged multilingual MiniLM and persistent synthetic retrieval. [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | Done-bounded for the local viewer on Windows x64. Settings shows effective role choices and Chroma health. A copied worker and browser distinguished missing assets from a passing probe backed by semantic retrieval. [VIEWER-08-LOCAL](enterprise-local/handoffs/VIEWER-08-LOCAL.md) |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28 | M | done-bounded for private Codex CLI on Windows x64. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Desktop and Claude host acceptance remain open. |
-| 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | not started; preserve needed SDK/Codex/API adapters, prune proved-unused closures only |
+| 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | in progress. Private worker admission passed on Windows x64. Exact artifact provenance, SBOM and D12 CI admission remain open. [RUNTIME-10-LOCAL](enterprise-local/handoffs/RUNTIME-10-LOCAL.md) |
 | 11 | Exact-artifact local E2E, egress and selected-profile acceptance | IP P6/P7; A20 | M | not started; mock/offline checks independent of Bedrock availability; live rows separately gated |
 | 12 | Verified Windows bundle, SBOM, install/rollback and profile runbook | IP P8; A19/A20 | S | not started; deployment requires the intended profile's actual live evidence |
 
@@ -203,8 +203,8 @@ own concrete reviewed scope and cleanup/evidence contract.
 
 The bounded checks for steps 8 and 9 are complete. Step 9 was exercised earlier
 to establish the private Codex CLI and worker baseline on Windows x64. The
-[next implementation prompt](enterprise-local/NEXT-SESSION.md) covers local
-package admission in step 10, followed by exact-artifact E2E and release checks
+[next implementation prompt](enterprise-local/NEXT-SESSION.md) covers artifact
+provenance and the SBOM in step 10, followed by exact-artifact E2E and release checks
 in steps 11 and 12. Desktop and Claude Code host acceptance remain open.
 [Windows CLI evidence and limits](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 
