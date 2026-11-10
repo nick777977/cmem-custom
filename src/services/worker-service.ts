@@ -1216,6 +1216,11 @@ function printWorkerAliasHelp(): never {
 }
 
 function runServerServiceCli(command: string, extraArgs: string[] = []): void {
+  if (process.env.CLAUDE_MEM_RUNTIME?.trim().toLowerCase() === 'worker') {
+    console.error('LOCAL_WORKER_ONLY: standalone server commands are unavailable in worker mode.');
+    process.exit(1);
+  }
+
   // Plan §1c line 149: try the post-rename script first, then fall back
   // to the legacy `server-beta-service.cjs` so users running against an
   // already-installed plugin cache (built before the rename) continue to

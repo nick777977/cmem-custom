@@ -1,6 +1,6 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, rmdirSync, rmSync, writeFileSync } from 'node:fs';
-import { isAbsolute, join, resolve, win32 } from 'node:path';
+import { basename, dirname, isAbsolute, join, resolve, win32 } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -19,6 +19,27 @@ const hookEvents = {
   PostCompact: 'post-compact',
   SubagentStart: 'subagent-context',
 };
+// The repository build also emits standalone runtimes and installer tools.
+// Only the files used by the private worker and its local skills are staged.
+const runtimeFiles = [
+  'scripts/worker-service.cjs',
+  'scripts/mcp-server.cjs',
+  'scripts/context-read-worker.cjs',
+  'scripts/chroma-local.py',
+  'sqlite/SessionStore.js',
+  'sqlite/SessionStore.js.map',
+  'sqlite/observations/files.js',
+  'sqlite/observations/files.js.map',
+  'skills/mem-search/SKILL.md',
+  'skills/smart-explore/SKILL.md',
+  'skills/knowledge-agent/SKILL.md',
+  'skills/request-progress/SKILL.md',
+  'skills/request-progress/scripts/request-groups.mjs',
+  'skills/owner-goals/SKILL.md',
+  'skills/owner-goals/scripts/export_owner_prompts.py',
+  'skills/owner-goals/scripts/save_goals.py',
+];
+const runtimeDirectories = ['modes', 'ui'];
 const metadata = 'cmem-light-local.json';
 const readJson = file => JSON.parse(readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
 const writeJson = (file, value) => writeFileSync(file, JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
@@ -146,51 +167,70 @@ function cli(config, root, args, interactive = false) {
   return result.stdout;
 }
 
-function install({ root, codex, bun, port, bundle }) {
+export function stageLocalInstall({ root, codex, bun, port, bundle }) {
   if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('Specify a free port from 1024 to 65535');
   const config = { kind: marketplace, codex: executable(codex), bun: executable(bun), node: executable(process.execPath), port };
   const source = realpathSync(windowsPath(bundle));
-  const manifest = readJson(join(source, '.codex-plugin', 'plugin.json'));
+  const { name, version, description, author, homepage, repository, license, keywords, interface: presentation } =
+    readJson(join(source, '.codex-plugin', 'plugin.json'));
   const catalog = readJson(join(source, 'hooks', 'codex-hooks.json'));
-  if (manifest.name !== 'claude-mem') throw new Error('Expected the compiled claude-mem plugin directory');
-  for (const event of Object.keys(hookEvents)) {
-    if (catalog.hooks[event]?.length !== 1 || catalog.hooks[event][0].hooks?.length !== 1) {
+  if (name !== 'claude-mem') throw new Error('Expected the compiled claude-mem plugin directory');
+  const hooks = {};
+  root = windowsPath(root);
+  root = windowsPath(join(realpathSync(dirname(root)), basename(root)));
+  for (const [event, handler] of Object.entries(hookEvents)) {
+    const groups = catalog.hooks?.[event];
+    const entries = groups?.[0]?.hooks;
+    if (groups?.length !== 1 || entries?.length !== 1 || entries[0]?.type !== 'command') {
       throw new Error(`Unexpected build hook shape for ${event}`);
     }
+    const { matcher } = groups[0];
+    const { timeout } = entries[0];
+    // Codex uses cmd.exe for commandWindows. The launcher forwards the hook
+    // envelope on stdin and spawns Bun without a shell.
+    hooks[event] = [{ matcher, hooks: [{
+      type: 'command', timeout, command: 'exit 1',
+      commandWindows: `"${config.node}" "${join(root, 'codex-local.mjs')}" hook ${handler}`,
+    }] }];
   }
-  const required = ['scripts/worker-service.cjs', 'scripts/mcp-server.cjs', 'scripts/context-read-worker.cjs',
-    'sqlite', 'modes', 'ui', 'skills'];
-  for (const file of required) lstatSync(join(source, file));
+  for (const file of runtimeFiles) {
+    if (!lstatSync(join(source, file)).isFile()) throw new Error(`Expected a regular bundle file: ${file}`);
+  }
+  for (const dir of runtimeDirectories) {
+    if (!lstatSync(join(source, dir)).isDirectory()) throw new Error(`Expected a bundle directory: ${dir}`);
+  }
   mkdirSync(root); // A dedicated, new root prevents overwriting a user's Codex profile.
-  root = windowsPath(realpathSync(root));
   writeJson(join(root, metadata), config);
   for (const dir of ['home/appdata', 'home/localappdata', 'temp', 'workspace', 'codex', 'data',
     'catalog/.agents/plugins', 'catalog/plugin/.codex-plugin', 'catalog/plugin/hooks', 'catalog/plugin/scripts']) {
     mkdirSync(join(root, dir), { recursive: true });
   }
   const plugin = join(root, 'catalog', 'plugin');
-  for (const file of required) cpSync(join(source, file), join(plugin, file), { recursive: true });
+  for (const file of runtimeFiles) cpSync(join(source, file), join(plugin, file));
+  for (const dir of runtimeDirectories) cpSync(join(source, dir), join(plugin, dir), { recursive: true });
   cpSync(script, join(root, 'codex-local.mjs'));
-  for (const [event, handler] of Object.entries(hookEvents)) {
-    const hook = catalog.hooks[event][0].hooks[0];
-    // Codex uses a Windows command shell for commandWindows. The launcher
-    // receives stdin unchanged and spawns Bun without involving a shell.
-    hook.commandWindows = `"${config.node}" "${join(root, 'codex-local.mjs')}" hook ${handler}`;
-    hook.command = 'exit 1';
-  }
-  writeJson(join(plugin, 'hooks', 'codex-hooks.json'), catalog);
+  writeJson(join(plugin, 'hooks', 'codex-hooks.json'), { hooks });
   writeJson(join(plugin, '.mcp.json'), { mcpServers: { 'mcp-search': {
     type: 'stdio',
     command: config.node,
     args: [join(root, 'codex-local.mjs'), 'mcp'],
   } } });
-  writeJson(join(plugin, '.codex-plugin', 'plugin.json'), manifest);
+  writeJson(join(plugin, '.codex-plugin', 'plugin.json'), {
+    name, version, description, author, homepage, repository, license, keywords, interface: presentation,
+    skills: './skills/', mcpServers: './.mcp.json', hooks: './hooks/codex-hooks.json',
+  });
   writeJson(join(root, 'catalog', '.agents', 'plugins', 'marketplace.json'), {
     name: marketplace,
     interface: { displayName: 'CMEM Light (private local build)' },
     plugins: [{ name: 'claude-mem', source: { source: 'local', path: './plugin' },
       policy: { installation: 'AVAILABLE', authentication: 'ON_INSTALL' }, category: 'Productivity' }],
   });
+  return { ...config, root };
+}
+
+function install(options) {
+  const config = stageLocalInstall(options);
+  const { root } = config;
   // Keep all CLI configuration under the installation. Codex owns the catalog
   // and cache registration, including uninstall.
   const catalogPath = join(root, 'catalog');
@@ -361,7 +401,9 @@ async function main() {
   }
 }
 
-main().catch(error => {
-  console.error(`cmem-light: ${error.message}`);
-  process.exitCode = 1;
-});
+if (process.argv[1] && fileURLToPath(import.meta.url) === realpathSync(process.argv[1])) {
+  main().catch(error => {
+    console.error(`cmem-light: ${error.message}`);
+    process.exitCode = 1;
+  });
+}

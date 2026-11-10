@@ -72,6 +72,15 @@ function assertBundleIntegrity(filePath) {
   }
 }
 
+const INSTALLER_CREDENTIAL_PROBE = 'src/npx-cli/cmem-memory-credentials.ts';
+
+function assertExcludedSources({ metafile }, bundle, excluded) {
+  const inputs = new Set(Object.keys(metafile.inputs).map(file => file.replaceAll('\\', '/')));
+  for (const source of excluded) {
+    if (inputs.has(source)) throw new Error(`${bundle} must not load ${source}`);
+  }
+}
+
 const WORKER_SERVICE = {
   name: 'worker-service',
   source: 'src/services/worker-service.ts'
@@ -607,9 +616,10 @@ async function buildHooks() {
     });
 
     console.log(`\n🔧 Building worker service...`);
-    await build({
+    const workerBuild = await build({
       entryPoints: [WORKER_SERVICE.source],
       bundle: true,
+      metafile: true,
       platform: 'node',
       target: 'node18',
       format: 'cjs',
@@ -664,6 +674,11 @@ async function buildHooks() {
       }
     });
 
+    assertExcludedSources(workerBuild, WORKER_SERVICE.name, [
+      SERVER_SERVICE.source,
+      'src/server/runtime/create-server-service.ts',
+      INSTALLER_CREDENTIAL_PROBE,
+    ]);
     assertBundleIntegrity(`${hooksDir}/${WORKER_SERVICE.name}.cjs`);
 
     const workerZodRequire = fs.readFileSync(`${hooksDir}/${WORKER_SERVICE.name}.cjs`, 'utf-8')
@@ -1027,9 +1042,10 @@ async function buildHooks() {
     if (!fs.existsSync(npxCliOutDir)) {
       fs.mkdirSync(npxCliOutDir, { recursive: true });
     }
-    await build({
+    const npxBuild = await build({
       entryPoints: ['src/npx-cli/index.ts'],
       bundle: true,
+      metafile: true,
       platform: 'node',
       target: 'node18',
       format: 'esm',
@@ -1048,6 +1064,7 @@ async function buildHooks() {
       },
     });
 
+    assertExcludedSources(npxBuild, 'npx-cli', [INSTALLER_CREDENTIAL_PROBE]);
     fs.chmodSync(`${npxCliOutDir}/index.js`, 0o755);
     const npxCliStats = fs.statSync(`${npxCliOutDir}/index.js`);
     console.log(`✓ npx-cli built (${(npxCliStats.size / 1024).toFixed(2)} KB)`);
