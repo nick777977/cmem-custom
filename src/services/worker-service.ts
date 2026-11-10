@@ -784,8 +784,6 @@ export class WorkerService implements WorkerRef {
       // outage must not hold readiness), then on watch/nudge/sweep.
       this.startHookSpoolDrain();
 
-      runOneTimeV12_4_3Cleanup();
-
       // One-time, deferred and bounded: reclaim the FTS5 bloat an install already
       // accumulated (#2793). Schema v54 stops new bloat at the source; the reclaim runs
       // on an unref'd timer so startup and health checks never wait for it.

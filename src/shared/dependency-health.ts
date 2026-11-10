@@ -66,8 +66,8 @@ export const UVX_VECTOR_SEARCH_REMEDIATION =
   'Try `curl -LsSf https://astral.sh/uv/install.sh | sh` or `brew install uv`.';
 
 export const CHROMA_VECTOR_SEARCH_REMEDIATION =
-  'Stop the other claude-mem worker using the same Chroma data directory, or configure a distinct ' +
-  'CLAUDE_MEM_DATA_DIR / remote Chroma instance, then restart claude-mem.';
+  'Check the staged files in CLAUDE_MEM_CHROMA_RUNTIME_DIR and ensure only one worker owns ' +
+  'the local Chroma data directory, then restart claude-mem.';
 
 const statuses = new Map<DependencyName, DependencyStatus>();
 

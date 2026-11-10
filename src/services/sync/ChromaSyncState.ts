@@ -29,10 +29,11 @@ export interface ProjectWatermarks {
 }
 
 const ZERO: ProjectWatermarks = { observations: 0, summaries: 0, prompts: 0 };
+const CHECKPOINT_FILE = 'chroma-minilm-v1-sync-state.json';
 
 function statePath(): string {
   const dataDir = SettingsDefaultsManager.get('CLAUDE_MEM_DATA_DIR');
-  return join(dataDir, 'chroma-sync-state.json');
+  return join(dataDir, CHECKPOINT_FILE);
 }
 
 let cache: Record<string, ProjectWatermarks> | null = null;
@@ -107,7 +108,7 @@ function load(): Record<string, ProjectWatermarks> {
   } catch (error) {
     // A truncated or corrupt state file must not abort the sync pipeline. Treat
     // it as empty and rebuild from the SQLite watermarks on the next backfill.
-    logger.warn('CHROMA_SYNC', 'Unreadable chroma-sync-state.json, treating as empty', {
+    logger.warn('CHROMA_SYNC', 'Unreadable Chroma checkpoint, treating as empty', {
       path
     }, error instanceof Error ? error : new Error(String(error)));
     cache = {};
@@ -136,7 +137,7 @@ function persist(): void {
     persistOrThrow();
   } catch (error) {
     persistBlockedUntil = Date.now() + PERSIST_FAILURE_BACKOFF_MS;
-    logger.warn('CHROMA_SYNC', 'Could not write chroma-sync-state.json, will retry on the next change', {
+    logger.warn('CHROMA_SYNC', 'Could not write Chroma checkpoint, will retry on the next change', {
       path: statePath()
     }, error instanceof Error ? error : new Error(String(error)));
   }

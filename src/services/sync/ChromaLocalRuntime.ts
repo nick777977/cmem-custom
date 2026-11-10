@@ -1,10 +1,11 @@
 import path from 'node:path';
+import { statSync } from 'node:fs';
+import { getPackageRoot, paths } from '../../shared/paths.js';
 import type { SettingsDefaults } from '../../shared/SettingsDefaultsManager.js';
 
 type LocalChromaConfiguration = Partial<Pick<SettingsDefaults,
-  'CLAUDE_MEM_CHROMA_MODE' | 'CLAUDE_MEM_CHROMA_EMBEDDING_FUNCTION' | 'CLAUDE_MEM_CHROMA_EXECUTABLE'>>;
+  'CLAUDE_MEM_CHROMA_MODE' | 'CLAUDE_MEM_CHROMA_EMBEDDING_FUNCTION' | 'CLAUDE_MEM_CHROMA_RUNTIME_DIR'>>;
 
-/** Node-side launch description only; this is not a Python API or an approval manifest. */
 export interface LocalChromaLaunch {
   command: string;
   args: string[];
@@ -27,28 +28,44 @@ export function assertLocalChromaConfiguration(settings: LocalChromaConfiguratio
 }
 
 export function assertLocalEmbeddingFunction(name: unknown): void {
-  // "default" is only the retained collection name. It does NOT certify that
-  // the Python implementation is local/offline; the launch gate below blocks it too.
+  // The worker's historical selector maps to the packaged local MiniLM adapter.
+  // The adapter never passes "default" to Chroma's embedding-function registry.
   if (name !== 'default') {
-    throw new ChromaLocalRuntimeError('Remote or unverified Chroma embedding function is forbidden; only default may be considered after artifact verification');
+    throw new ChromaLocalRuntimeError('Remote or unverified Chroma embedding function is forbidden; use the local default');
   }
 }
 
 export function requireApprovedLocalChromaRuntime(settings: LocalChromaConfiguration): LocalChromaLaunch {
   assertLocalChromaConfiguration(settings);
-  const executable = settings.CLAUDE_MEM_CHROMA_EXECUTABLE || '';
-  if (!path.isAbsolute(executable) || executable.startsWith('\\\\') || executable.startsWith('//')) {
-    throw new ChromaLocalRuntimeError('Set CLAUDE_MEM_CHROMA_EXECUTABLE to an absolute pre-provisioned local executable; PATH, UNC and uvx resolution are forbidden');
+  const runtimeDir = settings.CLAUDE_MEM_CHROMA_RUNTIME_DIR || '';
+  if (process.platform !== 'win32' || process.arch !== 'x64') {
+    throw new ChromaLocalRuntimeError('LOCAL_CHROMA_SETUP_REQUIRED: this runtime requires Windows x64');
   }
-  if (/^(?:uvx?|pip\d*|pipx|python\d*(?:\.\d+)*|npm|npx|bun|cmd|powershell|pwsh|sh|bash)(?:\.(?:exe|cmd|bat))?$/i.test(path.basename(executable))) {
-    throw new ChromaLocalRuntimeError('Chroma executable must be the reviewed local adapter, not an interpreter, shell or package manager');
+  if (!/^[a-z]:[\\/]/i.test(runtimeDir)) {
+    throw new ChromaLocalRuntimeError('LOCAL_CHROMA_SETUP_REQUIRED: set CLAUDE_MEM_CHROMA_RUNTIME_DIR to the absolute local drive path prepared by prepare-local-chroma.ps1');
   }
-  // U1/D9: no approved Python/Chroma/model artifacts or supported offline API
-  // were supplied. Do not stat/search caches, run --help, construct guessed
-  // Python flags, trust a self-attested config, or repair missing assets.
-  // A future reviewed implementation must verify the entire local asset and
-  // embedding/telemetry contract before returning a launch description.
-  throw new ChromaLocalRuntimeError(
-    'LOCAL_CHROMA_ARTIFACT_CONTRACT_UNVERIFIED: Chroma startup blocked. Approved executable/dependency/model hashes and supported offline embedding/telemetry API evidence are required; no install, download, repair or fallback was attempted'
-  );
+  const command = path.join(runtimeDir, 'venv', 'Scripts', 'python.exe');
+  const modelDir = path.join(runtimeDir, 'model');
+  const adapter = path.join(getPackageRoot(), 'scripts', 'chroma-local.py');
+  for (const file of [command, path.join(modelDir, 'model.onnx'), path.join(modelDir, 'tokenizer.json'), adapter]) {
+    let stat;
+    try {
+      stat = statSync(file, { throwIfNoEntry: false });
+    } catch {
+      throw new ChromaLocalRuntimeError(`LOCAL_CHROMA_SETUP_REQUIRED: cannot read local Chroma file ${path.basename(file)}`);
+    }
+    if (!stat?.isFile() || stat.size === 0) {
+      throw new ChromaLocalRuntimeError(`LOCAL_CHROMA_SETUP_REQUIRED: missing or empty local Chroma file ${path.basename(file)}`);
+    }
+  }
+  return {
+    command,
+    args: ['-I', '-B', adapter, '--model-dir', modelDir, '--data-dir', path.resolve(paths.chroma())],
+    env: {
+      ANONYMIZED_TELEMETRY: 'False',
+      OTEL_SDK_DISABLED: 'true',
+      HF_HUB_DISABLE_TELEMETRY: '1',
+      HF_HUB_OFFLINE: '1',
+    },
+  };
 }

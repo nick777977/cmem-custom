@@ -20,7 +20,7 @@ afterEach(() => {
 describe('semantic index checkpoint shape recovery', () => {
   for (const payload of ['null', '[]', '"not a checkpoint"', '7']) {
     it(`recovers a valid JSON document with invalid root ${payload}`, () => {
-      writeFileSync(join(dataDir, 'chroma-sync-state.json'), payload);
+      writeFileSync(join(dataDir, 'chroma-minilm-v1-sync-state.json'), payload);
       expect(() => ChromaSyncState.get('owned')).not.toThrow();
       expect(ChromaSyncState.get('owned').observations).toBe(0);
       ChromaSyncState.bump('owned', 'observations', 8);

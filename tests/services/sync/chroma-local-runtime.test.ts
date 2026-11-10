@@ -1,5 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it, mock } from 'bun:test';
-import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import path from 'node:path';
 import * as realSettings from '../../../src/shared/SettingsDefaultsManager.js';
 import * as realStdio from '@modelcontextprotocol/sdk/client/stdio.js';
@@ -16,7 +16,7 @@ mock.module('@modelcontextprotocol/sdk/client/index.js', () => ({ ...snapshots[2
 mock.module('../../../src/utils/logger.js', () => ({ logger: { debug() {}, info() {}, warn() {}, error() {}, failure() {} } }));
 import { ChromaMcpManager } from '../../../src/services/sync/ChromaMcpManager.js';
 import { ChromaLocalRuntimeError, requireApprovedLocalChromaRuntime } from '../../../src/services/sync/ChromaLocalRuntime.js';
-const root = path.resolve('.scratch/enterprise-local/chroma-07/fixtures');
+const root = path.resolve('.scratch/enterprise-local/chroma-07-local/fixtures');
 mkdirSync(root, { recursive: true });
 beforeEach(async () => { await ChromaMcpManager.reset(); settings = {}; transports = clients = 0; });
 afterAll(async () => {
@@ -26,26 +26,32 @@ afterAll(async () => {
   mock.module('@modelcontextprotocol/sdk/client/index.js', () => snapshots[2]);
   mock.module('../../../src/utils/logger.js', () => snapshots[3]);
 });
-describe('unverified local Chroma never launches', () => {
-  for (const asset of ['missing', 'cold-cache', 'corrupt', 'present']) {
-    it(`blocks ${asset} assets before client/store/process, without repair`, async () => {
-      const executable = path.join(root, asset, 'adapter.exe');
-      if (asset === 'present' || asset === 'corrupt') {
+describe('incomplete local Chroma never launches', () => {
+  for (const asset of ['missing-python', 'missing-model', 'empty-model', 'missing-tokenizer']) {
+    it(`blocks ${asset} before client/store/process, without repair`, async () => {
+      const runtimeDir = path.join(root, asset);
+      const executable = path.join(runtimeDir, 'venv', 'Scripts', 'python.exe');
+      const model = path.join(runtimeDir, 'model', 'model.onnx');
+      if (asset !== 'missing-python') {
         mkdirSync(path.dirname(executable), { recursive: true });
-        writeFileSync(executable, asset === 'corrupt' ? 'invalid executable' : 'synthetic fixture, never executable');
+        writeFileSync(executable, 'synthetic fixture, never executable');
       }
-      settings = { CLAUDE_MEM_CHROMA_EXECUTABLE: executable, CLAUDE_MEM_CHROMA_UVX_PATH: path.join(root, 'uvx.exe') };
-      const before = existsSync(executable) ? readFileSync(executable, 'utf8') : null;
+      if (asset === 'empty-model' || asset === 'missing-tokenizer') {
+        mkdirSync(path.dirname(model), { recursive: true });
+        writeFileSync(model, asset === 'empty-model' ? '' : 'synthetic fixture');
+      }
+      settings = { CLAUDE_MEM_CHROMA_RUNTIME_DIR: runtimeDir };
       const manager = ChromaMcpManager.getInstance();
-      await expect(manager.callTool('chroma_list_collections', {})).rejects.toThrow('LOCAL_CHROMA_ARTIFACT_CONTRACT_UNVERIFIED');
-      await expect(manager.callTool('chroma_query_documents', { query_texts: ['synthetic query'] })).rejects.toThrow('LOCAL_CHROMA_ARTIFACT_CONTRACT_UNVERIFIED');
+      await expect(manager.callTool('chroma_list_collections', {})).rejects.toThrow('LOCAL_CHROMA_SETUP_REQUIRED');
+      await expect(manager.callTool('chroma_query_documents', { query_texts: ['synthetic query'] })).rejects.toThrow('LOCAL_CHROMA_SETUP_REQUIRED');
+      expect(manager.getCrashState().localRuntime).toBe('setup-required');
       expect(transports).toBe(0); expect(clients).toBe(0);
-      expect(existsSync(executable) ? readFileSync(executable, 'utf8') : null).toBe(before);
+      expect(existsSync(path.join(runtimeDir, 'model', 'tokenizer.json'))).toBe(false);
     });
   }
   it('does not let legacy uvx configuration authorize execution', async () => {
-    settings = { CLAUDE_MEM_CHROMA_UVX_PATH: path.join(root, 'uvx.exe') };
-    await expect(ChromaMcpManager.getInstance().callTool('chroma_list_collections', {})).rejects.toThrow('absolute pre-provisioned');
+    settings = { CLAUDE_MEM_CHROMA_UVX_PATH: path.join(root, 'uvx.exe'), CLAUDE_MEM_CHROMA_EXECUTABLE: path.join(root, 'adapter.exe') };
+    await expect(ChromaMcpManager.getInstance().callTool('chroma_list_collections', {})).rejects.toThrow('LOCAL_CHROMA_SETUP_REQUIRED');
     expect(transports).toBe(0);
   });
   it('rejects direct tool provider override before transport', async () => {
@@ -57,7 +63,7 @@ describe('unverified local Chroma never launches', () => {
     await expect(ChromaMcpManager.getInstance().callTool('chroma_query_documents', {})).rejects.toThrow('Remote Chroma is forbidden');
     expect(transports).toBe(0); expect(clients).toBe(0);
   });
-  it('unknown contract is a configuration refusal, not a new transient SQLite-only mode', () => {
-    expect(() => requireApprovedLocalChromaRuntime({ CLAUDE_MEM_CHROMA_EXECUTABLE: path.join(root, 'adapter.exe') })).toThrow(ChromaLocalRuntimeError);
+  it('requires explicit setup even when Chroma is selected', () => {
+    expect(() => requireApprovedLocalChromaRuntime({})).toThrow(ChromaLocalRuntimeError);
   });
 });

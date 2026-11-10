@@ -338,7 +338,7 @@ var init_paths = __esm({
       // boot before it opens the database, and the outcome of the last one.
       pendingRestore: () => join4(DATA_DIR, "backups", "restore-pending.json"),
       lastRestore: () => join4(DATA_DIR, "backups", "last-restore.json"),
-      chroma: () => join4(DATA_DIR, "chroma"),
+      chroma: () => join4(DATA_DIR, "chroma-minilm-v1"),
       combinedCerts: () => join4(DATA_DIR, "combined_certs.pem"),
       transcriptsConfig: () => join4(DATA_DIR, "transcript-watch.json"),
       transcriptsState: () => join4(DATA_DIR, "transcript-watch-state.json"),
@@ -1017,8 +1017,10 @@ var init_SettingsDefaultsManager = __esm({
         // every observation, and search by meaning covers only rows already
         // re-embedded until that finishes.
         CLAUDE_MEM_EMBEDDING_MODEL: "all-MiniLM-L6-v2",
-        CLAUDE_MEM_CHROMA_EXECUTABLE: "",
+        CLAUDE_MEM_CHROMA_RUNTIME_DIR: "",
         // No discovery, runtime resolution or automatic repair
+        CLAUDE_MEM_CHROMA_EXECUTABLE: "",
+        // Legacy field retained for round-trip only; never executed
         CLAUDE_MEM_CHROMA_UVX_PATH: "",
         // Legacy field retained for round-trip only; never executed
         CLAUDE_MEM_SEARCH_RECENCY_DAYS: "90",

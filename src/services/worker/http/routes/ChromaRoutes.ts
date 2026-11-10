@@ -34,13 +34,15 @@ export class ChromaRoutes extends BaseRouteHandler {
 
     const chromaMcp = ChromaMcpManager.getInstance();
     const isHealthy = await chromaMcp.isHealthy();
+    const { localRuntime, setupError } = chromaMcp.getCrashState();
 
     if (!deepEnabled) {
       res.json({
         status: isHealthy ? 'healthy' : 'unhealthy',
         connected: isHealthy,
         timestamp: new Date().toISOString(),
-        details: isHealthy ? 'chroma-mcp is responding to tool calls' : 'chroma-mcp health check failed',
+        localRuntime,
+        details: isHealthy ? 'chroma-mcp is responding to tool calls' : setupError ?? 'chroma-mcp health check failed',
         deep: false
       });
       return;
@@ -52,10 +54,11 @@ export class ChromaRoutes extends BaseRouteHandler {
     res.json({
       status,
       connected: isHealthy,
+      localRuntime,
       timestamp: new Date().toISOString(),
       details: probe.ok
         ? 'chroma-mcp semantic search round-trip succeeded'
-        : `chroma-mcp deep probe failed at stage '${probe.stage}'`,
+        : setupError ?? `chroma-mcp deep probe failed at stage '${probe.stage}'`,
       deep: true,
       probe
     });

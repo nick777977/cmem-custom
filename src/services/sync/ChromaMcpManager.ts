@@ -18,7 +18,7 @@ import { clearDependencyStatus, recordChromaVectorSearchUnavailable } from '../.
 import { ChromaUnavailableError } from '../worker/search/errors.js';
 import type { ChromaCollectionDrop } from './ChromaSync.js';
 
-import { assertLocalChromaConfiguration, assertLocalEmbeddingFunction, requireApprovedLocalChromaRuntime } from './ChromaLocalRuntime.js';
+import { assertLocalChromaConfiguration, assertLocalEmbeddingFunction, ChromaLocalRuntimeError, requireApprovedLocalChromaRuntime } from './ChromaLocalRuntime.js';
 import type { LocalChromaLaunch } from './ChromaLocalRuntime.js';
 
 const CHROMA_MCP_CLIENT_NAME = 'claude-mem-chroma';
@@ -41,7 +41,7 @@ const CHROMA_STORE_RECORD_FILENAME = '.claude-mem-chroma-store.json';
 // longer safely follow a newer one's store layout. Deliberately not tied to
 // the package version so routine releases do not trigger spurious refusals.
 //
-// Bump it whenever the chromadb pin in CHROMA_MCP_DEP_OVERRIDES crosses a
+// Bump it whenever the pinned chromadb version crosses a
 // store-format boundary. chromadb migrations are forward-only, and an older
 // engine can crash on a newer store: chromadb 1.0.16 panics opening a store
 // that 1.5.9 wrote ("range start index 10 out of range", #3384). After the
@@ -56,8 +56,7 @@ const CHROMA_OUTPUT_TAIL_MAX_CHARS = 2048;
 const DEFAULT_MAX_PENDING_MUTATIONS = 5_000;
 const CHROMA_MUTATION_TOOL_PATTERN = /^chroma_(?:add|create|delete|modify|update|upsert)_/;
 
-// Historical store metadata only; no Python runtime is approved by these values.
-const CHROMA_MCP_PINNED_VERSION = '0.2.6';
+const CHROMA_MCP_PINNED_VERSION = 'cmem-local-1';
 const CHROMADB_PINNED_VERSION = '1.5.9';
 const CHROMA_MCP_DEP_OVERRIDES: ReadonlyArray<string> = [];
 
@@ -73,7 +72,8 @@ export interface ChromaCrashState {
   } | null;
   chromaMcpVersion: string;
   dependencyOverrides: string[];
-  localRuntime: 'artifact-contract-unverified';
+  localRuntime: 'idle' | 'connected' | 'setup-required';
+  setupError?: string;
   /** Compatibility health field: runtime prewarm was removed; always stopped. */
   prewarm: {
     consecutiveFailures: number;
@@ -221,13 +221,23 @@ export class ChromaMcpManager {
     return ChromaMcpManager.instance;
   }
 
+  private setupError?: string;
+
   private async ensureConnected(): Promise<void> {
-    // Configuration/artifact refusals must stay explicit on every call, including
-    // cached connections and retries. Do not turn U1/D9 into transient backoff.
-    const launch = requireApprovedLocalChromaRuntime(SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH));
+    let launch: LocalChromaLaunch;
+    try {
+      launch = requireApprovedLocalChromaRuntime(SettingsDefaultsManager.loadFromFile(USER_SETTINGS_PATH));
+    } catch (error) {
+      if (error instanceof ChromaLocalRuntimeError) {
+        this.setupError = error.message;
+        recordChromaVectorSearchUnavailable(error.message);
+      }
+      throw error;
+    }
     await this.waitForUnexpectedCloseCleanup();
 
     if (this.connected && this.client) {
+      this.setupError = undefined;
       return;
     }
 
@@ -248,6 +258,11 @@ export class ChromaMcpManager {
     } catch (error) {
       if (error instanceof ChromaMcpConnectionCancelledError) {
         logger.debug('CHROMA_MCP', 'Connection attempt cancelled during shutdown');
+        throw error;
+      }
+      if (error instanceof ChromaLocalRuntimeError) {
+        this.setupError = error.message;
+        recordChromaVectorSearchUnavailable(error.message);
         throw error;
       }
       this.lastConnectionFailureTimestamp = Date.now();
@@ -366,6 +381,9 @@ export class ChromaMcpManager {
       // Tree-kill (not just transport.close) so failed-connect descendants
       // can't survive on Linux (#2313).
       await this.disposeCurrentSubprocess();
+      if (stderrTail.includes('LOCAL_CHROMA_SETUP_REQUIRED:')) {
+        throw new ChromaLocalRuntimeError('LOCAL_CHROMA_SETUP_REQUIRED: staged Python packages or MiniLM assets failed validation; see the local worker log');
+      }
       // A failed MCP handshake means Chroma is unavailable, the same as a
       // missing uvx, a failed prewarm, or a lost writer lock. The SDK sends
       // `notifications/initialized` right after `initialize`; when the
@@ -384,6 +402,7 @@ export class ChromaMcpManager {
     }
 
     this.connected = true;
+    this.setupError = undefined;
     this.registerManagedProcess();
     clearDependencyStatus('chroma');
 
@@ -452,7 +471,8 @@ export class ChromaMcpManager {
       lastExit: this.chromaLastExit ? { ...this.chromaLastExit } : null,
       chromaMcpVersion: CHROMA_MCP_PINNED_VERSION,
       dependencyOverrides: [...CHROMA_MCP_DEP_OVERRIDES],
-      localRuntime: 'artifact-contract-unverified',
+      localRuntime: this.setupError ? 'setup-required' : this.connected ? 'connected' : 'idle',
+      ...(this.setupError && { setupError: this.setupError }),
       prewarm: {
         consecutiveFailures: 0,
         state: 'stopped',

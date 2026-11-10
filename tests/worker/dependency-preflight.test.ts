@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeEach } from 'bun:test';
-import path from 'node:path';
 import { runWorkerDependencyPreflight } from '../../src/services/worker/dependency-preflight.js';
 import {
   getDependencyStatus,
@@ -21,79 +20,33 @@ describe('worker dependency preflight', () => {
     resetDependencyStatusesForTesting();
   });
 
-  it('records missing uvx using PATH/file checks without checking Claude for Gemini', () => {
+  it('reports missing local Chroma assets and ignores stale uvx status', () => {
+    recordDependencyStatus('uvx', 'vector_search_unavailable', 'old failure');
     let claudeChecked = false;
-
     const snapshot = runWorkerDependencyPreflight({
-      settings: {
-        CLAUDE_MEM_PROVIDER: 'gemini',
-        CLAUDE_MEM_CHROMA_ENABLED: 'true',
-      },
+      settings: { CLAUDE_MEM_PROVIDER: 'gemini', CLAUDE_MEM_CHROMA_ENABLED: 'true' },
       classifyClaudeError: classifier,
       findClaudeExecutable: () => {
         claudeChecked = true;
         throw new Error('Claude should not be checked for Gemini');
       },
-      env: { PATH: '/tmp/no-uvx' },
-      platform: 'linux',
-      homedir: () => '/tmp/home',
-      pathExists: () => false,
-      isFile: () => false,
     });
-
     expect(claudeChecked).toBe(false);
     expect(snapshot.degraded).toBe(true);
-    expect(getDependencyStatus('uvx')).toMatchObject({
-      dependency: 'uvx',
-      kind: 'vector_search_unavailable',
-    });
-    expect(getDependencyStatus('uvx')?.remediation).toContain('uv/uvx');
+    expect(getDependencyStatus('uvx')).toBeNull();
+    expect(getDependencyStatus('chroma')).toMatchObject({ kind: 'vector_search_unavailable' });
+    expect(getDependencyStatus('chroma')?.message).toContain('LOCAL_CHROMA_SETUP_REQUIRED');
+    expect(getDependencyStatus('chroma')?.remediation).toContain('CLAUDE_MEM_CHROMA_RUNTIME_DIR');
   });
 
-  it('recognizes a Homebrew-only uvx install on darwin', () => {
-    let claudeChecked = false;
-
+  it('clears stale Chroma diagnostics when explicitly disabled', () => {
+    recordDependencyStatus('chroma', 'vector_search_unavailable', 'old failure');
     const snapshot = runWorkerDependencyPreflight({
-      settings: {
-        CLAUDE_MEM_PROVIDER: 'gemini',
-        CLAUDE_MEM_CHROMA_ENABLED: 'true',
-      },
+      settings: { CLAUDE_MEM_PROVIDER: 'gemini', CLAUDE_MEM_CHROMA_ENABLED: 'false' },
       classifyClaudeError: classifier,
-      findClaudeExecutable: () => {
-        claudeChecked = true;
-        throw new Error('Claude should not be checked for Gemini');
-      },
-      env: { PATH: '/usr/bin:/bin' },
-      platform: 'darwin',
-      homedir: () => '/tmp/home',
-      pathExists: filePath => filePath === '/opt/homebrew/bin',
-      isFile: filePath => filePath === path.join('/opt/homebrew/bin', 'uvx'),
     });
-
-    expect(claudeChecked).toBe(false);
     expect(snapshot.degraded).toBe(false);
-    expect(getDependencyStatus('uvx')).toBeNull();
-  });
-
-  it('finds uvx.exe at the path set in settings on Windows (#4195)', () => {
-    const settingsUvx = 'C:\\Users\\Jane Doe\\AppData\\Local\\Programs\\Python\\Python313\\Scripts\\uvx.exe';
-
-    const snapshot = runWorkerDependencyPreflight({
-      settings: {
-        CLAUDE_MEM_PROVIDER: 'gemini',
-        CLAUDE_MEM_CHROMA_ENABLED: 'true',
-        CLAUDE_MEM_CHROMA_UVX_PATH: settingsUvx,
-      },
-      classifyClaudeError: classifier,
-      env: { PATH: 'C:\\Windows\\System32' },
-      platform: 'win32',
-      homedir: () => 'C:\\Users\\Jane Doe',
-      pathExists: () => false,
-      isFile: filePath => filePath === settingsUvx,
-    });
-
-    expect(snapshot.degraded).toBe(false);
-    expect(getDependencyStatus('uvx')).toBeNull();
+    expect(getDependencyStatus('chroma')).toBeNull();
   });
 
   it('clears stale Claude CLI setup status when a non-Claude provider is selected', () => {
@@ -108,11 +61,6 @@ describe('worker dependency preflight', () => {
       findClaudeExecutable: () => {
         throw new Error('Claude should not be checked for OpenRouter');
       },
-      env: { PATH: '' },
-      platform: 'linux',
-      homedir: () => '/tmp/home',
-      pathExists: () => false,
-      isFile: () => false,
     });
 
     expect(getDependencyStatus('claude_cli')).toBeNull();
@@ -128,11 +76,6 @@ describe('worker dependency preflight', () => {
       findClaudeExecutable: () => {
         throw new Error('Claude executable not found. Please install Claude Code CLI.');
       },
-      env: { PATH: '' },
-      platform: 'linux',
-      homedir: () => '/tmp/home',
-      pathExists: () => false,
-      isFile: () => false,
     });
 
     expect(getDependencyStatus('claude_cli')).toMatchObject({

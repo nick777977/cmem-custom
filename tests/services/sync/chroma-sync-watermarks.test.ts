@@ -604,7 +604,7 @@ describe('ChromaSync watermark gap persistence', () => {
   });
 
   it('stops bootstrapping watermarks once shutdown begins (#4069)', async () => {
-    rmSync(join(process.env.CLAUDE_MEM_DATA_DIR!, 'chroma-sync-state.json'), { force: true });
+    rmSync(join(process.env.CLAUDE_MEM_DATA_DIR!, 'chroma-minilm-v1-sync-state.json'), { force: true });
     expect(ChromaSyncState.exists()).toBe(false);
 
     const base = makeStore(project, [1]);

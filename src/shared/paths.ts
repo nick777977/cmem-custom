@@ -147,7 +147,7 @@ export const paths = {
   // boot before it opens the database, and the outcome of the last one.
   pendingRestore: () => join(DATA_DIR, 'backups', 'restore-pending.json'),
   lastRestore: () => join(DATA_DIR, 'backups', 'last-restore.json'),
-  chroma: () => join(DATA_DIR, 'chroma'),
+  chroma: () => join(DATA_DIR, 'chroma-minilm-v1'),
   combinedCerts: () => join(DATA_DIR, 'combined_certs.pem'),
   transcriptsConfig: () => join(DATA_DIR, 'transcript-watch.json'),
   transcriptsState: () => join(DATA_DIR, 'transcript-watch-state.json'),

@@ -300,7 +300,8 @@ export interface SettingsDefaults {
   CLAUDE_MEM_SERVER_VECTOR_SEARCH: string;       // server search by meaning: 'auto', 'true' or 'false'
   CLAUDE_MEM_EMBEDDING_BACKFILL_THREADS: string; // CPU threads for embedding stored rows; '' = half, 0 = all
   CLAUDE_MEM_EMBEDDING_MODEL: string;            // in-process embedding model for server search by meaning
-  CLAUDE_MEM_CHROMA_EXECUTABLE: string;          // absolute pre-provisioned adapter; blocked until artifact/API review
+  CLAUDE_MEM_CHROMA_RUNTIME_DIR: string;         // prepared Windows Python environment and MiniLM assets
+  CLAUDE_MEM_CHROMA_EXECUTABLE: string;          // inert legacy round-trip field
   CLAUDE_MEM_CHROMA_UVX_PATH: string;            // inert legacy round-trip field
   CLAUDE_MEM_SEARCH_RECENCY_DAYS: string;        // Implicit 90-day recency window on date-less semantic searches (#4770); 0 = no window
   // Worker-native cloud sync. Active ⇔ TOKEN, USER_ID, and HUB_URL are all
@@ -599,7 +600,8 @@ export class SettingsDefaultsManager {
     // every observation, and search by meaning covers only rows already
     // re-embedded until that finishes.
     CLAUDE_MEM_EMBEDDING_MODEL: 'all-MiniLM-L6-v2',
-    CLAUDE_MEM_CHROMA_EXECUTABLE: '',          // No discovery, runtime resolution or automatic repair
+    CLAUDE_MEM_CHROMA_RUNTIME_DIR: '',         // No discovery, runtime resolution or automatic repair
+    CLAUDE_MEM_CHROMA_EXECUTABLE: '',          // Legacy field retained for round-trip only; never executed
     CLAUDE_MEM_CHROMA_UVX_PATH: '',            // Legacy field retained for round-trip only; never executed
     CLAUDE_MEM_SEARCH_RECENCY_DAYS: '90',      // Date-less semantic search only ranks matches from the last N days (#4770). 0 = no window (every match eligible); an explicit dateStart/dateEnd always wins. Restart the worker after changing it
     // Worker-native cloud sync: credentials come from cmem.ai → Connect.

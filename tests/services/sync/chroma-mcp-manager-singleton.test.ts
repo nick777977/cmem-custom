@@ -996,7 +996,7 @@ describe('ChromaMcpManager singleton enforcement (#2313)', () => {
     const firstState = mgr.getCrashState();
     expect(firstState.count).toBe(1);
     expect(firstState.lastExit).toMatchObject({ code: null, signal: 'SIGSEGV' });
-    expect(firstState.chromaMcpVersion).toBe('0.2.6');
+    expect(firstState.chromaMcpVersion).toBe('cmem-local-1');
     expect(firstState.dependencyOverrides).toEqual([]);
     expect(logEntries.find(entry => entry.message === 'chroma-mcp subprocess closed unexpectedly, applying reconnect backoff')?.meta)
       .toMatchObject({ count: 1, exitCode: null, signalCode: 'SIGSEGV' });
@@ -1004,7 +1004,7 @@ describe('ChromaMcpManager singleton enforcement (#2313)', () => {
     const privateManager = mgr as unknown as { lastConnectionFailureTimestamp: number };
     privateManager.lastConnectionFailureTimestamp = 0;
     await mgr.callTool('chroma_list_collections', { limit: 1 });
-    expect(mgr.getCrashState()).toEqual(firstState);
+    expect(mgr.getCrashState()).toEqual({ ...firstState, localRuntime: 'connected' });
 
     const secondTransport = transportInstances[1];
     secondTransport._process.finish(1);
@@ -1548,7 +1548,7 @@ describe('ChromaMcpManager store record (refs #3012)', () => {
 
     expect(existsSync(chromaStoreRecordPath())).toBe(true);
     const record = JSON.parse(readFileSync(chromaStoreRecordPath(), 'utf-8'));
-    expect(record.chromaMcpVersion).toBe('0.2.6');
+    expect(record.chromaMcpVersion).toBe('cmem-local-1');
     expect(record.depOverrides).toEqual([]);
     // The engine version is read from the launcher pin, never kept separately.
     expect(record.chromadbVersion).toBe('1.5.9');

@@ -7,7 +7,7 @@ import { ChromaSyncState } from '../../../src/services/sync/ChromaSyncState.js';
 const project = 'atomic-project';
 
 function statePath(dataDir: string): string {
-  return join(dataDir, 'chroma-sync-state.json');
+  return join(dataDir, 'chroma-minilm-v1-sync-state.json');
 }
 
 describe('ChromaSyncState atomic persistence', () => {
