@@ -2,6 +2,11 @@
 
 ## Current phase-one contract — A27, 2026-11-04
 
+Under A29, run the required checks directly on the local machine. Continuous
+integration (CI) and a formal distributable bundle are optional follow-ups.
+The CI design below records the dormant workflow and the requirements to
+revisit if automation is requested. [Current route](../roadmap.md).
+
 WINDOWS-09-LOCAL adds bounded real installation and lifecycle evidence for
 the private Windows Codex CLI lane. It covers local catalog, compiled worker
 and MCP, SQLite save/search, viewer, same-host transfer and removal. Chroma
@@ -19,9 +24,9 @@ failures are understandable, without making preparation impossible.
 Mandatory acceptance: build/install/start/stop/uninstall under an ordinary Windows
 user, no admin/UAC/machine PATH/registry/system service. Test owned local processes,
 bounded startup/output/stop and task-owned files/config/data; preserve the user's
-normal installation and memories. No image/PID/global-port cleanup. A copied build
-needs matching architecture/native/runtime prerequisites and user-writable paths;
-cross-machine portability must be tested, not inferred from a successful local build.
+normal installation and memories. Clean up only the processes and ports the test
+owns. If a transferable build is requested, test on a matching machine with the
+intended native/runtime prerequisites and user-writable paths.
 
 Strong Job/AppContainer/WFP/inherited-DNS/crash-proof containment and CI provisioning
 are deferred from phase-one gates. V3 still means actual compiled-process behavior;
@@ -303,13 +308,10 @@ At source 48feeab567995de81d501b74007694b5ee95a880:
 | tests/infrastructure/worker-bundle-self-contained.test.ts:25,32,38-39 | Existing compiled-hook child fixture; copies bundle but inherits broad env, needs adaptation before reuse |
 | tests/integration/worker-api-endpoints.test.ts:1 | Existing in-process WorkerService/API tests are not exact-artifact process proof |
 
-Plan one fork Windows validation lane using existing tools and pre-provisioned approved
-runner inputs. Prepare its harness/config with step 9, run reviewed available checks at
-subsequent implementation checkpoints, finalize dependency/provenance pinning in 10,
-and consume exact-artifact evidence in 11/12. This is an added checkpoint within existing
-steps, not a new independent roadmap or a requirement to wait until step 11 to detect
-runtime failures. Source-only launch can author the runner/workflow but cannot execute
-services or change runners without runtime authorization.
+If automation is requested later, reuse the local Windows checks and provision
+one runner with approved inputs. Use the dependency inventory from step 10 and
+the executable checks from step 11. Launching or provisioning automation requires
+separate approval under D12.
 
 - Pin the known toolchain exactly; Windows is required for Windows lifecycle claims.
   Optional Linux checks supplement it without replacing Windows evidence.
@@ -342,6 +344,6 @@ exact version declarations and unconditional D12 failure; stage commands are com
 no actions/provisioning/upload/deploy. This is a blocked source skeleton, not executable
 approved CI. Existing upstream triggers remain unchanged and must be reviewed before push.
 CI provisioning/execution and runtime permissions remain explicit future launches.
-Final step 12 reruns against the exact installable bundle; any relevant rebuilt byte
-invalidates the corresponding earlier artifact evidence and requires the affected
-checks again, rather than accepting an old green run.
+For daily local use, step 12 records the update and rollback procedure and
+reruns the checks affected by a build change. Apply the same principle to the
+exact transferable bundle if a separate distribution is requested.

@@ -40,9 +40,9 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Done-bounded for Windows x64 with separately staged multilingual MiniLM and persistent synthetic retrieval. [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | Done-bounded for the local viewer on Windows x64. Settings shows effective role choices and Chroma health. A copied worker and browser distinguished missing assets from a passing probe backed by semantic retrieval. [VIEWER-08-LOCAL](enterprise-local/handoffs/VIEWER-08-LOCAL.md) |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28 | M | done-bounded for private Codex CLI on Windows x64. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Desktop and Claude host acceptance remain open. |
-| 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | Private Windows x64 admission, exact inventory, SBOM and copy verification done-bounded. Release provenance gaps and D12 CI admission remain open. [ARTIFACT-10-LOCAL](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md) |
-| 11 | Exact-artifact local E2E, egress and selected-profile acceptance | IP P6/P7; A20 | M | not started; mock/offline checks independent of Bedrock availability; live rows separately gated |
-| 12 | Verified Windows bundle, SBOM, install/rollback and profile runbook | IP P8; A19/A20 | S | not started; deployment requires the intended profile's actual live evidence |
+| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29 | M | Done-bounded for Windows x64. The inventory and software bill of materials (SBOM) describe the verified local copy. [ARTIFACT-10-LOCAL](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md) |
+| 11 | Verify the full local memory workflow and each intended host and model connection | IP P6/P7; A20; A29 | M | Next. Test on the local machine with real Chroma and a simulated model, then verify the intended Codex and Claude Code connections separately. |
+| 12 | Document regular local setup, updates and data-preserving rollback | IP P8; A19/A20; A29 | S | Pending step 11. Formal packaging and redistribution are optional follow-up work. |
 
 ## Phase-one delivery route (A27, 2026-11-04)
 
@@ -62,15 +62,18 @@ One practical end-to-end target using the existing numbered steps, no new pipeli
 4. Step8 and checkpoints in9/11: real compiled startup, MCP and worker lifecycle,
    capture -> SQLite -> selected-model observation/summary -> Chroma index/search ->
    restart -> retrieval/viewer, using disposable data and owned-process cleanup.
-5. Steps10/12: package the local build and prerequisites with a reproducible user-level
-   setup/run/rollback guide; validate transfer on matching Windows/architecture/runtime.
-   Corporate Bedrock/SSO live proof happens in the authorized corporate environment.
+5. Steps 10/12: identify the files the local install uses and finish the user-level
+   build, setup, update and rollback instructions. Verify Claude Code with Amazon
+   Web Services (AWS) Bedrock and corporate single sign-on in its authorized
+   environment. A bundle for redistribution is a separate deliverable if requested.
 
 Necessary dependency/runtime/model acquisition and local host configuration are
-allowed parts of setup. Strong Job/AppContainer/WFP/DNS/crash-proof containment,
-CI provisioning/hosted publishing and exhaustive release provenance are deferred
-from first functional acceptance. Ordinary deadlines/cleanup and no unapproved
-memory/telemetry/model fallback are retained. No SQLite-only substitute for Chroma.
+allowed parts of setup. Continuous integration (CI) means running checks
+automatically on a separate machine through a workflow. The local path runs the
+required checks directly. CI, hosted publishing, exhaustive distribution
+provenance and stronger operating-system containment are outside this local
+completion path. Ordinary deadlines, cleanup and limits on network use still
+apply. Chroma is part of full local acceptance.
 Current Codex login is authorized for minimal synthetic live tests; exact model and
 budget must be proposed first. PHASE1-ALIGN only checked native login presence after
 authorization; no inference or manual credential-file inspection.
@@ -78,12 +81,13 @@ authorization; no inference or manual credential-file inspection.
 Completed evidence and input-preservation limits remain in [DEV-ENVIRONMENT](enterprise-local/DEV-ENVIRONMENT.md)
 and the HOSTED-03 / CHROMA-07 / TELEMETRY-04 handoffs. Do not repeat completed source
 work. The Windows x64 artifact and local Chroma inputs are pinned in step 10.
-D11 remains open.
+A SQLite-only product mode (D11) stays outside current scope. The local setup
+reports missing Chroma assets and preserves SQLite data.
 
 ## Validation checkpoints during development
 
-Tests, compile and bounded Windows private Codex lifecycle have run. Full
-release-artifact install and live model access remain open. Use runtime feedback
+Tests, compile and bounded Windows private Codex lifecycle have run. The full
+local workflow and the intended live model connections remain open. Use runtime feedback
 within the remaining increments:
 
 - Step 9 has historical mock runner and CI source evidence. WINDOWS-09-LOCAL
@@ -93,10 +97,11 @@ within the remaining increments:
   Step 6 proves profile routing/no-send failure behavior without cloud accounts.
 - Once 5/6/7/8/9 prerequisites are available, V4 runs real local memory/index/restart
   with a loopback fake LLM. Approved local Chroma assets remain necessary.
-- Step 10 finalizes exact closure and CI pinning/provenance; step 11 tests those exact
-  bytes. V5 live evidence is per provider/auth/model; unavailable Bedrock stays pending.
-- Step 12 verifies the exact installable bundle and rollback. A mock-backed green CI
-  is useful confidence, never a substitute for live evidence of a route used in production.
+- Step 10 identifies the tested build. Step 11 exercises those files locally.
+  Actual provider tests (V5) apply to each selected provider, login and model.
+  The Bedrock check runs separately when the authorized environment is available.
+- Step 12 finishes setup and rollback for daily use. If a transferable distribution
+  is requested, verify that package separately on its intended target.
 
 All checks require reviewed fixture/env/subprocess behavior and the applicable launch.
 No CI runner provisioning, hosted upload, push, live credentials or service start is
@@ -135,8 +140,8 @@ required; this is separate from the selected summary LLM.
 | D8 | Approved local data location, retention/backup rules? | human | deployment, 8/12 |
 | D9 | Resolved for the tested Windows x64 Chroma/MiniLM stack. Versions, sources, hashes, licenses and APIs are in [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). | agent | exact release closure and transfer, 10/12 |
 | D10 | Complete remaining dynamic clients/entrypoints/connectors and retained-provider closure? | agent | 1/10 |
-| D11 | Missing Chroma may enter explicitly visible SQLite-only degraded product mode? Still unselected | human | proposed product-mode change, 7/11 |
-| D12 | Approved CI execution location, runner inputs/network/control plane and artifact retention? | human | actual CI provisioning/execution and hosted uploads, 9/10 |
+| D11 | Optional SQLite-only operation when Chroma is unavailable. Deferred for local use | human | only a future change to product behavior |
+| D12 | Optional automated checks. Reopen runner and hosted artifact policy if CI is requested | human | only CI provisioning/execution and hosted uploads |
 
 These are scoped gates, not a new up-front interview. Bedrock is unavailable now;
 continue source, fixtures and isolated process test preparation. Do not invent a model,
@@ -146,7 +151,8 @@ remain pending until explicitly available.
 ## Decisions and retained evidence
 
 [A19/A20](enterprise-local/memory/DECISIONS.md) supersede Bedrock exclusivity and add
-staged runtime/CI requirements. A01/A02 branch/memory, A06/A07 local behavior and egress
+staged runtime checks. A29 sets CI and distribution aside for local use.
+A01/A02 branch/memory, A06/A07 local behavior and egress
 scope, A09 toolchain, A11/A14/A15 compile boundary, A16/A17/A18 remain in force within
 their documented bounds. The original plan and historical evidence are not rewritten.
 
@@ -170,7 +176,7 @@ flowchart TD
   s2 -->|preserve local API and viewer| s8["8 Local API and viewer"]
   s6 -->|effective profile config and safe status contract| s8
   s2 -->|deterministic local build and host setup| s9["9 User-level Windows setup"]
-  s3 -->|hosted closure removed| s10["10 Retained runtime closure and fork CI"]
+  s3 -->|hosted closure removed| s10["10 Verified local build contents"]
   s4 -->|telemetry closure removed| s10
   s5 -->|cloud closure removed| s10
   s6 -->|all model roles and retained adapters finalized| s10
@@ -178,7 +184,7 @@ flowchart TD
   s8 -->|API and viewer boundary finalized| s10
   s9 -->|local host integration and bounded lifecycle verified| s10
   s10 -->|test exact packaged entrypoints| s11["11 Exact-artifact E2E and profile evidence"]
-  s11 -->|functional and egress evidence for intended profiles| s12["12 Release and rollback"]
+  s11 -->|functional and traffic evidence for intended profiles| s12["12 Daily setup, update and rollback"]
 ~~~
 
 ## Execution path
@@ -193,13 +199,13 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 1 | 1 | Existing audit/contracts; targeted new deltas only | Agreed evidence/policy |
 | 2 | 2 | Existing scripts/compile boundary, retain inputs | Safe compile |
 | 3 | 3 and 7 | Hosted removal and bounded Windows local Chroma activation complete | Hosted-free core and persistent local index |
-| 4 | 4 and 9 | Telemetry done; Windows launcher/generators/CLI preflight; author synthetic process/CI runner, scoped early V3 when launched | Deterministic entrypoints and quick runtime feedback |
+| 4 | 4 and 9 | Telemetry removal, Windows launcher and early checks of compiled local processes | Deterministic entrypoints and quick runtime feedback |
 | 5 | 5 | DatabaseManager/CloudSync/SyncClient/routes and worker; V1/V2, safe V3 slice | Local data without cloud sync |
 | 6 | 6 | Existing providers/dispatch/env/settings/roles and effective status. PROFILE-06A then PROFILE-06B, V1/V2/V3 | All model tasks obey explicit profiles |
 | 7 | 8 | Worker API/viewer network and profile settings presentation, identity semantics retained; V3/browser checks | Local-only interface with visible routing |
-| 8 | 10 | Scripts/manifests/locks/artifacts; retained dependency closure, CI pinning/provisioning gate; V4 as prerequisites permit | Reviewed exact artifact |
+| 8 | 10 | Build scripts, manifests, dependency records and inventory of the local install | Verified local build contents |
 | 9 | 11 | Exact artifact, disposable local E2E, process-tree/network evidence, separate V5 rows | Tested configuration; unavailable live routes remain pending |
-| 10 | 12 | Windows bundle/SBOM/runbook/install/rollback on exact final hashes | Release candidate for validated profiles |
+| 10 | 12 | Local Windows build, install, configuration, update and data-preserving rollback instructions | Daily local use with validated profiles |
 
 The bounded checks for steps 8 and 9 are complete. Step 9 established the
 private Codex CLI and worker baseline on Windows x64. Step 10 pinned and verified

@@ -7,6 +7,16 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **Local-use plan alignment**, done. One coordinator at
+`3ff812350b842812446ee9e769d8ada28f6e3d24` on clean `feat/cmem-light-local`.
+Reserve `docs/{roadmap,PATCH-SEQUENCE}.md`,
+`docs/enterprise-local/{README,VALIDATION,NEXT-SESSION}.md`,
+`docs/enterprise-local/handoffs/ARTIFACT-10-LOCAL.md` and
+`docs/enterprise-local/memory/{STATE,TASKS,DECISIONS,WORKLOG}.md`.
+Documentation only. Clarify the local completion path, optional automation and
+distribution, and the scope of the Chroma and artifact checks.
+Reservations released. [VERIFY-11-LOCAL](../NEXT-SESSION.md) remains ready-unclaimed.
+
 2026-11-10 **ARTIFACT-10-LOCAL**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `cb9738a2778860b66ed604c887b243231d39935a`.
 

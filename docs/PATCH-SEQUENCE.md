@@ -283,7 +283,8 @@ are outside the staged package, the compiled worker refuses server delegation
 in worker mode, and the build checks the excluded sources.
 [ARTIFACT-10-LOCAL](enterprise-local/handoffs/ARTIFACT-10-LOCAL.md) pins the
 Windows x64 candidate and its separate inputs, records the CycloneDX SBOM and
-verifies the transferred bytes. Release provenance gaps and D12 remain open.
+verifies the transferred bytes. This completes the local inventory slice.
+The software bill of materials (SBOM) records what the tested build contains.
 
 Prove reachability before pruning. Keep SDK/Codex/API modules and dependencies required
 by any retained explicit profile/role or host integration. Remove unused remote-memory
@@ -296,15 +297,16 @@ matched entrypoint/manifest/UI artifacts and record all hashes. Reject stale cli
 hardcoded model routes and unsupported adapter combinations. Preserve selected-profile
 config and safe diagnostics; include no fake credentials/test bypass in release.
 
-Finalize/reuse step-9 runner and fork CI lane with approved D12 runner/provisioning policy:
-exact tools, reviewed V1/typecheck/V2/V3 commands, no ambient secrets or network package
-resolution, no deploy/sync/publish. V4 with fake LLM + real approved local Chroma is a
-required package-candidate check once prerequisites exist, independent of Bedrock.
-Review upstream CI/publish/deploy triggers before any authorized push; do not launch
-existing acquiring workflows by default. Missing assets/CI stages stay explicit pending.
-Acceptance: exact closure and source/generated pairing; needed adapters preserved,
-reviewed CI evidence/stage report, no unapproved application destination. V5 live and
-final OS evidence remain 11. Rollback matched source/locks/artifacts, preserve all data.
+For local use, match the compiled output to its source, retain the intended
+adapters and identify the files the launcher actually installs. Step 11 runs
+the full local workflow with a simulated model and real Chroma. Roll back the
+matching source and build together and preserve all data.
+
+Continuous integration (CI) is optional automation under A29. If requested
+later, reopen D12 for the runner, permitted commands, pinned tools and inputs,
+secrets and network boundaries, and artifact retention. Review upstream
+test/publish/deploy triggers before any authorized push. Those workflows are
+outside local acceptance.
 
 ## 11. Exact-artifact runtime, E2E and selected-profile acceptance
 
@@ -335,19 +337,22 @@ out of scope. Diagnose failures in their owning increment; no fake green from sk
 
 ## 12. Distribution, configuration and operational handoff
 
-Verified offline Windows bundle, checksums/SBOM/licenses and approved artifact sources;
-local install/verify/uninstall/reinstall and data-preserving rollback on exact final
-hashes. Document default/role profile setup, explicit model/auth selection, local Chroma
-assets, payload/retention rules and troubleshooting. No plugin registration/subscription
-or third-party MCP service required; chosen providers may require owner entitlement.
+Document the Windows checkout build and local plugin setup for each verified
+host. Exercise install, update or reinstall, removal and rollback with local
+data preserved. Record the selected model and authentication, Chroma setup,
+data location and retention, and troubleshooting. Local host registration
+uses the local build. Selected model providers may require owner entitlement.
 
-Publish tested support matrix by adapter/auth/model/platform, distinguish mocked from
-live rows and identify unavailable Bedrock or other routes. Regular use requires the
+Record tested combinations by adapter, authentication, model and platform.
+Distinguish simulated from live results and identify unavailable routes. Regular use requires the
 intended profile's actual evidence plus local memory/index and install acceptance.
 A separately agreed preview on another validated route does not certify Bedrock.
-No automatic migration/update or upstream/fork data merging. No push/deployment inferred.
-Final approved package must preserve useful local behavior and all configured retained
-routes, rather than silently return to a single-provider distribution.
+Keep upgrades and migration explicit and preserve existing data.
+
+If a separate distribution is requested, verify the transferable bundle on its
+matching target, close source and license-notice gaps, validate the SBOM format
+and record final checksums and rollback. A local checkout install does not
+require this packaging work.
 
 ## Validation discipline
 

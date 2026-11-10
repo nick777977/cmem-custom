@@ -29,6 +29,14 @@ for pairing evidence. Two SQLite helper maps are staged. The candidate starts
 with empty data, workspace, Codex, home and temp directories. The verifier
 targets this pre-registration state.
 
+Here the candidate is the set of files copied to the local installation folder.
+Excluded files may still exist in the checkout or its build outputs. The two
+modified copies were disposable test fixtures. Changing one byte while keeping
+the file size checked the content comparison. Adding a server file under the
+recursively copied viewer directory checked that the verifier rejects unexpected
+files anywhere in the installation. These checks describe the tested build and
+require no manual tampering during ordinary local use.
+
 The worker's esbuild graph still lists external `better-auth` and
 `@better-auth/api-key` imports. The worker registers a lazy local auth route
 that tries to load them on request. Their packages stay in the build inventory
@@ -146,6 +154,10 @@ before any registration or runtime use. This is a quiescent-tree comparison.
   [CHROMA-07-LOCAL](CHROMA-07-LOCAL.md).
 
 ## Gates for steps 11 and 12
+
+Under A29, step 11 runs locally and step 12 documents daily operation.
+The CI and distribution conditions below apply only to those optional lanes.
+[Local delivery route](../../roadmap.md).
 
 D12 still requires owner approval for the runner identity, location, Windows
 image and provisioning authority, immutable source and tool/dependency/model

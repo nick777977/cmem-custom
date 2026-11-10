@@ -1,13 +1,19 @@
 # Current handoff
 
-Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 is current scope.
+Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 and A29 define current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
+
+The target is daily local use from this checkout. Verify the full Codex memory
+workflow first. Verify Claude Code with AWS Bedrock separately in its authorized
+environment. Automated workflow runs and a formal distribution are optional
+follow-ups. The daily-use handoff covers local setup, updates and rollback.
+[Local route](../../roadmap.md), [A29](DECISIONS.md#a29--prioritize-local-operation-2026-11-10).
 
 The private Windows x64 candidate has a byte-level inventory and CycloneDX
 SBOM at the paired `2bb4746b2` build. The transferred stage and its raw copy
 matched across all 81 files. The verifier checked the separate 93-wheel
-Chroma input and two model files. Release provenance gaps and D12 CI admission
-remain open. [Inventory, verification and limits](../handoffs/ARTIFACT-10-LOCAL.md).
+Chroma input and two model files. The remaining provenance items apply to a
+formal distribution if requested. [Inventory, verification and limits](../handoffs/ARTIFACT-10-LOCAL.md).
 The closeout reran the copy fixture and tested the documented staging-only
 procedure for a fresh candidate. D11 and D12 do not block step 11's local
 loopback verification with real Chroma.
@@ -130,8 +136,9 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**VERIFY-11-LOCAL: exercise the verified Windows x64 candidate with a loopback
-LLM and real local Chroma.** [NEXT-SESSION](../NEXT-SESSION.md) gives the bounded
-runtime scope. D11 remains open. Native retry disablement gates the first live
-turn. Desktop integration and release packaging remain separate
-[roadmap](../../roadmap.md) checks.
+**VERIFY-11-LOCAL: exercise the verified Windows x64 build with a simulated
+language model and real local Chroma.** [NEXT-SESSION](../NEXT-SESSION.md) gives
+the bounded runtime scope. Native retry disablement gates the first live turn.
+Check desktop integration if that is the intended Codex surface. Follow with
+the authorized Claude Code/Bedrock route and daily-use instructions.
+[Local delivery route](../../roadmap.md).

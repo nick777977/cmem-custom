@@ -17,6 +17,25 @@ checks remain required. Old refusal work below is historical, not desired functi
 [Current handoff](memory/STATE.md), [phase-one route](../roadmap.md),
 [acceptance contract](VALIDATION.md), [next source task](NEXT-SESSION.md).
 
+## Local completion path
+
+Build from this checkout and connect the compiled plugin locally. Codex is the
+first host. Claude Code with Amazon Web Services (AWS) Bedrock is a separate
+host and model route to verify in its authorized environment. The host's
+login and the memory worker's model profile are separate choices. [Model profiles](LLM-PROFILES.md).
+
+SQLite keeps the original memory records. Chroma maintains a local search
+index that can find memories phrased in different words. Full local acceptance
+requires that search to work. The setup error for a missing Chroma runtime or
+model leaves the original records in SQLite. [Chroma setup](WINDOWS-LOCAL-SETUP.md#prepare-local-chroma).
+
+Continuous integration (CI) would run checks through an automation service.
+The local plan runs checks directly. The software bill of materials (SBOM) is
+a list of components and dependencies. CycloneDX is the format used to store
+that list. The existing inventory describes the tested local build. A formal
+distribution for other machines, including further provenance and license
+review, is optional. [Current scope and steps](../roadmap.md).
+
 **WINDOWS-09-LOCAL, 2026-11-09.** The private Codex CLI install and foreground
 worker passed bounded local acceptance on Windows x64 without UAC. Codex loaded
 the copied MCP server, which saved and found a synthetic observation in SQLite.

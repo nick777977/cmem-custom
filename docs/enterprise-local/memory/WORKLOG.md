@@ -1073,3 +1073,13 @@ and two model files. No application runtime, registration or inference was
 used. Clarified that D11 and D12 do not block local V3/V4 and recorded the
 step 11 launch in [NEXT-SESSION](../NEXT-SESSION.md). The closeout is included
 in the local artifact commit.
+
+## 2026-11-10 — Local-use plan alignment
+
+At `3ff812350`, reviewed the local Codex setup, explicit Claude Code/Bedrock
+profile, SQLite/Chroma roles and dormant automation. Recorded A29 and aligned
+steps 10–12 around local build, host integration, memory verification and
+daily-use instructions. Continuous integration and formal distribution move
+to optional follow-up scope. SQLite-only operation remains deferred. Preserved
+the artifact evidence and explained the disposable negative checks. No runtime,
+build, workflow or profile configuration change. [Next launch](../NEXT-SESSION.md).

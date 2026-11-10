@@ -175,6 +175,25 @@ The lifecycle fixture uses a loopback endpoint and explicitly disables Chroma.
 The remaining Claude host and full packaged acceptance are later checks.
 [Evidence and limits](../handoffs/WINDOWS-09-LOCAL.md).
 
+### A29 — prioritize local operation (2026-11-10)
+
+The owner clarified the working target: build from the checkout and connect the
+local plugin to Codex or Claude Code with AWS Bedrock. The current delivery path
+uses direct local checks. Continuous integration (CI) and a separately packaged
+distribution are outside this path. Keep the existing workflow source as history
+and reopen D12 only if automated runs are requested. Preserve the verified build
+inventory and its software bill of materials (SBOM) as evidence for the tested
+copy. Distribution provenance, notice delivery and full SBOM schema validation
+apply to a separate distribution if requested.
+
+Keep SQLite as the source of stored memory and Chroma as the local semantic
+search index. The current plan checks real Chroma and a visible setup error
+when its files are missing. D11 remains a deferred product-mode decision.
+Finish local verification, then document setup, updates and rollback. Codex
+desktop and Claude Code/Bedrock require separate evidence in their intended
+environments. Existing login, retry, network and data boundaries still apply.
+[Local delivery route](../../roadmap.md), [next launch](../NEXT-SESSION.md).
+
 ### CLOUD-05 implementation boundary (2026-11-09)
 
 Apply A27 to the local worker by removing the cloud push/pull lifecycle,
