@@ -1,7 +1,7 @@
 # Session prompts and bounded handoffs
 
-The [current handoff](NEXT-SESSION.md) is VIEWER-08-LOCAL after the bounded
-[CHROMA-07-LOCAL](handoffs/CHROMA-07-LOCAL.md) implementation.
+The [current handoff](NEXT-SESSION.md) is RUNTIME-10-LOCAL after the bounded
+[VIEWER-08-LOCAL](handoffs/VIEWER-08-LOCAL.md) implementation.
 A27 permits required downloads and ordinary-user build/install/run.
 Claude Code/Bedrock/AWS SSO adapters are retained.
 Strong native OS sandbox and CI are deferred from phase-one prerequisites. Current
@@ -84,7 +84,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | VIEWER-08-LOCAL exposes Chroma and effective profile status |
+| `docs/enterprise-local/NEXT-SESSION.md` | RUNTIME-10-LOCAL gates separate server and installer paths in the phase-one package |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Profile contract and implemented main worker configuration |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |

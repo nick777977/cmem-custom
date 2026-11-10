@@ -419,6 +419,16 @@ with the pinned multilingual MiniLM model. The Node/npm/Bun baseline stays
 22.23.4/10.9.9/1.4.4. [Provenance and validation](handoffs/CHROMA-07-LOCAL.md),
 [preparation](WINDOWS-LOCAL-SETUP.md#prepare-local-chroma).
 
+## VIEWER-08-LOCAL browser checks on Windows x64
+
+The worker and browser used synthetic settings and fresh scratch profiles.
+Headless Chrome DevTools required the ordinary Windows system environment
+variables alongside the isolated app-data and temp directories. The fixture
+helper supports an explicit Chrome executable. Windows cleanup targets the
+owned browser process tree and retries transient profile file locks. The
+copied worker reused the previously prepared local Chroma venv and assets.
+[Executed checks](handoffs/VIEWER-08-LOCAL.md).
+
 ## Historical CHROMA-07 environment and results
 
 Source/tests 8fa9979797b5478ec8b36eebd6c52533112aec83; generated b8734d9b25e6e6e890ae4d3c4f7864cf48d3a4bf.

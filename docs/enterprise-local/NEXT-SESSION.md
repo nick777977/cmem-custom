@@ -1,26 +1,25 @@
-# Next implementation — VIEWER-08-LOCAL
+# Next implementation — RUNTIME-10-LOCAL
 
-Continue step 8 on `feat/cmem-light-local` with one coordinator. Recheck branch,
-status and HEAD. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md), step 8
-of the [roadmap](../roadmap.md), [CHROMA-07-LOCAL](handoffs/CHROMA-07-LOCAL.md),
-[PROFILE-06B](handoffs/PROFILE-06B.md) and the relevant local setup and profile
-configuration sections. Reserve the actual viewer/API, test and emitted paths
-before edits.
+Start step 10 on `feat/cmem-light-local` with one coordinator. Recheck branch,
+status and HEAD, then read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md),
+the step 10 [roadmap](../roadmap.md) and [patch sequence](../PATCH-SEQUENCE.md#10-retained-runtime-closure-artifact-and-fork-ci),
+and the step 10 follow-up in [PROFILE-06B](handoffs/PROFILE-06B.md).
 
-Make the local viewer expose the worker's effective profile choices and the
-existing Chroma runtime/search health clearly. Verify the UI can distinguish
-a prepared runtime with actual semantic retrieval from missing or invalid
-local assets. Keep existing project/worktree identity, sharing, filtering,
-capture and retrieval semantics. D11 remains open. Keep secret values and
-credential paths out of viewer output.
+Make the phase-one local package and launcher admit only the reviewed local
+worker path. Start with the separate server provider factory and the dormant
+installer credential probe identified in PROFILE-06B. Trace their actual
+entrypoints and either exclude them from the local package path or add an
+explicit local refusal at the admission boundary. Preserve the retained
+worker's explicit profiles and native adapters. Reserve exact source, test
+and emitted paths before edits.
 
-Use only a copied compiled worker and synthetic data in a task-owned scratch
-directory on Windows x64. Reuse the verified local Chroma setup and local
-loopback fixtures. No external registration, provider inference, real corpus
-or credentials, corporate AWS execution, admin/UAC, push or additional agents.
-All three approved `gpt-6-luna` turns remain unused. The exact native route
-still needs proof that automatic retries can be disabled before any live turn.
+Under a fresh user launch, prove the boundary with focused route/launcher
+tests, root and viewer typechecks, a guarded paired build and a copied-bundle
+local startup and stop with synthetic data. Record which separately built
+entrypoints remain outside the local acceptance lane. Artifact provenance,
+SBOM and D12 CI admission still belong to step 10. Keep D11 open.
 
-Completion requires the affected API/viewer tests and typechecks, a paired
-guarded build and a bounded copied-worker/browser check of both Chroma states.
-Update STATE, TASKS, WORKLOG and the handoff with the actual results.
+Use the existing user-level Windows toolchain. No real state, registration,
+admin/UAC, CI dispatch, push, external provider traffic or additional agents
+are implied by this handoff. All three approved `gpt-6-luna` turns remain
+unused. Prove retry disablement on the exact native route before a live turn.

@@ -61,8 +61,10 @@ the value printed by the preparation command and escape backslashes in JSON.
 ```
 
 Start the private worker without `--lifecycle-only` to exercise Chroma.
-Check `/api/chroma/status?deep=true` after at least one memory is indexed.
-A missing or invalid asset appears as a local setup error. Worker startup
+Open `/viewer`, then **Settings → Local runtime**. The panel runs the same
+semantic query probe as `/api/chroma/status?deep=true`. Check after at least
+one memory is indexed. A missing or invalid asset appears as **Setup required**.
+Use **Recheck status** after preparing assets or indexing a memory. Worker startup
 never invokes the preparation script. Keep `claude-mem.db` as the canonical
 data. The derived vector store is `$local\data\chroma-minilm-v1` and its
 checkpoint is `$local\data\chroma-minilm-v1-sync-state.json`.

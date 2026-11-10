@@ -1005,4 +1005,21 @@ preserved. Shutdown released the lock and the Windows process check found zero
 owned processes. The separate legacy cleanup test reported six `EBUSY` teardown
 failures. No generative turns used. D11 remains open.
 [Evidence, limits and rollback](../handoffs/CHROMA-07-LOCAL.md). Reservations
-released. Next [VIEWER-08-LOCAL](../NEXT-SESSION.md).
+released. Followed by [VIEWER-08-LOCAL](../handoffs/VIEWER-08-LOCAL.md).
+
+## 2026-11-10 — VIEWER-08-LOCAL implementation
+
+Clean entry `47e990374` on `feat/cmem-light-local`. One coordinator reserved
+the exact viewer, API, tests and emitted paths. Paired implementation
+`2b77e9331` surfaces the worker's role selections and Chroma query health
+in Settings. The API keeps native credential paths and raw probe errors
+out of the status surface. The GitHub link no longer fetches a star count.
+
+54 focused tests and 237 assertions, root and viewer typechecks, and guarded
+compile passed. The copied worker and Chrome showed setup required when
+assets were missing and a passing semantic probe with the prepared runtime.
+The Russian paraphrase matched SQLite observation ID 1. The loopback provider
+received zero requests. Both starts exited cleanly and the process check
+found zero matching children. D11 stays open and all three approved turns
+remain unused. [Evidence, limits and rollback](../handoffs/VIEWER-08-LOCAL.md).
+Reservations released. Next [RUNTIME-10-LOCAL](../NEXT-SESSION.md).

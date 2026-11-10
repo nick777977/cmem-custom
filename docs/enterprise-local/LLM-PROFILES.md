@@ -156,6 +156,11 @@ provider, auth, inheritance and configuration state. Failures use safe
 categories. Credentials, auth directories, endpoints and raw transport errors
 stay out of this status. `configured` describes local selection. Native login
 availability and remote entitlement are checked by the selected transport.
+In `/viewer`, **Settings → Local runtime** displays the effective roles from
+this response. The panel is read-only. Edit `CLAUDE_MEM_MODEL_PROFILES` in
+the worker settings or environment, then recheck status. The **Advanced**
+provider controls are legacy settings. The panel reports the local Chroma
+embedding and query status separately from the worker and host model choices.
 See [PROFILE-06A](handoffs/PROFILE-06A.md) and [PROFILE-06B](handoffs/PROFILE-06B.md)
 for the evidence boundaries.
 

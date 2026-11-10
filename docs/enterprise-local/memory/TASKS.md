@@ -7,6 +7,36 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **VIEWER-08-LOCAL**, done-bounded. One coordinator on clean
+`feat/cmem-light-local` at `47e990374abb39bc4afe560b0f2a45dd4c45da6e`.
+Step 8 reserved the following paths before editing.
+
+- Viewer `src/ui/viewer/components/{ContextSettingsModal,LocalRuntimeStatus,GitHubStarsButton}.tsx`
+  and `src/ui/viewer-template.html`.
+- API `src/services/worker/http/routes/{ChromaRoutes,SettingsRoutes}.ts`.
+- Tests `tests/worker/http/routes/chroma-status.test.ts`,
+  `tests/settings-routes-settings-document.test.ts`, and
+  `tests/ui/viewer/local-runtime-status.browser.test.ts`. Extend before edit to
+  `tests/helpers/chrome-devtools.ts` for explicit Windows Chrome selection.
+  Windows fixture cleanup also owns its browser child tree and bounded retries
+  for transient profile/DevTools file locks.
+  Extend to `tests/ui/viewer/settings-{save-draft,claude-auth-method}.browser.test.ts`
+  to scope their readiness selectors to the editable settings fieldset.
+  Copied-worker and browser
+  fixture, build guards and disposable evidence under `.scratch/enterprise-local/viewer-08-local/`.
+- Serial compile writes the declared build targets. Expected paired deltas are
+  `plugin/scripts/worker-service.cjs{,.map}`, `plugin/ui/viewer-bundle.js`
+  and `plugin/ui/viewer.html`. Fingerprint all tracked outputs and review any
+  additional delta before retaining it.
+- Closure `docs/roadmap.md`, `docs/enterprise-local/{WINDOWS-LOCAL-SETUP,LLM-PROFILES,DEV-ENVIRONMENT,NEXT-SESSION,SESSION-PROMPTS}.md`,
+  `docs/enterprise-local/memory/{STATE,TASKS,WORKLOG}.md` and
+  `docs/enterprise-local/handoffs/VIEWER-08-LOCAL.md`.
+
+Paired implementation `2b77e9331`. Focused API and browser tests, both
+typechecks, guarded compile and both copied-worker browser states passed.
+[Evidence and limits](../handoffs/VIEWER-08-LOCAL.md). Reservations released.
+[RUNTIME-10-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+
 2026-11-10 **CHROMA-07-LOCAL**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `80a6b0868867ad017a19580a7fedb8e334cd647d`.
 Step 7 reserves:
@@ -33,7 +63,7 @@ Step 7 reserves:
 Paired implementation `c476b5cd0`. Preparation, focused tests, guarded build,
 and copied-worker retrieval and restart are recorded in
 [CHROMA-07-LOCAL](../handoffs/CHROMA-07-LOCAL.md). Reservations released.
-[VIEWER-08-LOCAL](../NEXT-SESSION.md) is ready-unclaimed.
+Followed by [VIEWER-08-LOCAL](../handoffs/VIEWER-08-LOCAL.md).
 
 Compile review extended the reservation to
 `plugin/sqlite/observations/files.js{,.map}` for the inlined settings change.

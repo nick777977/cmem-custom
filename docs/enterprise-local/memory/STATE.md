@@ -3,6 +3,15 @@
 Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 is current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 
+The local viewer now shows effective worker profiles and Chroma search health
+under **Settings → Local runtime**. A copied compiled worker and Chrome on
+Windows x64 showed setup required with missing assets. With the prepared
+runtime, the viewer showed a passing semantic query probe and the search API
+returned the expected SQLite observation for a Russian paraphrase. The
+loopback provider received zero requests. Source and paired build `2b77e9331`.
+54 focused tests and 237 assertions, both typechecks and the guarded build
+passed. [Checks and rollback](../handoffs/VIEWER-08-LOCAL.md).
+
 The worker now indexes SQLite observations, summaries and prompts with
 `paraphrase-multilingual-MiniLM-L12-v2` in local persistent Chroma on Windows
 x64. The copied compiled worker retrieved the expected SQLite observation
@@ -104,7 +113,7 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**VIEWER-08-LOCAL: show effective profiles and Chroma health in the local viewer.**
+**RUNTIME-10-LOCAL: gate separate server and installer paths from the local package.**
 [NEXT-SESSION](../NEXT-SESSION.md) gives bounded source and validation scope.
 Desktop integration, full memory acceptance and release packaging remain
 separate [roadmap](../../roadmap.md) checks.
