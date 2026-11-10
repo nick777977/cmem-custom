@@ -280,16 +280,9 @@ live modes проверять отдельными rows при доступе; B
 
 ### Session 07 — offline Chroma (step 7)
 
-```text
-Выполни общие правила; PATCH-SEQUENCE §7, E08–E11. Сначала закрой deferred Python/
-model contract на доступных approved artifacts: versions, model/hash/license,
-telemetry/download API. Без разрешённой acquisition оформи requirements/blocker,
-не скачивай. При разрешениях замени runtime uvx абсолютным local executable,
-запрети remote Chroma/embedding providers, обеспечь local preflight/telemetry-off.
-Сохрани index semantics/Windows lifecycle protections. Cold-cache/index/query/restart/
-no-download доказаны лишь реально выполненными разрешёнными проверками, не env flags.
-Если объём большой — законченный подэтап и один следующий подэтап в handoff. Стоп.
-```
+Use the [CHROMA-07-LOCAL launch](NEXT-SESSION.md) with PATCH-SEQUENCE §7 and
+E08–E11. The current launch owns the model priority, separate preparation
+procedure and offline retrieval acceptance.
 
 ### Session 08 — local API/viewer (step 8)
 

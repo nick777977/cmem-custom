@@ -1,11 +1,18 @@
 # Shared execution board
 
-Updated: 2026-11-09. Single place for active ownership and file reservations.
+Updated: 2026-11-10. Single place for active ownership and file reservations.
 Dependencies/waves remain solely in [roadmap](../../roadmap.md); decisions in
 [DECISIONS](DECISIONS.md); current resumable handoff in [STATE](STATE.md).
 This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
+
+2026-11-10 completed **CHROMA-07-LOCAL handoff alignment** claim. One coordinator
+on clean `feat/cmem-light-local` at `b34f55189dfca2b1411bee89d72fbad9b38365c5`.
+Documentation scope: `docs/{roadmap,PATCH-SEQUENCE}.md`,
+`docs/enterprise-local/{NEXT-SESSION,SESSION-PROMPTS,WINDOWS-LOCAL-SETUP}.md` and
+`docs/enterprise-local/memory/{STATE,TASKS,DECISIONS,WORKLOG}.md`.
+Documentation reservations released. The implementation claim remains unassigned.
 
 2026-11-09 completed **PROFILE-06B** claim. One coordinator on clean
 `feat/cmem-light-local` at `ee4f7dfbf04cece361ecb7b8901eecdc7829f214`.
@@ -126,7 +133,7 @@ checks are in DEV-ENVIRONMENT/WORKLOG. Next WINDOWS-09-LOCAL is ready-unclaimed.
 | CLOUD-05 / 5 | done-bounded | Coordinator finished; feat/cmem-light-local; entry 7b7e5cbdb | None active | e87ef65ae, focused checks and guarded compile, compiled restart with legacy settings and two inert outboxes. [Evidence](../handoffs/CLOUD-05.md). |
 | PROFILE-06A / 6 | done-bounded | Coordinator finished; feat/cmem-light-local | None | Main worker observation, summary and compression at `534de7911`. [Evidence](../handoffs/PROFILE-06A.md). |
 | PROFILE-06B / 6 | done-bounded | Coordinator finished; feat/cmem-light-local | None | Background and standalone judge paths, explicit capability refusals, copied worker evidence at `616c51272`. [Evidence](../handoffs/PROFILE-06B.md). |
-| CHROMA-07-LOCAL / 7 | ready-unclaimed | None; serial selected branch | None | Local Chroma and embedding activation. [Next session](../NEXT-SESSION.md). |
+| CHROMA-07-LOCAL / 7 | ready-unclaimed | None; serial selected branch | None | Local multilingual MiniLM first. Verify bilingual retrieval and persistent offline Chroma with separately staged assets. [Next session](../NEXT-SESSION.md). |
 
 ## WINDOWS-09F reservation history — all released
 

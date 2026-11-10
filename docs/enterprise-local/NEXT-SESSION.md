@@ -6,25 +6,41 @@ and D9/D11 in the [roadmap](../roadmap.md), and the historical
 [CHROMA-07 boundary](handoffs/CHROMA-07.md). Reserve exact source, tests, emitted
 files and task-owned scratch before edits.
 
-Select compatible Python, Chroma and embedding artifacts for ordinary-user
-Windows x64. Trace `src/services/sync/ChromaLocalRuntime.ts`,
-`ChromaMcpManager.ts`, `ChromaSync.ts` and the worker startup/search callers.
-Verify package and model versions, provenance, hashes, local storage,
-telemetry settings and the supported embedding/MCP API against primary sources
-and synthetic fixtures. Use an isolated user/project-local Python environment
-and explicitly selected local model files. Necessary acquisition during setup
-falls under A27. Runtime starts from local artifacts and requires local
-embedding inference. Missing or invalid assets produce a local setup error.
+The first candidate is **`paraphrase-multilingual-MiniLM-L12-v2`** running
+locally on ordinary-user Windows x64. Use it for the first compatibility and
+retrieval checks. The worker currently has a gated Chroma `default` route.
+The same model name in the separate server's model table does not configure
+the worker. Trace `src/services/sync/{ChromaLocalRuntime,ChromaMcpManager,ChromaSync}.ts`
+and the worker startup/search callers. Verify how the chosen Chroma API binds
+the same model to both index writes and query embedding. Record any concrete
+compatibility failure before reconsidering the candidate.
 
-Implement and verify one local activation path. Preserve SQLite as canonical
-and Chroma as a rebuildable derived index. Use only synthetic rows under
-`.scratch/enterprise-local/chroma-07-local/`. Exercise local embed, index,
-query, shutdown and reopen with a selected loopback LLM or model work disabled
-where the fixture permits. Verify no remote embedding or automatic download
-during runtime. Keep D11 open and distinguish any unavailable path from actual
-persistent Chroma success. Run affected tests, typechecks, guarded compile and
-the bounded copied-worker check within the launch. Record pairing, validation,
-rollback, STATE/TASKS/WORKLOG and a concrete next task.
+Verify Python, Chroma and model versions, provenance, hashes, licenses,
+storage paths, telemetry controls and the supported offline API against
+primary sources and synthetic fixtures. Use an isolated user/project-local
+Python environment. A27 permits acquisition during setup. Stage the weights
+once via a separate documented preparation procedure with exact commands
+and paths. The [private fork install](WINDOWS-LOCAL-SETUP.md#prepare-the-build)
+continues to use the compiled checkout and local Codex catalog. Keep model
+acquisition separate from npm compile, private registration and worker startup.
+Missing or invalid assets produce a local setup error.
+
+Implement and verify one local activation path. SQLite remains canonical and
+Chroma indexes the worker's stored observations, summaries and prompts.
+Use only synthetic rows under `.scratch/enterprise-local/chroma-07-local/`.
+Index a relevant English memory and unrelated distractors, then assert that
+a Russian paraphrase retrieves the expected SQLite ID through the actual
+Chroma route. Restart the owned processes and repeat against the persistent
+index using the staged local weights, with external network access denied
+where the fixture permits. Check missing-asset refusal, telemetry and runtime
+download behavior. Use model work disabled or a selected loopback LLM as needed.
+Cloud embedding providers and whole-repository source indexing are outside this
+slice. Keep D11 open and distinguish any unavailable path from actual
+persistent Chroma success.
+
+Run affected tests, typechecks, guarded compile and the bounded copied-worker
+check within the launch. Record pairing, validation, rollback and the verified
+separate preparation instructions. Close STATE/TASKS/WORKLOG with one next task.
 
 [PROFILE-06B](handoffs/PROFILE-06B.md) closes the bounded local profile slice.
 All three approved `gpt-6-luna` turns remain unused. The exact route still

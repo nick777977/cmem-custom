@@ -213,6 +213,25 @@ observation processing. The local worker and standalone judge are the
 verified boundary. [Configuration](../LLM-PROFILES.md#background-capability-and-migration)
 and [remaining ownership](../handoffs/PROFILE-06B.md).
 
+### Step 7 initial model and setup boundary (2026-11-10)
+
+Use `paraphrase-multilingual-MiniLM-L12-v2` as the first local Chroma
+compatibility candidate. Verify Russian-to-English retrieval and persistent
+offline use on synthetic memory records. Keep the one-time preparation of
+Python/Chroma packages and model weights in a separate reproducible guide,
+with acquisition permitted by A27. Build and register the copied fork through
+the existing private local catalog. Worker startup uses staged local artifacts.
+Cloud embeddings and whole-repository source indexing are outside step 7.
+Generative LLM selection continues to follow A19 independently.
+
+Source evidence at `b34f55189` lists multilingual MiniLM in the separate
+[server model table](../../../src/services/vector/models.ts#L48). Its default
+is `all-MiniLM-L6-v2`. The worker's
+[local Chroma gate](../../../src/services/sync/ChromaLocalRuntime.ts#L37)
+still refuses activation. Selection as the first candidate records priority,
+with compatibility and actual offline retrieval to be established in
+[CHROMA-07-LOCAL](../NEXT-SESSION.md).
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

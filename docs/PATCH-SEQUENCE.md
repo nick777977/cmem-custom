@@ -148,6 +148,8 @@ preserve pending events and all local data. See VALIDATION for CI/runtime scope.
 
 CHROMA-07 **source refusal done-bounded**, not operational activation. Source
 8fa997979, paired generated b8734d9b2; [evidence/rollback](enterprise-local/handoffs/CHROMA-07.md).
+The [CHROMA-07-LOCAL launch](enterprise-local/NEXT-SESSION.md) owns the active
+multilingual MiniLM priority, separate model preparation and bilingual offline check.
 
 - [x] Remove manager uvx/package resolution, prewarm/cache deletion, certificate
   acquisition and HTTP launch; reject legacy remote/unknown modes and vendor embeddings.

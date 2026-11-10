@@ -11,6 +11,11 @@ embedded in Bun. Local Chroma and embeddings still require the step 7 runtime.
 Use synthetic data for setup acceptance until the remaining phase-one checks
 are complete. See [WINDOWS-09-LOCAL evidence](handoffs/WINDOWS-09-LOCAL.md).
 
+The fork build and registration copy the plugin code and assets. Python/Chroma
+packages and embedding weights are a separate preparation step. The verified
+preparation instructions are a deliverable of
+[CHROMA-07-LOCAL](NEXT-SESSION.md), which starts with local multilingual MiniLM.
+
 ## Prepare the build
 
 Use direct user-accessible Node 22.23.4, npm 10.9.9, Bun 1.4.4 and Codex

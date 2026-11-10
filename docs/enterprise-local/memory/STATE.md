@@ -1,8 +1,13 @@
 # Current handoff
 
-Updated 2026-11-09 after PROFILE-06B on feat/cmem-light-local by one coordinator.
-Clean entry ee4f7dfbf. A27 is current scope.
+Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 is current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
+
+The owner selected local `paraphrase-multilingual-MiniLM-L12-v2` as the first
+step 7 candidate. Prepare model assets separately from the private fork install.
+Verify Russian-to-English retrieval and offline restart with synthetic records.
+Chroma activation and this model's compatibility are still pending.
+[Decision](DECISIONS.md#step-7-initial-model-and-setup-boundary-2026-11-10).
 
 The local worker now resolves refresh, copy, request and focus judges, and
 knowledge through explicit profiles. The separate request-progress judge
@@ -96,7 +101,7 @@ Corporate Bedrock/SSO live acceptance remains for the authorized corporate envir
 
 ## One next implementation task
 
-**CHROMA-07-LOCAL: verify and activate a local Chroma and embedding runtime.**
+**CHROMA-07-LOCAL: verify local multilingual MiniLM with persistent Chroma.**
 [NEXT-SESSION](../NEXT-SESSION.md) gives bounded source and validation scope.
 Then follow the [phase-one roadmap](../../roadmap.md) for local API/viewer and
 release acceptance. The local launcher evidence

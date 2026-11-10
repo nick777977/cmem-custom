@@ -1,6 +1,6 @@
 ---
 status: living
-updated_at: 2026-11-09
+updated_at: 2026-11-10
 ---
 
 # Enterprise local memory roadmap
@@ -37,7 +37,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 4 | Local diagnostics without remote telemetry | IP W2; A18 | S | done-bounded; TELEMETRY-04 S 0abd4180b / G 6bb7c6995, 206 tests + compile PASS |
 | 5 | Local SQLite/Chroma without cloud sync | IP W3; A27 | S | done-bounded for local worker. Legacy credentials and queues inert in compiled loopback checks. Real Chroma activation remains step 7. [CLOUD-05](enterprise-local/handoffs/CLOUD-05.md) |
 | 6 | User-controlled LLM profiles for every retained model task | A19; LLM-PROFILES replaces IP W4 Bedrock-only | M | Done-bounded for the local worker and request-progress CLI. PROFILE-06A covers observer, summary and field compression. PROFILE-06B covers refresh, copy, judges, knowledge and the Telegram refusal. Step 10 owns separate server/helper admission and step 11 owns live provider evidence. [Evidence](enterprise-local/handoffs/PROFILE-06B.md) |
-| 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17 | M | source refusal done-bounded, S 8fa997979 / G b8734d9b2, 127 tests + compile PASS; activation/contract U1/D9 open |
+| 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Source refusal done-bounded, S 8fa997979 / G b8734d9b2. U1/D9 open. [CHROMA-07-LOCAL](enterprise-local/NEXT-SESSION.md) starts with local multilingual MiniLM and separately staged assets. |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | not started; retain identity/sharing/filter/capture/retrieval behavior |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28 | M | done-bounded for private Codex CLI on Windows x64. ef815b29a verified local catalog, worker, SQLite MCP save/search, viewer, matching-host copy and uninstall without admin/UAC. Desktop and Claude host acceptance remain open. |
 | 10 | Approved retained-provider runtime closure and reproducible fork CI/artifact | IP W8; A19/A20 | M | not started; preserve needed SDK/Codex/API adapters, prune proved-unused closures only |
@@ -55,9 +55,10 @@ One practical end-to-end target using the existing numbered steps, no new pipeli
 2. Steps5/6: finish cloud-sync removal and explicit role/model/auth routing; reuse
    Codex ChatGPT-login and Claude/Bedrock/AWS SSO adapters. Local Codex tests must not
    hardwire the product to OpenAI. Keep existing memory/viewer semantics.
-3. Step7: choose/install a compatible user-local Python/Chroma/embedding closure,
-   disable telemetry, load embeddings locally and fix actual compatibility errors.
-   Downloads during setup are allowed; missing assets get actionable setup errors.
+3. Step7: verify `paraphrase-multilingual-MiniLM-L12-v2` first with a compatible
+   user-local Python/Chroma runtime. Document the one-time asset preparation
+   separately from the fork install. Verify bilingual retrieval and restart
+   offline with synthetic memory records. Missing assets get actionable setup errors.
 4. Step8 and checkpoints in9/11: real compiled startup, MCP and worker lifecycle,
    capture -> SQLite -> selected-model observation/summary -> Chroma index/search ->
    restart -> retrieval/viewer, using disposable data and owned-process cleanup.

@@ -978,3 +978,12 @@ Preserved private Windows setup, SQLite evidence and copy cache. The synthetic
 worker stopped cleanly and SQLite reopened. No live turns used. Closed step 6
 within the local worker and request-progress CLI boundary. Released reservations.
 [Evidence and rollback](../handoffs/PROFILE-06B.md). Next CHROMA-07-LOCAL.
+
+## 2026-11-10 — CHROMA-07-LOCAL handoff alignment
+
+Clean entry `b34f55189` on `feat/cmem-light-local`. One coordinator recorded
+the owner's choice of local multilingual MiniLM as the first candidate.
+Aligned the next-session prompt, roadmap and private setup guide with separate
+model asset preparation and synthetic Russian-to-English retrieval after
+offline restart. Documentation and links reviewed. Runtime, model compatibility
+and end-to-end verification remain assigned to CHROMA-07-LOCAL. Reservations released.
