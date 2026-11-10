@@ -7,6 +7,13 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **VIEWER-08-LOCAL documentation clarification**, one coordinator on
+clean `feat/cmem-light-local` at `1a4497f2fb3d1a36b340df142673b886844c2daa`.
+Reserved `docs/roadmap.md`, `docs/enterprise-local/WINDOWS-LOCAL-SETUP.md` and
+`docs/enterprise-local/memory/{TASKS,WORKLOG}.md` to clarify the worker-served
+Viewer URL and why step 10 follows the completed private CLI and viewer slices.
+Documentation corrected and reservations released.
+
 2026-11-10 **VIEWER-08-LOCAL**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `47e990374abb39bc4afe560b0f2a45dd4c45da6e`.
 Step 8 reserved the following paths before editing.

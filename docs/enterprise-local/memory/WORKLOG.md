@@ -1023,3 +1023,11 @@ received zero requests. Both starts exited cleanly and the process check
 found zero matching children. D11 stays open and all three approved turns
 remain unused. [Evidence, limits and rollback](../handoffs/VIEWER-08-LOCAL.md).
 Reservations released. Next [RUNTIME-10-LOCAL](../NEXT-SESSION.md).
+
+## 2026-11-10 — Viewer URL and step order clarification
+
+At `1a4497f2f`, verified the `/viewer` and `/` route handlers and the emitted
+HTML's dependency on the JavaScript bundle. Corrected the setup guide to open
+the worker-served `/viewer` URL and removed the obsolete next-step paragraph
+from the roadmap. Step 9 retains bounded private Codex CLI evidence, with
+Desktop and Claude Code host acceptance open. Documentation-only change.

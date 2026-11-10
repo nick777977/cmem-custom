@@ -201,11 +201,12 @@ own concrete reviewed scope and cleanup/evidence contract.
 | 9 | 11 | Exact artifact, disposable local E2E, process-tree/network evidence, separate V5 rows | Tested configuration; unavailable live routes remain pending |
 | 10 | 12 | Windows bundle/SBOM/runbook/install/rollback on exact final hashes | Release candidate for validated profiles |
 
-Remaining implementation starts with API/viewer wiring in step 8, followed by
-artifact, E2E and install acceptance in 10/11/12. The
-[next implementation prompt](enterprise-local/NEXT-SESSION.md) is VIEWER-08-LOCAL.
-The tested Windows lane and its limitations are recorded in
-[WINDOWS-09-LOCAL](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
+The bounded checks for steps 8 and 9 are complete. Step 9 was exercised earlier
+to establish the private Codex CLI and worker baseline on Windows x64. The
+[next implementation prompt](enterprise-local/NEXT-SESSION.md) covers local
+package admission in step 10, followed by exact-artifact E2E and release checks
+in steps 11 and 12. Desktop and Claude Code host acceptance remain open.
+[Windows CLI evidence and limits](enterprise-local/handoffs/WINDOWS-09-LOCAL.md).
 
 ## Shipped
 

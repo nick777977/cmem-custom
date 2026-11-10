@@ -61,7 +61,8 @@ the value printed by the preparation command and escape backslashes in JSON.
 ```
 
 Start the private worker without `--lifecycle-only` to exercise Chroma.
-Open `/viewer`, then **Settings → Local runtime**. The panel runs the same
+Open `http://127.0.0.1:<port>/viewer`, using the port selected at registration,
+then **Settings → Local runtime**. The panel runs the same
 semantic query probe as `/api/chroma/status?deep=true`. Check after at least
 one memory is indexed. A missing or invalid asset appears as **Setup required**.
 Use **Recheck status** after preparing assets or indexing a memory. Worker startup
@@ -125,8 +126,11 @@ compression overrides. Check `/api/health` for the effective choices.
 
 With the worker ready, use another ordinary PowerShell terminal with the same
 `$node` and `$launcher` variables. Open Codex in the intended project and review
-the generated hooks through `/hooks`. The viewer is served at
-`http://127.0.0.1:<port>/`.
+the generated hooks through `/hooks`. Open the memory viewer through the
+running worker at `http://127.0.0.1:<port>/viewer`. With the example port above,
+the address is `http://127.0.0.1:43985/viewer`. The root URL opens My Work.
+The HTML file in the build is a template that depends on the viewer bundle
+and the worker's same-origin API. Open the worker URL in your browser.
 
 ```powershell
 & $node $launcher host -C C:\Tests\synthetic-project
