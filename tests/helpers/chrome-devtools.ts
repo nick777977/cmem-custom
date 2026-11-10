@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 
 /**
  * Shared plumbing for the `*.browser.test.ts` files: find Chrome, compile a
@@ -12,7 +12,9 @@ import { join, resolve } from 'node:path';
 
 const MAC_CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
-export const chromeExecutablePath: string | null = Bun.which('google-chrome') ?? Bun.which('chromium')
+const configuredChrome = process.env.CHROME_EXECUTABLE;
+export const chromeExecutablePath: string | null = (configuredChrome && existsSync(configuredChrome) ? configuredChrome : null)
+  ?? Bun.which('google-chrome') ?? Bun.which('chromium')
   ?? (existsSync(MAC_CHROME) ? MAC_CHROME : null);
 
 export const REPOSITORY_ROOT = resolve(import.meta.dir, '../..');
@@ -68,7 +70,9 @@ export function launchChrome(pageUrl: string, options: {
   profilePrefix?: string; extraFlags?: string[]; remoteDebugging?: boolean;
 } = {}): OwnedChrome {
   if (!chromeExecutablePath) throw new Error('Chrome is not installed');
-  const profileDirectory = mkdtempSync(join(tmpdir(), options.profilePrefix ?? 'claude-mem-browser-'));
+  const profileRoot = resolve(tmpdir());
+  const profileDirectory = mkdtempSync(join(profileRoot, options.profilePrefix ?? 'claude-mem-browser-'));
+  if (dirname(profileDirectory) !== profileRoot) throw new Error('Browser profile escaped the temporary directory');
   const child = Bun.spawn([chromeExecutablePath, '--headless', '--no-sandbox', '--disable-gpu',
     '--disable-background-networking', '--no-first-run', ...(options.extraFlags ?? []),
     ...(options.remoteDebugging ? ['--remote-debugging-port=0'] : []),
@@ -76,6 +80,14 @@ export function launchChrome(pageUrl: string, options: {
   return {
     process: child, profileDirectory,
     async close() {
+      // Terminating only the Windows browser root leaves renderers holding the profile.
+      if (process.platform === 'win32' && child.exitCode === null) {
+        try {
+          execFileSync('taskkill.exe', ['/PID', String(child.pid), '/T', '/F'], {
+            stdio: 'ignore', timeout: 10000, windowsHide: true,
+          });
+        } catch { /* the owned root can exit before taskkill observes it */ }
+      }
       child.kill();
       // SIGKILL after 5 s if Chrome ignores SIGTERM. The timer is cleared once
       // Chrome exits so it never keeps the test process alive.
@@ -86,7 +98,15 @@ export function launchChrome(pageUrl: string, options: {
       ]);
       clearTimeout(sigkillTimer);
       if (!exitedInTime) { child.kill('SIGKILL'); await child.exited; }
-      rmSync(profileDirectory, { recursive: true, force: true, maxRetries: 3 });
+      for (const deadline = Date.now() + 5000;;) {
+        try {
+          rmSync(profileDirectory, { recursive: true, force: true });
+          break;
+        } catch (error) {
+          if (!['EBUSY', 'EPERM', 'ENOTEMPTY'].includes((error as NodeJS.ErrnoException).code ?? '') || Date.now() >= deadline) throw error;
+          await Bun.sleep(100);
+        }
+      }
     },
   };
 }
@@ -117,7 +137,11 @@ export async function connectToPage(chrome: OwnedChrome, pageUrl: string): Promi
   let port = '';
   while (!/^\d+$/.test(port)) {
     if (Date.now() > deadline) throw new Error('Owned browser did not start');
-    if (existsSync(portFile)) port = readFileSync(portFile, 'utf8').split('\n')[0];
+    try {
+      if (existsSync(portFile)) port = readFileSync(portFile, 'utf8').split('\n')[0].trim();
+    } catch (error) {
+      if (!['EBUSY', 'ENOENT'].includes((error as NodeJS.ErrnoException).code ?? '')) throw error;
+    }
     if (!/^\d+$/.test(port)) await Bun.sleep(10);
   }
   const targets = await (await fetch(`http://127.0.0.1:${port}/json/list`)).json();

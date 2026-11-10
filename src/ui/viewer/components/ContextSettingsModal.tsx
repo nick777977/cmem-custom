@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useId } from 'react';
 import { useDialogFocus } from '../hooks/useDialogFocus';
 import type { Settings } from '../types';
 import { TerminalPreview } from './TerminalPreview';
+import { LocalRuntimeStatus } from './LocalRuntimeStatus';
 import { useContextPreview } from '../hooks/useContextPreview';
 import { useBackupStatus } from '../hooks/useBackupStatus';
 import { DEFAULT_SETTINGS } from '../constants/settings';
@@ -314,6 +315,15 @@ export function ContextSettingsModal({
             </div>
           </div>
 
+          <div className="settings-stack">
+            <CollapsibleSection
+              title="Local runtime"
+              description="Worker model profiles and Chroma search health"
+              defaultOpen={false}
+            >
+              <LocalRuntimeStatus />
+            </CollapsibleSection>
+
           {/* Right column - Settings Panel. Before the initial load the form
               holds defaults; saving them would overwrite settings.json. */}
           <fieldset className="settings-column" disabled={isSaving || !isLoaded}
@@ -475,7 +485,7 @@ export function ContextSettingsModal({
             {/* Section 4: Advanced */}
             <CollapsibleSection
               title="Advanced"
-              description="AI provider and model selection"
+              description="Context, worker port and legacy provider settings"
               defaultOpen={false}
             >
               <FormField
@@ -864,6 +874,7 @@ export function ContextSettingsModal({
               </div>
             </CollapsibleSection>
           </fieldset>
+          </div>
         </div>
 
         {/* Footer with Save button */}

@@ -1848,7 +1848,7 @@
     }
 
     /* Settings Column */
-    .settings-column {
+    .settings-stack {
       padding: 0;
       overflow-y: auto;
       background: var(--color-bg-primary);
@@ -1856,20 +1856,20 @@
     }
 
     /* Custom Scrollbar */
-    .settings-column::-webkit-scrollbar {
+    .settings-stack::-webkit-scrollbar {
       width: 8px;
     }
 
-    .settings-column::-webkit-scrollbar-track {
+    .settings-stack::-webkit-scrollbar-track {
       background: transparent;
     }
 
-    .settings-column::-webkit-scrollbar-thumb {
+    .settings-stack::-webkit-scrollbar-thumb {
       background: var(--color-bg-scrollbar-thumb);
       border-radius: 4px;
     }
 
-    .settings-column::-webkit-scrollbar-thumb:hover {
+    .settings-stack::-webkit-scrollbar-thumb:hover {
       background: var(--color-bg-scrollbar-thumb-hover);
     }
 
@@ -2809,6 +2809,14 @@
     .settings-preview-heading { margin-bottom: 16px; }
     .settings-preview-heading h3 { font-size: 14px; margin-bottom: 4px; }
     .settings-preview-heading p { font-size: 12px; }
+    .local-runtime-status { display: grid; gap: 12px; font-size: 13px; line-height: 1.5; }
+    .local-runtime-status h3 { font-size: 14px; }
+    .local-runtime-status dl { display: grid; gap: 8px; margin: 8px 0; }
+    .local-runtime-status dt { font-weight: 600; }
+    .local-runtime-status dd { margin: 0; overflow-wrap: anywhere; }
+    .local-runtime-status small { display: block; color: var(--color-text-secondary); }
+    .local-runtime-status button { justify-self: start; padding: 4px 8px; border: 1px solid var(--color-border-primary); border-radius: 4px; background: var(--color-bg-button); color: var(--color-text-primary); }
+    .local-runtime-status button:disabled { opacity: .55; }
     /* Memory refinement: hierarchy and primary tasks. */
     .header { gap: 24px; }
     .header-main { flex-wrap: nowrap; gap: 16px; flex-shrink: 0; }
@@ -2829,7 +2837,7 @@
     .modal-header { gap: 24px; }
     .settings-heading { flex-shrink: 0; }
     .modal-body { grid-template-columns: minmax(320px, 38%) minmax(0, 1fr); }
-    .settings-column { order: 1; }
+    .settings-stack { order: 1; }
     .preview-column { order: 2; border-left: 1px solid var(--color-border-primary); }
     .preview-content { padding: 0; }
     .settings-preview-heading { margin-bottom: 16px; }
@@ -2916,7 +2924,7 @@
       .modal-close-btn { position: absolute; top: 16px; right: 16px; }
       .settings-heading { padding-right: 42px; }
       .modal-body { display: flex; flex-direction: column; overflow-y: auto; }
-      .settings-column { overflow: visible; flex: none; }
+      .settings-stack { overflow: visible; flex: none; }
       .preview-column { flex: none; min-height: 400px; height: 55vh; border-left: 0; border-top: 1px solid var(--color-border-primary); }
       .modal-footer { padding: 14px 16px; }
       .console-drawer { max-height: 70dvh; }

@@ -34,6 +34,25 @@ describe('SettingsRoutes settings document writes', () => {
     return { server, url: `http://127.0.0.1:${address.port}/api/settings` };
   }
 
+  it('omits native credential paths and model profile settings from viewer reads', async () => {
+    const stored = { env: {
+      CLAUDE_MEM_CLAUDE_CONFIG_DIR: 'C:/synthetic-credentials',
+      CLAUDE_MEM_MODEL_PROFILES: { default: { authHome: 'C:/synthetic-login' } },
+    } };
+    writeFileSync(settingsPath, JSON.stringify(stored));
+    const { server, url } = await startServer();
+    try {
+      const response = await fetch(url);
+      expect(response.status).toBe(200);
+      const settings = await response.json();
+      expect(settings.CLAUDE_MEM_CLAUDE_CONFIG_DIR).toBeUndefined();
+      expect(settings.CLAUDE_MEM_MODEL_PROFILES).toBeUndefined();
+      expect(JSON.stringify(settings)).not.toContain('C:/synthetic-');
+    } finally {
+      await new Promise<void>((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
+    }
+  });
+
   it('updates nested env settings in place and preserves the document shape', async () => {
     writeFileSync(settingsPath, JSON.stringify({
       theme: 'dark',

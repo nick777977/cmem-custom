@@ -190,7 +190,8 @@ export class SettingsRoutes extends BaseRouteHandler {
     const settingsPath = paths.settings();
     ensureSettingsDocument(settingsPath, SettingsDefaultsManager.getAllDefaults());
     const settings = SettingsDefaultsManager.loadFromFile(settingsPath);
-    res.json(redactSecretSettings(settings));
+    const { CLAUDE_MEM_CLAUDE_CONFIG_DIR, ...viewerSettings } = settings;
+    res.json(redactSecretSettings(viewerSettings));
   });
 
   private handleGetDependencyHealth = this.wrapHandler((_req: Request, res: Response): void => {

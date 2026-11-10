@@ -52,7 +52,7 @@ for (const succeeds of [true, false]) {
       const renderDeadline = Date.now() + 10000;
       // The section toggles sit in the fieldset, which stays disabled until
       // the settings load; a click before then would be ignored.
-      while (!await evaluate('!!document.querySelector(".section-header-btn:not(:disabled)")')) {
+      while (!await evaluate('!!document.querySelector("fieldset.settings-column .section-header-btn:not(:disabled)")')) {
         if (Date.now() > renderDeadline) throw new Error('Settings did not load');
         await Bun.sleep(10);
       }

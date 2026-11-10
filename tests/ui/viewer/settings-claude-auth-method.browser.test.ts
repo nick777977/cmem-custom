@@ -47,7 +47,7 @@ failOnCiWithoutChrome('CI requires Chrome or Chromium for the native settings-sa
       page = await connectToPage(chrome, server.url.href);
       const { send, evaluate, settle } = page;
       const deadline = Date.now() + 10000;
-      while (!await evaluate('!!document.querySelector(".section-header-btn:not(:disabled)")')) {
+      while (!await evaluate('!!document.querySelector("fieldset.settings-column .section-header-btn:not(:disabled)")')) {
         if (Date.now() > deadline) throw new Error('Settings did not load');
         await Bun.sleep(10);
       }

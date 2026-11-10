@@ -2,7 +2,6 @@
 import express, { Request, Response } from 'express';
 import { BaseRouteHandler } from '../BaseRouteHandler.js';
 import { ChromaMcpManager } from '../../../sync/ChromaMcpManager.js';
-import { logger } from '../../../../utils/logger.js';
 import { SettingsDefaultsManager } from '../../../../shared/SettingsDefaultsManager.js';
 import { USER_SETTINGS_PATH } from '../../../../shared/paths.js';
 
@@ -48,7 +47,9 @@ export class ChromaRoutes extends BaseRouteHandler {
       return;
     }
 
-    const probe = await chromaMcp.probeSemanticSearch();
+    const probe = setupError
+      ? { ok: false, stage: 'connect' as const }
+      : await chromaMcp.probeSemanticSearch();
     const status = probe.ok ? 'healthy' : 'unhealthy';
 
     res.json({
@@ -60,7 +61,13 @@ export class ChromaRoutes extends BaseRouteHandler {
         ? 'chroma-mcp semantic search round-trip succeeded'
         : setupError ?? `chroma-mcp deep probe failed at stage '${probe.stage}'`,
       deep: true,
-      probe
+      // MCP errors can contain paths and subprocess output. Keep those in the worker log.
+      probe: {
+        ok: probe.ok,
+        stage: probe.stage,
+        collections: probe.collections,
+        queryLatencyMs: probe.queryLatencyMs,
+      },
     });
   });
 }
