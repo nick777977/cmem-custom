@@ -1,5 +1,5 @@
 import { spawn, spawnSync } from 'node:child_process';
-import { cpSync, existsSync, lstatSync, mkdirSync, readFileSync, realpathSync, rmdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, realpathSync, rmdirSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, dirname, isAbsolute, join, resolve, win32 } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import { fileURLToPath } from 'node:url';
@@ -8,6 +8,7 @@ import { parseArgs } from 'node:util';
 const here = fileURLToPath(new URL('.', import.meta.url));
 const script = fileURLToPath(import.meta.url);
 const marketplace = 'cmem-light-private';
+const claudeKind = 'cmem-light-claude-private';
 const pluginId = 'claude-mem@' + marketplace;
 const hostSettings = ['-c', 'analytics.enabled=false', '-c', 'feedback.enabled=false'];
 const hookEvents = {
@@ -18,6 +19,16 @@ const hookEvents = {
   Stop: 'summarize',
   PostCompact: 'post-compact',
   SubagentStart: 'subagent-context',
+};
+const claudeHookEvents = {
+  SessionStart: 'context',
+  UserPromptSubmit: 'session-init',
+  PreToolUse: 'file-context',
+  PostToolUse: 'observation',
+  PostToolUseFailure: 'observation',
+  Stop: 'summarize',
+  SubagentStop: 'subagent-stop',
+  SessionEnd: 'session-end',
 };
 // The repository build also emits standalone runtimes and installer tools.
 // Only the files used by the private worker and its local skills are staged.
@@ -45,8 +56,7 @@ const readJson = file => JSON.parse(readFileSync(file, 'utf8').replace(/^\uFEFF/
 const writeJson = (file, value) => writeFileSync(file, JSON.stringify(value, null, 2) + '\n', { flag: 'wx' });
 
 function windowsPath(value) {
-  // Codex's Windows hook command is interpreted by cmd.exe. Reject shell
-  // metacharacters before quoting the absolute arguments.
+  // Use the same literal-drive path policy as the Codex cmd.exe binding.
   if (!/^[a-z]:[\\/]/i.test(value ?? '') || /[\x00-\x1f"'`$%!*?<>|;&^]/.test(value)) {
     throw new Error('Expected a literal local Windows drive path');
   }
@@ -57,6 +67,42 @@ function executable(value) {
   const file = realpathSync(windowsPath(value));
   if (!/\.exe$/i.test(file) || !lstatSync(file).isFile()) throw new Error('Select a direct .exe');
   return windowsPath(file);
+}
+
+function stageRoot(root) {
+  root = windowsPath(root);
+  return windowsPath(join(realpathSync(dirname(root)), basename(root)));
+}
+
+function validatePort(port) {
+  if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('Specify a free port from 1024 to 65535');
+}
+
+function checkBundle(source, checkChildren = false) {
+  for (const file of runtimeFiles) {
+    if (!lstatSync(join(source, file)).isFile() || (checkChildren && realpathSync(join(source, file)) !== join(source, file))) {
+      throw new Error(`Expected a regular bundle file: ${file}`);
+    }
+  }
+  for (const dir of runtimeDirectories) {
+    const path = join(source, dir);
+    if (!lstatSync(path).isDirectory()) throw new Error(`Expected a bundle directory: ${dir}`);
+    if (checkChildren) checkRegularTree(path);
+  }
+}
+
+function checkRegularTree(directory) {
+  for (const name of readdirSync(directory)) {
+    const path = join(directory, name);
+    const stat = lstatSync(path);
+    if (stat.isDirectory()) checkRegularTree(path);
+    else if (!stat.isFile()) throw new Error(`Expected a regular bundle entry: ${path}`);
+  }
+}
+
+function copyRuntime(source, plugin) {
+  for (const file of runtimeFiles) cpSync(join(source, file), join(plugin, file));
+  for (const dir of runtimeDirectories) cpSync(join(source, dir), join(plugin, dir), { recursive: true });
 }
 
 function baseEnv(root) {
@@ -168,7 +214,7 @@ function cli(config, root, args, interactive = false) {
 }
 
 export function stageLocalInstall({ root, codex, bun, port, bundle }) {
-  if (!Number.isInteger(port) || port < 1024 || port > 65535) throw new Error('Specify a free port from 1024 to 65535');
+  validatePort(port);
   const config = { kind: marketplace, codex: executable(codex), bun: executable(bun), node: executable(process.execPath), port };
   const source = realpathSync(windowsPath(bundle));
   const { name, version, description, author, homepage, repository, license, keywords, interface: presentation } =
@@ -176,8 +222,7 @@ export function stageLocalInstall({ root, codex, bun, port, bundle }) {
   const catalog = readJson(join(source, 'hooks', 'codex-hooks.json'));
   if (name !== 'claude-mem') throw new Error('Expected the compiled claude-mem plugin directory');
   const hooks = {};
-  root = windowsPath(root);
-  root = windowsPath(join(realpathSync(dirname(root)), basename(root)));
+  root = stageRoot(root);
   for (const [event, handler] of Object.entries(hookEvents)) {
     const groups = catalog.hooks?.[event];
     const entries = groups?.[0]?.hooks;
@@ -193,12 +238,7 @@ export function stageLocalInstall({ root, codex, bun, port, bundle }) {
       commandWindows: `"${config.node}" "${join(root, 'codex-local.mjs')}" hook ${handler}`,
     }] }];
   }
-  for (const file of runtimeFiles) {
-    if (!lstatSync(join(source, file)).isFile()) throw new Error(`Expected a regular bundle file: ${file}`);
-  }
-  for (const dir of runtimeDirectories) {
-    if (!lstatSync(join(source, dir)).isDirectory()) throw new Error(`Expected a bundle directory: ${dir}`);
-  }
+  checkBundle(source);
   mkdirSync(root); // A dedicated, new root prevents overwriting a user's Codex profile.
   writeJson(join(root, metadata), config);
   for (const dir of ['home/appdata', 'home/localappdata', 'temp', 'workspace', 'codex', 'data',
@@ -206,8 +246,7 @@ export function stageLocalInstall({ root, codex, bun, port, bundle }) {
     mkdirSync(join(root, dir), { recursive: true });
   }
   const plugin = join(root, 'catalog', 'plugin');
-  for (const file of runtimeFiles) cpSync(join(source, file), join(plugin, file));
-  for (const dir of runtimeDirectories) cpSync(join(source, dir), join(plugin, dir), { recursive: true });
+  copyRuntime(source, plugin);
   cpSync(script, join(root, 'codex-local.mjs'));
   writeJson(join(plugin, 'hooks', 'codex-hooks.json'), { hooks });
   writeJson(join(plugin, '.mcp.json'), { mcpServers: { 'mcp-search': {
@@ -226,6 +265,51 @@ export function stageLocalInstall({ root, codex, bun, port, bundle }) {
       policy: { installation: 'AVAILABLE', authentication: 'ON_INSTALL' }, category: 'Productivity' }],
   });
   return { ...config, root };
+}
+
+export function stageClaudePlugin({ root, bun, port, bundle }) {
+  validatePort(port);
+  root = stageRoot(root);
+  const source = realpathSync(windowsPath(bundle));
+  const config = { kind: claudeKind, root, bun: executable(bun), node: executable(process.execPath), port };
+  const { name, version, description, author, homepage, repository, license, keywords } =
+    readJson(join(source, '.claude-plugin', 'plugin.json'));
+  if (name !== 'claude-mem') throw new Error('Expected the compiled claude-mem plugin directory');
+  const catalog = readJson(join(source, 'hooks', 'hooks.json'));
+  const launcher = join(root, 'claude-local.mjs');
+  const hooks = {};
+  for (const [event, handler] of Object.entries(claudeHookEvents)) {
+    // SessionStart's other groups are legacy autostart and installer preflight.
+    const group = catalog.hooks?.[event]?.[event === 'SessionStart' ? 1 : 0];
+    const entry = group?.hooks?.[0];
+    if (group?.hooks?.length !== 1 || entry?.type !== 'command' ||
+        (event === 'SessionStart' && group.matcher !== 'startup|clear|compact')) {
+      throw new Error(`Unexpected Claude build hook shape for ${event}`);
+    }
+    const { matcher } = group;
+    const { timeout, async } = entry;
+    hooks[event] = [{ matcher, hooks: [{
+      type: 'command', command: config.node, args: [launcher, 'hook', handler], timeout, async,
+    }] }];
+  }
+  checkBundle(source, true);
+  mkdirSync(root);
+  const plugin = join(root, 'catalog', 'plugin');
+  for (const dir of ['home/appdata', 'home/localappdata', 'temp', 'data',
+    'catalog/plugin/.claude-plugin', 'catalog/plugin/hooks', 'catalog/plugin/scripts']) {
+    mkdirSync(join(root, dir), { recursive: true });
+  }
+  copyRuntime(source, plugin);
+  writeJson(join(plugin, '.claude-plugin', 'plugin.json'), {
+    name, version, description, author, homepage, repository, license, keywords,
+  });
+  writeJson(join(plugin, 'hooks', 'hooks.json'), { hooks });
+  writeJson(join(plugin, '.mcp.json'), { mcpServers: { 'mcp-search': {
+    type: 'stdio', command: config.node, args: [launcher, 'mcp'],
+  } } });
+  cpSync(script, launcher);
+  writeJson(join(root, metadata), config);
+  return config;
 }
 
 function install(options) {
@@ -342,18 +426,36 @@ async function runWorker(config, profile, lifecycleOnly) {
 
 async function hostEntry(config, command, args) {
   const { root } = config;
+  const claude = config.kind === claudeKind;
+  const events = claude ? claudeHookEvents : hookEvents;
+  if (claude) {
+    const loaded = process.env.CLAUDE_PLUGIN_ROOT;
+    const expected = join(root, 'catalog', 'plugin');
+    if (!loaded || windowsPath(loaded).toLowerCase() !== expected.toLowerCase()) {
+      throw new Error('Claude plugin root does not match the bound stage. Load the plugin from its staged directory.');
+    }
+  }
   const pidFile = join(active(root), 'pid');
   const pid = existsSync(pidFile) && Number(readFileSync(pidFile, 'utf8'));
-  if (!pid || !await ownedHealth(config, pid).catch(() => false)) {
+  if (!Number.isSafeInteger(pid) || pid < 1 || !await ownedHealth(config, pid).catch(() => false)) {
     throw new Error('Start the dedicated local worker before opening the plugin');
   }
   const env = appEnv(root, config.port);
   const options = { env, stdio: 'inherit' };
   let invocation;
-  if (command === 'hook' && args.length === 1 && Object.values(hookEvents).includes(args[0])) {
-    env.CLAUDE_MEM_CODEX_HOOK = '1';
+  if (command === 'hook' && args.length === 1 && Object.values(events).includes(args[0])) {
+    if (claude) {
+      for (const key of ['CLAUDE_PROJECT_DIR', 'CLAUDE_MEM_DISABLE_TOOL_HOOKS',
+        'CLAUDE_MEM_DISABLE_OBSERVATION', 'CLAUDE_MEM_DISABLE_FILE_CONTEXT']) {
+        if (process.env[key] !== undefined) env[key] = process.env[key];
+      }
+    } else {
+      env.CLAUDE_MEM_CODEX_HOOK = '1';
+    }
     env.CLAUDE_MEM_HOOK_ORIGINAL_CWD = process.cwd();
-    invocation = launch(config.bun, [workerPath(root), 'hook', 'codex', args[0]], { ...options, cwd: join(root, 'data') });
+    invocation = launch(config.bun, [workerPath(root), 'hook', claude ? 'claude-code' : 'codex', args[0]], {
+      ...options, cwd: join(root, 'data'),
+    });
   } else if (command === 'mcp' && args.length === 0) {
     invocation = launch(config.node, [join(root, 'catalog', 'plugin', 'scripts', 'mcp-server.cjs')], options);
   } else {
@@ -370,6 +472,14 @@ async function hostEntry(config, command, args) {
 async function main() {
   if (process.platform !== 'win32') throw new Error('This installer targets Windows');
   const [command, ...args] = process.argv.slice(2);
+  if (command === 'stage-claude') {
+    const { values } = parseArgs({ args, options: {
+      root: { type: 'string' }, bun: { type: 'string' }, port: { type: 'string' }, bundle: { type: 'string' },
+    } });
+    const { root } = stageClaudePlugin({ ...values, port: Number(values.port), bundle: values.bundle ?? resolve(here, '../../plugin') });
+    console.log(join(root, 'catalog', 'plugin'));
+    return;
+  }
   if (command === 'install') {
     const { values } = parseArgs({ args, options: {
       root: { type: 'string' }, codex: { type: 'string' }, bun: { type: 'string' },
@@ -379,10 +489,20 @@ async function main() {
     return;
   }
   const root = realpathSync(here);
-  const config = { ...readJson(join(root, metadata)), root };
-  if (config.kind !== marketplace || !isAbsolute(root)) throw new Error('Run the installer first');
+  const stored = readJson(join(root, metadata));
+  const config = { ...stored, root };
+  const claude = config.kind === claudeKind;
+  if (claude) {
+    validatePort(config.port);
+    if (stored.root !== root || script !== join(root, 'claude-local.mjs') ||
+        config.node !== executable(process.execPath) || config.bun !== executable(config.bun)) {
+      throw new Error('Invalid Claude stage binding. Re-stage at the intended path with the selected executables.');
+    }
+  } else if (config.kind !== marketplace || !isAbsolute(root)) {
+    throw new Error('Run the installer or stage-claude first');
+  }
   if (command === 'hook' || command === 'mcp') return hostEntry(config, command, args);
-  if (command === 'host') {
+  if (command === 'host' && !claude) {
     cli(config, root, args, true);
   } else if (command === 'start') {
     const { values } = parseArgs({ args, options: { profile: { type: 'string' }, 'lifecycle-only': { type: 'boolean' } } });
@@ -390,14 +510,14 @@ async function main() {
     await runWorker(config, readJson(resolve(values.profile)), values['lifecycle-only']);
   } else if (command === 'stop' && args.length === 0) {
     writeFileSync(join(active(root), 'stop'), '', { flag: 'wx' });
-  } else if (command === 'uninstall' && args.length === 0) {
+  } else if (command === 'uninstall' && !claude && args.length === 0) {
     await usingLock(root, async () => {
       cli(config, root, ['plugin', 'remove', pluginId]);
       cli(config, root, ['plugin', 'marketplace', 'remove', marketplace]);
       console.log('Removed Codex registration. Installation files and local data are preserved.');
     });
   } else {
-    throw new Error('Commands: install, start, stop, host, uninstall');
+    throw new Error(claude ? 'Commands for the Claude stage: start, stop' : 'Commands: install, stage-claude, start, stop, host, uninstall');
   }
 }
 
