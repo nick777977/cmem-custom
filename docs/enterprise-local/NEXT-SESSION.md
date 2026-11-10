@@ -1,46 +1,68 @@
-# Next implementation — CODEX-11-HOST
+# Next implementation — CLAUDE-WINDOWS-STAGE
 
 Continue on `feat/cmem-light-local` with one coordinator. Check branch, status
 and HEAD. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md),
-[step 11 status](../roadmap.md#what-remains-in-step-11),
-[WINDOWS-09-LOCAL](handoffs/WINDOWS-09-LOCAL.md), and
-[VERIFY-11-LOCAL](handoffs/VERIFY-11-LOCAL.md).
+[step 11](../roadmap.md#what-remains-in-step-11),
+[Windows preparation](WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation),
+and [VERIFY-11-LOCAL](handoffs/VERIFY-11-LOCAL.md). A31 accepts the existing
+Codex CLI result and takes Codex Desktop out of the current delivery path.
 
-Verify local plugin loading in the Codex surface intended for daily use.
-Confirm whether that surface is Desktop or CLI if the choice is unclear.
-The private CLI already loaded the plugin from a dedicated catalog, exposed
-its MCP tools and discovered the hooks. It saved and retrieved synthetic
-SQLite memory and was removed without deleting the data. Reuse that
-evidence if the tested CLI is the intended surface. If Desktop is the
-target, check the Desktop loading mechanism under a fresh bounded launch.
+## One source task
 
-For any new runtime, verify the [pinned stage](handoffs/ARTIFACT-10-LOCAL.md#recheck-on-a-matching-windows-x64-host)
-before opening the candidate. Use disposable home, config, data and loopback
-ports. For a separately authorized host registration, verify that the
-intended host loads the staged plugin, discovers its hooks and calls the
-staged MCP server. Save and retrieve one synthetic note. Exercise a supported
-hook lifecycle event that needs no live turn, if the host exposes one.
-Record separately hooks discovered by the host, hooks dispatched by the
-host and commands invoked directly by the fixture. Verify removal, preservation
-of synthetic data and bounded cleanup. If the host cannot be tested with
-disposable state, document the concrete limitation and stop that lane.
+Prepare a private, stage-only Claude Code CLI plugin directory for the
+intended Windows instance. Use the existing compiled worker, Claude hook
+adapter, stdio MCP and local viewer. The Codex stage is a reference for
+allowlisted files, path binding, worker ownership and rollback. It currently
+binds Codex hooks. The canonical Claude hooks and MCP commands in the
+checkout are still unbound. Keep the Claude stage separate from the accepted
+Codex artifact.
+[Codex staging](../../scripts/enterprise-local/codex-local.mjs#L170)
+· [Claude hook manifest](../../plugin/hooks/hooks.json)
+· [MCP manifest](../../plugin/.mcp.json).
 
-Use a simulated worker model on `127.0.0.1` for any generation fixture.
-Chroma already uses real local MiniLM. No generative model or live budget is
-selected. If a live worker test is requested later, get explicit scope for
-the model, auth, payload and budget. For the native Codex route this includes
-proving resend/fallback behavior through the worker, queue and app-server.
-The earlier Luna and Haiku references are historical model candidates.
-[A30](memory/DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10).
+1. Confirm the intended native Windows Claude CLI version and its documented
+   session-scoped local loading and hook/MCP command format. Verify support
+   against the intended version, including Windows quoting and approved
+   plugin/trust policy. Use the official local-directory mechanism when
+   permitted. If the target is an Anthropic-hosted session on another
+   machine, stop and scope that different environment.
+2. Reuse the smallest existing staging and owned-worker paths that fit.
+   Render explicit hook and MCP commands for the Claude adapter, preserve
+   event and working-directory semantics, and use the same local SQLite,
+   Chroma and MiniLM. Keep the worker loopback-only. Keep install and startup
+   free of account signup, automatic acquisition and hidden fallback.
+3. Complete the stage with focused source/staging checks under the applicable
+   launch. Verify allowlisted contents and a receipt for the Claude stage,
+   correct Windows paths including spaces, safe refusal for invalid bindings
+   or an unavailable worker, and unchanged Codex staging behavior. Document
+   how to exercise the stage later using synthetic projects and a simulated
+   worker model. Distinguish direct fixture calls from real host dispatch.
 
-Close this task with evidence for the intended surface or a specific
-loading/cleanup blocker. Keep the verified local workflow result, the
-failed pending-event recovery case and the separate local auth defect
-visible. Before daily-use acceptance, decide whether events waiting after a
-provider failure must survive worker shutdown. Stored SQLite records and
-Chroma vectors survived the verified restart. Claude Code with AWS Bedrock
-is a separate check in its authorized environment. D11 stays deferred.
+Completion is a testable bound stage with evidence and an explicit list of
+what still needs actual Claude CLI execution, or a concrete version/policy
+blocker. The next implementation launch must set its exact scope.
 
-This handoff does not authorize host registration or a new runtime launch.
-Obtain scope as needed. No live inference, real state, admin/UAC, AWS, CI,
-push, publication or agents in this task.
+## Keep these follow-ups on the route
+
+- **Pending-event recovery before daily use.** VERIFY-11-LOCAL saw two
+  provider-refused events disappear from the RAM queue on graceful shutdown.
+  Committed SQLite rows and Chroma vectors survived. Trace the existing hook
+  spool and transcript recovery path with synthetic events. Implement the
+  smallest deliberate recovery that preserves capture policy and identity.
+  Verify that restart exposes recoverable work, deliberate replay stores it
+  without duplicates, and no request is automatically resent after an
+  ambiguous outcome. Avoid restoring the old blind startup queue sweep.
+  Keep the separate local auth HTTP 500 visible.
+- **Claude host and Bedrock acceptance.** On the authorized Windows instance,
+  first check private plugin loading, real hook dispatch, MCP, two synthetic
+  projects, search and data-preserving removal. Then check the host's
+  interactive Bedrock route and, if selected, the worker's explicit Bedrock
+  profile as separate results. AWS SSO authorizes model calls. Windows and
+  Claude Code policy govern project, hook and MCP access. Confirm model,
+  profile, region, payload, retry behavior and budget before live calls.
+  The [runbook template](WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation)
+  supplies placeholders. Use the verified results for the operating guide.
+
+This handoff does not authorize registration, Claude runtime, corporate AWS
+calls, live inference, real state access, admin/UAC, CI, push, publication
+or agents. D11 stays deferred.

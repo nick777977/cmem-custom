@@ -7,14 +7,27 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-10 **CLI target and Claude Windows preparation**, done. One
+coordinator on clean `feat/cmem-light-local` at `26cf8b536`.
+Reserve `docs/{roadmap,PATCH-SEQUENCE}.md`,
+`docs/enterprise-local/{README,LLM-PROFILES,NEXT-SESSION,SESSION-PROMPTS,VALIDATION,WINDOWS-LOCAL-SETUP,handoffs/VERIFY-11-LOCAL}.md`
+and `memory/{DECISIONS,STATE,TASKS,WORKLOG}.md`. Prepare the host and
+worker profile examples, preserve recovery evidence and align the next
+implementation task. Documentation scope. A31 accepts the existing CLI
+result and records the Windows target. Added private-load and AWS SSO
+profile templates. Runtime/source behavior remains unverified for this
+Claude stage. Reservations released. [CLAUDE-WINDOWS-STAGE](../NEXT-SESSION.md)
+is ready-unclaimed. Pending-event recovery remains an implementation task
+before daily use.
+
 2026-11-10 **VERIFY-11-LOCAL closeout**, done. One coordinator on
 `feat/cmem-light-local` at `045ac7a05`, with the previous session's
 uncommitted verification docs. Reserve those files, `docs/PATCH-SEQUENCE.md`
 and `docs/enterprise-local/{README,LLM-PROFILES,memory/DECISIONS,handoffs/ARTIFACT-10-LOCAL}.md`
 for the model-role clarification, acceptance status, next launch and local commit.
 Recorded A30 and separated the finished test run from the open daily-use
-criteria. Reservations released. [CODEX-11-HOST](../NEXT-SESSION.md) is
-ready-unclaimed under separate scope.
+criteria. Reservations released. A31 supersedes the then-proposed
+CODEX-11-HOST task.
 
 2026-11-10 **VERIFY-11-LOCAL**, closed with bounded results. One coordinator on clean
 `feat/cmem-light-local` at `045ac7a0559a4c7125a90ebddf0d5f49bf37fd80`.

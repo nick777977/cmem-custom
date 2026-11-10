@@ -218,6 +218,35 @@ auth, synthetic payload and budget in a fresh launch. Prove resend and
 fallback behavior on the chosen route before using the live budget.
 [Model roles](../LLM-PROFILES.md#separate-the-host-observer-and-embeddings).
 
+### A31 — accept the Codex CLI check and target Claude Code on Windows (2026-11-10)
+
+The owner accepts the existing Codex CLI install, hook discovery, MCP and
+removal evidence for the Codex host. Codex Desktop implementation and
+verification are outside the current delivery path. The CLI and Claude Code
+share the memory worker, SQLite, Chroma and viewer. Claude Code has its own
+plugin loading, hook payloads and MCP configuration to verify.
+
+The next host target is Claude Code CLI running on the intended Windows
+instance, alongside the local worker and the projects that Windows user is
+allowed to access. A remote IDE can connect to that instance. The target is
+defined by where the CLI process and files are located. A separate
+Anthropic-hosted session would need its own setup and scope.
+
+Claude Code's AWS Bedrock authorization covers its interactive model calls.
+Local hook execution, MCP and memory use the Windows user's access and
+Claude Code's plugin/trust policy. If worker generation also uses Bedrock,
+configure the worker's AWS IAM Identity Center profile, region and model
+explicitly. The two processes can use the same approved AWS profile by
+choice. Local SQLite, Chroma and MiniLM stay on the Windows instance.
+Corporate AWS use requires a separately scoped launch.
+
+The failed pending-event recovery case stays in the implementation plan.
+Establish and test a deliberate recovery path before daily-use acceptance.
+Keep capture filters and project/worktree identity, avoid duplicates and
+avoid automatically resending work whose provider outcome was ambiguous.
+The local auth HTTP 500 stays a separate issue. [Step 11](../../roadmap.md#what-remains-in-step-11)
+· [Windows preparation](../WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation).
+
 ### CLOUD-05 implementation boundary (2026-11-09)
 
 Apply A27 to the local worker by removing the cloud push/pull lifecycle,

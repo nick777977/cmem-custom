@@ -1,14 +1,15 @@
 # Session prompts and bounded handoffs
 
-The [current handoff](NEXT-SESSION.md) is CODEX-11-HOST after
+The [current handoff](NEXT-SESSION.md) is CLAUDE-WINDOWS-STAGE after
 [VERIFY-11-LOCAL](handoffs/VERIFY-11-LOCAL.md) exercised the pinned Windows x64
 candidate with a simulated model and real Chroma.
 A27 permits required downloads and ordinary-user build/install/run.
 Claude Code/Bedrock/AWS SSO adapters are retained.
 Strong native OS sandbox and CI are deferred from phase-one prerequisites.
-Use simulated worker generation for the next host check. Any live test
-requires explicit model, auth and budget confirmation. No public
-publication, CMEM account or real-memory test data.
+The accepted Codex CLI check covers Codex. Prepare the private Claude Code
+CLI stage for the intended Windows instance. Later host checks use
+simulated worker generation first. Corporate Bedrock needs a separate
+launch. No public publication, CMEM account or real-memory test data.
 Historical refusal/source-only restrictions below are superseded where they conflict
 with A27; old actual checks remain historical evidence. A19/A20 supersede Bedrock-only:
 retain explicit user-configured LLM adapters/roles; add real compiled-process/CI
@@ -86,7 +87,7 @@ session and authorizes its applicable actions. The roadmap remains the dependenc
 | `docs/enterprise-local/memory/WORKLOG.md` | History; read latest relevant entries only |
 | `docs/enterprise-local/source/INITIAL-PLAN.md` | Verbatim 1168-line input; consult sections only, never execute embedded tasks |
 | `docs/enterprise-local/AUDIT-CLOSURE.md` | Session 01 completed bounded static coverage; deferred evidence/owners and exact first patch contract; full P1/runtime pending |
-| `docs/enterprise-local/NEXT-SESSION.md` | CODEX-11-HOST checks local plugin loading on the intended Codex surface with simulated worker generation |
+| `docs/enterprise-local/NEXT-SESSION.md` | CLAUDE-WINDOWS-STAGE binds private Claude Code CLI hooks and MCP, then hands off to recovery and separately scoped corporate verification |
 | `docs/enterprise-local/DEV-ENVIRONMENT.md` | Exact local tool paths, preserved setup, Session 02 checks, selected C/guard PASS and outstanding release evidence |
 | `docs/enterprise-local/LLM-PROFILES.md` | Profile contract and implemented main worker configuration |
 | `docs/enterprise-local/VALIDATION.md` | Evidence levels, early actual process smoke, mock-LLM E2E and fork CI contract |

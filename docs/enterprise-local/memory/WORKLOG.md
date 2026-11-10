@@ -1116,6 +1116,32 @@ Separated the completed artifact run from the remaining daily-use
 acceptance. Pending events were lost from the RAM buffer on shutdown and
 already stored data survived. The local auth error is separate from the
 successful memory path. Updated the roadmap, state, validation contract
-and next launch. [CODEX-11-HOST](../NEXT-SESSION.md) is next, with simulated
-generation and earlier CLI evidence available for reuse. This closeout
-ran no application, registration, build or live inference.
+and the then-proposed CODEX-11-HOST launch. This closeout ran no application,
+registration, build or live inference. A31 superseded that proposed launch.
+
+## 2026-11-10 — A31 CLI target and Claude Windows preparation
+
+Clean entry `26cf8b5361d98929d465eb2dcc856e9d945e793b`. The owner accepted
+Codex CLI host evidence and set aside Desktop. The target is Claude Code
+CLI on the Windows instance that runs the worker and holds authorized
+projects. Distinguish local file and plugin access, interactive AWS SSO
+and the worker's explicitly selected model profile.
+
+At the entry SHA, the [Codex renderer](../../../scripts/enterprise-local/codex-local.mjs#L170)
+uses Codex bindings, the canonical [Claude hooks](../../../plugin/hooks/hooks.json#L3)
+and [MCP](../../../plugin/.mcp.json#L2) are unbound, and the
+[worker resolver](../../../src/services/worker/MainWorkerProfiles.ts#L79)
+uses a named AWS SSO profile. These are source observations. Checked the
+official [Claude local plugin loading](https://code.claude.com/docs/en/cli-reference)
+and [Bedrock setup](https://code.claude.com/docs/en/amazon-bedrock) references.
+Added [placeholder configuration and acceptance steps](../WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation).
+No build, host startup, registration, credential or corporate AWS action.
+
+The RAM queue failure remains an implementation requirement. The existing
+[buffer comment](../../../src/services/worker/SessionMessageBuffer.ts#L31)
+points to transcript replay. Actual post-stop recovery still needs a
+synthetic regression with no duplicate record or unapproved resend.
+Checked the documentation diff, 20 local link targets in the new launch
+and runbook, and JSON parsing of the placeholder AWS SSO profile.
+Released documentation reservations. [CLAUDE-WINDOWS-STAGE](../NEXT-SESSION.md)
+is the next source task.

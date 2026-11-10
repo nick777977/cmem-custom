@@ -331,9 +331,11 @@ combinations reject. Failures cannot switch to another profile/model/account; op
 role overrides must be explicit and observable. No live credentials in CI PR jobs or
 tracked evidence. Currently unavailable Bedrock stays NOT RUN/BLOCKED; one live backend
 cannot certify another. Reuse fixture/process work meanwhile rather than wait on AWS.
-Under A30, the next Codex host check uses a simulated worker model. Confirm
-the exact generative model, auth, synthetic payload and budget only for a
-separately requested live check. Local MiniLM handles Chroma embeddings.
+Under A31, reuse the accepted Codex CLI result. Prepare the separate Claude
+Code CLI Windows binding and exercise it with simulated worker generation
+under the appropriate runtime scope. Resolve pending-event recovery before
+daily use. Confirm exact model, auth, synthetic payload and budget only for
+the later authorized Bedrock checks. Local MiniLM handles Chroma embeddings.
 
 Process-tree DNS/connection and browser request evidence across startup/capture/index/
 query/error/shutdown is needed for final egress conclusions, including SDK/CLI/native

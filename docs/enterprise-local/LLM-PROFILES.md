@@ -12,10 +12,13 @@ Codex test choices into the installer or let host login implicitly select observ
 provider/model. Build/install/run are ordinary-user Windows operations, no admin/UAC.
 Necessary dependency and local embedding-model downloads/bootstrap are permitted;
 special native OS sandbox/CI proof is deferred from first functional delivery.
-Under A30, the next Codex host check uses a simulated model. Any future live
-worker check needs a confirmed model, auth route and budget for that check.
-The historical Luna proposal spent zero turns.
-[Decision and prior scope](memory/DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10).
+The Codex CLI check is sufficient for the current Codex target. Claude Code
+on the intended Windows instance is next. Its local plugin loading and the
+worker's generative profile are separate checks. Any future live worker
+check needs a confirmed model, auth route and budget. The historical Luna
+proposal spent zero turns.
+[Decision and prior scope](memory/DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10)
+· [Windows Bedrock preparation](WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation).
 Supersedes the Bedrock-only target in the supplied initial plan and old session
 prompts. Historical evidence/commits remain unchanged. Dependencies and execution
 waves live only in [roadmap](../roadmap.md); runtime evidence requirements live in

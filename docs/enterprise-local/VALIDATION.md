@@ -40,8 +40,9 @@ requirements below are historical/release-hardening targets where they conflict.
 V4 requires real local SQLite, Chroma and MiniLM embeddings, synthetic capture,
 retrieval, restart and viewer checks, and a deterministic stand-in for the
 generative worker model. V5 covers a real provider for an explicitly selected
-generative profile. Under A30, the next Codex host check uses a simulated worker
-model and does not need a V5 selection. Before a separately requested live test,
+generative profile. Under A31, the existing Codex CLI result covers Codex.
+Prepare the Claude Code CLI binding for Windows. Its first host check uses
+a simulated worker model. Before a separately requested live test,
 confirm the model, auth route, synthetic payload and budget. Verify availability
 and resend/fallback behavior before sending a live request. Do not read or
 print token files for investigation. Bedrock/AWS SSO is tested live only in its
@@ -288,7 +289,10 @@ shutdown and restart. Existing SQLite records and Chroma vectors survived.
 The full V4 result remains open with other cases still unexercised. The
 private auth HTTP 500 is a separate entrypoint finding. TCP samples, viewer
 resource entries and the deny proxy have the coverage described in the
-[handoff](handoffs/VERIFY-11-LOCAL.md).
+[handoff](handoffs/VERIFY-11-LOCAL.md). The recovery regression must cover
+stopping after a provider failure, recoverable work after restart, a
+deliberate replay with no duplicate SQLite record, and zero automatic
+resend after an ambiguous provider outcome.
 
 ## V5: unavailable Bedrock and honest supported-provider status
 

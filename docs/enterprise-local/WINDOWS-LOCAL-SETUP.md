@@ -1,4 +1,4 @@
-# Private Codex setup on Windows
+# Private CLI plugin setup on Windows
 
 The launcher installs a copy of this checkout's compiled plugin under a new
 user-writable directory. It registers `claude-mem@cmem-light-private` in a
@@ -159,3 +159,85 @@ This removes the two Codex registrations. The dedicated profile, copied files
 and SQLite data stay under `$local` for inspection and backup.
 
 [Local plugin catalogs in OpenAI Docs](https://developers.openai.com/plugins/build/plugins)
+
+## Claude Code and Bedrock preparation
+
+The Codex instructions above are verified for the documented build. This
+Claude Code section is a preparation template for the intended Windows
+instance. The Codex stage renders Codex-specific hook commands. The checkout's
+Claude hook and MCP templates still have empty commands. The next source
+task must produce a separate bound stage before these instructions can be
+exercised. [Codex stage renderer](../../scripts/enterprise-local/codex-local.mjs#L170)
+· [Claude hook template](../../plugin/hooks/hooks.json#L3)
+· [MCP template](../../plugin/.mcp.json#L2).
+
+### Windows host and project access
+
+- Run Claude Code CLI, the worker and the local Chroma sidecar on the
+  Windows instance that holds the projects. The desktop or remote IDE can
+  provide the terminal session. Loopback refers to that Windows instance.
+- Use the Windows user's existing permissions for the approved project
+  directories. Test two synthetic project directories with the same private
+  plugin and worker. Verify existing project/worktree attribution and
+  search filters. Keep managed Claude Code plugin/trust policy in force.
+- Use separate scratch Claude configuration, worker data and ports during
+  verification. Keep the normal installation and memory stores available.
+  Use a session-scoped local plugin load where policy permits it. Validate
+  the intended Claude CLI version's flag and hook schema.
+  [Claude Code settings scopes](https://code.claude.com/docs/en/settings)
+  · [Claude CLI plugin flags](https://code.claude.com/docs/en/cli-reference).
+
+The eventual session command uses an absolute Claude executable and a bound
+stage. The variables below are placeholders to be supplied by the approved
+test. Run from the intended synthetic project directory.
+
+```powershell
+& $claudeExecutable --plugin-dir $boundClaudePluginDirectory
+```
+
+### Two Bedrock settings surfaces
+
+For the interactive CLI, use the organization's approved Bedrock mode and
+AWS IAM Identity Center session. The documented manual configuration selects
+Bedrock mode with `CLAUDE_CODE_USE_BEDROCK=1` and an explicit `AWS_PROFILE`.
+Confirm the effective Bedrock region and model or inference profile with the
+organization. IAM Identity Center and Bedrock can use different regions.
+Keep authentication in the host's normal approved flow.
+[Claude Code on Amazon Bedrock](https://code.claude.com/docs/en/amazon-bedrock).
+
+If the memory worker should generate observations and summaries through
+Bedrock as well, its separate profile has this shape. Replace each placeholder
+with a confirmed input before enabling it. Keep credentials out of the file.
+
+```json
+{
+  "default": {
+    "id": "windows-bedrock-observer",
+    "provider": "claude",
+    "auth": "aws-sso",
+    "executable": "<absolute path to approved Claude executable>",
+    "awsPath": "<absolute path to approved AWS CLI executable>",
+    "awsConfigFile": "<absolute path to approved AWS configuration>",
+    "awsProfile": "<approved IAM Identity Center profile name>",
+    "region": "<approved Bedrock region>",
+    "model": "<approved Bedrock model ID or inference-profile ARN>"
+  }
+}
+```
+
+The worker invokes the selected AWS CLI/profile to obtain temporary
+credentials in its own process environment. An explicit AWS config path
+selects configuration. Verify separately that the worker can use the
+approved SSO session under its scoped Windows environment, including the
+expired-session result. Use the same approved AWS identity as the
+interactive host only if that is the selected worker profile. Never copy
+SSO cache files into the stage or include credential output in evidence.
+[Profile contract](LLM-PROFILES.md#main-worker-configuration)
+· [Worker credential resolver](../../src/services/worker/MainWorkerProfiles.ts#L79).
+
+First verify the bound hooks, MCP, local data and search with synthetic
+inputs and a loopback worker model. Test the interactive host's Bedrock
+route and the worker's Bedrock route as separate results in the authorized
+environment. Local MiniLM handles embeddings throughout. Close the test
+session and stop the owned worker. Verify cleanup and preserve SQLite data.
+[Next launch](NEXT-SESSION.md).

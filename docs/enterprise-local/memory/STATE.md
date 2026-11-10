@@ -1,13 +1,14 @@
 # Current handoff
 
-Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27, A29 and A30 define current scope.
+Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 and A29–A31 define current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 
-The target is daily local use from this checkout. Verify the full Codex memory
-workflow first. Verify Claude Code with AWS Bedrock separately in its authorized
-environment. Automated workflow runs and a formal distribution are optional
-follow-ups. The daily-use handoff covers local setup, updates and rollback.
-[Local route](../../roadmap.md), [A29](DECISIONS.md#a29--prioritize-local-operation-2026-11-10).
+The target is daily local use from this checkout. The owner accepts the
+existing Codex CLI host result and sets aside Codex Desktop. Next prepare
+Claude Code CLI for the Windows instance where the projects and worker run.
+Verify the host and its AWS Bedrock route under separate authorized scope.
+The daily-use handoff covers setup, updates and data-preserving rollback.
+[Local route](../../roadmap.md) · [A31](DECISIONS.md#a31--accept-the-codex-cli-check-and-target-claude-code-on-windows-2026-11-10).
 
 VERIFY-11-LOCAL completed the exact-artifact test run on Windows x64.
 Direct Codex hooks and MCP, simulated observer and summary profiles, FTS5,
@@ -15,7 +16,8 @@ real Chroma search and persistence, missing/corrupt model refusal and a
 browser rendering probe passed within their fixture scope. Two events
 waiting for generation after provider errors disappeared on graceful
 shutdown. Committed observations, summaries and the index survived. That
-failed case keeps the full local workflow matrix (V4) open. The retained
+failed case keeps the full local workflow matrix (V4) open. Implement and
+test deliberate recovery before daily-use acceptance. The retained
 auth endpoint separately returned HTTP 500 when it resolved Better Auth
 from the checkout. The tested hooks, search and viewer work independently.
 [Runtime evidence and coverage](../handoffs/VERIFY-11-LOCAL.md).
@@ -138,18 +140,17 @@ commits and exact previous source/compile evidence preserved.
 
 ## Auth/model decisions
 
-Chroma already uses the local MiniLM embedding model. The intended Codex
-host is an independent choice. Luna and Haiku are historical generative
-worker candidates, with zero live Luna turns used. No live model or budget
-is selected for the next task. A later live check needs a confirmed profile,
-including auth and budget, and a check of retry/fallback behavior on that route.
-[A30](DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10).
+Chroma already uses the local MiniLM embedding model. The Windows user's
+file permissions and Claude Code's plugin/trust policy govern local
+project access. Interactive Claude Code Bedrock auth and the worker's
+explicit Bedrock profile are separate. No live model or budget is selected
+for the next task. [Windows profile template](../WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation).
 
 ## One next implementation task
 
-**CODEX-11-HOST: verify local plugin loading in the Codex surface intended
-for daily use, with a simulated worker model.** Reuse the existing CLI result
-if that is the target. [NEXT-SESSION](../NEXT-SESSION.md) gives the evidence,
-scope and completion criteria. Claude Code and AWS Bedrock require their
-separate authorized environment.
+**CLAUDE-WINDOWS-STAGE: bind a private Claude Code CLI stage on Windows.**
+The current Codex renderer binds only Codex hooks. Prepare the Claude hook
+and MCP bindings for the existing local worker. [NEXT-SESSION](../NEXT-SESSION.md)
+defines scope and completion. Keep the pending-event recovery implementation
+before daily-use acceptance and corporate execution separately scoped.
 [Local delivery route](../../roadmap.md).

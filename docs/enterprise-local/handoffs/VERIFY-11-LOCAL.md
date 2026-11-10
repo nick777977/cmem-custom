@@ -81,11 +81,10 @@ Chroma inputs and data stores intact.
 The pending-event result concerns work whose observation or summary has yet
 to be generated. It makes recovery after a provider error and restart
 unreliable for those events. Stored observations, summaries and Chroma
-vectors remained available. Decide before daily-use acceptance whether the
-current limitation is acceptable. If durability is required, scope recovery
-separately from this artifact test. Durable retention and automatic resend
-are independent requirements. A future check must avoid duplicates and
-respect the selected route's resend policy.
+vectors remained available. A31 retains recovery as a separate
+implementation requirement before daily use. Verify the available
+transcript/spool path under the existing capture policy. Recovery must
+avoid duplicate storage and automatic resend after an ambiguous outcome.
 
 Additional V4 cases still unexercised include linked-worktree sharing,
 provider timeout/429/malformed/unknown-model/unreachable responses and an
@@ -93,7 +92,8 @@ index fault. The auth endpoint is a separate defect. The tested memory flow
 does not depend on that endpoint. Its behavior outside the checkout remains
 unverified.
 
-Next verify the intended Codex host with simulated generation. The live
-worker profile is a separate selection under [A30](../memory/DECISIONS.md#a30--separate-model-roles-and-confirm-the-live-profile-2026-11-10).
-The earlier Luna test used zero live turns. Claude Code and AWS Bedrock
-remain separate. D11 stays deferred and D12/formal distribution remain optional.
+A31 accepts Codex CLI host coverage and puts the private Claude Code
+Windows stage next. The live worker profile remains separate. Claude Code
+host and AWS Bedrock runtime evidence must be collected in the authorized
+environment. D11 stays deferred and D12/formal distribution remain optional.
+[Current handoff](../NEXT-SESSION.md).
