@@ -7,7 +7,21 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
-2026-11-11 **REPOSITORY-CLEANUP planning**, done by one coordinator on
+2026-11-11 **REPOSITORY-CLEANUP final plan**, done by one coordinator from
+clean `683bd9062` on `codex/repository-cleanup-plan`. Reserve
+`docs/enterprise-local/cleanup/` and brief updates to
+`memory/{STATE,TASKS,DECISIONS,WORKLOG}.md` and `NEXT-SESSION.md`.
+Owner now requests removal of CI/CD, presentation PDFs and detachable non-local
+components in the next implementation session, with local build/tests retained.
+This turn wrote only the final plan, 440-path candidate manifest and next-session
+prompt. No product changes/deletion or runtime. CI/PDF preservation instructions
+are superseded; core provenance remains an explicit plan exception to blanket
+author removal. [Next implementation launch](../cleanup/NEXT-SESSION.md) executes
+the three bounded slices with local checks; defer costly shared refactors.
+Reservations released.
+
+2026-11-11 **REPOSITORY-CLEANUP planning**, historical, superseded by final plan
+above. Done by one coordinator on
 `codex/repository-cleanup-plan`, from clean `a9364604d026d79be8ab771ecb861688972d169c`.
 The owner explicitly requested this separate branch and analysis before deletion.
 Reserve `docs/enterprise-local/cleanup/`, task scratch under

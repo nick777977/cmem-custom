@@ -331,6 +331,9 @@ The transcript path remains a source of captures and the retired
 
 ### A32 — Separate repository-cleanup planning scope (2026-11-11)
 
+Historical initial scope; A33 below supersedes its CI/PDF preservation and
+pending-slice-approval instructions. Its source/index evidence remains valid.
+
 The owner explicitly requested `codex/repository-cleanup-plan` for a separate
 maintenance analysis; this overrides A01's branch restriction only for that task.
 Do not advance the main roadmap. Codex CLI and Claude Code CLI are the two
@@ -341,6 +344,29 @@ until separate agreement. Planning/index/tool files are authorized now; actual
 deletion and product/dependency/build edits await discussion and approval of
 the concrete slice. [Proposal and evidence](../cleanup/README.md).
 This accepts the analysis scope, not the proposed deletion list.
+
+### A33 — Final cleanup scope and next-session execution (2026-11-11)
+
+The owner now selects deletion of all CI/CD workflows and associated hosted
+automation, all eight presentation PDFs, non-target hosts and detachable
+standalone server/cloud/scaling components. Keep local build/tests/worker,
+Codex CLI/Claude Code CLI and supported explicit LLM/auth adapters, useful
+technical Markdown, ADRs and implementation evidence. Target one working
+session, prioritize easy removal, and defer costly shared refactors rather
+than rewriting common runtime/storage or repeating the whole audit.
+The current turn finalizes documents; the [next launch](../cleanup/NEXT-SESSION.md)
+implements the agreed categories without a repeated scope approval request.
+No product changes or deletion happened during final planning.
+
+The owner also requests removal of license/author references and custom branding.
+The [final plan](../cleanup/README.md) uses `cmem-light` display branding and
+removes optional personal/promotional metadata while retaining technical IDs to
+avoid migration. It expressly keeps core licensing/provenance for retained code
+and fonts and makes no false original-authorship claim. That is the assistant's
+stated exception to the broader request, not owner approval of preserving notices.
+Notices/docs for completely retired code may retire with their owner/preflight.
+Local auth HTTP 500 is an existing defect outside cleanup; it must stay visible.
+The main roadmap and the separately authorized Claude/Bedrock check do not advance.
 
 ## Proposed architecture, pending confirmation/implementation
 

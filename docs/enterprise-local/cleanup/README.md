@@ -1,232 +1,219 @@
-# Repository cleanup proposal
+# Local repository cleanup — final execution plan
 
-Status: **PLAN ONLY — no deletion approved or performed.** Updated 2026-11-11.
-Branch: `codex/repository-cleanup-plan`.
-Inspected baseline: `a9364604d026d79be8ab771ecb861688972d169c`.
-This is a separate maintenance task. It does not advance or replace
-[`docs/roadmap.md`](../../roadmap.md) or its next Claude target check.
+Updated 2026-11-11. Status: **ready for the next implementation session**.
+Current turn is documentation only: no application edits or deletions.
+Branch: `codex/repository-cleanup-plan`; planning baseline `683bd9062`.
+Inspected application source: `a9364604d026d79be8ab771ecb861688972d169c`.
+This replaces the initial proposal in `683bd9062`; it does not advance
+[`docs/roadmap.md`](../../roadmap.md).
 
-## Agreed scope
+## Outcome and authority
 
-The owner requested a small, local-first checkout, with an analysis and discussion
-before implementation. In this chat the owner confirmed:
+One working session should remove the large, easy, non-local pieces and keep a
+working local worker/build/test path. The owner has now selected:
 
-- Retain **Codex CLI and Claude Code CLI** as the two target hosts.
-- Treat other host integrations as removal candidates. Keep the existing selected
-  LLM providers/auth methods, including Claude Enterprise/Bedrock/AWS SSO, Codex
-  login, direct API and OpenAI-compatible routes. Host integration and model
-  provider are different things.
-- Keep `plans/`, including its PDFs, until a separate agreement.
-- Preserve implementation records, useful documentation, ADRs, configuration and
-  CI/CD. Do not continue the main implementation in this chat.
-- A separate branch, planning documents and local analysis tools are permitted.
-  Deletion and application changes wait for plan discussion and approval.
+- Remove all CI/CD workflows and hosting/release automation. Keep local build,
+  test, setup and verification scripts.
+- Keep Codex CLI and Claude Code CLI. Retire other host integrations without
+  removing supported LLM providers or their explicitly selected auth routes.
+- Remove all eight upstream presentation PDFs (117.31 MiB). Retain technical
+  Markdown, our implementation records, ADRs and useful AI-development context.
+- Remove Docker/cloud deployment and standalone server/scaling features where
+  they separate cheaply from the local worker. Shared local API/auth/storage stay.
+- Give the product the local display name **cmem-light** and remove upstream
+  promotional/person metadata from product surfaces. Do not do a global rename
+  or fabricate an original author for borrowed code.
 
-Recommended execution scope: retire unneeded hosts first; then remove detached
-cloud/deployment components. Treat standalone server pruning as a separate,
-conditional step. Keep every documentation/licensing file by default, even
-inside a candidate directory. No wholesale directory removal from this proposal.
+The owner also requested deleting all licensing/author information. This plan
+makes a narrower implementation choice: remove product-facing personal/marketing
+metadata and notices belonging solely to completely removed code; retain core
+`LICENSE`/`NOTICE`, provenance and notices for code/fonts still present. This is
+an explicit plan exception, not a claim that the owner approved preserving them.
+There is no requirement to display the upstream author's name in the UI. Apache
+2.0 section 4 addresses redistribution; private local use does not make the UI
+an attribution panel. See [the actual license](https://www.apache.org/licenses/LICENSE-2.0).
+Do not claim the entire fork was originally written by its local maintainers.
 
-## What the index establishes
+The next-session prompt launches these approved cleanup categories. Do not ask
+for the same scope confirmation again. If a candidate needs invasive changes,
+leave that candidate and record the reason; finish the independent easy work.
+No deletion is performed by the current planning turn.
 
-[`inventory.tsv`](inventory.tsv) accounts for **all 2,997 baseline tracked files**,
-178,676,910 Git-blob bytes (**170.40 MiB**). Each row records path, baseline blob
-ID, Git mode, classification and literal-module reachability. It is a review
-index, **not an executable deletion allowlist**. Sizes exclude Git history,
-installed dependencies and ignored output. Working-tree CRLF sizes can differ.
+## Reuse the existing index
 
-The existing TypeScript 6.0.3 parser inspected 1,997 JS/TS source/test/tool files
-and found 6,133 local module edges. Six local entrypoints conservatively reach
-463 files, including type imports and inactive branches. Eleven reached files
-are host-removal candidates that need call-site changes first.
+- [inventory.tsv](inventory.tsv): immutable 2,997-file baseline, blob IDs and
+  conservative reachability. Its old `P-CI` and PDF protection labels are
+  **superseded**, not current deletion policy.
+- [removal-targets.tsv](removal-targets.tsv): 440 exact baseline candidates,
+  127,537,948 bytes (121.63 MiB), with a dependency gate for each path.
+- [EVIDENCE.md](EVIDENCE.md): inspected source references and graph limits.
+- [NEXT-SESSION.md](NEXT-SESSION.md): self-contained implementation launch prompt.
 
-| Baseline group | Files | MiB | Interpretation |
+The target manifest is a review input, not a bulk-delete script. It includes
+38 documents and eight notices owned only by retired packages. Preserve them
+if any retained code still uses them. It excludes additional conditional
+server/cloud internals and edits to shared files. No automatic "unused file"
+fixer, semantic-index service, tool installation or full-history reread is needed.
+
+| Candidate category | Files | Baseline bytes | Gate |
 |---|---:|---:|---|
-| Protected docs/guidance/CI/licenses | 429 | 129.40 | Keep; includes all `plans/` and historical records |
-| Other-host candidates, `C-HOST` | 290 | 2.88 | Need generator, registration and caller changes |
-| Cloud-service candidates, `C-CLOUD` | 62 | 1.06 | Sync hub/API implementation, excluding protected documents |
-| Docker candidates, `C-DOCKER` | 12 | 0.04 | Configuration/scripts need CI dependency resolution |
-| Publication-tool candidates, `C-PUBLISH` | 9 | 0.03 | Public installer/translation/release helpers, conditional |
-| Local literal closure, `K-LOCAL` | 452 | 4.41 | Retain; eleven other reached files are in `C-HOST` |
-| Built plugin/resources, `R-ARTIFACT` | 193 | 19.10 | Keep unless a specific retired target is proven detachable |
-| Remaining source/config, `R-SOURCE` | 368 | 4.45 | Review, not proof of unused code |
-| Remaining tests/evaluations/fixtures, `R-TEST` | 1,182 | 9.03 | Keep until their exact retired subject is established |
+| Presentation PDFs | 8 | 123,009,837 | Not a runtime/build input; retain accompanying Markdown |
+| GitHub workflows/funding/issue templates | 13 | 47,989 | Preserve local check commands and useful agent guidance |
+| Other host implementation/packages | 290 | 3,019,528 | Detach generators/registries/callers first |
+| Cloud-service implementation | 62 | 1,110,745 | No retained local consumers |
+| Docker inputs | 12 | 43,662 | Remove dead package scripts/references, never volumes/data |
+| Publication helpers | 9 | 29,685 | Keep private local setup/build tooling |
+| Retired package documentation | 38 | 237,102 | Only with its completely retired package |
+| Retired package notices | 8 | 39,400 | Only with its completely retired code and build preflight |
 
-The first candidate buckets total **373 files / 4.01 MiB**, about **2.35%** of
-baseline tracked bytes. This is a ceiling for these buckets, before preserving
-cross-cutting configuration or other required files; not promised savings.
-The standalone server CJS/map pair is another **4.04 MiB**, conditional below.
+These are candidate bytes, not guaranteed savings. The server bundle/map pair
+is a further conditional 4,233,696 bytes (4.04 MiB). The eight PDFs provide the
+main certain byte reduction; do not spend a session chasing kilobytes. Deleting
+checkout files does not erase Git history. No history rewrite/GC/cache purge.
 
-Eight PDFs occupy **117.31 MiB**, about 69% of baseline bytes. They stay.
-Consequently a conservative code cleanup can noticeably reduce maintenance
-surface, but cannot honestly promise a tiny checkout. Removing tracked files
-later would not remove their old blobs from `.git` or full clones. No history
-rewrite, garbage collection or local cache purge belongs to this plan.
+## Keep intact
 
-## Protected material
+- All `docs/enterprise-local/` memory, original requirements, handoffs, contracts,
+  inventories/SBOM and this cleanup handoff. Original evidence remains pinned.
+- `docs/adr/`, main roadmap/audit/architecture/risk documents, technical Markdown
+  in `plans/` (especially local-human-work and Endless Mode), `.plan/`, `.maestro/`,
+  `.agent-jobs/`, useful `docs/`, changelog and `RECEIPT-JOIN.md`.
+- `AGENTS.md`, applicable agent guidance and `.github/copilot-instructions.md`.
+  The latter is an agent instruction, not CI; the other 13 `.github/` files retire.
+- SQLite/FTS5, schema and old data compatibility, queue/recovery/spool, project/
+  worktree identity/sharing/filtering, backup/import/export and capture/retrieval.
+- Local Chroma/MiniLM, models/runtime inputs, viewer/My Work, skills, modes,
+  required resources/fonts and selected provider/auth implementations.
+- Claude/Codex local manifests/catalog, hooks/MCP, guarded compile and relevant
+  local tests. Marketplace-shaped metadata can be needed for private loading.
+- Core legal/provenance files and notices for retained code/fonts. Nested notices
+  may retire with wholly removed implementations, not while attribution is live.
 
-1. Preserve the whole `docs/enterprise-local/` tree: memory, original supplied
-   plan, handoffs, inventories/SBOM, contracts and environment evidence. Preserve
-   `docs/{roadmap,BASELINE,ARCHITECTURE-LOCAL,EGRESS-INVENTORY,PATCH-SEQUENCE,RISK-REGISTER}.md`.
-2. Preserve `docs/adr/`, all remaining `docs/`, `plans/`, `.plan/`, `.maestro/`,
-   `.agent-jobs/`, `CHANGELOG.md`, `RECEIPT-JOIN.md`, the telemetry audit report,
-   Markdown/MDX documentation anywhere, and current agent guidance. In particular,
-   `plans/local-human-work-*` and `docs/expense-pricing/` are not disposable.
-3. Preserve every `.github/` file, including CI, Windows checks, the local blocked
-   skeleton and publishing/deployment definitions. Obsolete *jobs/references* may
-   need coordinated edits after approval; deleting the workflow files is not proposed.
-4. Preserve `LICENSE`, `NOTICE`, `docs/license.md`, all nested attribution/license
-   and provenance files, and retained code's attribution headers. The small byte
-   saving does not justify pruning these. Keep copied notices if their original
-   integration code is removed; any later consolidation is a separately reviewed task.
-5. Preserve `.claude-plugin/`, `.codex-plugin/`, `.agents/plugins/marketplace.json`,
-   their retained plugin equivalents and Claude/Codex hook/MCP inputs. Local
-   configuration/catalog use does not imply public marketplace publication.
-6. Preserve SQLite schema/migrations, recovery/spool, identity/worktree/sharing,
-   filtering, import/export/backup, FTS5/search, local Chroma, model profiles,
-   local viewer and My Work, mode languages, skills and required fonts/images.
-7. Keep the development/runtime configuration and relevant tests. Root and
-   nested package manifests, lockfiles, compiler/test configuration and lifecycle
-   trust lists require dependency review; their names do not make them disposable.
+Do not inspect/change real memories, credentials, registrations or unrelated
+settings. Do not purge `.git/`, `node_modules/`, `.scratch/`, ignored `dist/`,
+ignored root lockfiles, virtual environments, prepared wheelhouse/model assets
+or plugin data. No admin/UAC, machine PATH/registry/service changes, push, CI,
+AWS or live inference. Existing private installs stay untouched.
 
-Do not inspect or clean real memories, credentials, registrations or unrelated
-settings. `.git/`, `node_modules/`, `.scratch/`, ignored `dist/`, ignored root
-`package-lock.json`, venv/model assets and plugin data are **outside deletion
-scope**. The index intentionally does not crawl these directories. They can
-contain useful rollback inputs or user data. No `git clean` or blanket cache purge.
+## Three execution slices
 
-## Candidate batches and required companion changes
+### 1. Easy size and automation removal
 
-Paths below are selectors for review. The TSV supplies exact baseline files;
-protected rows always override a selector. A file marked `C-*` still requires
-inspection of incoming runtime, build, test, resource and CI references.
+Remove the eight manifest-listed PDFs; retain their Markdown companions. Remove
+all ten `.github/workflows/*.yml`, `FUNDING.yml` and the two issue templates.
+Remove Docker/Compose, public installer/Vercel and detached publish/release/
+translation helpers. Preserve local tests/typecheck/build/setup scripts; remove
+only the npm scripts/config used exclusively by retired automation. In particular,
+`build:compile`, the guarded generators, viewer preparation, local Chroma setup,
+private staging and verification remain. Keep root npm packaging config if still
+used by local install rather than deleting it for its filename.
 
-| Batch | Candidate paths | Work required before removal |
-|---|---|---|
-| H1: Cursor/Grok host packages | `.cursor-plugin/`, `.grok-plugin/`, `claude-mem-cursor/`, `claude-mem-grok-bot/`, `cursor-hooks/` | Remove required manifest reads/writes in `scripts/sync-plugin-manifests.js`; update package contents/scripts, installer host choices and tests. Preserve Markdown/attributions. |
-| H2: other external hosts | `.qoder-plugin/`, `openclaw/`, `omp/`, `hermes/`, `ods/`, `pi/`, `dsh/`, `ragtime/`, `cowork/`, `.agent/`, `.windsurf/` | Retire corresponding build/install contracts and CI references. `cowork` is a separate plugin, not the retained Claude Code CLI target. Keep shared helper code until all callers are checked. Preserve documents, licenses and provenance. |
-| H3: embedded host implementation | `src/integrations/{dsh-plugin,opencode-plugin,pi-extension}/`; non-target `src/cli/adapters/{cursor,kimi,antigravity-cli,windsurf}.ts`; host-specific installer/index/pusher modules in `src/services/integrations/`; `scripts/grok-bot-*` | First detach adapter registries, worker imports/dispatch and installer enumeration. Review common `harness-worker.ts`, integration types/path helpers, utility callers and platform normalization separately. Keep raw/common parsing and existing stored platform identifiers where needed for old memories. |
-| H4: generated host output | `plugin/.qoder-plugin/`, `plugin/qoder.mcp.json`, Qoder hook JSON and `qoder-hook-launcher.cjs`; OpenClaw output; generated OpenCode/Pi/DSH output | Stop generation and checks for retired targets first. Some output is ignored and remains outside this deletion task. Review enterprise-local mock fixtures that currently name Qoder; preserve common refusal tests and their historical handoffs. |
-| C1: cloud service projects | `workers/sync-hub/`, `services/sync-api/`, cloud-only matrix scripts | Retire dependent CI jobs/scripts and host-package references. Keep README/docs and existing memory/schema/legacy queues. This is cloud implementation code, not local Chroma. |
-| C2: legacy cloud modules | `src/services/sync/{CloudSync,SyncClient,SyncApply}.ts`, their exclusive helpers and cloud/TeamBrain routes | Conditional additional review, not included in the 373-file count. Prove zero retained consumers after C1 and inspect `SyncApply` side effects. Keep canonical content parsing, local Chroma, legacy data compatibility and no-egress regression coverage. |
-| D1: Docker path | `docker/`, `.dockerignore`, `Dockerfile.test-installer`, `docker-compose{,.e2e}.yml`, `scripts/e2e-server-docker.sh` | Retained CI currently references Docker/Postgres/E2E inputs. Update affected jobs/references together while preserving workflow files and Docker docs. No Docker execution, engine uninstall, volume/data deletion or service change. |
-| P1: public deployment helpers | `install/`, `scripts/{discord-release-notify,generate-changelog}.js`, `scripts/translate-readme/`, root `.translation-cache.json` | Confirm no retained local setup caller; coordinate Vercel/npm/release workflow references and package scripts. Preserve changelog/translations/docs, private Windows setup and build tools. Do not run public publishing/deploy/sync/restart helpers. |
+Do not copy the workflows into a new active automation tree; Git retains their
+history. Historical references can stay with their pinned source SHA. Repair
+current setup/build instructions where a removed command would mislead users.
+Commit one concern: `chore(cleanup): remove presentations and hosted automation`.
+No application runtime/compile is required for a purely detached data/config
+commit; run affected static/local-command contract checks if tooling changed.
 
-H3 examples include `CursorHooksInstaller`, `GrokBot{Installer,IndexWriter,AwarenessPusher,Brainbeat}`,
-`OpenClawInstaller`, `OpenCodeInstaller`, `PiInstaller`, `OmpHooksInstaller`,
-`HermesInstaller`, `DeepSeekHarnessInstaller`, `KimiHooksInstaller`,
-`AntigravityCliHooksInstaller`, and `T3CodeInstaller`. Shared integrations such as
-`McpIntegrations`, Notion/Telegram, CCS alignment and generic parsing are **review**,
-not blanket removals. The two-host decision does not by itself remove existing
-viewer/background behavior or permit schema/identity redesign.
+### 2. Retire extra hosts and rebrand product surfaces
 
-There is no tracked gRPC host plugin. There is a Grok Bot plugin. Chroma's pinned
-Python dependencies include `grpcio` and an OTLP gRPC package; these are not host
-plugins and must not be removed by name matching.
+Remove manifest-listed non-target host packages: Cursor, Grok Bot, Qoder,
+OpenClaw, OMP, Hermes, ODS, Pi, DSH, Ragtime, Cowork and their host-only assets.
+First update `scripts/sync-plugin-manifests.js`, build target/preflight lists,
+package contents/scripts, installer selection, adapter registries and worker
+callers. Eleven host candidates are currently in the local literal closure.
+Do not delete their files before rewiring those callers. Retire relevant Qoder/
+Pi/DSH outputs and their exclusive tests/preflights with the feature.
 
-## Conditional server and dependency reduction
+Retain common parsing and stored platform identifiers where old records need
+compatibility. Keep providers (Claude/Bedrock, Codex, Gemini, OpenRouter,
+OpenAI-compatible and the existing explicitly selected supported adapters).
+Do not redesign provider/model selection, local viewer or database architecture.
 
-The standalone server is outside the local delivery target, but `src/server/`
-is not a removable unit. The local worker directly registers `BetterAuthRoutes`
-and `ServerV1Routes` and uses the SQLite API-key service. Shared middleware and
-SQLite storage also remain live. The existing local auth HTTP 500 is a separate
-known defect, not a justification to delete its endpoint during cleanup.
+Set display names/title/description to `cmem-light` in retained manifests, private
+catalog presentation and viewer. Remove upstream personal `author`/
+`developerName`/author-URL fields when optional, or use an accurate neutral local
+maintainer label where the schema requires a value. Remove upstream GitHub-star,
+promotion/sponsor/social links from live product UI. Do not invent a repository
+URL. Fix the generator source so compile does not restore old presentation.
 
-After H/C/D, assess these narrower candidates: `src/server/{runtime,generation,jobs,compat,mcp,services}/`,
-Postgres-only routes/middleware, `src/storage/postgres/`,
-`src/services/vector/`, standalone-server NPX commands, and
-`plugin/scripts/server-service.cjs{,.map}`. The current literal local closure
-does not reach the Postgres/vector directories, but build/NPX/test/runtime
-selection still does. Remove only after detaching those entrypoints. Keep
-`src/server/auth/`, `ServerV1Routes`, common middleware, queue-health types and
-`src/storage/sqlite/` until a specific replacement is explicitly needed.
+For economy retain technical `claude-mem` IDs, environment keys, paths, wire/
+database fields, command aliases, plugin identifiers and test fixtures where
+renaming would require migration. The private staging code checks
+`name === 'claude-mem'` (`scripts/enterprise-local/codex-local.mjs:223` at source
+`a9364604d`); changing the display name does not require changing that identity.
+Keep historical author/URL references in immutable records and actual notices.
+No mass copyright/comment/string replacement. Optional logo redesign is deferred.
 
-| Dependency family | Proposed treatment |
-|---|---|
-| `pg`, `@types/pg`, `bullmq`, `ioredis` | Candidates only after Postgres/server CLI and all callers are removed. Queue-engine labels/settings may still need compatibility. |
-| `@huggingface/transformers`, ONNX/sharp options | Review after standalone `LocalEmbedder` removal. Preserve Python MiniLM/Chroma and all still-used external declarations; same word “embedding” does not imply same runtime. |
-| `typebox` | Candidate after Pi source/build/installer consumers and attribution preflight are retired. Preserve provenance/licenses. |
-| `posthog-node`, optional telemetry externals | Candidate after confirming imports across source, build, tests and manifests. Preserve inert/no-egress API and local diagnostics currently covered by regression tests. |
-| Tree-sitter grammars/CLI, `parse5`, `postcss`, `unified`, remark packages | Keep initially: smart file reading/exploration remains in scope. No blanket pruning of parser dependencies because some old activation paths refuse. |
-| Better Auth packages | Keep: local worker imports them. Fixing or removing local auth is separate work. |
-| Claude SDK, MCP SDK, esbuild, TypeScript, React/viewer dependencies, zod | Keep where retained profiles/build/UI use them. An SDK in `devDependencies` can be bundled into the runtime. |
+Run focused retained-host/profile tests, both typechecks and one guarded compile
+for this completed source slice. Keep source and reviewed outputs paired.
+Commit: `refactor(cleanup): retain local hosts and customize presentation`.
 
-Update root and nested manifests, generator templates, package contents,
-allowScripts/trustedDependencies, lockfiles and SBOM together for the dependency
-actually removed. Review installed-tree size separately if later requested;
-no savings estimate for `node_modules` was measured here. No general upgrade,
-reinstall, `npm prune` or mass dependency fixer is proposed.
+### 3. Detach server/cloud implementation and finish
 
-## Short execution plan and commit boundaries
+Remove `workers/sync-hub/`, `services/sync-api/` and cloud-only matrix tools after
+caller review. Never delete `src/services/sync/` wholesale: local Chroma and
+canonical SQLite parsing use it. Preserve old queues/data/schema and no-egress
+regressions even when legacy cloud implementation is removed.
 
-This document is the maintenance plan; do not create a second SDD pipeline,
-feature task tree, graph database or new main-roadmap steps for cleanup.
+For standalone server, retire its build target/output, CLI/delegation surface,
+Postgres/BullMQ launch and deploy helpers. Cheap refusal/unsupported-command
+handling can remain instead of a replacement runtime framework. Remove server-
+only source/dependencies only after their last retained source/build/test caller
+is gone. Keep shared `src/server/auth/`, local `ServerV1Routes`, request middleware,
+queue-health types and SQLite storage. The separate local-auth HTTP 500 remains
+an existing defect; this cleanup must not conceal it or claim to fix it.
 
-| Step | Proposed commit/result | Completion condition |
-|---|---|---|
-| 0 — this chat | `docs(cleanup): index repository and propose local-only pruning` | Baseline index, evidence, protected set and candidate plan recorded. No product edits/deletions. |
-| 1 — after approval | `refactor(hosts): retain Claude Code and Codex integrations` | H1–H4 detached atomically from generators/registries/callers, then exact non-protected files removed. Retained host/profile tests pass; source and emitted files paired. |
-| 2 — after step 1 | `chore(local): retire detached cloud and deployment components` | C/D/P subset agreed in advance; all retained CI files accounted for and live references repaired. Keep shared sync/schema, docs, licenses and local setup. Pair any generated changes. |
-| 3 — conditional | `refactor(runtime): remove standalone server-only closure` | Proceed only when scoped path analysis shows no retained runtime/build/resource consumers. Keep shared auth/API/SQLite. Otherwise defer this step and close the useful cleanup already completed. |
-| 4 — closeout | `docs(cleanup): record verified contents and maintenance handoff` | Exact removals/savings/tests/limitations recorded; refreshed current build inventory if bytes changed; original receipts/history retained. Main roadmap resumes only on user request. |
+If complete source-tree pruning would require extensive shared refactoring,
+stop that subtask after safely detaching the standalone build/launch, retain its
+remaining source/dependencies and list them as deferred. Apply the same rule to
+deep legacy cloud internals and broad optional integration settings. Do not
+remove useful tests just to hide a regression. A test exclusively for a retired
+feature can retire; shared behavior and enterprise-local evidence remain.
 
-Dependency pruning belongs with the slice that retires its last consumer; add a
-separate commit only for an independent concern. Source/build pairs belong to
-the same concern, not a broken source commit followed by unrelated regeneration.
-Batch directories by concern: one reviewed compile per source slice, no compile
-per directory and no repeated full repository audit. No pushes/remote jobs.
+Prune a dependency with its last consumer, not by package-name matching. `pg`,
+BullMQ/Redis, standalone JS embedding and Pi TypeBox are candidates; keep Better
+Auth, needed SDKs/UI/build/parser dependencies, inert telemetry contracts and
+Python Chroma's gRPC dependencies. Update generator manifests/trust lists/locks
+only where the completed slice requires it. No upgrades or general reinstall.
+If this would trigger unrelated lock churn/acquisition, leave that pruning step.
 
-## Removal gate and validation
+Run relevant checks and one guarded compile if source/build inputs changed.
+Run the final copied-build acceptance below. Commit source and paired outputs
+as `refactor(cleanup): detach standalone deployment runtime`; include closeout
+records in that commit or one small documentation commit if clearer.
 
-Before **each** implementation slice:
+## Final acceptance and session limits
 
-1. Recheck branch/HEAD/status and the ownership board; stop for conflicting WIP.
-   Regenerate the baseline comparison for changed paths rather than treating this
-   snapshot as a permanent allowlist.
-2. Produce the exact path list and companion edits; reject protected/docs/license
-   rows and overlapping shared code. Check AST incoming edges, literal/resource
-   paths, package contents, shell/Python entrypoints, generators, tests and CI.
-   A search hit in a historical pinned report is evidence, not a runtime caller.
-3. Capture protected-file blob/hash identities and current artifact inputs.
-   Preserve all historical SHA/line evidence. For a moved/retired source link,
-   add a small path-to-baseline-SHA mapping here; do not rewrite historical results.
-4. Review the selected check scripts' subprocess/environment/data behavior.
-   Use the existing pinned tools and disposable task state. No broad upstream
-   build-and-sync/install/test/deploy command by implication.
+Reuse existing focused fixtures. Inspect selected commands before execution;
+no broad `build-and-sync`, upstream installer, whole test suite or hosted lane.
+Use baseline Node 22.23.4/npm 10.9.9/Bun 1.4.4. Review setup scripts if an essential
+input is missing; install only what the completed local check actually needs.
 
-For **code slices**, run relevant unit/contract checks, both existing typecheck
-targets and one guarded `build:compile`. Also exercise retained smart-file-read,
-backup/recovery/SQLite, profiles/no-egress and host contracts when their callers
-change. Inspect emitted deltas, syntax and bundle input exclusions. Do not delete
-tests simply to turn a failure green; retain tests of shared behavior and remove
-only cases whose subject the approved slice intentionally retires.
+Verify: retained host/manifests and profiles; both typechecks; clean guarded
+compile with no recreation of removed targets; emitted syntax/input guards;
+then bounded copied-worker start/health/stop, direct Claude/Codex hooks and MCP,
+synthetic SQLite/FTS capture/recovery, viewer/My Work resources, and prepared
+real local Chroma retrieval/restart with a loopback model fixture. Use fresh
+owned scratch, deadlines and owned-child cleanup; no registration or user data.
+Ask only for a genuinely new privilege/live-account action, never repeat the
+approved cleanup scope. Do not equate sandbox approval with Windows elevation.
 
-At **final acceptance**, review and run a bounded copied-build fixture: foreground
-worker readiness/shutdown, direct Claude/Codex hook commands, MCP initialize/list,
-synthetic capture and recovery, SQLite/FTS, real prepared local Chroma retrieval
-and restart, and viewer/My Work assets. Use loopback model responses and owned
-child cleanup. This does not establish real Claude CLI/Bedrock target acceptance
-or OS-wide egress proof; those remain on the original roadmap. No live inference,
-corporate AWS, real memory or installed-user configuration is needed for cleanup.
+Use a single final runtime fixture where possible. Do not replay every historical
+verification. New output bytes need new evidence; old PASS labels are not inherited.
+If a check cannot run, record its exact limit. No claim of real Claude CLI/Bedrock
+acceptance or "all bugs fixed". Keep the existing local auth defect visible.
 
-Refresh current stage receipts/SBOM when their contents change, while retaining
-the prior artifact record and its actual test evidence. New build hashes cannot
-inherit old runtime PASS labels. If compiled tests cannot run, record the exact
-gap rather than claiming cleanup verified.
+At closeout record actual deletions/bytes, retained deferred files and validation
+in one `RESULTS.md`, update shared memory and the next task, and refresh any
+changed current artifact receipt while preserving its old evidence (a versioned
+new receipt is acceptable). Do not distribute an old receipt as valid for new
+bytes. Check protected documents for unintended loss and current links for breakage;
+use baseline SHA/manifest paths for historical deleted-file references.
 
-For this **planning commit**, only analyzer/report integrity, protected-change
-review and `git diff --check` are appropriate. Build, typecheck, application tests,
-runtime, CI and live provider checks are **not run**.
-
-Rollback uses a reviewed revert of the particular cleanup commit after checking
-later changes, never a hard reset/clean over user WIP. Existing private installs
-and data remain untouched; revert source and paired generated output together.
-
-## Next action in this chat
-
-Discuss and adjust steps 1–2, particularly the handling of obsolete CI jobs while
-keeping workflow files. Approve an exact first host-removal slice before code
-changes. PDFs, license pruning, history rewriting, CI execution and the main
-Claude/Bedrock target check are not part of that approval.
-
-Detailed evidence and analyzer limits: [EVIDENCE.md](EVIDENCE.md).
+One coordinator; no agents, new branches/worktrees or pushes. No more inventory
+project, SDD tree, new dependency tooling or exhaustive reformatting. Target three
+reviewable concern commits, not one commit per folder. Finish easy approved work
+and report deferred coupled work honestly if the session cannot safely do all of it.
+Rollback is a reviewed revert of the affected source/output commit; never hard
+reset/clean over WIP. The main roadmap remains unchanged throughout cleanup.

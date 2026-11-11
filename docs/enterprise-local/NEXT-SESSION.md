@@ -1,12 +1,15 @@
 # Next target check — CLAUDE-WINDOWS-VERIFY
 
-**Separate cleanup chat, 2026-11-11:** on `codex/repository-cleanup-plan`, read
-[cleanup proposal](cleanup/README.md), [evidence](cleanup/EVIDENCE.md) and the
-ownership board. Its one next task is plan discussion and definition of the
-first exact host-removal slice. Keep documentation, licenses, CI files and all
-`plans/` PDFs. No deletion/application/dependency/build/runtime work before the
-owner approves that slice. This pointer does not replace or start the main
-target task below; its status and permissions remain unchanged.
+**Separate cleanup launch, 2026-11-11:** on `codex/repository-cleanup-plan`, use
+[the implementation prompt](cleanup/NEXT-SESSION.md), [final plan](cleanup/README.md),
+[exact candidates](cleanup/removal-targets.tsv) and ownership board. The owner
+now approves CI/CD and eight presentation PDF removal, non-target host retirement,
+custom local branding and detachable server/cloud deployment cleanup. Keep local
+tests/build, useful development records, the two target hosts and selected
+provider/auth routes. Preserve actual retained-code provenance as the plan's
+explicit exception to blanket author removal. Implement the three slices in one
+bounded session; defer invasive shared refactors, do not seek repeated scope
+approval. This pointer does not start/replace the main target below.
 
 Continue on `feat/cmem-light-local` with one coordinator. Check branch,
 HEAD and status. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md),

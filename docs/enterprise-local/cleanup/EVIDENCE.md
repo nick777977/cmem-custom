@@ -1,5 +1,11 @@
 # Cleanup analysis evidence
 
+Historical static-analysis snapshot. The owner subsequently approved removing
+CI/CD and the eight PDFs. Their preservation labels in this snapshot and the
+baseline TSV are superseded by [the final plan](README.md) and
+[current candidates](removal-targets.tsv). Application source has not changed
+during this planning update; source citations below remain valid.
+
 Date: 2026-11-11. Inspected source SHA:
 `a9364604d026d79be8ab771ecb861688972d169c`.
 All source line references below refer to this SHA, not a future cleaned build.
@@ -101,3 +107,23 @@ buckets total 4,203,620 bytes. The conditional server bundle/map pair occupies
 4,233,696 bytes. These are source-tree figures, not install size, transitive
 dependency size or eventual clone savings. Runtime correctness after removal
 is unknown until the proposed implementation gates actually run.
+
+## Final-plan update, 2026-11-11
+
+At unchanged application source and planning HEAD `683bd9062`, finalized the
+owner's CI/PDF/non-target-host/deployment removal scope and the one-session
+launch. `removal-targets.tsv` contains 440 unique baseline paths,
+127,537,948 Git-blob bytes, including eight PDFs and 13 GitHub automation files.
+38 retired-package documents and eight retired-code notices are conditional on
+their complete owner removal. Core/retained-code provenance is a stated plan
+exception to blanket author removal, not attributed to owner approval.
+
+Validated every candidate against baseline path/blob/size, category counts and
+protected-path exclusions. Checked local planning links and `git diff --check`.
+There were zero application/build/generated/workflow/main-roadmap edits and zero
+tracked-file deletions. No graph replay, install, compile, typecheck, application
+test/runtime or live inference was needed. The ready launch prompt is 6,978
+characters; existing static evidence is reused. Execution remains for the next
+session. Apache's official license text was consulted to distinguish product
+presentation from redistribution/provenance terms; no original-authorship claim
+is introduced by the plan.

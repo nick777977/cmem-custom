@@ -1,13 +1,17 @@
 # Current handoff
 
-2026-11-11 side task: **REPOSITORY-CLEANUP planning** on the owner-requested
-`codex/repository-cleanup-plan` branch, baseline `a9364604d`. Analysis and
-[proposed plan](../cleanup/README.md) are complete; no deletion/product change
-or runtime check. Owner confirmed two target hosts (Codex CLI/Claude Code CLI),
-retained LLM adapters/auth, and preservation of `plans/` including PDFs until
-separate agreement. Next in that chat: discuss/adjust the exact first cleanup
-slice before approval. Main roadmap status and the target check below are
-unchanged. This branch's planning closeout releases its reservations.
+2026-11-11 side task: **REPOSITORY-CLEANUP final plan** on
+`codex/repository-cleanup-plan`; planning started at `683bd9062`, application
+source remains `a9364604d`. The owner now approves retiring CI/CD, all eight
+presentation PDFs, non-target hosts and detachable standalone/cloud deployment.
+Retain local build/tests, Codex CLI/Claude Code CLI, selected LLM adapters/auth,
+useful technical Markdown and implementation history. Product presentation will
+use `cmem-light`; actual license/provenance is a stated plan exception to the
+owner's broader author-removal request. [Final plan](../cleanup/README.md) and
+[implementation prompt](../cleanup/NEXT-SESSION.md) are ready. This turn made
+no deletion/product edit or runtime check. Next cleanup session implements the
+three slices without repeating scope approval; defer invasive shared refactors.
+Main roadmap/Claude target below remain unchanged. Reservations released.
 
 Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 and A29–A31 define current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.

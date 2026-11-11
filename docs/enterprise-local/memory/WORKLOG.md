@@ -1246,3 +1246,32 @@ artifacts/analyzer and small shared-memory records changed.
 Reservations released. Next in the cleanup chat: discuss/adjust the proposal
 and approve an exact first host-removal slice. Roll back this planning concern
 with a reviewed Git revert; no application/data rollback is needed.
+
+## 2026-11-11 — REPOSITORY-CLEANUP final plan
+
+One coordinator from clean `683bd9062` on `codex/repository-cleanup-plan`.
+The owner now selects CI/CD/workflow removal, all eight presentation PDFs,
+non-target hosts, custom local branding and detachable cloud/standalone
+deployment/scaling. A33 supersedes the initial CI/PDF preservation and pending
+scope-approval wording; main roadmap/Claude target status stays unchanged.
+
+Replaced the active cleanup proposal with three bounded execution slices,
+an exact 440-path/127,537,948-byte candidate manifest and a 6,978-character
+[next-session launch prompt](../cleanup/NEXT-SESSION.md). Prior baseline index
+and static evidence remain; no full analysis/graph replay or new tool install.
+The plan keeps actual core/retained-code/font notices as an explicit assistant
+exception to the owner's requested blanket author/license removal, allows
+retired-code notices to retire, and removes upstream personal/promotional
+metadata from live presentation without global technical-ID migration.
+The Apache license text was consulted; no UI attribution requirement or false
+original authorship is asserted. Expensive shared refactors may be deferred
+after easy cleanup and safe deployment detachment.
+
+Validation PASS: 440 unique candidates and exact byte total, baseline path/blob/
+size equality, eight PDF/13 automation counts, protected-path exclusions,
+planning links and `git diff --check`. Product/build/generated/workflow/main-
+roadmap inputs unchanged; no tracked-file deletion. No compile/typecheck,
+application tests/runtime, acquisition, CI, inference or real-state access.
+Only planning/manifest/prompt/shared-memory documents changed. Reservations
+released; next task is the three-slice implementation launch, without repeated
+approval of the agreed scope. Rollback: reviewed revert of this docs concern.
