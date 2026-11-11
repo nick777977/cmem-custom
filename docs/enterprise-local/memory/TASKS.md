@@ -7,17 +7,18 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
-2026-11-11 **REPOSITORY-CLEANUP implementation**, in progress. One coordinator
-on clean `codex/repository-cleanup-plan` at `8b93ceb3db870bbbb766aebf51df65abc6c745e1`.
-Reserve manifest-listed deletion candidates after caller review, shared host
-registry/dispatch/build/manifest/UI presentation inputs and paired generated outputs,
-standalone CLI/build boundaries, affected focused fixtures and package metadata.
-Reserve `cleanup/{RESULTS,NEXT-SESSION,README}.md`, current handoff and
-`memory/{STATE,TASKS,WORKLOG,DECISIONS}.md`, current artifact receipts and
-`DEV-ENVIRONMENT.md` when validation changes. Disposable output is under
-`.scratch/enterprise-local/cleanup-implementation/`. No main-roadmap work,
-agents/worktrees/push, real installation/user data or live inference.
-Next: remove detached PDF/automation inputs and their exclusive npm commands.
+2026-11-11 **REPOSITORY-CLEANUP implementation**, done-bounded. One
+coordinator on `codex/repository-cleanup-plan`, entry `8b93ceb3d`.
+Three concerns remove PDF/automation, extra hosts/presentation and detachable
+standalone/cloud build/launch. All 438 removable candidates and 49 extra
+exclusive test/helper/output files deleted; two agent-guidance candidates kept.
+Source, generators and paired outputs retained with checks and current receipt.
+Reservation extended to root README, its historical technical archive and the
+Windows runbook receipt warning. No main-roadmap edits, agents/worktrees/push,
+real installation/data/inference or toolchain changes. [Results](../cleanup/RESULTS.md)
+records successful local checks, five stale shared assertions, existing auth
+HTTP 500 and coupled source/dependency deferrals. All reservations released.
+Next task is ready-unclaimed: [align retained hook tests](../cleanup/NEXT-SESSION.md).
 
 2026-11-11 **REPOSITORY-CLEANUP final plan**, done by one coordinator from
 clean `683bd9062` on `codex/repository-cleanup-plan`. Reserve

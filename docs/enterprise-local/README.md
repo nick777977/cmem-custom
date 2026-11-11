@@ -1,5 +1,14 @@
 # Enterprise local fork: project memory
 
+**Repository cleanup, 2026-11-11:** the existing cleanup branch now contains
+three bounded implementation slices: PDF/automation removal, extra-host
+retirement and `cmem-light` display metadata, and standalone/cloud deployment
+detachment. [Results and retained source](cleanup/RESULTS.md) include current
+copied-build checks, five stale hook-test failures and the existing auth HTTP
+500. [Current receipt](artifacts/windows-x64-cleanup-receipt.json) covers exact
+synthetic reference stages; older inventories/SBOM remain historical. The main
+roadmap and actual Claude CLI/Bedrock target check have not advanced.
+
 Goal: Windows local-first memory with existing Claude Code/Codex integrations,
 canonical SQLite/FTS5, persistent local Chroma/embedding assets and local viewer.
 The owner explicitly chooses provider, model and auth for every LLM task, with one

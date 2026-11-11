@@ -1,7 +1,9 @@
 # Local repository cleanup — final execution plan
 
-Updated 2026-11-11. Status: **ready for the next implementation session**.
-Current turn is documentation only: no application edits or deletions.
+Updated 2026-11-11. Status: **three bounded slices implemented**.
+See [actual results, failures and deferred source](RESULTS.md) and the
+[follow-up task](NEXT-SESSION.md). The plan below preserves the approved scope
+and planning rationale; its future-tense launch text is historical.
 Branch: `codex/repository-cleanup-plan`; planning baseline `683bd9062`.
 Inspected application source: `a9364604d026d79be8ab771ecb861688972d169c`.
 This replaces the initial proposal in `683bd9062`; it does not advance

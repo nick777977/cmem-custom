@@ -368,6 +368,15 @@ Notices/docs for completely retired code may retire with their owner/preflight.
 Local auth HTTP 500 is an existing defect outside cleanup; it must stay visible.
 The main roadmap and the separately authorized Claude/Bedrock check do not advance.
 
+Execution, 2026-11-11: the owner launched `cleanup/NEXT-SESSION.md` explicitly.
+Three bounded slices implement this scope; [RESULTS](../cleanup/RESULTS.md)
+records 487 removals, source/output checks, fresh reference receipts and
+retained coupled server/storage/cloud internals. Technical identities remain;
+only product display/personal promotion changed. Keep two useful agent-guidance
+candidate files. Old inventories/SBOM stay historical; new reference receipts
+are destination-bound and do not establish portable distribution or real
+Claude CLI/Bedrock acceptance. No further pruning/refactor inferred.
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

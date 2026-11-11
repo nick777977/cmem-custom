@@ -1200,43 +1200,8 @@ function printWorkerAliasHelp(): never {
 }
 
 function runServerServiceCli(command: string, extraArgs: string[] = []): void {
-  if (process.env.CLAUDE_MEM_RUNTIME?.trim().toLowerCase() === 'worker') {
-    console.error('LOCAL_WORKER_ONLY: standalone server commands are unavailable in worker mode.');
-    process.exit(1);
-  }
-
-  // Plan §1c line 149: try the post-rename script first, then fall back
-  // to the legacy `server-beta-service.cjs` so users running against an
-  // already-installed plugin cache (built before the rename) continue to
-  // dispatch without a forced reinstall.
-  let serverScript = path.join(__dirname, 'server-service.cjs');
-  if (!existsSync(serverScript)) {
-    const legacyScript = path.join(__dirname, 'server-beta-service.cjs');
-    if (existsSync(legacyScript)) {
-      serverScript = legacyScript;
-    } else {
-      console.error(`Server script not found at: ${serverScript}`);
-      console.error('Rebuild or reinstall claude-mem so server-service.cjs is available.');
-      process.exit(1);
-    }
-  }
-
-  const child = spawn(process.execPath, [serverScript, command, ...extraArgs], {
-    stdio: 'inherit',
-    windowsHide: true,
-    // Strip host CLI bleed-through (CLAUDE_CODE_*, including EFFORT_LEVEL) and
-    // Anthropic credentials before handing env to the spawned daemon. The
-    // daemon re-reads its own credentials from ~/.claude-mem/.env. See
-    // env-isolation discipline (#2357 / #2375).
-    env: sanitizeEnv(process.env),
-  });
-  child.on('error', (error) => {
-    console.error(`Failed to start server command: ${error.message}`);
-    process.exit(1);
-  });
-  child.on('close', (exitCode) => {
-    process.exit(exitCode ?? 0);
-  });
+  console.error('LOCAL_WORKER_ONLY: standalone server deployment has been retired. Use the private local worker.');
+  process.exit(1);
 }
 
 function parseServerApiKeyOptions(args: string[]): Record<string, string> {

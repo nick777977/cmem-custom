@@ -1275,3 +1275,45 @@ application tests/runtime, acquisition, CI, inference or real-state access.
 Only planning/manifest/prompt/shared-memory documents changed. Reservations
 released; next task is the three-slice implementation launch, without repeated
 approval of the agreed scope. Rollback: reviewed revert of this docs concern.
+
+## 2026-11-11 — REPOSITORY-CLEANUP implementation
+
+Executed the approved launch from `cleanup/NEXT-SESSION.md`, clean entry
+`8b93ceb3db870bbbb766aebf51df65abc6c745e1` on the existing cleanup branch.
+One coordinator; no new branch/worktree, agents or push. First concern
+`04d9f751a` removes eight PDFs and detached hosted automation; second
+`a5c3c2364` retires extra host packages/callers/generators and changes display
+metadata/UI to cmem-light. Third concern pairs standalone/cloud detachment,
+refusal boundaries, current outputs and reference receipt.
+
+Deleted 487 baseline files / 132,312,367 Git-blob bytes. Removed 438/440
+candidates; kept two AI-agent guidance files. Common parsers/identity,
+SQLite/FTS/Chroma/viewer/skills, selected LLM/auth routes and retained-code
+notices preserved. Root setup guidance now targets the local fork; original
+technical README remains explicitly historical. Main roadmap is unchanged.
+No user installation, settings/login/memories, model assets, node_modules,
+venv/wheelhouse, ignored locks or Git history were cleaned.
+
+Validation: slice 2 160 focused tests/1,078 assertions; slice 3 99/497;
+retained cloud/storage regressions 91/482; independent launch 5/7; four Node
+bound-host/recovery fixtures; both typechecks and guarded compile PASS.
+Final compile preserved 19 inputs/1,946 source sentinels and emitted identical
+runtime bytes after closing the excluded BullMQ helper. The copied fixture
+passed synthetic concurrent capture, SQLite/FTS, real local Chroma search and
+restart, MCP/context reader, browser viewer/My Work, refusal preservation and
+owned-child/port cleanup. Fresh current receipt covers 81 Codex/80 Claude
+reference files; old inventories/SBOM stay historical. No tool acquisition,
+UAC, real host registration, AWS, CI or live inference.
+
+Initial validation found a missed Qoder canonical-wrapper preflight, missing
+catalog input in the manifest fixture, a retired webhook assertion and an
+obsolete pre-recovery active-queue expectation in the disposable large fixture.
+Corrected these and reran the affected gates/fresh runtime. Five unchanged
+legacy Claude hook-format assertions remain failures and the independent
+local-auth endpoint still returns HTTP 500. Full diff whitespace flags one
+unmodified esbuild-generated whitespace line; source/docs checks pass.
+No blanket whole-suite claim. Coupled server/storage/cloud and optional legacy
+settings/compatibility source/dependencies remain deferred in
+[RESULTS](../cleanup/RESULTS.md). Reservations released. Next cleanup task:
+align the five retained hook tests with canonical/private-bound contracts.
+Rollback is a reviewed revert of the relevant source/output concern.

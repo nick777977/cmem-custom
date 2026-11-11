@@ -12,8 +12,8 @@ import { test } from 'node:test';
 import { stageClaudePlugin, stageLocalInstall } from '../../scripts/enterprise-local/codex-local.mjs';
 
 const bundle = fileURLToPath(new URL('../../plugin', import.meta.url));
-const scratch = fileURLToPath(new URL('../../.scratch/enterprise-local/claude-windows-stage/', import.meta.url));
-const inventory = JSON.parse(readFileSync(new URL('../../docs/enterprise-local/artifacts/windows-x64-inventory.json', import.meta.url)));
+const scratch = process.env.CMEM_STAGE_TEST_SCRATCH ?? fileURLToPath(new URL('../../.scratch/enterprise-local/claude-windows-stage/', import.meta.url));
+const inventory = JSON.parse(readFileSync(new URL('../../docs/enterprise-local/artifacts/windows-x64-cleanup-receipt.json', import.meta.url)));
 const bun = process.env.CMEM_STAGE_TEST_BUN;
 const read = file => JSON.parse(readFileSync(file, 'utf8'));
 const plugin = root => join(root, 'catalog', 'plugin');

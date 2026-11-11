@@ -1,17 +1,26 @@
 # Current handoff
 
-2026-11-11 side task: **REPOSITORY-CLEANUP final plan** on
-`codex/repository-cleanup-plan`; planning started at `683bd9062`, application
-source remains `a9364604d`. The owner now approves retiring CI/CD, all eight
-presentation PDFs, non-target hosts and detachable standalone/cloud deployment.
-Retain local build/tests, Codex CLI/Claude Code CLI, selected LLM adapters/auth,
-useful technical Markdown and implementation history. Product presentation will
-use `cmem-light`; actual license/provenance is a stated plan exception to the
-owner's broader author-removal request. [Final plan](../cleanup/README.md) and
-[implementation prompt](../cleanup/NEXT-SESSION.md) are ready. This turn made
-no deletion/product edit or runtime check. Next cleanup session implements the
-three slices without repeating scope approval; defer invasive shared refactors.
-Main roadmap/Claude target below remain unchanged. Reservations released.
+2026-11-11 side task: **REPOSITORY-CLEANUP implemented** on
+`codex/repository-cleanup-plan`, entry `8b93ceb3d`. Three bounded slices
+retired automation/eight PDFs, extra host packages and standalone/cloud
+build/launch. Deleted 487 baseline files / 132,312,367 bytes; 438/440 exact
+candidates removed, with two agent-guidance files kept. UI/private display
+metadata uses `cmem-light`; technical identities/providers/auth and local
+memory behavior remain. Coupled legacy source/dependencies are explicitly
+retained, not claimed fully pruned. [Actual results](../cleanup/RESULTS.md).
+
+Both typechecks/guarded compile, focused checks, direct bound Claude/Codex
+hooks/MCP, durable recovery and real local Chroma/FTS/restart passed. Browser
+viewer/My Work render with local resources. Five old hook-format assertions
+remain failures and local auth still returns HTTP 500. The new
+[current receipt](../artifacts/windows-x64-cleanup-receipt.json) covers exact
+synthetic reference stages; older inventories/SBOM stay historical and do not
+validate these bytes. Real CLI registration/Claude/Bedrock acceptance did not
+advance. No real installation/data, toolchain, model or ignored cache changes.
+
+[Next cleanup task](../cleanup/NEXT-SESSION.md): align the five retained
+hook-format assertions with the current canonical/private-bound contracts.
+Main roadmap/Claude target below is unchanged. Reservations released.
 
 Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 and A29–A31 define current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.

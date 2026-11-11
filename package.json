@@ -89,7 +89,6 @@
     "test:context": "bun test tests/context/",
     "test:infra": "bun test tests/infrastructure/",
     "test:server": "bun test tests/server/",
-    "e2e:sync-matrix": "bun scripts/sync-matrix-e2e.ts",
     "eval:read-gate": "bun scripts/eval-read-gate.ts",
     "check:postinstall-allowlist": "node scripts/check-postinstall-allowlist.js",
     "smoke:clean-room": "node scripts/smoke-clean-room.cjs"
@@ -133,7 +132,6 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "esbuild": "^0.28.0",
-    "np": "^11.2.0",
     "parse5": "^8.0.1",
     "postcss": "^8.5.14",
     "remark-mdx": "^3.1.1",
@@ -159,8 +157,7 @@
     "tsup": "^8.5.1",
     "typescript": "^6.0.3",
     "unified": "^11.0.5",
-    "unist-util-visit": "^5.1.0",
-    "typebox": "1.1.24"
+    "unist-util-visit": "^5.1.0"
   },
   "trustedDependencies": [
     "esbuild",

@@ -84,11 +84,6 @@ const WORKER_SERVICE = {
   source: 'src/services/worker-service.ts'
 };
 
-const SERVER_SERVICE = {
-  name: 'server-service',
-  source: 'src/server/runtime/ServerService.ts'
-};
-
 const MCP_SERVER = {
   name: 'mcp-server',
   source: 'src/servers/mcp-server.ts'
@@ -657,7 +652,7 @@ async function buildHooks() {
     });
 
     assertExcludedSources(workerBuild, WORKER_SERVICE.name, [
-      SERVER_SERVICE.source,
+      'src/server/runtime/ServerService.ts',
       'src/server/runtime/create-server-service.ts',
       INSTALLER_CREDENTIAL_PROBE,
     ]);
@@ -781,51 +776,6 @@ async function buildHooks() {
     });
     console.log(`✓ ${REQUEST_GROUPS_CLI} built (${(fs.statSync(REQUEST_GROUPS_CLI).size / 1024).toFixed(2)} KB)`);
 
-    console.log(`\n🔧 Building server beta service...`);
-    await build({
-      entryPoints: [SERVER_SERVICE.source],
-      bundle: true,
-      platform: 'node',
-      target: 'node18',
-      format: 'cjs',
-      outfile: `${hooksDir}/${SERVER_SERVICE.name}.cjs`,
-      minify: true,
-      ...SOURCEMAP_OPTS,
-      logLevel: 'error',
-      external: [
-        'bun:sqlite',
-        // bun:ffi backs Windows listen-socket HANDLE_FLAG_INHERIT clearing (#3300).
-        'bun:ffi',
-        'zod',
-        // @huggingface/transformers is reached ONLY through LocalEmbedder's
-        // request-time `await import('@huggingface/transformers')`. Bundling it
-        // inlines the ONNX runtime glue while onnxruntime-node / sharp stay
-        // external, so the lazy path dies on a real install with
-        // "Cannot find module 'onnxruntime-node'". Keeping the whole trio external
-        // makes the dynamic import resolve against plugin/node_modules, where
-        // plugin/package.json ships them (and pins onnxruntime-node; see its
-        // overrides above).
-        'onnxruntime-node',
-        '@huggingface/transformers',
-        'sharp',
-      ],
-      define: {
-        '__DEFAULT_PACKAGE_VERSION__': `"${version}"`,
-        ...DIRNAME_DEFINE
-      },
-      banner: {
-        js: [
-          '#!/usr/bin/env bun',
-          ...DIRNAME_BANNER
-        ].join('\n')
-      }
-    });
-
-    assertBundleIntegrity(`${hooksDir}/${SERVER_SERVICE.name}.cjs`);
-
-    fs.chmodSync(`${hooksDir}/${SERVER_SERVICE.name}.cjs`, 0o755);
-    const serverStats = fs.statSync(`${hooksDir}/${SERVER_SERVICE.name}.cjs`);
-    console.log(`✓ server-service built (${(serverStats.size / 1024).toFixed(2)} KB)`);
 
     console.log(`\n🔧 Building MCP server...`);
     await build({
@@ -1157,7 +1107,6 @@ async function buildHooks() {
     console.log('\n✅ All build targets compiled successfully!');
     console.log(`   Output: ${hooksDir}/`);
     console.log(`   - Worker: worker-service.cjs`);
-    console.log(`   - Server: server-service.cjs`);
     console.log(`   - MCP Server: mcp-server.cjs`);
     console.log(`   - Context Generator: context-generator.cjs`);
     console.log(`   - Transcript Watcher: transcript-watcher.cjs`);

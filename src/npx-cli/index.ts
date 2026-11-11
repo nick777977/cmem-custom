@@ -45,8 +45,8 @@ function parseInstallOptions(argv: string[]): InstallOptions {
     process.exit(1);
   }
   const runtime = flag('runtime');
-  if (runtime !== undefined && runtime !== 'worker' && runtime !== 'server' && runtime !== 'server-beta') {
-    console.error(`Unknown --runtime: ${runtime}. Allowed: worker, server`);
+  if (runtime !== undefined && runtime !== 'worker') {
+    console.error(`Unknown --runtime: ${runtime}. Allowed: worker`);
     process.exit(1);
   }
   const ide = flag('ide');

@@ -6,6 +6,17 @@ compile/targeted checks; see the current section below and [BUILD-02](handoffs/B
 
 ## Preferred local toolchain
 
+**REPOSITORY-CLEANUP, 2026-11-11.** Reused Node 22.23.4, npm 10.9.9 and
+Bun 1.4.4 without acquisition, toolchain or installed-dependency changes.
+Both typechecks and guarded compile pass. Current copied Windows x64 stages
+passed direct Claude/Codex hooks/MCP, durable recovery, real local Chroma/FTS
+and restart, plus browser viewer/My Work rendering. Ordinary-user loopback
+fixtures refused an administrator token and used synthetic task-owned data.
+Five stale legacy hook-format assertions remain failures; local auth still
+returns HTTP 500. Browser background attempts were blocked by its local fixture
+proxy; no OS-wide isolation claim. Current receipt and details are in
+[cleanup results](cleanup/RESULTS.md); older inventories remain historical.
+
 **CLAUDE-WINDOWS-STAGE, 2026-11-10.** Reused the pinned Windows x64 Node
 22.23.4 and Bun 1.4.4 binaries. The default sandbox did not confirm the
 worker's loopback readiness. An ordinary-user rerun passed compiled

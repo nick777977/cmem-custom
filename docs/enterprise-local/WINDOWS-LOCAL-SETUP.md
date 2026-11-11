@@ -1,5 +1,13 @@
 # Private CLI plugin setup on Windows
 
+**Cleanup branch, 2026-11-11:** new source/bundles use `cmem-light` display
+metadata and retain only Claude Code/Codex hosts. The old inventories/SBOM and
+their verifier defaults describe earlier bytes. The
+[cleanup receipt](artifacts/windows-x64-cleanup-receipt.json) covers the exact
+new synthetic reference stages; it is destination-bound, not a transfer receipt.
+Do not present an old inventory as valid for a new build. Refresh destination
+binding/inventory before target transfer. [Checks and limits](cleanup/RESULTS.md).
+
 The launcher installs a copy of this checkout's compiled plugin under a new
 user-writable directory. It registers `claude-mem@cmem-light-private` in a
 dedicated Codex CLI home. The launcher runs the worker in the foreground on
