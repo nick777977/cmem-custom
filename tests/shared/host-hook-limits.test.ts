@@ -20,26 +20,24 @@ afterEach(() => setPlatform(originalPlatform));
 type RegisteredHook = { command: string; args?: string[]; timeout?: number };
 
 /**
- * The `timeout` (seconds) of the SessionStart hook that runs `hookInvocation`:
- * Claude Code hooks are exec form (`args`), Codex hooks are shell strings.
+ * Select the context template by its event matcher, independently of the
+ * intentionally unbound canonical command. The private-stage fixture checks
+ * the executable, handler argv and inherited timeout after binding.
  */
-function registeredSessionStartTimeoutSeconds(hooksFile: string, hookInvocation: string): number | undefined {
+function registeredSessionStartTimeoutSeconds(hooksFile: string, matcher: string): number | undefined {
   const parsed = JSON.parse(readFileSync(join(REPO_ROOT, hooksFile), 'utf-8')) as {
-    hooks: Record<string, Array<{ hooks: RegisteredHook[] }>>;
+    hooks: Record<string, Array<{ matcher?: string; hooks: RegisteredHook[] }>>;
   };
   const entry = parsed.hooks.SessionStart
-    .flatMap(group => group.hooks)
-    .find(hook => Array.isArray(hook.args)
-      ? hook.args.join(' ') === hookInvocation
-      : hook.command.includes(`"$_P/scripts/worker-service.cjs" ${hookInvocation}`));
+    .find(group => group.matcher === matcher)?.hooks[0];
   return entry?.timeout;
 }
 
 describe('SESSION_START_HOOK_LIMIT_MS', () => {
   it('matches the SessionStart context hook timeouts the plugin registers with each host', () => {
-    expect(registeredSessionStartTimeoutSeconds('plugin/hooks/hooks.json', 'hook claude-code context') ?? NaN)
+    expect(registeredSessionStartTimeoutSeconds('plugin/hooks/hooks.json', 'startup|clear|compact') ?? NaN)
       .toBe(SESSION_START_HOOK_LIMIT_MS['claude-code'] / 1000);
-    expect(registeredSessionStartTimeoutSeconds('plugin/hooks/codex-hooks.json', 'hook codex context') ?? NaN)
+    expect(registeredSessionStartTimeoutSeconds('plugin/hooks/codex-hooks.json', 'startup|resume|clear|compact') ?? NaN)
       .toBe(SESSION_START_HOOK_LIMIT_MS.codex / 1000);
   });
 });

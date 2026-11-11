@@ -6,15 +6,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, '../..');
-const versionManifestFilenames = ['plugin.json', 'openclaw.plugin.json', 'package.json'];
-const nonNpmVersionManifests = [
-  '.grok-plugin/plugin.json',
-  'claude-mem-cursor/.cursor-plugin/plugin.json',
-  'claude-mem-grok-bot/.cursor-plugin/plugin.json',
-];
-const independentVersionManifests = new Set([
-  'openclaw/package.json',
-]);
+const versionManifestFilenames = ['plugin.json', 'package.json'];
 
 function readManifest(root: string, relativePath: string) {
   return JSON.parse(readFileSync(path.join(root, relativePath), 'utf-8'));
@@ -46,7 +38,7 @@ function discoverShippedVersionManifests(root: string = projectRoot): string[] {
   // No filter on the manifest's contents: a shipped manifest that lost its
   // `version` must stay in the list so its version test fails, not vanish.
   return [...candidates]
-    .filter(candidate => candidate !== 'package.json' && !independentVersionManifests.has(candidate))
+    .filter(candidate => candidate !== 'package.json')
     .sort();
 }
 
@@ -70,12 +62,8 @@ describe('Version Consistency', () => {
     expect(discoverShippedVersionManifests()).toEqual([
       '.claude-plugin/plugin.json',
       '.codex-plugin/plugin.json',
-      '.qoder-plugin/plugin.json',
-      'dsh/package.json',
-      'openclaw/openclaw.plugin.json',
       'plugin/.claude-plugin/plugin.json',
       'plugin/.codex-plugin/plugin.json',
-      'plugin/.qoder-plugin/plugin.json',
       'plugin/package.json',
     ]);
   });
@@ -140,7 +128,6 @@ describe('Version Consistency', () => {
 
   for (const manifestPath of [
     ...discoverShippedVersionManifests(),
-    ...nonNpmVersionManifests,
   ]) {
     it(`should have matching version in ${manifestPath}`, () => {
       const filePath = path.join(projectRoot, manifestPath);
@@ -151,18 +138,7 @@ describe('Version Consistency', () => {
     });
   }
 
-  it('should list both cursor marketplace plugin sources', () => {
-    const marketplaceJsonPath = path.join(projectRoot, '.cursor-plugin', 'marketplace.json');
-    expect(existsSync(marketplaceJsonPath)).toBe(true);
-
-    const marketplaceJson = JSON.parse(readFileSync(marketplaceJsonPath, 'utf-8'));
-    expect(marketplaceJson.plugins.map((plugin: any) => plugin.name)).toEqual([
-      'claude-mem-cursor',
-      'claude-mem-grok-bot',
-    ]);
-  });
-
-  for (const bundle of ['worker-service.cjs', 'mcp-server.cjs', 'server-service.cjs', 'transcript-watcher.cjs']) {
+  for (const bundle of ['worker-service.cjs', 'mcp-server.cjs', 'transcript-watcher.cjs']) {
     it(`should have the release version injected into built ${bundle}`, () => {
       const bundlePath = path.join(projectRoot, 'plugin/scripts', bundle);
       expect(existsSync(bundlePath)).toBe(true);

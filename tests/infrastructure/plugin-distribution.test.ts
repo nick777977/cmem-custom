@@ -133,26 +133,14 @@ describe('Plugin Distribution - Required Files', () => {
   const requiredFiles = [
     'plugin/hooks/hooks.json',
     'plugin/hooks/codex-hooks.json',
-    'plugin/hooks/qoder-hooks.json',
-    'plugin/hooks/qoder-repo-hooks.json',
     'plugin/.claude-plugin/plugin.json',
     'plugin/.codex-plugin/plugin.json',
-    'plugin/.qoder-plugin/plugin.json',
-    'plugin/qoder.mcp.json',
-    'plugin/scripts/qoder-hook-launcher.cjs',
     'plugin/.mcp.json',
     'plugin/sqlite/SessionStore.js',
     'plugin/sqlite/observations/files.js',
     'plugin/skills/mem-search/SKILL.md',
     'plugin/skills/mode-creator/SKILL.md',
     '.agents/plugins/marketplace.json',
-    '.cursor-plugin/marketplace.json',
-    'claude-mem-cursor/.cursor-plugin/plugin.json',
-    'claude-mem-cursor/mcp.json',
-    'claude-mem-cursor/hooks/hooks.json',
-    'claude-mem-grok-bot/.cursor-plugin/plugin.json',
-    'claude-mem-grok-bot/mcp.json',
-    'claude-mem-grok-bot/skills/host-observer/SKILL.md',
   ];
 
   for (const filePath of requiredFiles) {
@@ -161,48 +149,6 @@ describe('Plugin Distribution - Required Files', () => {
       expect(existsSync(fullPath)).toBe(true);
     });
   }
-});
-
-describe('Plugin Distribution - Qoder', () => {
-  it('ships root and bundled manifests with the correct relative paths', () => {
-    const root = readJson('.qoder-plugin/plugin.json');
-    const bundled = readJson('plugin/.qoder-plugin/plugin.json');
-    expect(root.hooks).toBe('./plugin/hooks/qoder-repo-hooks.json');
-    expect(root.mcpServers).toBe('./plugin/qoder.mcp.json');
-    expect(bundled.hooks).toBe('./hooks/qoder-hooks.json');
-    expect(bundled.mcpServers).toBe('./qoder.mcp.json');
-  });
-
-  it('runs every Qoder hook through the structured hook launcher', () => {
-    for (const file of ['plugin/hooks/qoder-hooks.json', 'plugin/hooks/qoder-repo-hooks.json']) {
-      const entries = commandHookEntriesFrom(file);
-      expect(entries.length).toBeGreaterThan(0);
-      for (const entry of entries) {
-        expect(entry.command).toBe('node');
-        expect(entry.args.join(' ')).toContain('qoder-hook-launcher.cjs');
-        expect(entry.env.CLAUDE_MEM_CODEX_HOOK).toBe('1');
-      }
-    }
-  });
-
-  it('routes Qoder through the compatible Codex hook adapter', () => {
-    const launcher = readFileSync(
-      path.join(projectRoot, 'plugin/scripts/qoder-hook-launcher.cjs'),
-      'utf-8',
-    );
-    expect(launcher).toContain("'hook',\n    'codex'");
-    expect(launcher.indexOf("version-check.js")).toBeLessThan(
-      launcher.indexOf("bun-runner.js"),
-    );
-    expect(launcher).toContain("event === 'context'");
-  });
-
-  it('gives first-session dependency setup enough time to complete', () => {
-    for (const file of ['plugin/hooks/qoder-hooks.json', 'plugin/hooks/qoder-repo-hooks.json']) {
-      const hooks = readJson(file);
-      expect(hooks.hooks.SessionStart[0].hooks[0].timeout).toBe(180);
-    }
-  });
 });
 
 describe('Plugin Distribution - Codex Marketplace', () => {
@@ -317,32 +263,6 @@ describe('Plugin Distribution - Codex Marketplace', () => {
   });
 });
 
-
-describe('Plugin Distribution - Cursor Marketplace', () => {
-  it('ships independent Cursor and Grok Bot marketplace entries', () => {
-    const marketplace = readJson('.cursor-plugin/marketplace.json');
-    expect(marketplace.owner.name).toBe('Alex Newman');
-    expect(marketplace.plugins.map((plugin: any) => plugin.name)).toEqual([
-      'claude-mem-cursor',
-      'claude-mem-grok-bot',
-    ]);
-  });
-
-  it('wires Cursor hooks through the npx hook entrypoint', () => {
-    const hooks = readJson('claude-mem-cursor/hooks/hooks.json');
-    expect(hooks.hooks.beforeSubmitPrompt[0].command).toContain('npx -y claude-mem hook cursor session-init');
-    expect(hooks.hooks.stop[0].command).toContain('npx -y claude-mem hook cursor summarize');
-  });
-
-  it('ships the shared local and remote MCP definitions for both plugins', () => {
-    for (const relativePath of ['claude-mem-cursor/mcp.json', 'claude-mem-grok-bot/mcp.json']) {
-      const mcp = readJson(relativePath);
-      expect(mcp.mcpServers['claude-mem-local'].args).toEqual(['-y', 'claude-mem', 'mcp']);
-      const expected = 'Bearer ' + '${' + 'CLAUDE_MEM_MCP_TOKEN' + '}';
-      expect(mcp.mcpServers['claude-mem-remote'].headers.Authorization).toBe(expected);
-    }
-  });
-});
 
 describe('Plugin Distribution - hooks.json Integrity', () => {
   it('should have valid JSON in hooks.json', () => {
@@ -1116,10 +1036,7 @@ describe('Spawn-Contract Templating - Rule A shell resolution matrix', () => {
 
 describe('Spawn-Contract Templating - Rule B installers bake absolute paths', () => {
   const installerFiles = [
-    'src/services/integrations/CursorHooksInstaller.ts',
-    'src/services/integrations/WindsurfHooksInstaller.ts',
     'src/services/integrations/McpIntegrations.ts',
-    'src/services/integrations/AntigravityCliHooksInstaller.ts',
   ];
 
   for (const file of installerFiles) {

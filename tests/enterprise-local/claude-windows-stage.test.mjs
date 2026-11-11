@@ -62,6 +62,16 @@ test('Claude copy uses the reviewed runtime files and only Claude host bindings'
     }])));
   }
   const mcp = read(join(plugin(root), '.mcp.json')).mcpServers;
+  for (const source of ['startup', 'resume', 'clear', 'compact']) {
+    const active = hooks.SessionStart.filter(group => !group.matcher || new RegExp(`^(?:${group.matcher})$`).test(source));
+    assert.equal(active.length, source === 'resume' ? 0 : 1);
+    if (active.length) {
+      assert.deepEqual(active[0].hooks[0].args, [launcher(root), 'hook', 'context']);
+      assert.equal(active[0].hooks[0].timeout, 60);
+      assert.equal(active[0].hooks[0].async, undefined);
+    }
+  }
+  assert(!JSON.stringify(hooks).includes('claude-mem start'));
   assert.deepEqual(mcp, { 'mcp-search': { type: 'stdio', command: config.node, args: [launcher(root), 'mcp'] } });
   assert.throws(() => stageClaudePlugin({ root, bundle, port: 43985, bun }), /EEXIST/);
   assert.throws(() => stageClaudePlugin({ root: join(parent, 'new'), bundle, port: 43985, bun: 'bun.exe' }), /literal local Windows/);

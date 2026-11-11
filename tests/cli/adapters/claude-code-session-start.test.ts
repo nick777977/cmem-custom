@@ -24,7 +24,7 @@ describe('Claude Code SessionStart source', () => {
 
 interface SessionStartGroup {
   matcher?: string;
-  hooks: Array<{ command: string; args?: string[] }>;
+  hooks: Array<{ command: string; args?: string[]; async?: boolean; timeout?: number }>;
 }
 
 const { hooks } = JSON.parse(readFileSync(
@@ -32,24 +32,30 @@ const { hooks } = JSON.parse(readFileSync(
   'utf-8',
 )) as { hooks: { SessionStart: SessionStartGroup[] } };
 
-function commandsForSource(source: string): string[] {
+function groupsForSource(source: string): SessionStartGroup[] {
   return hooks.SessionStart
-    .filter(group => !group.matcher || new RegExp(group.matcher).test(source))
-    .flatMap(group => group.hooks.map(hook => [hook.command, ...(hook.args ?? [])].join(' ')));
+    .filter(group => !group.matcher || new RegExp(`^(?:${group.matcher})$`).test(source));
 }
 
-describe('Claude Code SessionStart hook matchers', () => {
-  it('starts the worker on resume without running timeline injection', () => {
-    const commands = commandsForSource('resume');
-    expect(commands.filter(command => command === 'claude-mem start')).toHaveLength(1);
-    expect(commands.filter(command => command === 'claude-mem hook claude-code context')).toHaveLength(0);
+describe('Claude Code canonical SessionStart templates (private binding required)', () => {
+  it('matches resume only to the inert lifecycle template, without timeline injection', () => {
+    expect(groupsForSource('resume')).toEqual([hooks.SessionStart[0]]);
+    expect(hooks.SessionStart[0].hooks[0].async).toBe(true);
   });
 
   for (const source of ['startup', 'clear', 'compact']) {
-    it(`keeps timeline injection and worker startup on ${source}`, () => {
-      const commands = commandsForSource(source);
-      expect(commands.filter(command => command === 'claude-mem start')).toHaveLength(1);
-      expect(commands.filter(command => command === 'claude-mem hook claude-code context')).toHaveLength(1);
+    it(`reserves synchronous context on ${source} without enabling canonical autostart`, () => {
+      const groups = groupsForSource(source);
+      expect(groups).toEqual(source === 'startup' ? hooks.SessionStart : hooks.SessionStart.slice(0, 2));
+      const context = groups.filter(group => group.matcher === 'startup|clear|compact');
+      expect(context).toHaveLength(1);
+      expect(context[0].hooks[0].async).toBeUndefined();
+      expect(context[0].hooks[0].timeout).toBe(60);
+      for (const group of groups) for (const hook of group.hooks) {
+        expect(hook.command).toBe('');
+        expect(hook.args?.[0]).toBe('-e');
+        expect(hook.args?.[1]).toContain('PRIVATE_LAUNCH_POLICY_PENDING');
+      }
     });
   }
 });
