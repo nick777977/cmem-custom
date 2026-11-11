@@ -314,32 +314,12 @@ export async function runUninstallCommand(): Promise<void> {
     }
   }
 
-  // DSH may link the local package. Remove it while the marketplace package
-  // and its bundle manifest still exist; never leave a dangling host plugin.
-  // A failure here does not stop the unrelated cleanup below. It keeps the DSH
-  // record and the marketplace directory, so a re-run can finish the removal.
-  let deepSeekHarnessCleanupFailed = false;
-  try {
-    const { uninstallDeepSeekHarness } = await import('../../services/integrations/DeepSeekHarnessInstaller.js');
-    deepSeekHarnessCleanupFailed = await uninstallDeepSeekHarness() !== 0;
-  } catch (error) {
-    deepSeekHarnessCleanupFailed = true;
-    p.log.error('DeepSeek Harness cleanup failed: ' + String(error));
-  }
-  if (deepSeekHarnessCleanupFailed) {
-    p.log.error('DeepSeek Harness cleanup failed. Its plugin record and the marketplace directory were kept; repair DSH and re-run uninstall to finish. Other integrations are still removed.');
-    process.exitCode = 1;
-  }
-
   // Shell rc files and the Windows user Path are left alone; the hint names the line to remove.
   const launcherRemovalOutcome: { result: LauncherRemovalResult | null } = { result: null };
   await p.tasks([
     {
       title: 'Removing marketplace directory',
       task: async () => {
-        if (deepSeekHarnessCleanupFailed) {
-          return `Marketplace directory kept for DeepSeek Harness ${styleText('yellow', '!')}`;
-        }
         const removed = removeMarketplaceDirectory();
         return removed
           ? `Marketplace directory removed ${styleText('green', 'OK')}`
@@ -414,49 +394,9 @@ export async function runUninstallCommand(): Promise<void> {
   ]);
 
   const ideCleanups: Array<{ label: string; fn: () => Promise<number> | number }> = [
-    { label: 'T3 Code provider plugins', fn: async () => {
-      const { uninstallT3Code } = await import('../../services/integrations/T3CodeInstaller.js');
-      return uninstallT3Code();
-    }},
-    { label: 'Hermes Agent memory provider', fn: async () => {
-      const { uninstallHermesIntegration } = await import('../../services/integrations/HermesInstaller.js');
-      return uninstallHermesIntegration();
-    }},
-    { label: 'Pi memory', fn: async () => {
-      const { uninstallPiExtension } = await import('../../services/integrations/PiInstaller.js');
-      return uninstallPiExtension();
-    }},
-    { label: 'Windsurf hooks', fn: async () => {
-      const { uninstallWindsurfHooks } = await import('../../services/integrations/WindsurfHooksInstaller.js');
-      return uninstallWindsurfHooks();
-    }},
-    { label: 'Goose MCP extension', fn: async () => {
-      const { uninstallGooseMcpIntegration } = await import('../../services/integrations/McpIntegrations.js');
-      return uninstallGooseMcpIntegration();
-    }},
-    { label: 'OpenCode plugin', fn: async () => {
-      const { uninstallOpenCodePlugin } = await import('../../services/integrations/OpenCodeInstaller.js');
-      return uninstallOpenCodePlugin();
-    }},
-    { label: 'OpenClaw plugin', fn: async () => {
-      const { uninstallOpenClawPlugin } = await import('../../services/integrations/OpenClawInstaller.js');
-      return uninstallOpenClawPlugin();
-    }},
     { label: 'Codex CLI', fn: async () => {
       const { uninstallCodexCli } = await import('../../services/integrations/CodexCliInstaller.js');
       return uninstallCodexCli();
-    }},
-    { label: 'Antigravity CLI hooks + MCP', fn: async () => {
-      const { uninstallAntigravityCliHooks } = await import('../../services/integrations/AntigravityCliHooksInstaller.js');
-      return uninstallAntigravityCliHooks();
-    }},
-    { label: 'Kimi Code hooks + MCP', fn: async () => {
-      const { uninstallKimiHooks } = await import('../../services/integrations/KimiHooksInstaller.js');
-      return uninstallKimiHooks();
-    }},
-    { label: 'OMP hooks', fn: async () => {
-      const { uninstallOmpHooks } = await import('../../services/integrations/OmpHooksInstaller.js');
-      return uninstallOmpHooks();
     }},
   ];
 
@@ -487,7 +427,5 @@ export async function runUninstallCommand(): Promise<void> {
   // install ID still live in ~/.claude-mem, which uninstall preserves.
   await captureCliEvent('uninstall_completed', {}, { person: true });
 
-  p.outro(deepSeekHarnessCleanupFailed
-    ? styleText('yellow', 'claude-mem has been uninstalled, except for DeepSeek Harness.')
-    : styleText('green', 'claude-mem has been uninstalled.'));
+  p.outro(styleText('green', 'cmem-light has been uninstalled.'));
 }

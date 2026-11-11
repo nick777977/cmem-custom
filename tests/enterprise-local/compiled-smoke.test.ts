@@ -243,10 +243,10 @@ describe('compiled-entrypoint orchestration (MOCK ONLY, V1)', () => {
       await expect(runCase(spec, mockProcess({ ...output, stderr: 'different failure' }).adapter)).rejects.toThrow('MISSING_CONTROLLED_REFUSAL');
     }
   });
-  it('authors missing/unapproved refusal specs for all four exact copied wrappers (mock only)', async () => {
+  it('authors missing/unapproved refusal specs for all three retained copied wrappers (mock only)', async () => {
     const f = fixture('wrapper refusal specs');
     const specs = wrapperRefusalCases(f);
-    expect(specs.length).toBe(28);
+    expect(specs.length).toBe(21);
     for (const spec of specs) {
       expect(existsSync(spec.args[0])).toBe(true);
       expect(spec.cwd).toBe(f.sandbox);

@@ -1,7 +1,6 @@
 import type { DatabaseManager } from '../worker/DatabaseManager.js';
 import { logger } from '../../utils/logger.js';
 import { logChromaWriteFailure } from '../worker/search/errors.js';
-import { notifyGrokBotIndex } from '../integrations/GrokBotIndexWriter.js';
 import { notifyNotion } from '../integrations/NotionExporter.js';
 
 export interface SaveMemoryInput {
@@ -45,7 +44,6 @@ function persistMemory(dbManager: DatabaseManager, defaultProject: string, input
   };
   const result = store.storeObservation(sessionId, project, observation, 0, 0);
   logger.info('HTTP', 'Manual observation saved', { id: result.id, project, title: observation.title });
-  notifyGrokBotIndex();
   // A merged row keeps its original text and vector; never index the proposed
   // replacement content under the existing id.
   if (!result.mergedIntoExisting) dbManager.getChromaSync()?.syncObservation(result.id, sessionId, project, observation, 0, result.createdAtEpoch, platformSource).catch(error => {

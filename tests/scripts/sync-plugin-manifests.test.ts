@@ -10,15 +10,8 @@ const marketplacePath = '.claude-plugin/marketplace.json';
 const rootVersionManifests = [
   '.claude-plugin/plugin.json',
   '.codex-plugin/plugin.json',
-  '.qoder-plugin/plugin.json',
-  '.grok-plugin/plugin.json',
-  'dsh/package.json',
-  'openclaw/openclaw.plugin.json',
   'plugin/.claude-plugin/plugin.json',
   'plugin/.codex-plugin/plugin.json',
-  'plugin/.qoder-plugin/plugin.json',
-  'claude-mem-cursor/.cursor-plugin/plugin.json',
-  'claude-mem-grok-bot/.cursor-plugin/plugin.json',
 ];
 
 describe('sync-plugin-manifests', () => {
@@ -39,7 +32,7 @@ describe('sync-plugin-manifests', () => {
         join(fixtureRoot, 'scripts', 'sync-plugin-manifests.js'),
       );
 
-      for (const manifestPath of [...rootVersionManifests, marketplacePath]) {
+      for (const manifestPath of [...rootVersionManifests, marketplacePath, '.agents/plugins/marketplace.json']) {
         const destination = join(fixtureRoot, manifestPath);
         mkdirSync(dirname(destination), { recursive: true });
         cpSync(join(projectRoot, manifestPath), destination);
@@ -66,6 +59,15 @@ describe('sync-plugin-manifests', () => {
       for (const manifestPath of rootVersionManifests) {
         const manifest = JSON.parse(readFileSync(join(fixtureRoot, manifestPath), 'utf8'));
         expect(manifest.version, manifestPath).toBe('9.9.9');
+        expect(manifest.name).toBe('claude-mem');
+        expect(manifest.author).toBeUndefined();
+        expect(manifest.homepage).toBeUndefined();
+        expect(manifest.description).toContain('cmem-light');
+        if (manifest.interface) {
+          expect(manifest.interface.displayName).toBe('cmem-light');
+          expect(manifest.interface.developerName).toBeUndefined();
+          expect(manifest.interface.websiteURL).toBeUndefined();
+        }
       }
 
       const marketplace = JSON.parse(

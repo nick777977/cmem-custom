@@ -260,7 +260,7 @@ export function stageLocalInstall({ root, codex, bun, port, bundle }) {
   });
   writeJson(join(root, 'catalog', '.agents', 'plugins', 'marketplace.json'), {
     name: marketplace,
-    interface: { displayName: 'CMEM Light (private local build)' },
+    interface: { displayName: 'cmem-light' },
     plugins: [{ name: 'claude-mem', source: { source: 'local', path: './plugin' },
       policy: { installation: 'AVAILABLE', authentication: 'ON_INSTALL' }, category: 'Productivity' }],
   });

@@ -48,7 +48,7 @@ const packageVersion = typeof __DEFAULT_PACKAGE_VERSION__ !== 'undefined' ? __DE
 export const WORKER_BOOT_FAILED_EXIT_CODE = 78;
 
 /** Subcommands that read or write the caller's project, so they run in its directory (#4628). */
-export const COMMANDS_THAT_ACT_ON_CALLER_PROJECT: ReadonlySet<string> = new Set(['generate', 'clean', 'adopt', 'memory', 'cursor']);
+export const COMMANDS_THAT_ACT_ON_CALLER_PROJECT: ReadonlySet<string> = new Set(['generate', 'clean', 'adopt', 'memory']);
 
 // The bind must happen within this window. server.listen() is the first ref'd
 // handle in the boot path, so a stall before it lets the event loop empty and
@@ -97,17 +97,6 @@ import {
   DEFAULT_LOCAL_API_KEY_SCOPES,
 } from '../server/auth/sqlite-api-key-service.js';
 import { ServerV1Routes } from '../server/routes/v1/ServerV1Routes.js';
-
-import {
-  handleCursorCommand
-} from './integrations/CursorHooksInstaller.js';
-import {
-  handleKimiCommand
-} from './integrations/KimiHooksInstaller.js';
-import {
-  handleAntigravityCliCommand
-} from './integrations/AntigravityCliHooksInstaller.js';
-import { notifyGrokBotIndex, watchGrokBotIndexSettings } from './integrations/GrokBotIndexWriter.js';
 
 import { DatabaseManager } from './worker/DatabaseManager.js';
 import { SessionManager } from './worker/SessionManager.js';
@@ -880,12 +869,6 @@ export class WorkerService implements WorkerRef {
         logger.warn('HOOK', 'Memory folder bridge configuration unavailable', { error: error instanceof Error ? error.message : String(error) });
       }
 
-      // Seed Grok Bot Memory INDEX files from current observations so seats
-      // do not wait for the next store before the mid-attach file exists.
-      notifyGrokBotIndex();
-      // Standing line / project-map edits must reach idle seats too.
-      watchGrokBotIndexSettings();
-
       if (this.chromaMcpManager) {
         ChromaSync.registerBackfillStore(this.dbManager.getSessionStore());
         ChromaSync.backfillAllProjects(this.dbManager.getSessionStore()).then(completed => {
@@ -1651,33 +1634,12 @@ async function main() {
       break;
     }
 
-    case 'cursor': {
-      const subcommand = process.argv[3];
-      const cursorResult = await handleCursorCommand(subcommand, process.argv.slice(4));
-      process.exit(cursorResult);
-      break;
-    }
-
     case 'memory': {
       // Auto-memory ingest (sibling to transcript). Dry-run runs client-side;
       // the real store reaches the worker over HTTP from inside runMemoryCommand.
       const subcommand = process.argv[3];
       const memoryResult = await runMemoryCommand(subcommand, process.argv.slice(4));
       process.exit(memoryResult);
-      break;
-    }
-
-    case 'kimi': {
-      const kimiSubcommand = process.argv[3];
-      const kimiResult = await handleKimiCommand(kimiSubcommand, process.argv.slice(4));
-      process.exit(kimiResult);
-      break;
-    }
-
-    case 'antigravity-cli': {
-      const antigravitySubcommand = process.argv[3];
-      const antigravityResult = await handleAntigravityCliCommand(antigravitySubcommand, process.argv.slice(4));
-      process.exit(antigravityResult);
       break;
     }
 
@@ -1691,7 +1653,7 @@ async function main() {
       const event = process.argv[4];
       if (!platform || !event) {
         console.error('Usage: claude-mem hook <platform> <event>');
-        console.error('Platforms: claude-code, codex, cursor, antigravity-cli, raw');
+        console.error('Platforms: claude-code, codex, raw');
         console.error('Events: context, session-init, observation, summarize, user-message');
         process.exit(1);
       }

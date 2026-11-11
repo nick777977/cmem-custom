@@ -1,7 +1,6 @@
 import { parseArgs, styleText } from 'node:util';
 import { readPluginVersion } from './utils/paths.js';
 import type { InstallOptions } from './commands/install.js';
-import { resolveInstallerProviderChoice } from './installer-provider-choice.js';
 import { refuseAutomaticPluginSetup } from './install/setup-runtime.js';
 
 const args = process.argv.slice(2);
@@ -32,7 +31,6 @@ function parseInstallOptions(argv: string[]): InstallOptions {
       model: { type: 'string' },
       runtime: { type: 'string' },
       'server-url': { type: 'string' },
-      'dsh-profile': { type: 'string' },
       'no-auto-start': { type: 'boolean' },
       'disable-auto-memory': { type: 'boolean' },
     },
@@ -52,29 +50,16 @@ function parseInstallOptions(argv: string[]): InstallOptions {
     process.exit(1);
   }
   const ide = flag('ide');
-  let resolvedProvider = provider as InstallOptions['provider'];
-  // Non-TTY grok-bot: CMEM Pro is the user default. The 'cmem' sentinel is
-  // prompt-only (install.ts maps it to openrouter + cmem-observer + OAuth).
-  // Interactive installs still get the CMEM/Claude prompt. `--provider host`
-  // stays an explicit loopback-shim opt-in.
-  if (!resolvedProvider && process.stdin.isTTY !== true) {
-    const implicit = resolveInstallerProviderChoice({ ide });
-    if (implicit) {
-      resolvedProvider = implicit as InstallOptions['provider'];
-    }
-  }
+  const resolvedProvider = provider as InstallOptions['provider'];
   return {
     ide,
     provider: resolvedProvider,
-    // Both the explicit flag and the grok-bot implicit cmem default are
-    // explicit product choices; install.ts only defaults when this is unset.
     providerSource: resolvedProvider ? 'flag' : undefined,
     model: flag('model'),
     noAutoStart: values['no-auto-start'] === true,
     disableAutoMemory: values['disable-auto-memory'] === true,
     runtime: runtime as InstallOptions['runtime'],
     serverUrl: flag('server-url'),
-    dshProfile: flag('dsh-profile'),
   };
 }
 
@@ -183,48 +168,6 @@ async function main(): Promise<void> {
     case 'server': {
       const { runServerCommand } = await import('./commands/server.js');
       await runServerCommand(args.slice(1));
-      break;
-    }
-
-    case 'antigravity-cli': {
-      const { handleAntigravityCliCommand } = await import('../services/integrations/AntigravityCliHooksInstaller.js');
-      const exitCode = await handleAntigravityCliCommand(args[1]?.toLowerCase(), args.slice(2));
-      if (typeof exitCode === 'number') {
-        process.exit(exitCode);
-      }
-      break;
-    }
-
-    case 't3':
-    case 't3-code':
-    case 't3code': {
-      const { t3CodeStatus, uninstallT3Code } = await import('../services/integrations/T3CodeInstaller.js');
-      const { values } = parseArgs({ args: args.slice(2), options: { settings: { type: 'string' } } });
-      const options = { settingsPath: values.settings };
-      if (args[1] === 'status') process.exit(t3CodeStatus(options));
-      if (args[1] === 'uninstall') process.exit(uninstallT3Code(options));
-      console.error('Usage: npx claude-mem t3code status|uninstall [--settings <path>]');
-      console.error('Install with: npx claude-mem install --ide t3code');
-      process.exit(1);
-      break;
-    }
-
-    case 'pi': {
-      const { installPiExtension, uninstallPiExtension, piExtensionStatus } = await import('../services/integrations/PiInstaller.js');
-      const action = args[1]?.toLowerCase();
-      const code = action === 'install' ? installPiExtension()
-        : action === 'uninstall' ? uninstallPiExtension()
-        : action === 'status' ? piExtensionStatus() : 1;
-      if (!['install', 'uninstall', 'status'].includes(action ?? '')) console.error('Usage: npx claude-mem pi install|status|uninstall');
-      process.exitCode = code;
-      break;
-    }
-    case 'kimi': {
-      const { handleKimiCommand } = await import('../services/integrations/KimiHooksInstaller.js');
-      const exitCode = await handleKimiCommand(args[1]?.toLowerCase(), args.slice(2));
-      if (typeof exitCode === 'number') {
-        process.exit(exitCode);
-      }
       break;
     }
 
