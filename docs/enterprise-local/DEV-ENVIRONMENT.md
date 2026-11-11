@@ -1,5 +1,16 @@
 # Development baseline and user-provided execution evidence
 
+**CLAUDE-WINDOWS-VERIFY preparation, 2026-11-11.** Local Windows x64,
+ordinary-user token; selected direct Node 22.23.4/Bun 1.4.4 versions/hashes
+match the old inventory. No tools/dependencies/models changed. Owner merge
+confirmed at `68d08474f`; owner selects another Windows target. Files-only
+current Claude stage passes normal verification (80 files). No application
+startup, actual Claude probe, inference/AWS, compile or test-suite replay.
+Two historical raw source-input hashes differ, despite unchanged Git blobs;
+current plugin/renderer bytes and copied files match their pinned build.
+[Exact preparation evidence and target procedure](handoffs/CLAUDE-WINDOWS-VERIFY.md).
+Actual target executable/version/policy/runtime and live host scope remain missing.
+
 **WINDOWS-REGRESSION-GATE, 2026-11-11.** Reused Node 22.23.4/npm 10.9.9/
 Bun 1.4.4/Python 3.13.15 without tool/dependency/model changes. 373 selected
 Bun tests in 27 files, four Node host/recovery tests, root/viewer typechecks

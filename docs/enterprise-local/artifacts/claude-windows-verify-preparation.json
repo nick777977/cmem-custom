@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-11-11",
+  "purpose": "Local files-only preparation for another Windows target; no host acceptance",
+  "source": {
+    "checkout": "68d08474ffa0936779086a648bb54ef9bd940b9b",
+    "pairedBuild": "dff499e45c3116d8cb8936733d0edf8f220797a6",
+    "renderer": "a5c3c236423401affc62ef8ab8ee3e6485b28cf2",
+    "cleanupSource": "974d779e40e85b345149c86a37363cdf78fc31b9",
+    "pluginTree": "96b9e22d975767da37850eb3e85ba85f05ef04c9"
+  },
+  "localPreparation": {
+    "platform": "win32-x64",
+    "ordinaryUserToken": true,
+    "root": "C:\\0\\ai\\claude\\claude-mem-custom\\cmem-light\\.scratch\\enterprise-local\\claude-windows-verify\\current Claude stage",
+    "port": 58951,
+    "node": {
+      "path": "C:\\Users\\MykolaPushnikov\\AppData\\Local\\Volta\\tools\\image\\node\\22.23.4\\node.exe",
+      "version": "22.23.4",
+      "sha256": "dccc52de28d8df2ee22d2062424f8c563070d95d8ad70c54c4bf01d590dec14f"
+    },
+    "bun": {
+      "path": "C:\\Users\\MykolaPushnikov\\.bun\\bin\\bun.exe",
+      "version": "1.4.4",
+      "sha256": "cb1d8e6564e655e49d30cead359750a1cbbd12f42651caa4b62244d7bd93c244"
+    }
+  },
+  "checks": {
+    "cleanupSourceInputs": 813,
+    "cleanupSourceRawMatches": 811,
+    "cleanupSourceRawMismatches": [
+      {
+        "path": "scripts/sync-plugin-manifests.js",
+        "expected": "36c5fd3e6cd8b71dc77c5782e027315ee2d19f9241f816b1771eccd8e3d5bec9",
+        "actual": "b300cf9629769bc66e0d59329a2e800ba6feeec6a22a9c2dcd7b33f746f43f71",
+        "gitContentUnchanged": true,
+        "workingTextMatchesGit": true,
+        "limitation": "Historical raw-byte source receipt does not match this working file; exact historical working bytes not reconstructed."
+      },
+      {
+        "path": "src/cli/adapters/index.ts",
+        "expected": "05ed7049332944e283b73383b4cd8dbe9798cc69bccb750491fb68cdd9f086c2",
+        "actual": "04c7c3472e7aeff86dc5c9dd341b180d010423d372ca5d17007ca0f49ada7f3c",
+        "gitContentUnchanged": true,
+        "workingTextMatchesGit": true,
+        "limitation": "Historical raw-byte source receipt does not match this working file; exact historical working bytes not reconstructed."
+      }
+    ],
+    "copiedPluginFiles": 75,
+    "copiedRendererFiles": 1,
+    "reviewedGeneratedFiles": 4,
+    "fullStageFiles": 80,
+    "pluginMatchesPairedBuild": true,
+    "rendererMatchesPinnedCommit": true,
+    "exactCopiedBytes": true,
+    "generatedBindingsReviewed": true,
+    "runtimeHashesUnchanged": true
+  },
+  "proposedInventorySha256": "08dba457d9d931605816df6015db4b2fbcd0c8a5a02d8eb5c8f3ba67e5bcff21",
+  "referenceStageSha256": "f3eec86c0c75b26202cebd762f364f49ae802ffdc4430d54012cf98a7eb235a1",
+  "delta": {
+    "added": [
+      {
+        "path": "catalog/plugin/ui/work-view/assets/index-DZWaUf7z.js",
+        "bytes": 1026801,
+        "sha256": "bd7475d34cfa185e931175be55eed0fc87f8e272948ce4552d32e2aa911935e5"
+      }
+    ],
+    "removed": [
+      {
+        "path": "catalog/plugin/ui/work-view/assets/index-DInrJkv2.js",
+        "bytes": 1028143,
+        "sha256": "6d2db59355f9ab27f8bebe7de2defcd7fd98eb6a2a45c5d9b2ca0137c45a893c"
+      }
+    ],
+    "changed": [
+      {
+        "path": "catalog/plugin/.claude-plugin/plugin.json",
+        "before": {
+          "path": "catalog/plugin/.claude-plugin/plugin.json",
+          "bytes": 551,
+          "sha256": "9ee16c61971a005d49e6660d34709c38b01805668b6fbc21e3ddcfa07eef7c20"
+        },
+        "after": {
+          "path": "catalog/plugin/.claude-plugin/plugin.json",
+          "bytes": 363,
+          "sha256": "da768428030f120541aee6a9b54ed3e9815707b8c3e623aef13a203382e254e1"
+        }
+      },
+      {
+        "path": "catalog/plugin/scripts/context-read-worker.cjs",
+        "before": {
+          "path": "catalog/plugin/scripts/context-read-worker.cjs",
+          "bytes": 150692,
+          "sha256": "391469a08ca0802b57d042af3368541edfc93f8100aa931bfdb7cead8e1639fb"
+        },
+        "after": {
+          "path": "catalog/plugin/scripts/context-read-worker.cjs",
+          "bytes": 150786,
+          "sha256": "910f40e7f19d2059562a856231ad1db673843fd995e5a354bcee308054e9fb4f"
+        }
+      },
+      {
+        "path": "catalog/plugin/scripts/worker-service.cjs",
+        "before": {
+          "path": "catalog/plugin/scripts/worker-service.cjs",
+          "bytes": 4012047,
+          "sha256": "dfcad03b037eaca65f1c5aba71c056b3550a3c23d3e8e917a97caabc036e762b"
+        },
+        "after": {
+          "path": "catalog/plugin/scripts/worker-service.cjs",
+          "bytes": 3953760,
+          "sha256": "b8b24e770913216a1716eb4f4f979a7466eeeb648051163c335df211bea12911"
+        }
+      },
+      {
+        "path": "catalog/plugin/skills/request-progress/scripts/request-groups.mjs",
+        "before": {
+          "path": "catalog/plugin/skills/request-progress/scripts/request-groups.mjs",
+          "bytes": 198818,
+          "sha256": "b72f06e68c6b894146bb7f91581acefed03b1dfc4c29967d26dc0e9c3fb6f219"
+        },
+        "after": {
+          "path": "catalog/plugin/skills/request-progress/scripts/request-groups.mjs",
+          "bytes": 198643,
+          "sha256": "a6b76e36c1adad75694a8dc7f0bc8fd3f917928ec6a4de93ab5eb990d7d06a72"
+        }
+      },
+      {
+        "path": "catalog/plugin/sqlite/SessionStore.js",
+        "before": {
+          "path": "catalog/plugin/sqlite/SessionStore.js",
+          "bytes": 191444,
+          "sha256": "2dbc251ce4287f2bfda3714d539eaeac8d97dbacbde6d6a31f028446f9160d20"
+        },
+        "after": {
+          "path": "catalog/plugin/sqlite/SessionStore.js",
+          "bytes": 191634,
+          "sha256": "9e542fcfd2d06ee6817296ca5fbb52adc1e7908f8614fad118244709e2b29faa"
+        }
+      },
+      {
+        "path": "catalog/plugin/sqlite/SessionStore.js.map",
+        "before": {
+          "path": "catalog/plugin/sqlite/SessionStore.js.map",
+          "bytes": 158890,
+          "sha256": "4aaec86c304c878244f96f241df551e719227587e7f72638f4793b20b112a476"
+        },
+        "after": {
+          "path": "catalog/plugin/sqlite/SessionStore.js.map",
+          "bytes": 159151,
+          "sha256": "83c205fb7af4f08315ba3b5b38cab927f1c66061b4dd28ec393fda4845db36fd"
+        }
+      },
+      {
+        "path": "catalog/plugin/ui/viewer-bundle.js",
+        "before": {
+          "path": "catalog/plugin/ui/viewer-bundle.js",
+          "bytes": 412796,
+          "sha256": "f00b469771ac650d13f828ab6a0431d151c5d2229b3d22955d5407a5cc6a99f8"
+        },
+        "after": {
+          "path": "catalog/plugin/ui/viewer-bundle.js",
+          "bytes": 407955,
+          "sha256": "0404fd5189d26b68ca80f0bb35ec8bc4634f1534de6174c18135db3e48cbda9a"
+        }
+      },
+      {
+        "path": "catalog/plugin/ui/viewer.html",
+        "before": {
+          "path": "catalog/plugin/ui/viewer.html",
+          "bytes": 83477,
+          "sha256": "42786ccdee25aa3ef97f3dae518b38614b13ce7a5b4a5dbb7cd643922d212036"
+        },
+        "after": {
+          "path": "catalog/plugin/ui/viewer.html",
+          "bytes": 83477,
+          "sha256": "90ca4e8042ae66c8b7420c957b97aa021085ce4ec4f686554f5fe72185747cad"
+        }
+      },
+      {
+        "path": "catalog/plugin/ui/work-view/index.html",
+        "before": {
+          "path": "catalog/plugin/ui/work-view/index.html",
+          "bytes": 501,
+          "sha256": "4d047c7f8d10cafad7319b1805b4d710372eebaa38e8b68876fe59f6ed393827"
+        },
+        "after": {
+          "path": "catalog/plugin/ui/work-view/index.html",
+          "bytes": 501,
+          "sha256": "c6c48c754a637c9cb270d2098d1e4e0d91d145fb8ce9a45a1402bf301ded7fff"
+        }
+      },
+      {
+        "path": "claude-local.mjs",
+        "before": {
+          "path": "claude-local.mjs",
+          "bytes": 22913,
+          "sha256": "35f02e960a660d58363d4c686cf974df7a715ae7e9b2b7a617eb8222f7292527"
+        },
+        "after": {
+          "path": "claude-local.mjs",
+          "bytes": 22891,
+          "sha256": "028d361523cf0a9f604f180f2cdf4b3597e50880082ba56d4bacc0561b0de0c6"
+        }
+      }
+    ]
+  },
+  "target": {
+    "status": "NOT RUN",
+    "location": "Another Windows host, confirmed by owner 2026-11-11",
+    "executable": null,
+    "version": null,
+    "policy": null,
+    "stageReceipt": null,
+    "hostModelScope": null,
+    "workerModelScope": "Planned deterministic loopback fixture only"
+  },
+  "results": {
+    "actualClaudeLoading": "NOT RUN",
+    "eightHostEvents": "NOT RUN",
+    "stdioMcpThroughClaude": "NOT RUN",
+    "stoppedWrongWorkerThroughClaude": "NOT RUN",
+    "twoProjects": "NOT RUN",
+    "subdirectory": "NOT RUN",
+    "linkedWorktree": "NOT RUN",
+    "targetChromaViewerRestart": "NOT RUN",
+    "targetCleanupDataPreservation": "NOT RUN",
+    "liveHost": "NOT RUN",
+    "liveWorker": "NOT RUN",
+    "bedrockHost": "NOT RUN",
+    "bedrockWorker": "NOT RUN"
+  },
+  "limits": [
+    "Local stage is bound to this exact root, port and executable paths; re-stage and verify on target.",
+    "No application worker, Chroma, Claude CLI, live model, auth or AWS execution in this session.",
+    "Completed cleanup tests/build/runtime results reused; no suite replay."
+  ]
+}

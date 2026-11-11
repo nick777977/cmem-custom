@@ -9,12 +9,15 @@ This decomposition does not authorize execution. Current handoff: [STATE](enterp
 A19/A20 supersede the former Bedrock-only target; original supplied requirements and
 source-pinned historical reports remain audit evidence, not current instructions.
 
-**Post-cleanup resumption, 2026-11-11:** the cleanup side task and retained
-Windows gate are complete; bounded cleanup merge is recommended. The owner
-will integrate manually into `feat/cmem-light-local`; merge has not been
-performed by the agent. Resume the same next task as at `a9364604d`:
-**step 11, CLAUDE-WINDOWS-VERIFY**, using the current merged build and a refreshed
-target inventory. No additional cleanup-review session or new dependency edge.
+**Post-cleanup resumption, 2026-11-11:** the owner integrated cleanup into
+`feat/cmem-light-local` at `68d08474f`; ancestry verified. Cleanup/gate are
+complete. Owner confirms the Claude target is another Windows host.
+**Step 11, CLAUDE-WINDOWS-VERIFY** files-only preparation is complete: current
+80-file inventory reviewed/verified, [target procedure](enterprise-local/handoffs/CLAUDE-WINDOWS-VERIFY.md)
+prepared. Actual host acceptance is NOT RUN; target executable/policy/runtime
+and host model scope are still missing. Two historical raw-source receipt
+hash mismatches are recorded; compiled plugin/renderer match their pinned
+commits. No additional cleanup review or new dependency edge.
 [Manual merge](enterprise-local/cleanup/NEXT-SESSION.md) ·
 [Post-merge task](enterprise-local/NEXT-SESSION.md).
 
@@ -49,7 +52,7 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Done-bounded for Windows x64 with separately staged multilingual MiniLM and persistent synthetic retrieval. [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | Done-bounded for the local viewer on Windows x64. Settings shows effective role choices and Chroma health. A copied worker and browser distinguished missing assets from a passing probe backed by semantic retrieval. [VIEWER-08-LOCAL](enterprise-local/handoffs/VIEWER-08-LOCAL.md) |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28/A31 | M | Codex CLI host check accepted for this delivery. The private Claude Code Windows stage and direct command fixtures are complete. Actual Claude CLI loading and dispatch are step-11 target checks. [CLAUDE-WINDOWS-STAGE](enterprise-local/handoffs/CLAUDE-WINDOWS-STAGE.md) |
-| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29/A31 | M | Current cleanup receipt verifies 813 source inputs and exact 81 Codex/80 Claude reference files. Old inventories/SBOM describe earlier builds. Refresh/review the current Claude inventory for a new target destination before execution. [Current receipt](enterprise-local/artifacts/windows-x64-cleanup-receipt.json) |
+| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29/A31 | M | Current Claude inventory reviewed against merged build; 80 files verify. New target needs its own destination receipt. Historical cleanup receipt has two raw source-input mismatches here; Git content unchanged, compiled bytes match. Old Codex inventory/SBOM retain their original scope. [Review and receipts](enterprise-local/handoffs/CLAUDE-WINDOWS-VERIFY.md) |
 | 11 | Verify local memory, Claude Code CLI and the selected Bedrock route | IP P6/P7; A20; A29–A31 | M | Memory/recovery passed again on the current cleanup copied build with real prepared Chroma and viewer/My Work. Actual Claude CLI and Bedrock remain pending in the authorized target environment. [Next task](enterprise-local/NEXT-SESSION.md) · [Remaining work](#what-remains-in-step-11) |
 | 12 | Document regular local setup, updates and data-preserving rollback | IP P8; A19/A20; A29 | S | Pending step 11. Formal packaging and redistribution are optional follow-up work. |
 
@@ -107,7 +110,7 @@ reports missing Chroma assets and preserves SQLite data.
 | Recovery of events waiting for generation | **Passed the staged loopback recovery fixture.** The 401 and redirect survived graceful restart. An interruption after dispatch left an unknown outcome and a separate undispatched summary. Deliberate recovery stored each result once. Startup and ordinary retry made zero automatic resends. [Recovery evidence](enterprise-local/handoffs/RECOVERY-11-LOCAL.md) |
 | Private worker auth endpoint | **Separate defect.** The retained local endpoint returned HTTP 500 when it loaded Better Auth from the checkout. Hook capture, MCP, local search and viewer worked independently. Resolve the route before relying on it. |
 | Codex CLI host | **Accepted.** Reuse the private CLI install, hook discovery, MCP and removal evidence. The staged Codex hook and MCP paths passed again after the recovery build. Codex Desktop is outside the current scope. |
-| Claude Code CLI on Windows | **Pending target runtime.** The bound local stage and receipt passed steps 9 and 10 fixtures. Verify the intended CLI's actual version, managed policy, loading, hook dispatch and project/worktree behavior in a separately authorized runtime launch with simulated worker generation. |
+| Claude Code CLI on Windows | **Pending on another Windows host (owner confirmed).** Current 80-file inventory and files-only preparation verify. Run the [target procedure](enterprise-local/handoffs/CLAUDE-WINDOWS-VERIFY.md) with its own receipt, approved CLI/policy/runtime and separately agreed host model scope. Actual loading/eight events/MCP/two projects/subdirectory/worktree/cleanup are NOT RUN. |
 | Bedrock in the corporate environment | **Separate checks.** Confirm Claude Code's interactive Bedrock route and test the worker's explicit Bedrock profile if that profile is selected. Record model, AWS profile/region, SSO behavior and approved scope for each. Keep embeddings and storage on the Windows instance. |
 
 The local synthetic workflow is called V4 in the validation contract. Its full

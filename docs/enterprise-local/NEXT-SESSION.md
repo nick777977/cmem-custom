@@ -1,9 +1,18 @@
-# After manual cleanup merge — CLAUDE-WINDOWS-VERIFY
+# Claude target on another Windows host — CLAUDE-WINDOWS-VERIFY
 
-Resume the main roadmap on `feat/cmem-light-local` **after the owner merges**
-`codex/repository-cleanup-plan`. Cleanup and its retained Windows gate are
-complete; no additional cleanup-review session is required. The owner performs
-the merge, not this launcher. [Manual merge commands](cleanup/NEXT-SESSION.md).
+The owner merged cleanup into `feat/cmem-light-local` at
+`68d08474ffa0936779086a648bb54ef9bd940b9b`; branch, clean entry and cleanup
+ancestry (exit 0) were verified. No agent merge/switch/push. Cleanup and its
+retained Windows gate are complete; no additional cleanup review is required.
+
+**Latest owner input: another Windows host; prepare its procedure.** Files-only
+preparation is complete: current 80-file Claude inventory reviewed and normal
+verification PASS. [Target procedure and actual results](handoffs/CLAUDE-WINDOWS-VERIFY.md)
+· [review/delta/limitations](artifacts/claude-windows-verify-preparation.json).
+No Claude/worker/Chroma process or inference ran. The two historical raw-source
+receipt mismatches are recorded there; do not reopen cleanup or chase old hashes.
+The next observable task is to run this procedure on the authorized target,
+after its executable/version/policy/runtime inputs and host model scope exist.
 
 This restores the next task from pre-cleanup commit
 `a9364604d026d79be8ab771ecb861688972d169c`: **step 11, actual Claude Code CLI
@@ -33,6 +42,8 @@ merge commit also satisfies this check; fast-forward is currently available.
 Read only the task-relevant bundle after the entry files:
 
 - [Step 11 remaining outcomes](../roadmap.md#what-remains-in-step-11).
+- [Current target procedure](handoffs/CLAUDE-WINDOWS-VERIFY.md): fresh destination
+  receipt, host isolation/fake worker recipe, assertion matrix and missing inputs.
 - [Target runbook](WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation),
   [profile contract](LLM-PROFILES.md) and [validation scope](VALIDATION.md),
   limited to target execution/profile/cleanup requirements.
@@ -54,13 +65,14 @@ Read only the task-relevant bundle after the entry files:
    or runtime scope is unavailable, prepare the exact target procedure and
    record the missing target/input; do not substitute direct hook mocks for
    real host acceptance or repeat generic audits.
-2. Stage the **merged current compiled plugin**, with new destination binding
-   and a reviewed current Claude inventory before execution/transfer. The old
-   `claude-windows-x64-inventory.json` describes the pre-cleanup recovery build;
-   it cannot certify these bytes unchanged. The cleanup receipt certifies only
-   its exact reference roots. Inspect the existing renderer and
+2. Stage the **merged current compiled plugin** at the real target destination
+   and verify it against the reviewed current Claude inventory before execution.
+   The local preparation receipt does not certify another destination. The
+   historical cleanup receipt certifies only its exact reference roots and has
+   two raw source-input mismatches in the merged checkout (see current review).
+   The pre-cleanup recovery inventory is preserved in Git. Inspect the renderer and
    `verify-claude-stage.mjs --record` path, compare copied files with the merged
-   plugin and review the inventory delta before accepting/updating it. Record
+   plugin and review any further inventory delta before accepting/updating it. Record
    full source/build/renderer SHAs and selected executable hashes. Do not weaken
    a verifier to accept stale/moved bytes. No rebuild is needed merely because
    a fast-forward changes the branch name; rebuild only if actual inputs change

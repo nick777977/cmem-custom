@@ -1,11 +1,33 @@
 # Shared execution board
 
-Updated: 2026-11-10. Single place for active ownership and file reservations.
+Updated: 2026-11-11. Single place for active ownership and file reservations.
 Dependencies/waves remain solely in [roadmap](../../roadmap.md); decisions in
 [DECISIONS](DECISIONS.md); current resumable handoff in [STATE](STATE.md).
 This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
+
+2026-11-11 **CLAUDE-WINDOWS-VERIFY preparation**, done-bounded by one coordinator
+on clean `feat/cmem-light-local` at
+`68d08474ffa0936779086a648bb54ef9bd940b9b`. Owner merge verified (cleanup
+ancestor exit 0). Owner confirms the target is another Windows host and
+requests its procedure. Reserve current Claude inventory/new preparation
+receipt and handoff, WINDOWS-LOCAL-SETUP, NEXT-SESSION, README, docs/roadmap
+and memory STATE/TASKS/WORKLOG/DECISIONS plus DEV-ENVIRONMENT if relevant.
+Scratch: `.scratch/enterprise-local/claude-windows-verify/`. Inspect existing
+renderer/verifier, stage files only, review copied bytes/inventory delta and
+write the exact target procedure. No application/generated-output changes,
+compile/test replay, Claude/worker/Chroma startup, live inference, corporate
+AWS, real settings/data, registration, merge/push or agents. Target acceptance
+stays NOT RUN until the separate host/executable/policy/model scope exists.
+Completed: current 80-file inventory reviewed and normal verification PASS;
+75 copied plugin files, one copied renderer and four generated files checked.
+Two historical raw source-input mismatches documented, with unchanged Git
+content; original cleanup receipt/verifier retained. Target procedure and
+tracked preparation receipts written. Syntax/JSON/link/whitespace checks only;
+no runtime or test replay. Reservations released. Next ready-unclaimed:
+same target check on the other Windows instance after target inputs/scope.
+The claim/reservation text above records the original preparation boundary.
 
 2026-11-11 **POST-CLEANUP-HANDOFF**, done-bounded by one coordinator
 at clean `e3d58215beb6071dac42121ef7a75d9f3068c4a3` on

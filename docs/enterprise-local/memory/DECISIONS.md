@@ -1,5 +1,23 @@
 # Decision log
 
+### A38 — Prepare here; actual Claude acceptance on another Windows host (2026-11-11)
+
+The owner confirms the intended target is another Windows host and requests
+its procedure. Owner cleanup merge is verified at `68d08474f` on
+`feat/cmem-light-local`. Complete files-only staging/inventory review here;
+do not run Claude against this machine's real configuration or infer a live
+host model/auth/budget. The current normalized inventory can verify matching
+bytes rebound at the target; its exact local receipt is not the target receipt.
+
+The target procedure must retain actual host dispatch/MCP, two-project and
+separate subdirectory/worktree assertions, real prepared local Chroma, fake
+worker generation and data-preserving owned cleanup. Missing target inputs
+mean NOT RUN, not acceptance from direct mocks. Two old raw source-receipt
+hash mismatches are recorded without altering their verifier; Git content
+and compiled plugin remain unchanged. No new source fix or merge follows
+from files-only evidence. Bedrock host/worker checks and steps 11/12 remain
+on the existing route. [Procedure/evidence](../handoffs/CLAUDE-WINDOWS-VERIFY.md).
+
 ### A37 — Owner-run cleanup merge, then resume the original roadmap (2026-11-11)
 
 The owner will merge cleanup into `feat/cmem-light-local` manually and asks the

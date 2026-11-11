@@ -1,5 +1,15 @@
 # Enterprise local fork: project memory
 
+**CLAUDE-WINDOWS-VERIFY preparation, 2026-11-11.** Owner merge confirmed on
+`feat/cmem-light-local` at `68d08474f`. The owner selects another Windows host.
+Current Claude inventory reviewed; all 80 staged files pass normal verification.
+This is files-only preparation: actual Claude CLI/events/MCP/two-project and
+worktree acceptance remain NOT RUN. [Target procedure, receipts and limits](handoffs/CLAUDE-WINDOWS-VERIFY.md).
+No runtime/model/AWS execution, new source fix or compile. Two historical raw
+source-input receipt hashes differ despite unchanged Git content; see the review.
+Next: execute the procedure on the authorized target after its inputs/scope exist.
+Earlier pre-merge status below is historical; do not restart cleanup.
+
 **Windows regression gate, 2026-11-11: cleanup merge recommended.** All 22
 original failed files plus five focused dependencies pass: 373 tests in 27 Bun
 files, zero failures. Both typechecks/guarded compile, four Node host/recovery
@@ -41,8 +51,9 @@ checks remain required. Old refusal work below is historical, not desired functi
 ## Local completion path
 
 Build from this checkout and connect the compiled plugin locally. The
-existing Codex CLI check covers the Codex target. The private Claude Code
-stage and its separate inventory are ready for later target verification.
+existing Codex CLI check covers the Codex target. The current Claude Code
+inventory and files-only reference are ready; re-stage at the other Windows
+target and save its exact receipt before execution.
 Claude Code host verification and Amazon Web Services (AWS) Bedrock
 testing are pending on the authorized Windows instance where the projects
 and worker will run. The worker's model for observations and summaries is

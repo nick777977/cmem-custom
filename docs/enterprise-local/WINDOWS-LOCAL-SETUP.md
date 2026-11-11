@@ -221,9 +221,11 @@ directory. Staging only writes files. The renderer prints the directory
 to pass to Claude Code later. The exact receipt should be stored outside
 the staged tree and created before adding settings or starting the worker.
 [Stage evidence](handoffs/CLAUDE-WINDOWS-STAGE.md)
-· [Historical Claude inventory](artifacts/claude-windows-x64-inventory.json).
-After cleanup merge, that inventory must be refreshed/reviewed for the current
-compiled files before the default verifier can accept a new stage. The
+· [Current reviewed Claude inventory](artifacts/claude-windows-x64-inventory.json).
+The 2026-11-11 [files-only preparation](handoffs/CLAUDE-WINDOWS-VERIFY.md)
+reviewed the cleanup delta and verified 80 current files. On the other Windows
+target, re-stage and run normal verification with its own destination/receipt.
+The earlier recovery inventory remains historical in Git. The
 [cleanup receipt](artifacts/windows-x64-cleanup-receipt.json) checks only its
 exact synthetic roots. Do not treat it as a transfer/new-destination inventory.
 
@@ -233,8 +235,10 @@ $boundClaudePluginDirectory = & $node scripts/enterprise-local/codex-local.mjs s
 if ($LASTEXITCODE -ne 0) { throw 'Claude stage failed' }
 ```
 
-For the current cleanup build, first record a proposed inventory outside the
-stage, supplying full Git SHAs for the compiled build and renderer. The paired
+For a changed build/renderer/runtime, first record a proposed inventory outside
+the stage, supplying full Git SHAs for the compiled build and renderer. With
+the current reviewed bytes and matching runtime hashes, use normal verification
+below; a new root/port alone does not require replacing the inventory. The paired
 build is `dff499e45c3116d8cb8936733d0edf8f220797a6`; the last renderer change is
 `a5c3c236423401affc62ef8ab8ee3e6485b28cf2`. Recheck these inputs if the target
 task changes source or rebuilds. Merely changing the branch name in a
@@ -249,7 +253,7 @@ $proposedInventory | Set-Content -LiteralPath $proposedInventoryPath -Encoding u
 ```
 
 `--record` produces a candidate inventory; it does not validate against an
-accepted inventory. In the target task, compare the staged copied bytes with
+accepted inventory. When refreshing, compare the staged copied bytes with
 the merged `plugin/`, review the complete file set, binding normalization and
 executable hashes, and review the delta from the historical inventory. Then
 write the reviewed inventory to `docs/enterprise-local/artifacts/claude-windows-x64-inventory.json`

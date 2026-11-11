@@ -1,7 +1,9 @@
 # CLAUDE-WINDOWS-STAGE — Windows x64 private stage
 
-This handoff records the original stage. The current inventory uses the
-paired recovery build. [Refreshed stage and checks](RECOVERY-11-LOCAL.md).
+This handoff records the original stage; its inventory description is historical.
+The current inventory uses the merged cleanup build, reviewed during
+[files-only target preparation](CLAUDE-WINDOWS-VERIFY.md).
+[Historical recovery stage and checks](RECOVERY-11-LOCAL.md).
 
 Closed 2026-11-10 on `feat/cmem-light-local`. Entry
 `327980a4f4a45d41edfda005f80b765371c5a646`, renderer and tests

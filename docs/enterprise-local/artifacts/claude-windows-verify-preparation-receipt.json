@@ -1,0 +1,410 @@
+{
+  "source": {
+    "pairedBuild": "dff499e45c3116d8cb8936733d0edf8f220797a6",
+    "renderer": "a5c3c236423401affc62ef8ab8ee3e6485b28cf2",
+    "platform": "win32-x64"
+  },
+  "files": [
+    {
+      "path": "catalog/plugin/.claude-plugin/plugin.json",
+      "bytes": 363,
+      "sha256": "da768428030f120541aee6a9b54ed3e9815707b8c3e623aef13a203382e254e1"
+    },
+    {
+      "path": "catalog/plugin/.mcp.json",
+      "bytes": 373,
+      "sha256": "127fd6a9ec51d3ea6e2f27f61e641e637708381296081a44ba81ecf3d8ed4753"
+    },
+    {
+      "path": "catalog/plugin/hooks/hooks.json",
+      "bytes": 4428,
+      "sha256": "23174bb9c1a7aee03bae49cc5b2820a468e27a4e5554392af1ce4bb2054aade5"
+    },
+    {
+      "path": "catalog/plugin/modes/code--ar.json",
+      "bytes": 3286,
+      "sha256": "7d5e7b90395e446e43f6107c153af9f1a61647bef826cd07a465e65167dad354"
+    },
+    {
+      "path": "catalog/plugin/modes/code--bn.json",
+      "bytes": 4080,
+      "sha256": "a565481eaf4e88b65d921f56f3258615302832d793ddc632a9530719d596e3ac"
+    },
+    {
+      "path": "catalog/plugin/modes/code--chill.json",
+      "bytes": 2026,
+      "sha256": "69fb26c9b028c136fd62756b91248f64d9e2a1041d45fdd816ed21b3bf63e8ea"
+    },
+    {
+      "path": "catalog/plugin/modes/code--cs.json",
+      "bytes": 3022,
+      "sha256": "77bc75997d77eb4c7a0ab9ea6dbc92cbd9e8b28f0e72a251ed6737e8a96f42a1"
+    },
+    {
+      "path": "catalog/plugin/modes/code--da.json",
+      "bytes": 3062,
+      "sha256": "e8daa7b67363b1ea554356c018d7e2b829b5ab9ba6d2db196b1ee1edb1049949"
+    },
+    {
+      "path": "catalog/plugin/modes/code--de.json",
+      "bytes": 3069,
+      "sha256": "569e489204da64e6ccbd9ae104207ae2e90f9ec69b033036c842e341b87ee816"
+    },
+    {
+      "path": "catalog/plugin/modes/code--el.json",
+      "bytes": 3593,
+      "sha256": "b55a06465911cb1b330224fe536cc4285351494292fb11728f7ec7c4295bd575"
+    },
+    {
+      "path": "catalog/plugin/modes/code--es.json",
+      "bytes": 3075,
+      "sha256": "71c1c39f4bd82d25a408b690998c5a97ae8d525e8f0f522e75bf681e770b34f3"
+    },
+    {
+      "path": "catalog/plugin/modes/code--fi.json",
+      "bytes": 3016,
+      "sha256": "2f1c14b7001b65001e37280d7dbb58025d4cded6e0a995890024e988c9a0a56e"
+    },
+    {
+      "path": "catalog/plugin/modes/code--fr.json",
+      "bytes": 3156,
+      "sha256": "31b01e1581ebfc6b2530fe9d84d262097cfd0112840a5cb2308bd9149812d372"
+    },
+    {
+      "path": "catalog/plugin/modes/code--he.json",
+      "bytes": 3129,
+      "sha256": "a53930d092e346d5482f4139a42c51abea0756618b29c310088acdc4aca43809"
+    },
+    {
+      "path": "catalog/plugin/modes/code--hi.json",
+      "bytes": 3968,
+      "sha256": "9037287139d780d45e1c2f8c28761ec2a7a32da888c919cc789d5cd8de56008f"
+    },
+    {
+      "path": "catalog/plugin/modes/code--hu.json",
+      "bytes": 3053,
+      "sha256": "aaf4431a02b60822d058e9c797073c6b530a8d783c5832aa40df83bb8c0dccb1"
+    },
+    {
+      "path": "catalog/plugin/modes/code--id.json",
+      "bytes": 3111,
+      "sha256": "f61d00ad4d3ebc6cd45bacdb13101b75af3a6bbfd568c497dcc8e96890e1b743"
+    },
+    {
+      "path": "catalog/plugin/modes/code--it.json",
+      "bytes": 3071,
+      "sha256": "d0d2bb7374398e441a20cfdeff1eabfbc117b7a1cd2492b949ca732c4346d596"
+    },
+    {
+      "path": "catalog/plugin/modes/code--ja.json",
+      "bytes": 3193,
+      "sha256": "9ce449432433d6a896aeb03a3605652bbc29fa0be7f34946734e10982c5247ac"
+    },
+    {
+      "path": "catalog/plugin/modes/code--ko.json",
+      "bytes": 3112,
+      "sha256": "5091c9066de07263ef6a5dc826407a0a05d1ad6fefb8d3a1154bcbcba5de7d22"
+    },
+    {
+      "path": "catalog/plugin/modes/code--nl.json",
+      "bytes": 3036,
+      "sha256": "39ba73790eb7b06ad7e7347d895ac0622d5dba4826c645d59613af43b696556b"
+    },
+    {
+      "path": "catalog/plugin/modes/code--no.json",
+      "bytes": 3030,
+      "sha256": "19ea566f4221b3dc2c45c391306cfb249c8bd05ccb9370761d71c0c3ecd24093"
+    },
+    {
+      "path": "catalog/plugin/modes/code--pl.json",
+      "bytes": 3047,
+      "sha256": "8d6b812f849ee35d0f1cc9c520b8eec8ff8dec32b73bc0fa199731b60f3c5c22"
+    },
+    {
+      "path": "catalog/plugin/modes/code--pt-br.json",
+      "bytes": 3081,
+      "sha256": "7d6dd23ae78c47aacee83bb52372fc57953f536a15311be803661e70a92813fa"
+    },
+    {
+      "path": "catalog/plugin/modes/code--ro.json",
+      "bytes": 3075,
+      "sha256": "278c1079304e3882230e60c46903f70b60d5508e3d0bada7eb47a7c99c06956f"
+    },
+    {
+      "path": "catalog/plugin/modes/code--ru.json",
+      "bytes": 3560,
+      "sha256": "8c5059c832147a9121930622a7c75e20de0e540a60d68ff4ceda8b1c7d082625"
+    },
+    {
+      "path": "catalog/plugin/modes/code--sv.json",
+      "bytes": 3024,
+      "sha256": "1aa060765191bcfff35ef8546f44fba89a65eeb61d2797deba7e616afa14d058"
+    },
+    {
+      "path": "catalog/plugin/modes/code--th.json",
+      "bytes": 4016,
+      "sha256": "bb0b6240730908506ad8a51e90174eb45cd5c6142f112d32fa2088e8f544454f"
+    },
+    {
+      "path": "catalog/plugin/modes/code--tr.json",
+      "bytes": 3031,
+      "sha256": "6a8fa5e091967927e88276665daf46501aec8922da9fd2da20b5784fbad70ede"
+    },
+    {
+      "path": "catalog/plugin/modes/code--uk.json",
+      "bytes": 3522,
+      "sha256": "877f861d5c23fda59f8da4573bd237dbdd5292d165c9a7401229cf27f116d9b9"
+    },
+    {
+      "path": "catalog/plugin/modes/code--ur.json",
+      "bytes": 3379,
+      "sha256": "9a7ba954bef289c2165198f580f68290d64f4bacac71f849e5f36cebce189c1e"
+    },
+    {
+      "path": "catalog/plugin/modes/code--vi.json",
+      "bytes": 3314,
+      "sha256": "41eaf41d2842b43d6980452eaa711b6dae91388cfec3245b3ce786fbaca44bd9"
+    },
+    {
+      "path": "catalog/plugin/modes/code--zh.json",
+      "bytes": 2904,
+      "sha256": "e1adf63a74cb960f0dfa20d4c496774fbd544e0aa93c1d8c6f79e99986dfeb86"
+    },
+    {
+      "path": "catalog/plugin/modes/code.json",
+      "bytes": 12297,
+      "sha256": "dd3ca1d042efba9902e6c5b607eefce6f0fe83aa7810436063d5b97a2ebf0b0d"
+    },
+    {
+      "path": "catalog/plugin/modes/email-investigation.json",
+      "bytes": 11255,
+      "sha256": "585908ecc22847c46fe65878846f7c28b8b6d0f4845bc89b8ff8438c617a39c7"
+    },
+    {
+      "path": "catalog/plugin/modes/law-study--chill.json",
+      "bytes": 1371,
+      "sha256": "7a7baeef2effd38dd95d894ebe13897fd2ff774aca03e01b5ab718ad71e9491a"
+    },
+    {
+      "path": "catalog/plugin/modes/law-study-CLAUDE.md",
+      "bytes": 3325,
+      "sha256": "b01c0aa4a1da1f64f40b2051abb21f158cdcf269c5b0e680134b7c6627ee974f"
+    },
+    {
+      "path": "catalog/plugin/modes/law-study.json",
+      "bytes": 12474,
+      "sha256": "553783941a63beac94875c3ed2d6adbd125a0178384ba221b59d275694feb526"
+    },
+    {
+      "path": "catalog/plugin/modes/meme-tokens.json",
+      "bytes": 13121,
+      "sha256": "517fb47bdb272a28811ac22501de8be59ce9c0e46560acdba91fa7a17f7b9b39"
+    },
+    {
+      "path": "catalog/plugin/scripts/chroma-local.py",
+      "bytes": 8282,
+      "sha256": "f2500a72d736c6a2fdadd55fc3cd792659f4f9e343c7885ab68df036e4f63bf8"
+    },
+    {
+      "path": "catalog/plugin/scripts/context-read-worker.cjs",
+      "bytes": 150786,
+      "sha256": "910f40e7f19d2059562a856231ad1db673843fd995e5a354bcee308054e9fb4f"
+    },
+    {
+      "path": "catalog/plugin/scripts/mcp-server.cjs",
+      "bytes": 869063,
+      "sha256": "77b2e82bcd0d9d5d2c9fb0537fa59dc2db2a4014cc2127d93edd3854e1bb9eef"
+    },
+    {
+      "path": "catalog/plugin/scripts/worker-service.cjs",
+      "bytes": 3953760,
+      "sha256": "b8b24e770913216a1716eb4f4f979a7466eeeb648051163c335df211bea12911"
+    },
+    {
+      "path": "catalog/plugin/skills/knowledge-agent/SKILL.md",
+      "bytes": 2488,
+      "sha256": "538de006ebe2619b8a47dd47b09c5afa51ccbe0f806f5fd17ab348609eef6fd1"
+    },
+    {
+      "path": "catalog/plugin/skills/mem-search/SKILL.md",
+      "bytes": 7923,
+      "sha256": "29dce09590fda3f3b7de61d617cdc7c22730863576dab8c5795782870079d682"
+    },
+    {
+      "path": "catalog/plugin/skills/owner-goals/SKILL.md",
+      "bytes": 10997,
+      "sha256": "b96927c6a0dbc8b8066a34a1f94734de79a7f39544f96105b3050227a1bfb546"
+    },
+    {
+      "path": "catalog/plugin/skills/owner-goals/scripts/export_owner_prompts.py",
+      "bytes": 15662,
+      "sha256": "6935820b3e53e14a591940a9aea044fca229f782a5bca8faeb21ada83c322300"
+    },
+    {
+      "path": "catalog/plugin/skills/owner-goals/scripts/save_goals.py",
+      "bytes": 26268,
+      "sha256": "487f602aa4303117fa044bdf5d299d92e24b2ac043a8731ad5cd413417f225e2"
+    },
+    {
+      "path": "catalog/plugin/skills/request-progress/SKILL.md",
+      "bytes": 18031,
+      "sha256": "789a5a49cd2df9ee503544603389e786355098c809d0e5b25d2701527cfce2d5"
+    },
+    {
+      "path": "catalog/plugin/skills/request-progress/scripts/request-groups.mjs",
+      "bytes": 198643,
+      "sha256": "a6b76e36c1adad75694a8dc7f0bc8fd3f917928ec6a4de93ab5eb990d7d06a72"
+    },
+    {
+      "path": "catalog/plugin/skills/smart-explore/SKILL.md",
+      "bytes": 8580,
+      "sha256": "daa83c762252e294fc0168165c0f5052007c97dabe93e13a23d6b9a73da3216c"
+    },
+    {
+      "path": "catalog/plugin/sqlite/SessionStore.js",
+      "bytes": 191634,
+      "sha256": "9e542fcfd2d06ee6817296ca5fbb52adc1e7908f8614fad118244709e2b29faa"
+    },
+    {
+      "path": "catalog/plugin/sqlite/SessionStore.js.map",
+      "bytes": 159151,
+      "sha256": "83c205fb7af4f08315ba3b5b38cab927f1c66061b4dd28ec393fda4845db36fd"
+    },
+    {
+      "path": "catalog/plugin/sqlite/observations/files.js",
+      "bytes": 9362,
+      "sha256": "9b11878b7fcadefa48ebcf9b433b361f546594d00f76a5d6a78817901ee87dcf"
+    },
+    {
+      "path": "catalog/plugin/sqlite/observations/files.js.map",
+      "bytes": 12453,
+      "sha256": "ad2f801164e1b48e5a0577ae5e94116932438d6fb1afe7827de3e5ce4c789fc8"
+    },
+    {
+      "path": "catalog/plugin/ui/assets/fonts/monaspace-radon-var.woff",
+      "bytes": 563460,
+      "sha256": "53f10af290acc1b92a86fe0bdcee5ba30bc5bd59f8520dc4f3b8b7e48a5e6331"
+    },
+    {
+      "path": "catalog/plugin/ui/assets/fonts/monaspace-radon-var.woff2",
+      "bytes": 426972,
+      "sha256": "e39d928ee130a11fe6e026365873c9ba65667ce7e6cc536c056ecd28c2abff17"
+    },
+    {
+      "path": "catalog/plugin/ui/claude-mem-logo-for-dark-mode.webp",
+      "bytes": 79780,
+      "sha256": "3023678274b47ec5c92e6d9f75c0fa0adfbb7ee2b06228c83b1a2b7a1833cef5"
+    },
+    {
+      "path": "catalog/plugin/ui/claude-mem-logo-stylized.png",
+      "bytes": 132855,
+      "sha256": "9e3edf3a9ae37585228a009da9c456336664e15153e0a67d65d0d7cf11a29117"
+    },
+    {
+      "path": "catalog/plugin/ui/claude-mem-logomark.webp",
+      "bytes": 42656,
+      "sha256": "492326602690178cfdd17715f54d0002812e1753e1f7f3d8e49cfb1a9c66a3d7"
+    },
+    {
+      "path": "catalog/plugin/ui/icon-thick-completed.svg",
+      "bytes": 4777,
+      "sha256": "8083cb2c8fbbfe8e2ef939515819db9ca1b6bd381212f638664dc0d80f4d10c1"
+    },
+    {
+      "path": "catalog/plugin/ui/icon-thick-investigated.svg",
+      "bytes": 3953,
+      "sha256": "ee16883185a2858e3a3caf83307b4e712979ead409f838fe29ff6a822d855709"
+    },
+    {
+      "path": "catalog/plugin/ui/icon-thick-learned.svg",
+      "bytes": 5339,
+      "sha256": "4adf399f8ff82f4c142533cb2dcb0532ceea5a8c9eb7c240dcc2a7e67fc4e5b4"
+    },
+    {
+      "path": "catalog/plugin/ui/icon-thick-next-steps.svg",
+      "bytes": 3830,
+      "sha256": "e6fc09109596f4a0eb9321ebfad5cd45487f4b3f3d83504b9445ce6f8634833a"
+    },
+    {
+      "path": "catalog/plugin/ui/icon-thick-notes.svg",
+      "bytes": 939,
+      "sha256": "7f099526d67c53a588a8cc7748df5aaea331830a60b8fda488e8b7ee552fcd28"
+    },
+    {
+      "path": "catalog/plugin/ui/tv.html",
+      "bytes": 15637,
+      "sha256": "7d0c9592d609299b94d992c566be6fd9be2069a9f99ee6a78b73d255e7def401"
+    },
+    {
+      "path": "catalog/plugin/ui/viewer-bundle.js",
+      "bytes": 407955,
+      "sha256": "0404fd5189d26b68ca80f0bb35ec8bc4634f1534de6174c18135db3e48cbda9a"
+    },
+    {
+      "path": "catalog/plugin/ui/viewer.html",
+      "bytes": 83477,
+      "sha256": "90ca4e8042ae66c8b7420c957b97aa021085ce4ec4f686554f5fe72185747cad"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/assets/geist-cyrillic-ext-wght-normal-DjL33-gN.woff2",
+      "bytes": 7420,
+      "sha256": "2317fa4bb293c9c0b110e18315d529235c47a0ddd3338cea3d8c7955e927899e"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/assets/geist-cyrillic-wght-normal-BEAKL7Jp.woff2",
+      "bytes": 15084,
+      "sha256": "6894439694946a589d157ece003086960a6a4013d74a813dab7602efdb3d8c09"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/assets/geist-latin-ext-wght-normal-DC-KSUi6.woff2",
+      "bytes": 16512,
+      "sha256": "824f485b5d26e2f2da3c2b236132ece1bc8e4e43373452950bb0e40548b4313f"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/assets/geist-latin-wght-normal-BgDaEnEv.woff2",
+      "bytes": 29400,
+      "sha256": "19f9c92546aa300c312235e3125af1b81394d8db9a4bc4a425cd5b641d2d54e1"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/assets/geist-vietnamese-wght-normal-6IgcOCM7.woff2",
+      "bytes": 8004,
+      "sha256": "8fa40e5d248247735eb97a0bd593b8852440430600d6ba01364c31fe0abc1fe1"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/assets/index-DZWaUf7z.js",
+      "bytes": 1026801,
+      "sha256": "bd7475d34cfa185e931175be55eed0fc87f8e272948ce4552d32e2aa911935e5"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/assets/index-Ddyc58ua.css",
+      "bytes": 144973,
+      "sha256": "17820c501afbd654760f044cc1043c1615410dc4ac0bb86a1f63068353706019"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/favicon.svg",
+      "bytes": 9522,
+      "sha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/icons.svg",
+      "bytes": 5031,
+      "sha256": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a"
+    },
+    {
+      "path": "catalog/plugin/ui/work-view/index.html",
+      "bytes": 501,
+      "sha256": "c6c48c754a637c9cb270d2098d1e4e0d91d145fb8ce9a45a1402bf301ded7fff"
+    },
+    {
+      "path": "claude-local.mjs",
+      "bytes": 22891,
+      "sha256": "028d361523cf0a9f604f180f2cdf4b3597e50880082ba56d4bacc0561b0de0c6"
+    },
+    {
+      "path": "cmem-light-local.json",
+      "bytes": 355,
+      "sha256": "bd87161d5847b00f46079d3824744b61e40de00a61e23a1c725b1c9f5161c67d"
+    }
+  ],
+  "stageSha256": "f3eec86c0c75b26202cebd762f364f49ae802ffdc4430d54012cf98a7eb235a1"
+}

@@ -1,5 +1,39 @@
 # Current handoff
 
+2026-11-11 **CLAUDE-WINDOWS-VERIFY: files-only preparation complete; target pending.**
+Entry clean `feat/cmem-light-local` HEAD
+`68d08474ffa0936779086a648bb54ef9bd940b9b` is the owner's regular merge;
+cleanup ancestry exit 0. Owner confirms another Windows host and requests
+its procedure. No agent merge/switch/push. No cleanup-review replay.
+
+Current 80-file Claude inventory reviewed and normal verifier PASS; 75 plugin
+copies match the merged compiled bytes and cleanup file hashes, copied
+renderer matches its pinned commit, four generated files reviewed. Full build
+`dff499e45c3116d8cb8936733d0edf8f220797a6`, renderer
+`a5c3c236423401affc62ef8ab8ee3e6485b28cf2`; no application change/rebuild.
+Node 22.23.4/Bun 1.4.4 hashes unchanged; local ordinary-user Windows x64 token.
+
+Historical cleanup raw-source receipt is not fully replayable here: 811/813
+hashes match; `scripts/sync-plugin-manifests.js` and `src/cli/adapters/index.ts`
+differ in raw hashes, while Git blobs are unchanged and working text matches
+them after newline normalization. Exact old working bytes not reconstructed.
+Original receipt/verifier unchanged; current compiled/staged bytes match
+independently. Details/delta in the new tracked preparation review/receipt.
+
+[Target procedure/results](../handoffs/CLAUDE-WINDOWS-VERIFY.md) includes isolated
+host launch, deterministic loopback worker recipe and per-outcome evidence.
+Actual Claude version/policy/loading/eight events/MCP/refusals, two projects,
+subdirectory/worktree, target search/viewer/restart/removal/cleanup are NOT RUN.
+Target executable/runtime paths and managed permissions are missing; live host
+model/auth/destination/payload/budget must be agreed before inference. Both
+Bedrock surfaces remain separate. No host/worker/Chroma/provider/AWS startup,
+real state, installs, compile or test reruns; completed cleanup evidence reused.
+
+Reservations released. Next concrete task: execute this same procedure on the
+authorized other Windows instance once its inputs/scope are available. No
+new source fix or merge recommended from preparation; step 11/12 remain open.
+[Current launcher](../NEXT-SESSION.md). Earlier pre-merge wording is historical.
+
 2026-11-11 **POST-CLEANUP-HANDOFF: owner merges, then resume main step 11.**
 Compared main NEXT-SESSION at `a9364604d026d79be8ab771ecb861688972d169c`
 with `e3d58215b`: the original CLAUDE-WINDOWS-VERIFY task body was retained;

@@ -1512,3 +1512,68 @@ application/build/artifact inputs. Documentation-only: no tests, compile,
 application/provider/CLI execution, installs or real-state inspection. Reservations
 released. Next: owner manually integrates, then supplies main NEXT-SESSION.md to
 resume CLAUDE-WINDOWS-VERIFY on the authorized target.
+
+## 2026-11-11 — CLAUDE-WINDOWS-VERIFY preparation for another Windows host
+
+Clean entry `feat/cmem-light-local` HEAD
+`68d08474ffa0936779086a648bb54ef9bd940b9b` is the owner's regular merge,
+with cleanup `dacfdcd9d13e90710893d938099af981c10ab691` as its second
+parent; required ancestry exit 0. No agent merge/branch switch/push. Read
+entry docs and bounded target/staging/profile contracts, not cleanup failure
+logs as active tasks. Owner confirms another Windows target and requests a
+procedure. Current local `claude` command is absent from PATH; no installed
+user settings/credentials/memory were searched.
+
+Used direct Node 22.23.4/Bun 1.4.4 with unchanged SHA-256 and checked local
+ordinary-user Windows x64 token. Staged current compiled plugin, files only,
+under `.scratch/enterprise-local/claude-windows-verify/current Claude stage`,
+port binding 58951. Whole plugin tree equals paired build
+`dff499e45c3116d8cb8936733d0edf8f220797a6`, renderer equals
+`a5c3c236423401affc62ef8ab8ee3e6485b28cf2`; no rebuild needed. Reviewed
+75 exact plugin copies, exact launcher copy and four generated files.
+Historical inventory delta: ten changed normalized paths, one removed/one
+added Work View JS asset. Binding normalization and executable hashes unchanged.
+Accepted current inventory only after review; unmodified normal verifier
+passed all 80 files. Inventory digest
+`08dba457d9d931605816df6015db4b2fbcd0c8a5a02d8eb5c8f3ba67e5bcff21`;
+local exact stage digest
+`f3eec86c0c75b26202cebd762f364f49ae802ffdc4430d54012cf98a7eb235a1`.
+Tracked review and exact preparation receipt preserve this evidence.
+
+Initial raw-source comparison refused `scripts/sync-plugin-manifests.js`;
+bounded follow-up found a second mismatch in `src/cli/adapters/index.ts`.
+811/813 raw inputs match the historical cleanup receipt. Both affected Git
+blobs at its source commit and entry HEAD are identical and current text
+matches after newline normalization. Exact historical working bytes were
+not reconstructed. Do not call that raw receipt replay PASS; original receipt
+and verifier are unchanged. Current compiled files match independently, so
+this does not demonstrate a target application defect or justify source edits.
+
+Wrote [target procedure and result boundary](../handoffs/CLAUDE-WINDOWS-VERIFY.md)
+with destination verification, isolated host-launch and deterministic fake
+worker snippets, target input/model gates, all eight event assertions,
+two-project/subdirectory/worktree, memory/MCP/viewer/restart/refusal/removal
+and owned cleanup evidence requirements. Consulted official Claude CLI,
+hooks/settings/environment documentation for documented mechanisms only;
+target version and managed policy remain unobserved. Recorded owner scope
+as A38 and updated active STATE/TASKS/NEXT-SESSION, roadmap checkpoint,
+README/runbook/environment notes. Earlier evidence is historical, not erased.
+
+Focused preparation validation: 80-file normal stage verifier PASS;
+two JavaScript snippets syntax-checked only, four PowerShell blocks parsed,
+three JSON snippets parsed; new artifact JSON/digests and local handoff/launcher
+links consistent; Git whitespace and application/source/generated preservation
+checks PASS. No tests or full suite replay, compile, runtime startup, listener,
+synthetic DB, actual Claude version/help, model/auth/AWS, transfer or real data.
+Target acceptance and both live Bedrock surfaces remain NOT RUN.
+
+Reservations released. Next: execute the prepared procedure on the authorized
+other Windows instance after its CLI/policy/runtime inputs and exact host
+model/auth/destination/payload/budget are agreed. No further source fix/merge
+recommended from preparation; step 11 and daily-use step 12 remain open.
+
+Git closure: automatic approval rejected an attempted commit command with
+temporary hook/signing overrides; that command did not execute. Follow-up
+inspection found no configured core.hooksPath/commit.gpgsign/gpg.format and
+no active non-sample files in `.git/hooks`. No Git security setting was
+changed. Use ordinary `git commit` without overrides for this preparation.
