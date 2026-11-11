@@ -1,7 +1,8 @@
 # Current handoff
 
 2026-11-11 side task: **REPOSITORY-CLEANUP implemented** on
-`codex/repository-cleanup-plan`, entry `8b93ceb3d`. Three bounded slices
+`codex/repository-cleanup-plan`, entry `8b93ceb3d`, paired source/output
+`007a128e5`. Three bounded slices
 retired automation/eight PDFs, extra host packages and standalone/cloud
 build/launch. Deleted 487 baseline files / 132,312,367 bytes; 438/440 exact
 candidates removed, with two agent-guidance files kept. UI/private display

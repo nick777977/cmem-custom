@@ -1317,3 +1317,9 @@ settings/compatibility source/dependencies remain deferred in
 [RESULTS](../cleanup/RESULTS.md). Reservations released. Next cleanup task:
 align the five retained hook tests with canonical/private-bound contracts.
 Rollback is a reviewed revert of the relevant source/output concern.
+
+Cleanup source/output pin: `007a128e51cf386192eb1f1c76f1985cf95dc5b9`.
+The small documentation-only closure records that SHA and final source citations
+in RESULTS and the current receipt, without changing any application bytes.
+Post-commit source/stage hashes, active links, protected files and deletion
+counts rechecked PASS; checkout was clean before this evidence pin.

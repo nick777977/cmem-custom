@@ -5,6 +5,20 @@ branch `codex/repository-cleanup-plan`. Three bounded cleanup slices completed.
 Baseline paths, byte sizes and historical source citations remain in the
 immutable inventory and EVIDENCE. Main roadmap unchanged.
 
+Concern commits: `04d9f751a` (PDF/automation), `a5c3c2364`
+(hosts/presentation), `007a128e5` (standalone/cloud and closeout).
+Inspected final source/output SHA:
+`007a128e51cf386192eb1f1c76f1985cf95dc5b9`.
+Static citations at that SHA: `src/cli/adapters/index.ts:6` narrows dispatch;
+`scripts/sync-plugin-manifests.js:16` owns display metadata and
+`:24` the neutral catalog owner; `scripts/enterprise-local/codex-local.mjs:263`
+owns private catalog display. `src/services/worker-service.ts:1202`,
+`src/npx-cli/commands/server.ts:5`, and
+`src/server/runtime/ServerService.ts:300,663` refuse standalone/generation
+entrypoints. `scripts/build-hooks.js:654` guards server graph exclusion from
+the worker. These are source facts; runtime evidence and unknowns are separated
+below. Documentation-only source-pin closure does not change application bytes.
+
 ## Slice 1
 
 Removed 42 exact manifest paths, 123,131,173 baseline Git-blob bytes:
@@ -73,6 +87,9 @@ explicitly historical. Retained technical documents were not broadly rewritten.
 | Separate local auth | Existing HTTP 500 reproduced; NOT FIXED |
 | Source/document diff whitespace | PASS; full diff check reports one esbuild-generated worker line with trailing whitespace, preserved verbatim with its source map |
 | Whole upstream suite / CI / real host registration / Claude CLI / AWS / live inference | NOT RUN |
+
+Unrun legacy integration/distribution assertions may also require retirement or
+alignment; the five observed hook failures are not an exhaustive failure count.
 
 The large runtime fixture initially reached the end of successful capture,
 search/restart and browser checks, then failed an obsolete pre-RECOVERY assertion
