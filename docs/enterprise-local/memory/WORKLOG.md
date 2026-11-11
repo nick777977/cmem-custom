@@ -1214,3 +1214,35 @@ Re-staged and verified the refreshed 80-file Claude inventory, raw
 transfer and rebound copy. Reservations released.
 [Checks, receipt and rollback](../handoffs/RECOVERY-11-LOCAL.md).
 [Next target](../NEXT-SESSION.md) is CLAUDE-WINDOWS-VERIFY.
+
+## 2026-11-11 — REPOSITORY-CLEANUP planning
+
+One coordinator from clean `a9364604d026d79be8ab771ecb861688972d169c` on
+`feat/cmem-light-local`; created the owner-requested local branch
+`codex/repository-cleanup-plan`. No agents/worktrees/push. A32 records the
+separate planning authority, two-host target and preservation of `plans/` PDFs.
+The original roadmap and its target check did not advance.
+
+Indexed 2,997 baseline tracked files, 178,676,910 Git-blob bytes; parsed 1,997
+JS/TS source/test/tool files using existing TypeScript 6.0.3 on direct Node
+22.23.4. Found 6,133 local module edges and 463 conservatively reachable files
+from six local entrypoints. No installs/downloads/upgrades. An initial symlink
+refusal was corrected to inventory without following Git symlink targets.
+Static analysis completed. [Plan/index/evidence](../cleanup/README.md).
+
+The proposed first buckets total 373 files / 4,203,620 bytes before final
+consumer review. The conditional standalone server bundle/map pair is another
+4,233,696 bytes. Eight PDFs occupy 123,009,837 bytes and remain protected.
+Manifest/build coupling, local worker auth/API dependencies, common SQLite/sync
+helpers, Chroma gRPC inputs and CI references prevent blanket directory pruning.
+
+Integrity checks passed: unique row/count/byte/closure totals, protected baseline
+docs/plans/CI classification, durable/scratch inventory equality and zero product,
+build, generated, workflow or main-roadmap Git delta. `git diff --check` passed.
+No deletion, application edit, build, typecheck, application test, runtime,
+registration, real data inspection, live inference, AWS or CI. Only planning
+artifacts/analyzer and small shared-memory records changed.
+
+Reservations released. Next in the cleanup chat: discuss/adjust the proposal
+and approve an exact first host-removal slice. Roll back this planning concern
+with a reviewed Git revert; no application/data rollback is needed.

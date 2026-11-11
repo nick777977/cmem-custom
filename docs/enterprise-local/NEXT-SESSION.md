@@ -1,5 +1,13 @@
 # Next target check — CLAUDE-WINDOWS-VERIFY
 
+**Separate cleanup chat, 2026-11-11:** on `codex/repository-cleanup-plan`, read
+[cleanup proposal](cleanup/README.md), [evidence](cleanup/EVIDENCE.md) and the
+ownership board. Its one next task is plan discussion and definition of the
+first exact host-removal slice. Keep documentation, licenses, CI files and all
+`plans/` PDFs. No deletion/application/dependency/build/runtime work before the
+owner approves that slice. This pointer does not replace or start the main
+target task below; its status and permissions remain unchanged.
+
 Continue on `feat/cmem-light-local` with one coordinator. Check branch,
 HEAD and status. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md),
 [step 11](../roadmap.md#what-remains-in-step-11),

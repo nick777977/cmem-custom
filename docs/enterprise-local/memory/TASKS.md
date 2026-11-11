@@ -7,6 +7,18 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-11 **REPOSITORY-CLEANUP planning**, done by one coordinator on
+`codex/repository-cleanup-plan`, from clean `a9364604d026d79be8ab771ecb861688972d169c`.
+The owner explicitly requested this separate branch and analysis before deletion.
+Reserve `docs/enterprise-local/cleanup/`, task scratch under
+`.scratch/enterprise-local/repository-cleanup/`, and brief session records in
+`memory/{STATE,TASKS,WORKLOG,DECISIONS}.md` and `NEXT-SESSION.md`.
+No source/dependency/build edits, deletion, application execution or main-roadmap
+progress in this task. Indexed 2,997 baseline files and 6,133 literal module edges.
+The owner confirmed two target hosts and preservation of plans/PDFs. The
+[proposal and evidence](../cleanup/README.md) await discussion and approval of
+the exact first implementation slice. Reservations released.
+
 2026-11-10 **RECOVERY-11-LOCAL**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `922eeb841a74e4ca59303048e36722f35355e8fc`.
 Reserve the worker session, provider dispatch, response storage and spool handoff

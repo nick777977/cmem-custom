@@ -329,6 +329,19 @@ The transcript path remains a source of captures and the retired
 `pending_messages` queue stays outside recovery.
 [Implementation and checks](../handoffs/RECOVERY-11-LOCAL.md).
 
+### A32 — Separate repository-cleanup planning scope (2026-11-11)
+
+The owner explicitly requested `codex/repository-cleanup-plan` for a separate
+maintenance analysis; this overrides A01's branch restriction only for that task.
+Do not advance the main roadmap. Codex CLI and Claude Code CLI are the two
+retained target hosts; other hosts are candidates for removal, with existing
+explicit LLM providers/auth preserved. Retain documentation, ADRs, CI/CD files,
+licenses and implementation evidence. Keep `plans/`, including upstream PDFs,
+until separate agreement. Planning/index/tool files are authorized now; actual
+deletion and product/dependency/build edits await discussion and approval of
+the concrete slice. [Proposal and evidence](../cleanup/README.md).
+This accepts the analysis scope, not the proposed deletion list.
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |

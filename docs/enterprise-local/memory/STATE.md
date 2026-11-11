@@ -1,5 +1,14 @@
 # Current handoff
 
+2026-11-11 side task: **REPOSITORY-CLEANUP planning** on the owner-requested
+`codex/repository-cleanup-plan` branch, baseline `a9364604d`. Analysis and
+[proposed plan](../cleanup/README.md) are complete; no deletion/product change
+or runtime check. Owner confirmed two target hosts (Codex CLI/Claude Code CLI),
+retained LLM adapters/auth, and preservation of `plans/` including PDFs until
+separate agreement. Next in that chat: discuss/adjust the exact first cleanup
+slice before approval. Main roadmap status and the target check below are
+unchanged. This branch's planning closeout releases its reservations.
+
 Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 and A29–A31 define current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 
