@@ -138,7 +138,7 @@ describe('Version Consistency', () => {
     });
   }
 
-  for (const bundle of ['worker-service.cjs', 'mcp-server.cjs', 'transcript-watcher.cjs']) {
+  for (const bundle of ['worker-service.cjs', 'mcp-server.cjs']) {
     it(`should have the release version injected into built ${bundle}`, () => {
       const bundlePath = path.join(projectRoot, 'plugin/scripts', bundle);
       expect(existsSync(bundlePath)).toBe(true);
@@ -146,6 +146,19 @@ describe('Version Consistency', () => {
       expect(content.includes(`"${rootVersion}"`)).toBe(true);
     });
   }
+
+  it('builds the transcript CLI whose reachable entry has no release-version consumer', () => {
+    const bundlePath = path.join(projectRoot, 'plugin/scripts/transcript-watcher.cjs');
+    expect(existsSync(bundlePath)).toBe(true);
+    const content = readFileSync(bundlePath, 'utf8');
+    expect(content).toContain('process.argv[2]');
+    const entry = readFileSync(path.join(projectRoot, 'src/services/transcripts/transcript-watcher-entry.ts'), 'utf8');
+    expect(entry).toContain('runTranscriptCommand');
+    expect(entry).not.toContain('__DEFAULT_PACKAGE_VERSION__');
+    // esbuild drops an unused define; adding a version consumer would require
+    // extending the version-bearing bundle assertion above.
+    expect(content).not.toContain('__DEFAULT_PACKAGE_VERSION__');
+  });
 
   it('should validate version format is semver compliant', () => {
     expect(rootVersion).toMatch(/^\d+\.\d+\.\d+$/);

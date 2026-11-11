@@ -47,8 +47,8 @@ function setup(): { dbPath: string; backupsDir: string; snapshotName: string } {
 
 describe('resolveSnapshotInside', () => {
   it('accepts a snapshot name inside the backups dir', () => {
-    expect(resolveSnapshotInside('/data/backups/auto', 'claude-mem-2026-10-01T00-00-00-000Z.db'))
-      .toBe(join('/data/backups/auto', 'claude-mem-2026-10-01T00-00-00-000Z.db'));
+    const { backupsDir, snapshotName } = setup();
+    expect(resolveSnapshotInside(backupsDir, snapshotName)).toBe(join(backupsDir, snapshotName));
   });
 
   it('rejects traversal, absolute paths, nested paths and non-snapshot names', () => {

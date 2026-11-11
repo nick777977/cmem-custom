@@ -69,11 +69,15 @@ describe('writeJsonFileAtomic', () => {
     const target = join(tempDir, 'restricted.json');
     writeFileSync(target, '{}', { mode: 0o600 });
     chmodSync(target, 0o600); // Force-apply in case umask interfered.
+    // Windows stat/chmod exposes DOS read-only bits, not POSIX owner ACLs.
+    // Preserve the native mode there; POSIX must still preserve exactly 0600.
+    const expectedMode = IS_WINDOWS ? statSync(target).mode & 0o777 : 0o600;
 
     writeJsonFileAtomic(target, { secret: true });
 
     const mode = statSync(target).mode & 0o777;
-    expect(mode).toBe(0o600);
+    expect(mode).toBe(expectedMode);
+    expect(JSON.parse(readFileSync(target, 'utf8'))).toEqual({ secret: true });
   });
 
   it('can tighten an existing destination mode before writing secrets', () => {
