@@ -1468,3 +1468,47 @@ file and records coverage limits. Main-roadmap/real Claude/Bedrock target accept
 unchanged. Cleanup merge recommended because the bounded gate and changed runtime
 workflow pass. No merge/push performed. Reservations released; next action is
 owner-directed integration review, with no further cleanup source slice queued.
+
+## 2026-11-11 — POST-CLEANUP-HANDOFF
+
+Owner will merge cleanup manually, then resume the main roadmap. Compared main
+NEXT-SESSION at supplied pre-cleanup `a9364604d026d79be8ab771ecb861688972d169c`
+with clean entry `e3d58215beb6071dac42121ef7a75d9f3068c4a3` on
+`codex/repository-cleanup-plan`. The main task body was unchanged beneath the
+cleanup preface; docs/roadmap had no intervening delta. The original next task
+was CLAUDE-WINDOWS-VERIFY (step 11), not another cleanup implementation slice.
+`feat/cmem-light-local` still pointed to the supplied base and was an ancestor;
+fast-forward was available. No actual merge, branch switch or push performed.
+
+Updated cleanup/NEXT-SESSION to owner-run PowerShell fast-forward commands with
+clean-tree/error/ancestry checks. Updated main NEXT-SESSION to the post-merge
+entry point: verify real branch/status/integration, then execute the original
+Claude target task with bounded context and explicit target/model scope. Removed
+routing through another cleanup review. No assumption that the owner already
+merged, and no automatic agent merge. A regular ancestry-preserving owner merge
+also works; no reset/force/squash proposed.
+
+Identified stale main-handoff/runbook inventory usage: historical Claude
+inventory certifies pre-cleanup recovery bytes; current cleanup receipt certifies
+only exact synthetic reference roots. Updated handoff/runbook to record/review
+current merged-build target inventory before default verification/target use.
+Static source inspected at e3d58215b: verify-claude-stage.mjs record mode returns
+a proposal and default mode reads the tracked historical inventory. Paired
+runtime build dff499e45c3116d8cb8936733d0edf8f220797a6 and last renderer change
+a5c3c236423401affc62ef8ab8ee3e6485b28cf2 pinned for that procedure. No inventory,
+receipt or runtime bytes changed in this task. Branch-name-only fast-forward
+does not require recompilation; changed inputs/target requirements still do.
+
+Added a roadmap resumption checkpoint (no dependency/edge change), refreshed
+active STATE/TASKS/README, and recorded A37. Completed cleanup evidence is reused;
+full suite/local Better Auth defect/actual Claude and Bedrock scope remain honest
+and separate. Target acceptance leads to separately scoped Bedrock/remaining
+step-11 cases and step 12, as before cleanup. No new runtime authorization from
+this documentation task. No generic audit/cleanup loop queued.
+
+Validation: inspected Git ancestry/base/status, original-versus-current handoff
+and roadmap; checked changed-document links/required routing and preserved
+application/build/artifact inputs. Documentation-only: no tests, compile,
+application/provider/CLI execution, installs or real-state inspection. Reservations
+released. Next: owner manually integrates, then supplies main NEXT-SESSION.md to
+resume CLAUDE-WINDOWS-VERIFY on the authorized target.

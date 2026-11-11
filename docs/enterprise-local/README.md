@@ -8,7 +8,9 @@ capture/search/recovery/restart pass. Seven outputs paired; current receipt
 checks 813 inputs and 81 Codex/80 Claude files. Full suite NOT RUN; unused local
 Better Auth sessions still HTTP 500. No merge/push performed.
 [Verdict and each closed row](cleanup/MERGE-READINESS.md) ·
-[Owner integration review](cleanup/NEXT-SESSION.md). Earlier status below is historical.
+[Owner-run merge commands](cleanup/NEXT-SESSION.md) ·
+[After merge: resume step 11](NEXT-SESSION.md). No additional cleanup-review
+session is required. Earlier status below is historical.
 
 **Repository cleanup, 2026-11-11:** the existing cleanup branch now contains
 three bounded implementation slices: PDF/automation removal, extra-host

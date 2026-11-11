@@ -1,5 +1,22 @@
 # Decision log
 
+### A37 — Owner-run cleanup merge, then resume the original roadmap (2026-11-11)
+
+The owner will merge cleanup into `feat/cmem-light-local` manually and asks the
+agent to compare the pre-cleanup handoff at `a9364604d` and prepare the next
+session accordingly. No merge/switch/push is delegated. No further cleanup
+review or source slice is needed. Fast-forward is available at inspection;
+the next session must verify actual integration rather than assume it occurred.
+
+The original next task remains step 11 CLAUDE-WINDOWS-VERIFY. Restore it as
+the active main NEXT-SESSION, with current merged-build target inventory
+refresh/review as a prerequisite inside that task. Historical Claude inventory
+and exact-root cleanup receipt are not portable certification of new stages.
+Reuse completed local verification; retain separate target/corporate/live
+model authorization and budget. Later Bedrock checks and daily-use step 12
+remain on the existing roadmap. This is documentation-only resumption, not
+new runtime evidence or permission to inspect real state.
+
 ### A36 — Close the retained Windows regression gate without further pruning (2026-11-11)
 
 The owner explicitly authorizes serial source/resource corrections and portable

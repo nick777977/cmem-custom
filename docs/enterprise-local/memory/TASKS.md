@@ -7,6 +7,25 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-11 **POST-CLEANUP-HANDOFF**, done-bounded by one coordinator
+at clean `e3d58215beb6071dac42121ef7a75d9f3068c4a3` on
+`codex/repository-cleanup-plan`. Owner will merge manually, then resume the
+main roadmap. Compare main NEXT-SESSION at `a9364604d` with HEAD; reserve
+main/cleanup NEXT-SESSION, README, WINDOWS-LOCAL-SETUP, cleanup readiness,
+docs/roadmap checkpoint and memory STATE/TASKS/DECISIONS/WORKLOG. Documentation
+only: explicit owner-run merge commands, conditional post-merge handoff and
+current-build inventory prerequisite for original CLAUDE-WINDOWS-VERIFY.
+No application/generated/receipt changes, tests/runtime, registration, merge,
+branch switch or push. Next: make the main handoff resume step 11 after the
+owner's merge without another cleanup-review session.
+Completed: original handoff/unchanged roadmap compared at `a9364604d` and
+`e3d58215b`; target remains the base and is an ancestor. Added owner-run
+fast-forward commands and made main NEXT-SESSION the post-merge entry point
+for CLAUDE-WINDOWS-VERIFY. Corrected the stale inventory prerequisite/runbook;
+no artifacts or runtime evidence changed. Documentation/link/Git preservation
+checks PASS; merge not performed. Reservations released. Next ready-unclaimed:
+main step-11 target task, conditional on owner merge and target runtime scope.
+
 2026-11-11 **WINDOWS-REGRESSION-GATE**, done-bounded by one coordinator
 at clean `e113238ade58c8dcd25a5127d9a796b71d8ee124` on
 `codex/repository-cleanup-plan`. Reserve SQLite SessionStore/SessionSearch/

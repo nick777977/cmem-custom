@@ -162,7 +162,9 @@ not exercised. Coupled pruning, formal distribution/CI and real Claude CLI/Bedro
 remain separate. Full suite/broader browser matrix NOT RUN. The prior transient
 recovery fetch failure remains historical; both new recovery checks passed.
 
-Next: owner review/integration. Recheck branch/status/target ancestry and receipt;
-no merge/push without an explicit owner instruction. [Next scope](NEXT-SESSION.md).
+Next: the owner will merge manually; [commands](NEXT-SESSION.md). No additional
+cleanup-review session is required. After actual integration, resume the
+[main step-11 handoff](../NEXT-SESSION.md), with current-build target inventory
+refresh inside that task. The agent has not merged or pushed.
 Rollback: revert the concern commit with paired outputs, then restage/reissue
 the receipt. No data/schema migration or real-state rollback is involved.

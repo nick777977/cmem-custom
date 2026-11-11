@@ -1,5 +1,33 @@
 # Current handoff
 
+2026-11-11 **POST-CLEANUP-HANDOFF: owner merges, then resume main step 11.**
+Compared main NEXT-SESSION at `a9364604d026d79be8ab771ecb861688972d169c`
+with `e3d58215b`: the original CLAUDE-WINDOWS-VERIFY task body was retained;
+only cleanup-preface wording diverted the next session into another review.
+The roadmap had no intervening delta. That diversion is now removed.
+
+At inspection, clean `codex/repository-cleanup-plan` HEAD was `e3d58215b`;
+`feat/cmem-light-local` still points to `a9364604d` and is its ancestor.
+The owner will perform the merge manually; no merge/branch switch/push has
+been performed here. [Owner-run fast-forward commands](../cleanup/NEXT-SESSION.md).
+Cleanup source/gate are complete with the evidence below; no extra cleanup
+session or implementation slice is required.
+
+**After the owner's merge**, verify branch/status/cleanup ancestry and use
+[main NEXT-SESSION](../NEXT-SESSION.md) on `feat/cmem-light-local`: stage/review
+the current build's target inventory, then verify actual Claude Code CLI
+loading/dispatch/MCP and the synthetic two-project memory workflow on the
+authorized Windows instance. Old Claude inventory cannot certify the cleanup
+bytes; current receipt certifies only exact reference roots. Reuse completed
+373-test/4-Node/typecheck/compile/copied-Chroma/viewer/recovery evidence.
+Live host/worker inference and AWS require their separate exact scope/budget;
+no new runtime authorization is inferred from this documentation task.
+Then continue scoped Bedrock/remaining step-11 cases and step 12 as planned.
+
+Documentation-only handoff repair; application/build/receipts unchanged, no
+runtime or test reruns. Reservations released. Read this newest section for
+active routing; earlier integration-review/cleanup next-task wording is historical.
+
 2026-11-11 **WINDOWS-REGRESSION-GATE completed; cleanup merge recommended.**
 On existing `codex/repository-cleanup-plan`, entry `e113238ad`, source/paired
 outputs `dff499e45`, reproducible gate/portable fixtures `974d779e4`.

@@ -1,50 +1,61 @@
-# Next session — review cleanup integration
+# Manual merge — cleanup complete
 
-**WINDOWS-REGRESSION-GATE is complete. Merge is recommended for the bounded
-cleanup scope; no merge or push was performed.** Do not repeat deletion, the
-five original hook checks or the resource fixes as unfinished work.
+**Cleanup implementation and WINDOWS-REGRESSION-GATE are complete. Merge is
+recommended; the owner will perform it manually.** No additional cleanup-review
+session is queued. [Readiness and limits](MERGE-READINESS.md) ·
+[Current results](windows-regression-results.json).
 
-## One next task
+This file is the one-time integration note. **After merge, give the next session
+[the main NEXT-SESSION.md](../NEXT-SESSION.md)** to resume the roadmap, rather
+than launching another cleanup task from this file.
 
-Review this branch for owner-directed integration. Follow AGENTS start order,
-then TASKS and [MERGE-READINESS](MERGE-READINESS.md). Read
-[current results](windows-regression-results.json); the earlier
-[attempts/baseline](merge-verification-results.json) remain historical.
+## Owner-run PowerShell commands
 
-Stay on `codex/repository-cleanup-plan`; inspect HEAD/status and preserve WIP.
-Source/runtime fix `dff499e45`, portable gate `974d779e4`. One coordinator,
-no agents, task branches/worktrees, automatic merge or push. Recheck that
-`feat/cmem-light-local` remains an ancestor. Integration needs an explicit owner
-instruction; readiness alone is not that instruction.
+At inspection, `feat/cmem-light-local` is still
+`a9364604d026d79be8ab771ecb861688972d169c` and is an ancestor of the cleanup
+branch. A fast-forward preserves the reviewed commits and requires no conflict
+resolution. From this checkout, after the documentation update is committed:
 
-## Evidence to reuse
+```powershell
+if (git status --porcelain) { throw 'Working tree has changes; preserve them before merging.' }
+git switch feat/cmem-light-local
+if ($LASTEXITCODE -ne 0) { throw 'Branch switch failed; stop here.' }
+git merge --ff-only codex/repository-cleanup-plan
+if ($LASTEXITCODE -ne 0) { throw 'Fast-forward refused; stop and inspect branch divergence.' }
+git branch --show-current
+git status --short
+git log -1 --oneline
+git merge-base --is-ancestor codex/repository-cleanup-plan HEAD
+if ($LASTEXITCODE -ne 0) { throw 'Cleanup branch is not fully integrated.' }
+```
 
-- All 22 original failed files plus five focused dependencies: 373 PASS,
-  zero failures in 27 Bun files. Root/viewer typechecks and guarded compile
-  PASS; seven outputs paired. Full 1,069-file suite NOT RUN.
-- Fresh copied-build capture/search/recovery, real prepared Chroma,
-  viewer/My Work/restart PASS; 37 sampled PIDs exited and four ports rebound.
-  Four separate Node host/recovery tests PASS.
-- Current receipt covers 813 source inputs and 81 Codex/80 Claude files at
-  exact synthetic reference roots. Old inventories/SBOM are historical.
-  Transfer/new destination requires new staging/binding/inventory.
+Expected result: branch `feat/cmem-light-local`, no short-status output and
+ancestry exit 0. `--ff-only` moves the target to the cleanup tip without a merge
+commit/editor; it never resolves divergence automatically. An owner-created
+ordinary merge commit is also acceptable if it retains the cleanup ancestry.
+No push or branch deletion is needed for the next local session. Do not use
+reset/force/squash to bypass a refused fast-forward.
 
-Read-only reference check: pinned Node with
-`scripts/enterprise-local/verify-cleanup-reference.mjs`, then `--host claude`.
-For changed source/tests only, inspect commands first and use
-`scripts/enterprise-local/windows-regression-gate.mjs --bun <existing exe>
---python <existing exe>`. It isolates state, refuses administrator tokens and
-installs nothing. Rebuild/restage/check copied runtime if shipped bytes change.
-Never investigate real memories, settings or credentials.
+The agent does not execute these commands or claim the merge happened. The next
+session verifies the actual branch/status/ancestry before doing roadmap work.
 
-## Completion and separate work
+## What resumes after merge
 
-Complete the next task with an explicit integration disposition and resulting
-HEAD/status; update STATE/TASKS/WORKLOG and this handoff. Do not merge/push unless
-explicitly requested. No further cleanup source slice is queued.
+The pre-cleanup main handoff at `a9364604d` named **CLAUDE-WINDOWS-VERIFY**,
+step 11: real Claude Code CLI loading/hooks/MCP and the synthetic local memory
+workflow on the intended Windows instance. That is still next. Source fixes
+follow only from concrete target failures. Bedrock host/worker acceptance and
+step 12 daily setup/update/rollback follow under their original scopes.
 
-Local Better Auth sessions remain HTTP 500 and unused by the selected flow;
-define their local contract separately before relying on them. No signup or real
-schema migration. Real Claude CLI/Bedrock/AWS/provider auth/live inference,
-distribution/CI and coupled pruning are separate launches, not prerequisites
-for cleanup. The main target-host task did not advance.
+Reuse 373 selected Bun tests/27 files, four Node host/recovery tests,
+typechecks/guarded compile and copied-build real-Chroma/viewer/recovery/restart
+evidence. Full suite NOT RUN; unused Better Auth session HTTP 500 remains
+separate. Do not repeat deletion, closed hook checks or resource fixes.
+
+The current cleanup receipt covers 813 source inputs and exact 81/80-file
+reference stages. The old Claude inventory cannot certify the changed build;
+target staging must refresh/review its destination-bound inventory before
+execution. This prerequisite belongs inside the resumed target task, not a
+new cleanup loop. See the main handoff for the bounded context and completion
+criteria. No real state, signup, AWS/live inference or registration is authorized
+by this manual merge note.
