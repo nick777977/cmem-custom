@@ -1356,3 +1356,45 @@ this branch before deciding merge; no branch switch/merge/push performed.
 No tests/build/runtime rerun for empty directories and documentation only.
 Directory rescan, guidance/evidence checks and git diff --check validate this
 follow-up. Reservations released.
+
+## 2026-11-11 — CLEANUP-MERGE-VERIFY
+
+Owner explicitly launched cleanup/NEXT-SESSION on clean 493e20b76. Target
+feat/cmem-light-local=a9364604d remained an ancestor. Serial work on existing
+cleanup branch, no task branch/worktree, agent, merge or push.
+
+Tests f6f49db53 close the five old hook expectations, strengthen bound source/
+matcher/timeouts and retire only deleted host/server resource expectations.
+Verifier d9fa7f90f checks the exact original cleanup references, source/build
+hashes, sets and destination refusal; unit mutation/path checks pass.
+
+Expanded selected Bun checks: latest per-file attempts 1,806 PASS/90 FAIL/3 SKIP
+in 220 files, 198 fully passing. Original attempts, safe loopback/Python reruns
+and twenty-file target snapshot comparison are tracked in cleanup/
+merge-verification-results.json. No full 1,068-file suite/CI claim. Windows
+file release, WAL rollback, My Work atomic-write and fixture portability remain
+red on unchanged code/baseline; additional common resource assertions still
+expect legacy canonical launch behavior. First recovery attempt failed fetching
+recovery state; separate fresh rerun passed no-resend/exactly-once scenarios.
+Three direct Claude/Codex stage/hook/MCP tests pass. Local GET /api/auth/get-session
+returns 500; fresh disposable direct auth initialization reproduces missing
+Better Auth tables. Viewer/My Work have no session-client caller; independent
+local API-key checks pass. No real auth migration/provider login was attempted.
+
+Root/viewer typechecks PASS. Guarded compile initially refused protected
+generated .agents metadata in sandbox, then passed under an explicitly
+non-admin ordinary-user token: 19 inputs, 1,941 tracked source sentinels and
+186 tracked outputs unchanged. Loopback EACCES cases were rerun outside the
+filesystem/network sandbox without UAC/RunAs. An initial automatic review
+rejection conflated sandbox relaxation with Windows elevation; evidence of
+AdministratorToken=False and explicit elevated-token refusal allowed the
+reviewed rerun. All required approvals resolved; no machine changes.
+
+Exact references PASS: 811 original source inputs, 81 Codex/80 Claude files.
+Historical receipt preserved; newly added verifier/test are outside runtime
+bytes. No fresh real-Chroma or browser matrix replay was required by a runtime
+byte change, and none is claimed. Prepared assets/dependencies/locks/user data
+were preserved. MERGE-READINESS gives every failure's impact/next action and
+recommends **do not merge yet**, closing the retained Windows regression gate
+next. Auth, legacy pruning, formal distribution and real Claude/Bedrock remain
+separate nonblocking cleanup deferrals. Reservations released.

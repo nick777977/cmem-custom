@@ -1,14 +1,12 @@
 # Next target check — CLAUDE-WINDOWS-VERIFY
 
-**Separate cleanup result, 2026-11-11:** the three bounded slices on
-`codex/repository-cleanup-plan` are implemented. [Results](cleanup/RESULTS.md)
-record removals/checks and deferred coupled source. The
-[next cleanup task](cleanup/NEXT-SESSION.md) verifies readiness before merge:
-retained local test coverage, five obsolete hook expectations, the specific
-local Better Auth session endpoint error and current artifact verification;
-do not rerun the original deletion launch. New builds have a destination-bound
-cleanup receipt; older inventory/SBOM bytes remain historical. Main-roadmap
-and actual target Claude/Bedrock checks below did not advance.
+**Cleanup verification, 2026-11-11:** completed on the existing cleanup
+branch; five hook checks closed and exact reference verification works.
+[Readiness verdict](cleanup/MERGE-READINESS.md) recommends no merge yet because
+the expanded retained Windows checks remain red. The
+[next cleanup task](cleanup/NEXT-SESSION.md) closes that bounded regression
+gate. Do not repeat deletion or resume the main target-host task below as
+part of cleanup. Main-roadmap/Claude/Bedrock acceptance is unchanged.
 
 Continue on `feat/cmem-light-local` with one coordinator. Check branch,
 HEAD and status. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md),

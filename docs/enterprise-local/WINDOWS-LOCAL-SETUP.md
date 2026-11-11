@@ -1,5 +1,13 @@
 # Private CLI plugin setup on Windows
 
+**Current cleanup reference check, 2026-11-11:** use the pinned Node with
+`scripts/enterprise-local/verify-cleanup-reference.mjs` and optionally
+`--host claude`. This verifies the original cleanup reference destination,
+811 receipt source inputs and copied-build hashes; it refuses another path.
+It does not refresh a portable inventory or the old SBOM. Runtime bytes stayed
+unchanged during merge verification. [Current readiness](cleanup/MERGE-READINESS.md)
+still recommends closing the retained Windows regression gate before merge.
+
 **Cleanup branch, 2026-11-11:** new source/bundles use `cmem-light` display
 metadata and retain only Claude Code/Codex hosts. The old inventories/SBOM and
 their verifier defaults describe earlier bytes. The

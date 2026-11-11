@@ -1,5 +1,31 @@
 # Current handoff
 
+2026-11-11 **CLEANUP-MERGE-VERIFY completed; merge NOT recommended yet.**
+Source/tests `f6f49db53`, verifier `d9fa7f90f` on the existing cleanup branch.
+The five known hook assertions are closed. Direct bound Claude/Codex hooks/MCP
+pass; recovery passes on a fresh rerun after an initial connection failure.
+Both typechecks and guarded compile pass; 19 inputs, 1,941 tracked source
+sentinels and all 186 tracked outputs remain unchanged across compile.
+Current reference verification passes 811 original source inputs and exact
+81 Codex/80 Claude files. Old inventories/SBOM remain historical.
+
+The expanded selected Bun checks finish at 1,806 PASS / 90 FAIL / 3 SKIP
+across 220 files; this is not the full 1,068-file suite. Most residual failures
+reproduce on the target snapshot or inspect unchanged obsolete templates.
+Windows SQLite file release, restore sidecars and My Work atomic-write tests
+still fail, alongside nonportable fixture and resource-contract expectations.
+The retained gate is not green; inherited origin alone does not close it.
+Local Better Auth session HTTP 500 is reproduced and not used by the selected
+memory/viewer scenario; it is a separate nonblocking cleanup defect, unrelated
+to Codex/ChatGPT login and AWS SSO. No real DB migration is justified.
+
+[Verdict, behavior matrix, every failure's impact and next action](../cleanup/MERGE-READINESS.md)
+· [Exact selected results](../cleanup/merge-verification-results.json)
+· [Next task: close the retained Windows regression gate](../cleanup/NEXT-SESSION.md).
+No merge/push, real state, live inference, AWS or task branch/worktree changes.
+Reservations released. **Earlier active cleanup instructions below are historical
+and superseded by this handoff.** Main-roadmap/target-host work did not advance.
+
 2026-11-11 **CLEANUP tree/explanation follow-up**: at `0622cc22f`, removed
 116 unnecessary empty project directories; rescan found zero eligible empty
 directories. Ignored/dependency/runtime/data trees were excluded, and no

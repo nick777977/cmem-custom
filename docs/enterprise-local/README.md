@@ -1,5 +1,14 @@
 # Enterprise local fork: project memory
 
+**Cleanup merge verification, 2026-11-11:** five known hook checks closed;
+root/viewer typechecks, unchanged-output guarded compile, bound hooks/MCP
+and separate recovery rerun pass. Expanded selected checks remain red
+(1,806 PASS / 90 FAIL / 3 SKIP in 220 Bun files); most residual failures
+reproduce on the target or inspect unchanged legacy templates. Merge is
+**not recommended yet** until the retained Windows regression gate is closed.
+[Verdict and every residual issue](cleanup/MERGE-READINESS.md) ·
+[Next gate](cleanup/NEXT-SESSION.md). Earlier cleanup status below is historical.
+
 **Repository cleanup, 2026-11-11:** the existing cleanup branch now contains
 three bounded implementation slices: PDF/automation removal, extra-host
 retirement and `cmem-light` display metadata, and standalone/cloud deployment

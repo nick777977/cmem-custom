@@ -1,5 +1,18 @@
 # Development baseline and user-provided execution evidence
 
+**CLEANUP-MERGE-VERIFY, 2026-11-11.** Node 22.23.4/npm 10.9.9/Bun 1.4.4
+retained. Both typechecks and guarded compile pass with 19 inputs, 1,941
+tracked source sentinels and 186 tracked outputs unchanged. Exact reference
+verifier passes 811 original source inputs and 81 Codex/80 Claude files.
+Bound-host fixtures pass; recovery passes fresh after an initial connection
+failure. Expanded local selections remain red; baseline replay distinguishes
+inherited Windows failures from cleanup changes. Local Better Auth sessions
+remain HTTP 500 and are separate from provider login. Administrator tokens
+were explicitly refused. Sandbox loopback/generated-metadata write denials
+were resolved through inspected ordinary-user reruns, with no UAC, machine
+configuration or tool/dependency changes. Full suite, fresh real Chroma and
+browser matrix were not rerun. [Exact results and limits](cleanup/MERGE-READINESS.md).
+
 Updated: 2026-11-10. Supersedes the pre-install assumption in the 2026-10-30 launcher.
 This is not full runtime acceptance. Session 02 subsequently ran authorized step-2
 compile/targeted checks; see the current section below and [BUILD-02](handoffs/BUILD-02.md).

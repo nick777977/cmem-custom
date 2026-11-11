@@ -408,3 +408,21 @@ session checks readiness on the existing cleanup branch and reports whether to
 merge into `feat/cmem-light-local`; this is a recommendation, not permission to
 perform merge or run corporate auth/live inference. Known local Better Auth
 session-schema failure is distinct from Codex/ChatGPT login and AWS SSO.
+
+### A35 — Execute cleanup merge verification without merging (2026-11-11)
+
+The owner explicitly launches cleanup/NEXT-SESSION to close the five hook checks,
+review retained local behavior, auth-session impact and current build evidence,
+and deliver a justified readiness verdict. No automatic merge or push. Existing
+cleanup branch and serial ownership remain; no live inference/corporate auth or
+real user data is authorized by this launch.
+
+Execution result (assessment, not a newly accepted product-scope decision):
+five checks closed; broader selected checks remain red, including inherited
+Windows file-release/atomic-write failures and additional stale common assertions.
+Recommendation is **do not merge yet**, with the concrete next gate documented
+in [MERGE-READINESS](../cleanup/MERGE-READINESS.md). Local Better Auth sessions
+are not consumed by the selected viewer/memory path and remain a separate defect;
+no real DB migration or signup is introduced. Exact cleanup references can be
+verified with the new bounded verifier, while older inventories/SBOM retain
+their historical meaning. No runtime bytes or identity semantics changed.

@@ -7,6 +7,28 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-11 **CLEANUP-MERGE-VERIFY**, done-bounded by one coordinator from clean
+`493e20b76055a20bfcacec183cacb4bd9f7940b0` on
+`codex/repository-cleanup-plan`. Reserve the two retained hook test files,
+`tests/enterprise-local/claude-windows-stage.test.mjs`, applicable retained
+resource assertions, current cleanup receipt/verifier tests and scripts,
+`cleanup/MERGE-READINESS.md`, cleanup/main next-session pointers and
+`memory/{STATE,TASKS,WORKLOG,DECISIONS}.md`, README/runbook/environment status.
+Review local lanes and auth source; run bounded synthetic checks in fresh
+`.scratch/enterprise-local/cleanup-merge-verify/`. No agents, merge, push,
+real state, registration, AWS or live inference. Extend reservation before
+any application/generated changes. Next: align hook contracts and map lanes.
+Compile reservation: fingerprint all tracked plugin outputs, 19 reviewed
+tool/dependency inputs and tracked source/test sentinels. Expect no runtime
+output delta; no generation target, lock, dependency or application edit.
+Completed: hook/resource tests `f6f49db53`, verifier `d9fa7f90f`; both
+typechecks/guarded compile and exact reference verification pass, no runtime
+output delta. Expanded selection has 1,806 PASS/90 FAIL/3 SKIP, with baseline
+comparisons, direct host PASS and recovery fresh-rerun PASS. Verdict: do not
+merge yet; close retained Windows test gate. [Full disposition](../cleanup/MERGE-READINESS.md).
+Reservations released; next task ready-unclaimed in cleanup/NEXT-SESSION.
+The reservation/next-action wording above records the original claim only.
+
 2026-11-11 **CLEANUP tree and explanation follow-up**, done by one
 coordinator at clean `0622cc22f` on `codex/repository-cleanup-plan`.
 Reserve unnecessary empty project directories (never ignored/runtime/data or

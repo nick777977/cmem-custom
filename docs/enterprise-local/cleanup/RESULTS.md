@@ -225,3 +225,17 @@ branch first**. `feat/cmem-light-local` is an ancestor (0 commits unique to it,
 possible. This is topology only, not functional readiness. The old auth defect
 and intentionally retained source need explicit disposition, not an unexplained
 "all clear" or compulsory broad refactor. No merge was performed.
+
+## Pre-merge verification, 2026-11-11
+
+The original five hook assertions are closed in f6f49db53. Expanded local
+checks found additional inherited Windows/test-contract failures; the current
+result is 1,806 PASS / 90 FAIL / 3 SKIP across 220 selected Bun files, plus
+bound-host PASS and recovery fresh-rerun PASS. Both typechecks and guarded
+compile pass with identical tracked runtime outputs. New verifier d9fa7f90f
+validates the exact cleanup references and refuses a different destination;
+old inventories/SBOM remain historical. Local auth-session HTTP 500 remains a
+separate inherited defect and is not used by the selected local viewer flow.
+[MERGE-READINESS](MERGE-READINESS.md) supersedes earlier active five-failure and
+next-action wording, gives every residual issue and recommends **do not merge
+yet** until the retained Windows gate is closed. No merge/push performed.

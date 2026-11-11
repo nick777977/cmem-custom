@@ -1,0 +1,3660 @@
+{
+  "date": "2026-11-11",
+  "branch": "codex/repository-cleanup-plan",
+  "entry": "493e20b76055a20bfcacec183cacb4bd9f7940b0",
+  "source": "d9fa7f90f62af1f36046bd343a4b79e2f54d70d3",
+  "baseline": "a9364604d026d79be8ab771ecb861688972d169c",
+  "scope": "Reviewed local selections only, one Bun process per file; no whole upstream suite or CI. Latest listed attempts replace earlier attempts, never sum retries.",
+  "toolchain": {
+    "node": "22.23.4",
+    "npm": "10.9.9",
+    "bun": "1.4.4",
+    "python": "3.13.15"
+  },
+  "summary": {
+    "files": 220,
+    "passedFiles": 198,
+    "pass": 1806,
+    "fail": 90,
+    "skip": 3
+  },
+  "final": [
+    {
+      "file": "src/ui/my-work/src/live/connection-status.test.ts",
+      "status": 0,
+      "pass": 15,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/measured-estimate.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/review-response.test.ts",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/sample-source.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/status-normalization.test.ts",
+      "status": 0,
+      "pass": 15,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/to-focus-model.test.ts",
+      "status": 0,
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/to-goals-model.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/to-rules-model.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/to-work-model.test.ts",
+      "status": 0,
+      "pass": 33,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/update-queue.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/live/usage.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/setup/setup-flow.test.ts",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/setup/setup-reveal.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/setup/setup-scan-status.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/setup/setup-search.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "src/ui/my-work/src/setup/setup-usage.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/backup/backup-manager.test.ts",
+      "status": 0,
+      "pass": 11,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/backup/pending-restore.test.ts",
+      "status": 1,
+      "pass": 7,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/backup/restore-swap.test.ts",
+      "status": 1,
+      "pass": 11,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/cli/adapters/claude-code-session-start.test.ts",
+      "status": 0,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/cli/adapters/claude-code-stop-hook-active.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/cli/adapters/claude-code-subagent.test.ts",
+      "status": 0,
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/cli/adapters/claude-code-tool-failure.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/cli/adapters/codex-attribution.test.ts",
+      "status": 0,
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/cli/adapters/codex-file-context.test.ts",
+      "status": 0,
+      "pass": 14,
+      "fail": 0,
+      "skip": 1,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/cli/adapters/codex-read-argv-boundaries.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/cli/adapters/raw.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/context/context-budget-3802.test.ts",
+      "status": 0,
+      "pass": 14,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-builder-readonly.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-builder-shared-store.test.ts",
+      "status": 0,
+      "pass": 21,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-cache-lifecycle.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-cache-render-order.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-cache.test.ts",
+      "status": 0,
+      "pass": 39,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-config-loader.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-config-observation-filters.test.ts",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-count-bounds.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/context/context-query-lifecycle.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-read-responsiveness.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/context/context-read-results.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-read-routes.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/context/context-read-welcome-hint-race.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-read-worker-lifecycle.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-scope-named-projects.test.ts",
+      "status": 0,
+      "pass": 0,
+      "fail": 0,
+      "skip": 1,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/context-work-state-order.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/formatters/agent-formatter.test.ts",
+      "status": 0,
+      "pass": 46,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/include-last-message-dot-path.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/include-last-message-underscore-path.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/merged-project-hop.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/newest-per-project-key.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/notes-only-summary-context.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/observation-compiler.test.ts",
+      "status": 0,
+      "pass": 17,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/observer-briefing-health-warning.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/prior-host-transcript-routes.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 1,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/context/prior-host-transcript.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/prior-json-whitespace.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/prior-session-path-traversal.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/reinforcement-history-window.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/reinforcement-selection.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/sections/header-renderer-environment.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/sections/summary-renderer.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/sections/work-state-own-keys.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/sections/work-state-renderer.test.ts",
+      "status": 0,
+      "pass": 11,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/session-start-footer-5079.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/terminal-preview-4252.test.ts",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/token-calculator.test.ts",
+      "status": 0,
+      "pass": 20,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/transcript-cache-lifecycle.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/context/transcript-cache-outage.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/enterprise-local/cleanup-reference.test.mjs",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "final focused"
+    },
+    {
+      "file": "tests/enterprise-local/profile-06a.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/enterprise-local/profile-06b.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/enterprise-local/runtime-10-local.test.mjs",
+      "status": 0,
+      "pass": 25,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/enterprise-local/windows-09d.test.ts",
+      "status": 0,
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/infrastructure/plugin-distribution.test.ts",
+      "status": 1,
+      "pass": 47,
+      "fail": 33,
+      "skip": 0,
+      "attempt": "resources-final"
+    },
+    {
+      "file": "tests/infrastructure/version-consistency.test.ts",
+      "status": 1,
+      "pass": 14,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "resources"
+    },
+    {
+      "file": "tests/scripts/sync-plugin-manifests.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/scripts/test-lanes.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/server/auth-api-key.test.ts",
+      "status": 0,
+      "pass": 15,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/services/sqlite/by-ids-limit-validation.test.ts",
+      "status": 0,
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/concept-search-legacy-text.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/folder-search-pagination.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/fts-update-triggers.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/get-observations-by-ids-relevance.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/merged-project-id-hydration.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/observations-by-file-merged-project.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/observations-by-file-path-candidates.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/parse-file-list.test.ts",
+      "status": 0,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/relative-folder-absolute-files.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-cjk-fallback.test.ts",
+      "status": 0,
+      "pass": 23,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-empty-input.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-file-json-admission.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-file-like-literals.test.ts",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-file-order.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-any-term-bounded.test.ts",
+      "status": 1,
+      "pass": 12,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-any-term-evidence.test.ts",
+      "status": 1,
+      "pass": 19,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-any-term.test.ts",
+      "status": 0,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-partial-setup.test.ts",
+      "status": 1,
+      "pass": 3,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-probe-scope.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 2,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-query-semantics.test.ts",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-merged-project-fts.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-platform-source-scoping.test.ts",
+      "status": 0,
+      "pass": 11,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/search-project-aliases.test.ts",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/session-search-find-by-folder.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/session-search-path-matching.test.ts",
+      "status": 0,
+      "pass": 24,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/session-store-mark-completed.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/session-store-reopen-completed.test.ts",
+      "status": 0,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/stream-rows.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/summary-file-filter-columns.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/timeline-anchor-tie-boundary.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 4,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sqlite/timeline-id-import-order.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/services/sync/chroma-bootstrap-fragments.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-delete-row-documents.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-local-runtime.test.ts",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-mcp-manager-cwd.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-mcp-manager-path.test.ts",
+      "status": 0,
+      "pass": 18,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-mcp-manager-singleton.test.ts",
+      "status": 0,
+      "pass": 51,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-mcp-manager-ssl.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-merged-project-typed-lookup.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-query-postfilter.test.ts",
+      "status": 0,
+      "pass": 21,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sqlite-id-lookup.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sync-concurrent-revisions.test.ts",
+      "status": 0,
+      "pass": 14,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sync-corrupt-collection.test.ts",
+      "status": 0,
+      "pass": 18,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sync-embedding-function.test.ts",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sync-reconcile.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sync-state-atomic.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sync-state-shape.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sync-unavailable.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/services/sync/chroma-sync-watermarks.test.ts",
+      "status": 0,
+      "pass": 34,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/shared/host-hook-limits.test.ts",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "contracts"
+    },
+    {
+      "file": "tests/sqlite/dedup-idf-veto-boundary.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/dedup-scan.test.ts",
+      "status": 0,
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/dedup-store.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/distributed-manual-session-platform.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/file-context-json.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/generation-recovery.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/import-row-identities.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/import-session-titles.test.ts",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/manual-session-platform.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/native-prompt-identity.test.ts",
+      "status": 1,
+      "pass": 1,
+      "fail": 2,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/observation-file-index.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/project-key-case.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/project-read-keys-covering.test.ts",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/project-read-keys.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/prompt-number-sparse-history.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/search-readonly-fallback.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-advisor-calls.test.ts",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-cwd-migration.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-dedup-integration.test.ts",
+      "status": 0,
+      "pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-dedup-migration.test.ts",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-dedup.test.ts",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-deliverables.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-empty-title.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-fts-triggers.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 7,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-migrations.test.ts",
+      "status": 0,
+      "pass": 20,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-observations.test.ts",
+      "status": 0,
+      "pass": 17,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-observed-metadata.test.ts",
+      "status": 0,
+      "pass": 11,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-orphan-fk-repair.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 4,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-project-key-source-migration.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-prompts.test.ts",
+      "status": 0,
+      "pass": 14,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-sessions.test.ts",
+      "status": 0,
+      "pass": 20,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-summaries.test.ts",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-synced-at.test.ts",
+      "status": 0,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-telegram-wrapups.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-tool-uses.test.ts",
+      "status": 0,
+      "pass": 22,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-transactions.test.ts",
+      "status": 0,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-v7-rebuild-keeps-cascade.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 4,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-v7-rebuild-keeps-columns.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 2,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-work-state.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-store-writer-version.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 15,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/session-summary-files.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/tool-link-owner.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/tool-use-identity-rekey.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/tool-uses-retention.test.ts",
+      "status": 0,
+      "pass": 14,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/unicode-title-key-upgrade.test.ts",
+      "status": 1,
+      "pass": 2,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/sqlite/writer-check-busy-timeout.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "storage"
+    },
+    {
+      "file": "tests/ui/viewer/notes-summary-card.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/ui/viewer/pagination-loading-error.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/ui/viewer/settings-claude-auth-method.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/category.test.ts",
+      "status": 0,
+      "pass": 10,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/data.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/feed-deletion.test.ts",
+      "status": 0,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/feed-project-scope.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/prompt-card-clamp.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/sessions.test.ts",
+      "status": 0,
+      "pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/settings-save-error.test.ts",
+      "status": 0,
+      "pass": 36,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/summary-section-icon.test.ts",
+      "status": 0,
+      "pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/theme-tokens.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/viewer/welcome-card-storage.test.ts",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/work-view/auto-refresh.test.ts",
+      "status": 1,
+      "pass": 25,
+      "fail": 1,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/work-view/deliverables-records.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/work-view/focus-judge.test.ts",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/work-view/hosted-goals-view.test.ts",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/work-view/hosted-intent.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/work-view/my-focus.test.ts",
+      "status": 0,
+      "pass": 18,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/work-view/owner-goals-replay.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/work-view/python.test.ts",
+      "status": 0,
+      "pass": 5,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "baseline": false,
+      "file": "tests/work-view/request-first.test.ts",
+      "status": 1,
+      "pass": 18,
+      "fail": 1,
+      "attempt": "diagnose"
+    },
+    {
+      "file": "tests/work-view/request-groups.test.ts",
+      "status": 0,
+      "pass": 33,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/work-view/request-judge.test.ts",
+      "status": 0,
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/work-view/seed-focus-areas.test.ts",
+      "status": 1,
+      "pass": 5,
+      "fail": 4,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "baseline": false,
+      "file": "tests/work-view/skill-scripts-python.test.ts",
+      "status": 1,
+      "pass": 54,
+      "fail": 1,
+      "attempt": "diagnose"
+    },
+    {
+      "file": "tests/worker/search/chroma-category-identity.test.ts",
+      "status": 1,
+      "pass": 0,
+      "fail": 2,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/worker/search/file-date-order.test.ts",
+      "status": 0,
+      "pass": 11,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/worker/search/search-orchestrator.test.ts",
+      "status": 0,
+      "pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/worker/search/search-request-boundary.test.ts",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/worker/search/semantic-empty-filters-http.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/worker/search/semantic-filtered-candidates.test.ts",
+      "status": 0,
+      "pass": 16,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/worker/search/semantic-pagination.test.ts",
+      "status": 0,
+      "pass": 25,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "loopback"
+    },
+    {
+      "file": "tests/worker/search/semantic-persisted-json.test.ts",
+      "status": 0,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/worker/search/strategies/chroma-search-strategy.test.ts",
+      "status": 0,
+      "pass": 36,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/worker/search/strategies/hybrid-search-strategy.test.ts",
+      "status": 0,
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/worker/search/strategies/sqlite-search-strategy.test.ts",
+      "status": 0,
+      "pass": 12,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "retrieval"
+    },
+    {
+      "file": "tests/worker/work-view/agent-view-attribution.test.mjs",
+      "status": 0,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/worker/work-view/agent-view-review.test.mjs",
+      "status": 0,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/worker/work-view/agent-view-subagent.test.mjs",
+      "status": 0,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/worker/work-view/human-copy-provider.test.mjs",
+      "status": 0,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/worker/work-view/human-copy-worker.test.mjs",
+      "status": 0,
+      "pass": 18,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/worker/work-view/human-copy.test.mjs",
+      "status": 0,
+      "pass": 6,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/worker/work-view/request-projection.test.mjs",
+      "status": 0,
+      "pass": 15,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/worker/work-view/work-product-git.test.mjs",
+      "status": 0,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    },
+    {
+      "file": "tests/worker/work-view/work-product.test.mjs",
+      "status": 0,
+      "pass": 11,
+      "fail": 0,
+      "skip": 0,
+      "attempt": "ui"
+    }
+  ],
+  "attempts": {
+    "contracts": [
+      {
+        "file": "tests/cli/adapters/claude-code-session-start.test.ts",
+        "status": 0,
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/cli/adapters/claude-code-stop-hook-active.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/cli/adapters/claude-code-subagent.test.ts",
+        "status": 0,
+        "pass": 12,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/cli/adapters/claude-code-tool-failure.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/cli/adapters/codex-attribution.test.ts",
+        "status": 0,
+        "pass": 12,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/cli/adapters/codex-file-context.test.ts",
+        "status": 0,
+        "pass": 14,
+        "fail": 0,
+        "skip": 1
+      },
+      {
+        "file": "tests/cli/adapters/codex-read-argv-boundaries.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/cli/adapters/raw.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/enterprise-local/profile-06a.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/enterprise-local/profile-06b.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/enterprise-local/runtime-10-local.test.mjs",
+        "status": 0,
+        "pass": 25,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/enterprise-local/windows-09d.test.ts",
+        "status": 0,
+        "pass": 10,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/scripts/sync-plugin-manifests.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/scripts/test-lanes.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/server/auth-api-key.test.ts",
+        "status": 0,
+        "pass": 15,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/shared/host-hook-limits.test.ts",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      }
+    ],
+    "storage": [
+      {
+        "file": "tests/backup/backup-manager.test.ts",
+        "status": 0,
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/backup/pending-restore.test.ts",
+        "status": 1,
+        "pass": 7,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/backup/restore-swap.test.ts",
+        "status": 1,
+        "pass": 11,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/by-ids-limit-validation.test.ts",
+        "status": 0,
+        "pass": 12,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/concept-search-legacy-text.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/folder-search-pagination.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/fts-update-triggers.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/get-observations-by-ids-relevance.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/merged-project-id-hydration.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/observations-by-file-merged-project.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/observations-by-file-path-candidates.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/parse-file-list.test.ts",
+        "status": 0,
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/relative-folder-absolute-files.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-cjk-fallback.test.ts",
+        "status": 0,
+        "pass": 23,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-empty-input.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-file-json-admission.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-file-like-literals.test.ts",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-file-order.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-any-term-bounded.test.ts",
+        "status": 1,
+        "pass": 12,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-any-term-evidence.test.ts",
+        "status": 1,
+        "pass": 19,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-any-term.test.ts",
+        "status": 0,
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-partial-setup.test.ts",
+        "status": 1,
+        "pass": 3,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-probe-scope.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-query-semantics.test.ts",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-merged-project-fts.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-platform-source-scoping.test.ts",
+        "status": 0,
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-project-aliases.test.ts",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/session-search-find-by-folder.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/session-search-path-matching.test.ts",
+        "status": 0,
+        "pass": 24,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/session-store-mark-completed.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/session-store-reopen-completed.test.ts",
+        "status": 0,
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/stream-rows.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/summary-file-filter-columns.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/timeline-anchor-tie-boundary.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/timeline-id-import-order.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/dedup-idf-veto-boundary.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/dedup-scan.test.ts",
+        "status": 0,
+        "pass": 10,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/dedup-store.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/distributed-manual-session-platform.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/file-context-json.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/generation-recovery.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/import-row-identities.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/import-session-titles.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/manual-session-platform.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/native-prompt-identity.test.ts",
+        "status": 1,
+        "pass": 1,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/observation-file-index.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/project-key-case.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/project-read-keys-covering.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/project-read-keys.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/prompt-number-sparse-history.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/search-readonly-fallback.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-advisor-calls.test.ts",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-cwd-migration.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-dedup-integration.test.ts",
+        "status": 0,
+        "pass": 13,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-dedup-migration.test.ts",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-dedup.test.ts",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-deliverables.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-empty-title.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-fts-triggers.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 7,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-migrations.test.ts",
+        "status": 0,
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-observations.test.ts",
+        "status": 0,
+        "pass": 17,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-observed-metadata.test.ts",
+        "status": 0,
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-orphan-fk-repair.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-project-key-source-migration.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-prompts.test.ts",
+        "status": 0,
+        "pass": 14,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-sessions.test.ts",
+        "status": 0,
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-summaries.test.ts",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-synced-at.test.ts",
+        "status": 0,
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-telegram-wrapups.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-tool-uses.test.ts",
+        "status": 0,
+        "pass": 22,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-transactions.test.ts",
+        "status": 0,
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-v7-rebuild-keeps-cascade.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-v7-rebuild-keeps-columns.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-work-state.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-writer-version.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 15,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-summary-files.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/tool-link-owner.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/tool-use-identity-rekey.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/tool-uses-retention.test.ts",
+        "status": 0,
+        "pass": 14,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/unicode-title-key-upgrade.test.ts",
+        "status": 1,
+        "pass": 2,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/writer-check-busy-timeout.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "skip": 0
+      }
+    ],
+    "retrieval": [
+      {
+        "file": "tests/context/context-budget-3802.test.ts",
+        "status": 0,
+        "pass": 14,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-builder-readonly.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-builder-shared-store.test.ts",
+        "status": 0,
+        "pass": 21,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-cache-lifecycle.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-cache-render-order.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-cache.test.ts",
+        "status": 0,
+        "pass": 39,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-config-loader.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-config-observation-filters.test.ts",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-count-bounds.test.ts",
+        "status": 1,
+        "pass": 3,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-query-lifecycle.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-read-responsiveness.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-read-results.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-read-routes.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 3,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-read-welcome-hint-race.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-read-worker-lifecycle.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-scope-named-projects.test.ts",
+        "status": 0,
+        "pass": 0,
+        "fail": 0,
+        "skip": 1
+      },
+      {
+        "file": "tests/context/context-work-state-order.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/formatters/agent-formatter.test.ts",
+        "status": 0,
+        "pass": 46,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/include-last-message-dot-path.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/include-last-message-underscore-path.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/merged-project-hop.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/newest-per-project-key.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/notes-only-summary-context.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/observation-compiler.test.ts",
+        "status": 0,
+        "pass": 17,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/observer-briefing-health-warning.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/prior-host-transcript-routes.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 3,
+        "skip": 1
+      },
+      {
+        "file": "tests/context/prior-host-transcript.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/prior-json-whitespace.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/prior-session-path-traversal.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/reinforcement-history-window.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/reinforcement-selection.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/sections/header-renderer-environment.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/sections/summary-renderer.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/sections/work-state-own-keys.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/sections/work-state-renderer.test.ts",
+        "status": 0,
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/session-start-footer-5079.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/terminal-preview-4252.test.ts",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/token-calculator.test.ts",
+        "status": 0,
+        "pass": 20,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/transcript-cache-lifecycle.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/transcript-cache-outage.test.ts",
+        "status": 1,
+        "pass": 1,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-bootstrap-fragments.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-delete-row-documents.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-local-runtime.test.ts",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-mcp-manager-cwd.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-mcp-manager-path.test.ts",
+        "status": 0,
+        "pass": 18,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-mcp-manager-singleton.test.ts",
+        "status": 0,
+        "pass": 51,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-mcp-manager-ssl.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-merged-project-typed-lookup.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-query-postfilter.test.ts",
+        "status": 0,
+        "pass": 21,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sqlite-id-lookup.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-concurrent-revisions.test.ts",
+        "status": 0,
+        "pass": 14,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-corrupt-collection.test.ts",
+        "status": 0,
+        "pass": 18,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-embedding-function.test.ts",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-reconcile.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-state-atomic.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-state-shape.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-unavailable.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-watermarks.test.ts",
+        "status": 1,
+        "pass": 33,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/chroma-category-identity.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/file-date-order.test.ts",
+        "status": 0,
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/search-orchestrator.test.ts",
+        "status": 0,
+        "pass": 13,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/search-request-boundary.test.ts",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/semantic-empty-filters-http.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/semantic-filtered-candidates.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 16,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/semantic-pagination.test.ts",
+        "status": 1,
+        "pass": 21,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/semantic-persisted-json.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/strategies/chroma-search-strategy.test.ts",
+        "status": 0,
+        "pass": 36,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/strategies/hybrid-search-strategy.test.ts",
+        "status": 0,
+        "pass": 12,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/strategies/sqlite-search-strategy.test.ts",
+        "status": 0,
+        "pass": 12,
+        "fail": 0,
+        "skip": 0
+      }
+    ],
+    "ui": [
+      {
+        "file": "src/ui/my-work/src/live/connection-status.test.ts",
+        "status": 0,
+        "pass": 15,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/measured-estimate.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/review-response.test.ts",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/sample-source.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/status-normalization.test.ts",
+        "status": 0,
+        "pass": 15,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/to-focus-model.test.ts",
+        "status": 0,
+        "pass": 10,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/to-goals-model.test.ts",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/to-rules-model.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/to-work-model.test.ts",
+        "status": 0,
+        "pass": 33,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/update-queue.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/live/usage.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/setup/setup-flow.test.ts",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/setup/setup-reveal.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/setup/setup-scan-status.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/setup/setup-search.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "src/ui/my-work/src/setup/setup-usage.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/ui/viewer/notes-summary-card.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/ui/viewer/pagination-loading-error.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 3,
+        "skip": 0
+      },
+      {
+        "file": "tests/ui/viewer/settings-claude-auth-method.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/category.test.ts",
+        "status": 0,
+        "pass": 10,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/data.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/feed-deletion.test.ts",
+        "status": 0,
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/feed-project-scope.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/prompt-card-clamp.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/sessions.test.ts",
+        "status": 0,
+        "pass": 13,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/settings-save-error.test.ts",
+        "status": 0,
+        "pass": 36,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/summary-section-icon.test.ts",
+        "status": 0,
+        "pass": 13,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/theme-tokens.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/viewer/welcome-card-storage.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/auto-refresh.test.ts",
+        "status": 1,
+        "pass": 25,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/deliverables-records.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/focus-judge.test.ts",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/hosted-goals-view.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/hosted-intent.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/my-focus.test.ts",
+        "status": 0,
+        "pass": 18,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/owner-goals-replay.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/python.test.ts",
+        "status": 0,
+        "pass": 5,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/request-first.test.ts",
+        "status": 1,
+        "pass": 17,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/request-groups.test.ts",
+        "status": 0,
+        "pass": 33,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/request-judge.test.ts",
+        "status": 0,
+        "pass": 12,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/seed-focus-areas.test.ts",
+        "status": 1,
+        "pass": 5,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/skill-scripts-python.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/agent-view-attribution.test.mjs",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/agent-view-review.test.mjs",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/agent-view-subagent.test.mjs",
+        "status": 0,
+        "pass": 8,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/human-copy-provider.test.mjs",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/human-copy-worker.test.mjs",
+        "status": 0,
+        "pass": 18,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/human-copy.test.mjs",
+        "status": 0,
+        "pass": 6,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/request-projection.test.mjs",
+        "status": 0,
+        "pass": 15,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/work-product-git.test.mjs",
+        "status": 0,
+        "pass": 7,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/work-view/work-product.test.mjs",
+        "status": 0,
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      }
+    ],
+    "resources": [
+      {
+        "file": "tests/infrastructure/plugin-distribution.test.ts",
+        "status": 1,
+        "pass": 47,
+        "fail": 36,
+        "skip": 0
+      },
+      {
+        "file": "tests/infrastructure/version-consistency.test.ts",
+        "status": 1,
+        "pass": 14,
+        "fail": 1,
+        "skip": 0
+      }
+    ],
+    "loopback": [
+      {
+        "file": "tests/context/context-count-bounds.test.ts",
+        "status": 0,
+        "pass": 4,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-read-responsiveness.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/context-read-routes.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/context/prior-host-transcript-routes.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 1
+      },
+      {
+        "file": "tests/context/transcript-cache-outage.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sync/chroma-sync-watermarks.test.ts",
+        "status": 0,
+        "pass": 34,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/ui/viewer/pagination-loading-error.test.ts",
+        "status": 0,
+        "pass": 3,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/auto-refresh.test.ts",
+        "status": 1,
+        "pass": 25,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/owner-goals-replay.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/request-first.test.ts",
+        "status": 1,
+        "pass": 18,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/seed-focus-areas.test.ts",
+        "status": 1,
+        "pass": 5,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/skill-scripts-python.test.ts",
+        "status": 1,
+        "pass": 53,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/chroma-category-identity.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/semantic-empty-filters-http.test.ts",
+        "status": 0,
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/semantic-filtered-candidates.test.ts",
+        "status": 0,
+        "pass": 16,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/semantic-pagination.test.ts",
+        "status": 0,
+        "pass": 25,
+        "fail": 0,
+        "skip": 0
+      }
+    ],
+    "baseline": [
+      {
+        "file": "tests/backup/pending-restore.test.ts",
+        "status": 1,
+        "pass": 7,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/backup/restore-swap.test.ts",
+        "status": 1,
+        "pass": 11,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-any-term-bounded.test.ts",
+        "status": 1,
+        "pass": 12,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-any-term-evidence.test.ts",
+        "status": 1,
+        "pass": 19,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-partial-setup.test.ts",
+        "status": 1,
+        "pass": 3,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-probe-scope.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/services/sqlite/timeline-anchor-tie-boundary.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/native-prompt-identity.test.ts",
+        "status": 1,
+        "pass": 1,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-fts-triggers.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 7,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-orphan-fk-repair.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-v7-rebuild-keeps-cascade.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-v7-rebuild-keeps-columns.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/session-store-writer-version.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 15,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/unicode-title-key-upgrade.test.ts",
+        "status": 1,
+        "pass": 2,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/sqlite/writer-check-busy-timeout.test.ts",
+        "status": 0,
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/auto-refresh.test.ts",
+        "status": 1,
+        "pass": 25,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/request-first.test.ts",
+        "status": 1,
+        "pass": 17,
+        "fail": 2,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/seed-focus-areas.test.ts",
+        "status": 1,
+        "pass": 5,
+        "fail": 4,
+        "skip": 0
+      },
+      {
+        "file": "tests/work-view/skill-scripts-python.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 1,
+        "skip": 0
+      },
+      {
+        "file": "tests/worker/search/chroma-category-identity.test.ts",
+        "status": 1,
+        "pass": 0,
+        "fail": 2,
+        "skip": 0
+      }
+    ],
+    "diagnose": [
+      {
+        "baseline": false,
+        "file": "tests/work-view/request-first.test.ts",
+        "status": 1,
+        "pass": 18,
+        "fail": 1
+      },
+      {
+        "baseline": false,
+        "file": "tests/work-view/skill-scripts-python.test.ts",
+        "status": 1,
+        "pass": 54,
+        "fail": 1
+      },
+      {
+        "baseline": true,
+        "file": "tests/work-view/request-first.test.ts",
+        "status": 1,
+        "pass": 18,
+        "fail": 1
+      },
+      {
+        "baseline": true,
+        "file": "tests/work-view/skill-scripts-python.test.ts",
+        "status": 1,
+        "pass": 54,
+        "fail": 1
+      }
+    ]
+  },
+  "resourceFailures": [
+    "Plugin Distribution - Codex Marketplace > marks every Codex compaction so the next PostToolUse can re-inject memory",
+    "Plugin Distribution - Codex Marketplace > gives a subagent Codex starts its memory timeline",
+    "Plugin Distribution - Codex Marketplace > bounds the synchronous Codex observation hook to a short fail-open wait",
+    "Plugin Distribution - Codex Marketplace > sets the Codex hook marker on every Codex command",
+    "Plugin Distribution - Codex Marketplace > sets Windows Codex hook overrides without POSIX-only shell syntax",
+    "Plugin Distribution - Codex Marketplace > MCP launcher can recover without plugin root environment variables",
+    "Plugin Distribution - hooks.json Integrity > routes every Claude Code runtime hook through the on-PATH claude-mem launcher with the worker args (#3605)",
+    "Plugin Distribution - hooks.json Integrity > self-heals the launcher with one shell-free node entry on SessionStart startup only",
+    "Plugin Distribution - hooks.json Integrity > should reference CLAUDE_PLUGIN_ROOT in the Setup hook command",
+    "Plugin Distribution - hooks.json Integrity > should include CLAUDE_PLUGIN_ROOT fallback in the Setup hook command (#1215)",
+    "Plugin Distribution - hooks.json Integrity > should try cache path before marketplaces fallback in the Setup hook command (#1533)",
+    "Plugin Distribution - hooks.json Integrity > should quote NVM ls path inside export PATH in the Setup hook (#3190)",
+    "Plugin Distribution - Startup Root Resolution > MCP startup command resolves the plugin root cross-platform (#2792)",
+    "Plugin Distribution - Startup Root Resolution > Codex hook commands should have config-dir based non-empty fallbacks",
+    "Plugin Distribution - Startup Root Resolution > the Claude Setup hook command should have config-dir based non-empty fallbacks",
+    "Plugin Distribution - MCP launcher process (#4269) > runs the server inside the launcher process for an absolute plugin root",
+    "Plugin Distribution - MCP launcher process (#4269) > resolves a relative plugin root against the working directory",
+    "Plugin Distribution - MCP launcher process (#4269) > exits 1 with the not-found message when no candidate has the server",
+    "Plugin Distribution - package.json Files Field > npm tarball includes generated runtime entries and the Claude marketplace root manifests (#3424)",
+    "Plugin Distribution - Setup Hook (#1547) > should call version-check.js in the Setup hook",
+    "Plugin Distribution - Non-blocking bookkeeping hooks (#3206) > runs observation, summarization, and SessionEnd asynchronously",
+    "Plugin Distribution - Non-blocking bookkeeping hooks (#3206) > runs the SessionStart worker start asynchronously and keeps context and UserPromptSubmit synchronous (#3303)",
+    "Plugin Distribution - Non-blocking bookkeeping hooks (#3206) > keeps the PreToolUse Read file-context hook synchronous so the File Read Gate can deny",
+    "Spawn-Contract Templating - Rule A generator parity > never leaks a raw ${CLAUDE_PLUGIN_ROOT} into the resolved trailing command",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > resolves _P from CLAUDE_PLUGIN_ROOT when the env var points at a valid root",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > resolves a valid CLAUDE_PLUGIN_ROOT without scanning the plugin cache (#3449, #4121)",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > skips a Codex host root whose dependencies are missing and falls back to the cache (#4763)",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > Codex Windows payload dependency check (#4763) > falls back to the cache when the host root has no node_modules",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > Codex Windows payload dependency check (#4763) > still prefers a host root that has its dependencies",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > resolves _P from the cache directory when CLAUDE_PLUGIN_ROOT is unset",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > prefers the highest cache version over the newest mtime and skips .orphaned_at dirs (2026-07-22 restart storm)",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > keeps Setup fail-loud when no candidate exists",
+    "Spawn-Contract Templating - Rule A shell resolution matrix > prepends the highest NVM node bin to PATH without login shell (#3190)",
+    "Version Consistency > should have the release version injected into built transcript-watcher.cjs"
+  ],
+  "separateChecks": {
+    "typechecks": "root/viewer PASS",
+    "compile": "guarded PASS; 19 inputs, 1941 tracked source sentinels, 186 tracked outputs unchanged",
+    "host": "3 Node bound-stage tests PASS",
+    "recovery": "first run fetch failed; fresh isolated rerun PASS, exact unchanged worker bytes",
+    "auth": "compiled GET /api/auth/get-session HTTP 500; disposable direct initialization SCHEMA_MISMATCH",
+    "references": "811 original source inputs and 81 Codex/80 Claude stage files hash-verified; no portable inventory claim",
+    "realChroma": "not rerun: same byte-pinned cleanup stage and prepared model; prior runtime evidence retained"
+  },
+  "unrun": "Full 1068-file lane execution, real CLI registration/loading, AWS/live inference, browser matrix and new real-Chroma process run. See MERGE-READINESS.md for reasons/risks."
+}
