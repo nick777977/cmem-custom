@@ -107,7 +107,7 @@ function scanCleanupCounts(dbPath: string): CleanupCounts {
            )`
     ).get(STUCK_PENDING_THRESHOLD) as { n: number }).n;
   } finally {
-    db.close();
+    db.close(true);
   }
   logger.info('SYSTEM', 'v12.4.3 cleanup --dry-run scan complete', {
     observerSessions: counts.observerSessions,
@@ -181,7 +181,7 @@ function executeCleanup(dbPath: string, effectiveDataDir: string, markerPath: st
     const vacuumError = err instanceof Error ? err : new Error(String(err));
     logger.warn('SYSTEM', 'VACUUM INTO failed, falling back to copyFileSync', {}, vacuumError);
   }
-  backupDb.close();
+  backupDb.close(true);
 
   if (vacuumFailed) {
     try {
@@ -206,7 +206,7 @@ function executeCleanup(dbPath: string, effectiveDataDir: string, markerPath: st
     runObserverSessionsPurge(db, counts);
     runStuckPendingPurge(db, counts);
   } finally {
-    db.close();
+    db.close(true);
   }
 
   let chromaWiped = false;

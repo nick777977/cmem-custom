@@ -25,6 +25,8 @@ export interface SwapOptions {
   preRestoreDir: string;
   /** Test seam for the one step whose failure the swap must survive. */
   renameSync?: (from: string, to: string) => void;
+  /** Test seam for checkpoint failure before SQLite can discard damaged sidecars. */
+  runFileJob?: typeof runSqliteFileJob;
   /**
    * How long to keep retrying while another process holds the live database
    * (0 = fail at once). See applyPendingRestore for where the window comes from.
@@ -44,9 +46,9 @@ class DatabaseInUseError extends Error {}
  * when another connection holds it, and returns false when the file is too
  * damaged to checkpoint at all.
  */
-async function checkpointLiveDatabase(dbPath: string): Promise<boolean> {
+async function checkpointLiveDatabase(dbPath: string, runFileJob: typeof runSqliteFileJob): Promise<boolean> {
   try {
-    const { busy } = await runSqliteFileJob({ kind: 'checkpoint', target: dbPath });
+    const { busy } = await runFileJob({ kind: 'checkpoint', target: dbPath });
     if (busy) throw new DatabaseInUseError(IN_USE_MESSAGE);
     return true;
   } catch (error) {
@@ -61,11 +63,11 @@ async function checkpointLiveDatabase(dbPath: string): Promise<boolean> {
   }
 }
 
-async function checkpointWithRetry(dbPath: string, retryWindowMs: number): Promise<boolean> {
+async function checkpointWithRetry(dbPath: string, retryWindowMs: number, runFileJob: typeof runSqliteFileJob): Promise<boolean> {
   const giveUpAt = Date.now() + retryWindowMs;
   for (;;) {
     try {
-      return await checkpointLiveDatabase(dbPath);
+      return await checkpointLiveDatabase(dbPath, runFileJob);
     } catch (error) {
       if (!(error instanceof DatabaseInUseError) || Date.now() + BUSY_RETRY_INTERVAL_MS > giveUpAt) throw error;
       await new Promise(resolve => setTimeout(resolve, BUSY_RETRY_INTERVAL_MS));
@@ -159,6 +161,7 @@ export async function swapDatabaseFromSnapshot(
     throw new Error(`snapshot not found: ${snapshotPath}`);
   }
   const rename = options.renameSync ?? ((from: string, to: string) => renameWithWindowsRetry(from, to));
+  const runFileJob = options.runFileJob ?? runSqliteFileJob;
   const ts = new Date().toISOString().replace(/[:.]/g, '-');
   const stagedDb = `${dbPath}.restore-staging-${ts}`;
   let preRestoreCopy: string | null = null;
@@ -167,7 +170,7 @@ export async function swapDatabaseFromSnapshot(
   try {
     await copyFile(snapshotPath, stagedDb);
     if (existsSync(`${snapshotPath}-wal`)) await copyFile(`${snapshotPath}-wal`, `${stagedDb}-wal`);
-    await runSqliteFileJob({ kind: 'standalone', target: stagedDb });
+    await runFileJob({ kind: 'standalone', target: stagedDb });
 
     if (existsSync(dbPath)) {
       // Keep a byte-for-byte copy of the live db and its -wal before anything
@@ -184,7 +187,7 @@ export async function swapDatabaseFromSnapshot(
 
       let checkpointed: boolean;
       try {
-        checkpointed = await checkpointWithRetry(dbPath, options.busyRetryWindowMs ?? 0);
+        checkpointed = await checkpointWithRetry(dbPath, options.busyRetryWindowMs ?? 0, runFileJob);
       } catch (error) {
         // Refused: the live database stays as it is and needs no copy.
         dropRawCopy();

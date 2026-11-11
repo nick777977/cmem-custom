@@ -120,7 +120,7 @@ describe('seed rows and undo rows', () => {
     ids = 0;
   });
   afterEach(() => {
-    database.close();
+    database.close(true);
     rmSync(directory, { recursive: true, force: true });
   });
 

@@ -252,78 +252,85 @@ export class SessionStore {
       this.db = new Database(dbPathOrDb);
     }
 
-    // Refuse before any DDL — pragmas included — when the database's schema
-    // is newer than this binary's chain (#3609 step 2); a refused open
-    // touches nothing.
-    assertSchemaWriterCompatible(this.db, LATEST_SCHEMA_VERSION);
+    try {
+      // Refuse before any DDL — pragmas included — when the database's schema
+      // is newer than this binary's chain (#3609 step 2); a refused open
+      // touches nothing.
+      assertSchemaWriterCompatible(this.db, LATEST_SCHEMA_VERSION);
 
-    applySqliteConnectionPragmas(this.db);
+      applySqliteConnectionPragmas(this.db);
 
-    // Record the highest schema version this binary knows before the first
-    // schema write, not after the chain: the chain's steps commit separately,
-    // so a mid-chain failure (say the v46 REAL-revision refusal) leaves
-    // earlier DDL on disk, and a stamp deferred to the end would leave that
-    // partially-upgraded database adoptable by an older binary — the exact
-    // downgrade the stamp exists to refuse (#4602 review). Stamping first
-    // names this schema on any state it touched; the idempotent chain re-runs
-    // to completion on the next open by this same or a newer-chain binary.
-    // The re-check and the stamp commit under one write lock, so a newer
-    // worker that stamped after the check above still refuses this one.
-    claimSchemaWriter(this.db, LATEST_SCHEMA_VERSION);
+      // Record the highest schema version this binary knows before the first
+      // schema write, not after the chain: the chain's steps commit separately,
+      // so a mid-chain failure (say the v46 REAL-revision refusal) leaves
+      // earlier DDL on disk, and a stamp deferred to the end would leave that
+      // partially-upgraded database adoptable by an older binary — the exact
+      // downgrade the stamp exists to refuse (#4602 review). Stamping first
+      // names this schema on any state it touched; the idempotent chain re-runs
+      // to completion on the next open by this same or a newer-chain binary.
+      // The re-check and the stamp commit under one write lock, so a newer
+      // worker that stamped after the check above still refuses this one.
+      claimSchemaWriter(this.db, LATEST_SCHEMA_VERSION);
 
-    this.initializeSchema();
+      this.initializeSchema();
 
-    this.ensureWorkerPortColumn();
-    this.ensurePromptTrackingColumns();
-    this.removeSessionSummariesUniqueConstraint();
-    this.addObservationHierarchicalFields();
-    this.makeObservationsTextNullable();
-    this.createUserPromptsTable();
-    this.ensureDiscoveryTokensColumn();
-    this.createPendingMessagesTable();
-    this.renameSessionIdColumns();
-    this.addFailedAtEpochColumn();
-    this.addOnUpdateCascadeToForeignKeys();
-    this.addObservationContentHashColumn();
-    this.addSessionCustomTitleColumn();
-    this.addSessionPlatformSourceColumn();
-    this.addObservationModelColumns();
-    this.ensureMergedIntoProjectColumns();
-    this.addObservationSubagentColumns();
-    this.addObservationsUniqueContentHashIndex();
-    this.addObservationsMetadataColumn();
-    this.dropDeadPendingMessagesColumns();
-    this.ensurePendingMessagesToolUseIdColumn();
-    this.dropWorkerPidColumn();
-    this.ensureSDKSessionsPlatformContentIdentity();
-    this.ensureUserPromptsSessionDbId();
-    this.ensurePendingMessagesSessionToolUniqueIndex();
-    this.ensureSyncedAtColumns();
-    this.ensureSyncOriginColumns();
-    this.ensureSyncOutbox();
-    this.ensureSyncEntityLedger();
-    this.ensureSyncRevisionTextAffinity();
-    this.initializeSyncHubLaunchBaseline();
-    this.normalizeConceptTags();
-    this.ensureSDKSessionsObservedColumns();
-    this.ensureToolUsesTable();
-    this.ensureTelegramWrapupsTable();
-    this.addDedupTables();
-    this.refreshUnicodeTitleNormKeys();
-    this.ensureReinforcementColumns();
-    this.ensureSessionCwdColumn();
-    this.dropWriteOnlyUserPromptsFtsAndScopeFtsUpdateTriggers();
-    this.ensureProjectNocaseIndexes();
-    this.ensureAdvisorCallsTable();
-    this.ensureSessionProjectKeySourceColumn();
-    this.requeuePromptsDeadLetteredForSize();
-    this.ensureWorkStateTable();
-    this.ensureDeliverablesTable();
-    this.ensureHookSpoolConsumedTable();
-    this.ensureProjectRecencyIndexes();
-    this.ensureMergedIntoProjectCoveringIndexes();
-    this.ensureNativePromptIdentity();
-    this.ensureObservationFileIndex();
+      this.ensureWorkerPortColumn();
+      this.ensurePromptTrackingColumns();
+      this.removeSessionSummariesUniqueConstraint();
+      this.addObservationHierarchicalFields();
+      this.makeObservationsTextNullable();
+      this.createUserPromptsTable();
+      this.ensureDiscoveryTokensColumn();
+      this.createPendingMessagesTable();
+      this.renameSessionIdColumns();
+      this.addFailedAtEpochColumn();
+      this.addOnUpdateCascadeToForeignKeys();
+      this.addObservationContentHashColumn();
+      this.addSessionCustomTitleColumn();
+      this.addSessionPlatformSourceColumn();
+      this.addObservationModelColumns();
+      this.ensureMergedIntoProjectColumns();
+      this.addObservationSubagentColumns();
+      this.addObservationsUniqueContentHashIndex();
+      this.addObservationsMetadataColumn();
+      this.dropDeadPendingMessagesColumns();
+      this.ensurePendingMessagesToolUseIdColumn();
+      this.dropWorkerPidColumn();
+      this.ensureSDKSessionsPlatformContentIdentity();
+      this.ensureUserPromptsSessionDbId();
+      this.ensurePendingMessagesSessionToolUniqueIndex();
+      this.ensureSyncedAtColumns();
+      this.ensureSyncOriginColumns();
+      this.ensureSyncOutbox();
+      this.ensureSyncEntityLedger();
+      this.ensureSyncRevisionTextAffinity();
+      this.initializeSyncHubLaunchBaseline();
+      this.normalizeConceptTags();
+      this.ensureSDKSessionsObservedColumns();
+      this.ensureToolUsesTable();
+      this.ensureTelegramWrapupsTable();
+      this.addDedupTables();
+      this.refreshUnicodeTitleNormKeys();
+      this.ensureReinforcementColumns();
+      this.ensureSessionCwdColumn();
+      this.dropWriteOnlyUserPromptsFtsAndScopeFtsUpdateTriggers();
+      this.ensureProjectNocaseIndexes();
+      this.ensureAdvisorCallsTable();
+      this.ensureSessionProjectKeySourceColumn();
+      this.requeuePromptsDeadLetteredForSize();
+      this.ensureWorkStateTable();
+      this.ensureDeliverablesTable();
+      this.ensureHookSpoolConsumedTable();
+      this.ensureProjectRecencyIndexes();
+      this.ensureMergedIntoProjectCoveringIndexes();
+      this.ensureNativePromptIdentity();
+      this.ensureObservationFileIndex();
+    } catch (error) {
+      // An injected connection belongs to the caller on constructor failure.
+      // A path-opened connection has no reachable owner if construction throws.
+      if (!(dbPathOrDb instanceof Database)) this.db.close(true);
+      throw error;
+    }
   }
 
   /**
@@ -4595,7 +4602,10 @@ export class SessionStore {
   }
 
   close(): void {
-    this.db.close();
+    // Bun's non-strict close leaves native statements alive until GC. Release
+    // every statement now so shutdown/restore can rename the file on Windows.
+    this.db.close(true);
+    this.statementCache.clear();
   }
 
   /**

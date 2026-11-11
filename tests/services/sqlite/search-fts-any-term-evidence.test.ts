@@ -216,7 +216,7 @@ describe('short any-term questions retain bounded matching evidence', () => {
       try {
         expect(new SessionSearch(reader).searchObservations(question).map(row => row.title)).toContain(decision);
       } finally {
-        reader.close();
+        reader.close(true);
       }
       store = new SessionStore(':memory:');
     } finally {

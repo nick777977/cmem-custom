@@ -126,7 +126,7 @@ describe('runOneTimeV12_4_3Cleanup', () => {
     const realCount = (verify.prepare(`SELECT COUNT(*) AS n FROM sdk_sessions WHERE project = 'real-project'`).get() as { n: number }).n;
     const survivingPrompts = (verify.prepare('SELECT COUNT(*) AS n FROM user_prompts').get() as { n: number }).n;
     const survivingPending = (verify.prepare('SELECT COUNT(*) AS n FROM pending_messages').get() as { n: number }).n;
-    verify.close();
+    verify.close(true);
 
     expect(observerCount).toBe(0);
     expect(realCount).toBe(1);
@@ -146,7 +146,7 @@ describe('runOneTimeV12_4_3Cleanup', () => {
 
     const verify = new Database(dbPath, { readonly: true });
     const survivingPending = (verify.prepare('SELECT COUNT(*) AS n FROM pending_messages').get() as { n: number }).n;
-    verify.close();
+    verify.close(true);
     expect(survivingPending).toBe(9);
   });
 
@@ -263,7 +263,7 @@ describe('runOneTimeV12_4_3Cleanup', () => {
 
     const verify = new Database(dbPath, { readonly: true });
     const observerCount = (verify.prepare('SELECT COUNT(*) AS n FROM sdk_sessions WHERE project = ?').get(OBSERVER_SESSIONS_PROJECT) as { n: number }).n;
-    verify.close();
+    verify.close(true);
     expect(observerCount).toBe(1); 
   });
 });

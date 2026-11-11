@@ -98,7 +98,7 @@ function seedDbWithUniqueConstraintAndDiscoveryTokens(dbPath: string): void {
     VALUES ('mem-healthy', 'proj-a', 'first summary', 42, ?, ?)
   `).run(ISO, EPOCH);
   db.run('PRAGMA foreign_keys = ON');
-  db.close();
+  db.close(true);
 }
 
 /**
@@ -134,7 +134,7 @@ function seedDbThatAlreadyLostTheColumn(dbPath: string): void {
     db.prepare('INSERT INTO schema_versions (version, applied_at) VALUES (?, ?)').run(version, ISO);
   }
   db.run('PRAGMA foreign_keys = ON');
-  db.close();
+  db.close(true);
 }
 
 function columnNames(db: Database, table: string): string[] {
@@ -197,7 +197,7 @@ describe('session_summaries v7 rebuild keeps post-v7 columns (#3890)', () => {
     ).get() as { discovery_tokens: number };
     expect(third.discovery_tokens).toBe(0);
 
-    store.db.close();
+    store.db.close(true);
   });
 
   it('re-adds discovery_tokens on a database where the old rebuild already dropped it', () => {
@@ -214,6 +214,6 @@ describe('session_summaries v7 rebuild keeps post-v7 columns (#3890)', () => {
     `).run(ISO, EPOCH);
     expect(count(store.db, 'SELECT COUNT(*) AS n FROM session_summaries')).toBe(1);
 
-    store.db.close();
+    store.db.close(true);
   });
 });

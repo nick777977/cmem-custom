@@ -2815,7 +2815,7 @@ var init_request_judge = __esm({
 // src/services/work-view/request-groups.mjs
 import { Database } from "bun:sqlite";
 import { createHash } from "node:crypto";
-import { mkdirSync as mkdirSync4, readFileSync as readFileSync7, readdirSync, renameSync as renameSync2, statSync as statSync5, writeFileSync as writeFileSync2 } from "node:fs";
+import { mkdirSync as mkdirSync4, readFileSync as readFileSync7, readdirSync, statSync as statSync5 } from "node:fs";
 import { homedir as homedir7 } from "node:os";
 import { join as join9 } from "node:path";
 function placeholders(values) {
@@ -2970,11 +2970,7 @@ function readJson(path3, fallback) {
   }
 }
 function writeJsonAtomic(path3, value) {
-  mkdirSync4(join9(path3, ".."), { recursive: true });
-  const temp = `${path3}.tmp`;
-  writeFileSync2(temp, `${JSON.stringify(value, null, 2)}
-`, { mode: 384 });
-  renameSync2(temp, path3);
+  writeJsonFileAtomic(path3, value, { mode: 384 });
 }
 function applyGroupDecisions(stored, decisions, now = Date.now(), { projectOf = /* @__PURE__ */ new Map() } = {}) {
   if (!Array.isArray(decisions?.groups)) throw new TypeError("Decisions need a groups array.");
@@ -3568,6 +3564,7 @@ var DATA_DIR2, LEDGER_DIR, AGENT_WRITTEN_PROMPTS_FILE, DAY_MS2, GOALS_STALE_MS, 
 var init_request_groups = __esm({
   "src/services/work-view/request-groups.mjs"() {
     "use strict";
+    init_atomic_json();
     init_request_projection();
     init_owner_goals();
     init_session_project();
