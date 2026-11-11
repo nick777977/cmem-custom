@@ -1,12 +1,14 @@
 # Next target check — CLAUDE-WINDOWS-VERIFY
 
-**Cleanup verification, 2026-11-11:** completed on the existing cleanup
-branch; five hook checks closed and exact reference verification works.
-[Readiness verdict](cleanup/MERGE-READINESS.md) recommends no merge yet because
-the expanded retained Windows checks remain red. The
-[next cleanup task](cleanup/NEXT-SESSION.md) closes that bounded regression
-gate. Do not repeat deletion or resume the main target-host task below as
-part of cleanup. Main-roadmap/Claude/Bedrock acceptance is unchanged.
+**Cleanup Windows gate, 2026-11-11: completed; bounded cleanup merge recommended.**
+373 selected Bun tests/27 files, four Node host/recovery checks, typechecks,
+guarded compile and fresh copied real-Chroma/viewer/recovery/restart PASS.
+[Readiness verdict](cleanup/MERGE-READINESS.md) ·
+[Owner-directed integration review](cleanup/NEXT-SESSION.md). No merge/push.
+Stay on the cleanup branch for that review; do not repeat completed deletion
+or resource fixes. The main target-host task below is separately scoped and
+has not advanced. Full suite remains NOT RUN; local Better Auth HTTP 500 is
+separate from the selected viewer flow and provider login.
 
 Continue on `feat/cmem-light-local` with one coordinator. Check branch,
 HEAD and status. Read [STATE](memory/STATE.md), [TASKS](memory/TASKS.md),

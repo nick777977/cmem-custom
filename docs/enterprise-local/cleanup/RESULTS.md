@@ -1,5 +1,15 @@
 # Cleanup implementation results
 
+**Current assessment, 2026-11-11:** retained Windows regression gate closed;
+cleanup merge recommended, no merge/push performed. 373 selected Bun tests in
+27 files, four Node host/recovery checks, both typechecks/guarded compile and
+fresh copied-build real Chroma/viewer/capture/search/recovery/restart PASS.
+Seven runtime outputs paired; current receipt covers 813 source inputs and
+81 Codex/80 Claude files. Full suite NOT RUN; unused local Better Auth HTTP
+500 remains separate. [Current verdict](MERGE-READINESS.md) ·
+[Per-file results](windows-regression-results.json). Earlier failed-check counts
+and unchanged-byte statements below are historical, superseded by that verdict.
+
 2026-11-11. Entry `8b93ceb3db870bbbb766aebf51df65abc6c745e1`,
 branch `codex/repository-cleanup-plan`. Three bounded cleanup slices completed.
 Baseline paths, byte sizes and historical source citations remain in the

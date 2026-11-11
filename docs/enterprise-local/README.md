@@ -1,13 +1,14 @@
 # Enterprise local fork: project memory
 
-**Cleanup merge verification, 2026-11-11:** five known hook checks closed;
-root/viewer typechecks, unchanged-output guarded compile, bound hooks/MCP
-and separate recovery rerun pass. Expanded selected checks remain red
-(1,806 PASS / 90 FAIL / 3 SKIP in 220 Bun files); most residual failures
-reproduce on the target or inspect unchanged legacy templates. Merge is
-**not recommended yet** until the retained Windows regression gate is closed.
-[Verdict and every residual issue](cleanup/MERGE-READINESS.md) ·
-[Next gate](cleanup/NEXT-SESSION.md). Earlier cleanup status below is historical.
+**Windows regression gate, 2026-11-11: cleanup merge recommended.** All 22
+original failed files plus five focused dependencies pass: 373 tests in 27 Bun
+files, zero failures. Both typechecks/guarded compile, four Node host/recovery
+checks and a fresh copied build with real prepared Chroma, viewer/My Work,
+capture/search/recovery/restart pass. Seven outputs paired; current receipt
+checks 813 inputs and 81 Codex/80 Claude files. Full suite NOT RUN; unused local
+Better Auth sessions still HTTP 500. No merge/push performed.
+[Verdict and each closed row](cleanup/MERGE-READINESS.md) ·
+[Owner integration review](cleanup/NEXT-SESSION.md). Earlier status below is historical.
 
 **Repository cleanup, 2026-11-11:** the existing cleanup branch now contains
 three bounded implementation slices: PDF/automation removal, extra-host

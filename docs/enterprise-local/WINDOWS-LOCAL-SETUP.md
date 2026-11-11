@@ -2,11 +2,12 @@
 
 **Current cleanup reference check, 2026-11-11:** use the pinned Node with
 `scripts/enterprise-local/verify-cleanup-reference.mjs` and optionally
-`--host claude`. This verifies the original cleanup reference destination,
-811 receipt source inputs and copied-build hashes; it refuses another path.
-It does not refresh a portable inventory or the old SBOM. Runtime bytes stayed
-unchanged during merge verification. [Current readiness](cleanup/MERGE-READINESS.md)
-still recommends closing the retained Windows regression gate before merge.
+`--host claude`. This verifies the refreshed regression-gate reference roots,
+813 source inputs and copied-build hashes; it refuses another path. Seven
+runtime outputs changed and were restaged/tested with capture/search/recovery,
+real prepared Chroma, viewer/My Work and restart. It does not refresh a portable
+inventory or old SBOM. [Current readiness](cleanup/MERGE-READINESS.md) recommends
+merge for bounded cleanup; full-suite/target-host acceptance remains separate.
 
 **Cleanup branch, 2026-11-11:** new source/bundles use `cmem-light` display
 metadata and retain only Claude Code/Codex hosts. The old inventories/SBOM and

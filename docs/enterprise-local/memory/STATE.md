@@ -1,5 +1,36 @@
 # Current handoff
 
+2026-11-11 **WINDOWS-REGRESSION-GATE completed; cleanup merge recommended.**
+On existing `codex/repository-cleanup-plan`, entry `e113238ad`, source/paired
+outputs `dff499e45`, reproducible gate/portable fixtures `974d779e4`.
+All 22 originally failing files plus five focused dependencies pass:
+**373 PASS / 0 FAIL in 27 Bun files**. Root/viewer typechecks and guarded
+compile pass: 19 inputs and 1,943 tracked source sentinels unchanged across
+compile; seven of 186 outputs changed and are paired. Full 1,069-file suite
+NOT RUN; earlier attempts/baseline provenance remain preserved.
+
+Fresh copied build passes capture/SQLite/FTS/MCP, private prompt omission,
+real prepared Chroma bilingual retrieval/index persistence, viewer/My Work,
+restart and deliberate recovery. Two failed generations survive shutdown,
+require explicit acknowledgement, commit once and never automatically resend.
+37 sampled child PIDs exited; four ports rebound. Four separate Node
+Claude/Codex bound-hook/MCP/interruption/recovery tests pass. New current
+destination-bound receipt verifies 813 source inputs and 81 Codex/80 Claude
+files. Old inventories/SBOM remain historical; moved stages need new binding.
+
+Local Better Auth sessions still return HTTP 500, unused by the selected
+viewer/memory flow; no signup/schema migration. Real provider login/AWS/Claude
+CLI acceptance and broader suite/browser/distribution/CI remain separate.
+No real data, installs/downloads, agents, task branches/worktrees, merge or push.
+Target ancestry rechecked; main-roadmap target-host work did not advance.
+Reservations released. Next: owner review/integration only when explicitly
+requested; no additional cleanup source slice queued.
+[Verdict and every closed row](../cleanup/MERGE-READINESS.md) ·
+[Actual attempts/results](../cleanup/windows-regression-results.json) ·
+[Next-session scope](../cleanup/NEXT-SESSION.md).
+
+**Earlier no-merge/current-task wording below is historical and superseded.**
+
 2026-11-11 **CLEANUP-MERGE-VERIFY completed; merge NOT recommended yet.**
 Source/tests `f6f49db53`, verifier `d9fa7f90f` on the existing cleanup branch.
 The five known hook assertions are closed. Direct bound Claude/Codex hooks/MCP

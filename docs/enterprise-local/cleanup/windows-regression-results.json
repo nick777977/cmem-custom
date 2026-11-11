@@ -1,0 +1,1158 @@
+{
+  "date": "2026-11-11",
+  "task": "WINDOWS-REGRESSION-GATE",
+  "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+  "entry": "e113238ade58c8dcd25a5127d9a796b71d8ee124",
+  "branch": "codex/repository-cleanup-plan",
+  "recommendation": "merge recommended for the bounded cleanup scope; no merge or push performed",
+  "baseline": {
+    "target": "a9364604d026d79be8ab771ecb861688972d169c",
+    "provenance": "Original report preserved verbatim; same target-snapshot failures were recorded there, not newly rerun here.",
+    "report": "merge-verification-results.json",
+    "reportSha256": "e0f8ff1744467666dac2eac65c2d04fea0ef6a697f94f1da886329501eead0ee"
+  },
+  "reproductionBeforeCorrection": {
+    "sourceCommit": "e113238ade58c8dcd25a5127d9a796b71d8ee124",
+    "evidence": "Observed command output before source edits; the scratch reproduction runner reused its log names on later attempts.",
+    "results": [
+      {
+        "file": "tests/backup/restore-swap.test.ts",
+        "pass": 11,
+        "fail": 1,
+        "issue": "Live Windows WAL could not move before injected final failure"
+      },
+      {
+        "file": "tests/services/sqlite/search-fts-probe-scope.test.ts",
+        "pass": 0,
+        "fail": 2,
+        "issue": "EBUSY at folder removal after non-strict close"
+      },
+      {
+        "file": "tests/sqlite/session-store-writer-version.test.ts",
+        "pass": 0,
+        "fail": 15,
+        "issue": "EBUSY from native statements/refused opens/raw fixture handles"
+      },
+      {
+        "file": "tests/work-view/auto-refresh.test.ts",
+        "pass": 25,
+        "fail": 1,
+        "issue": "EPERM replacing refresh.json.tmp"
+      }
+    ]
+  },
+  "attempts": {
+    "resources-first-yUwlxF": {
+      "classification": "sandbox filesystem/loopback denials plus initial lifecycle assertion bug; not product acceptance",
+      "node": "v22.23.4",
+      "bun": "1.4.4",
+      "python": "3.13.15",
+      "sourceHead": "e113238ade58c8dcd25a5127d9a796b71d8ee124",
+      "results": [
+        {
+          "file": "tests/services/sqlite/connection-lifecycle.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 401,
+          "pass": 2,
+          "fail": 5,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/request-first.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 2765,
+          "pass": 15,
+          "fail": 4,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/skill-scripts-python.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 8780,
+          "pass": 50,
+          "fail": 5,
+          "skip": 0
+        },
+        {
+          "file": "tests/backup/pending-restore.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 4605,
+          "pass": 4,
+          "fail": 4,
+          "skip": 0
+        }
+      ]
+    },
+    "resources-user-9Vrk09": {
+      "classification": "ordinary Windows user isolated attempt",
+      "node": "v22.23.4",
+      "bun": "1.4.4",
+      "python": "3.13.15",
+      "sourceHead": "e113238ade58c8dcd25a5127d9a796b71d8ee124",
+      "results": [
+        {
+          "file": "tests/services/sqlite/connection-lifecycle.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 295,
+          "pass": 7,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/request-first.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 2426,
+          "pass": 19,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/skill-scripts-python.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 7607,
+          "pass": 54,
+          "fail": 1,
+          "skip": 0
+        },
+        {
+          "file": "tests/backup/pending-restore.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 659,
+          "pass": 8,
+          "fail": 0,
+          "skip": 0
+        }
+      ]
+    },
+    "gate-first-IScU5y": {
+      "classification": "ordinary Windows user isolated attempt",
+      "node": "v22.23.4",
+      "bun": "1.4.4",
+      "python": "3.13.15",
+      "sourceHead": "e113238ade58c8dcd25a5127d9a796b71d8ee124",
+      "results": [
+        {
+          "file": "tests/backup/pending-restore.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 615,
+          "pass": 8,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/backup/restore-swap.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 3182,
+          "pass": 13,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/infrastructure/plugin-distribution.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 14578,
+          "pass": 80,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/infrastructure/version-consistency.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 131,
+          "pass": 15,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/search-fts-any-term-bounded.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 5304,
+          "pass": 13,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/search-fts-any-term-evidence.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 6344,
+          "pass": 20,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/search-fts-partial-setup.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 287,
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/search-fts-probe-scope.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 344,
+          "pass": 2,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/timeline-anchor-tie-boundary.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 474,
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/native-prompt-identity.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 459,
+          "pass": 3,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-fts-triggers.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 1054,
+          "pass": 7,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-orphan-fk-repair.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 837,
+          "pass": 3,
+          "fail": 1,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-v7-rebuild-keeps-cascade.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 722,
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-v7-rebuild-keeps-columns.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 393,
+          "pass": 2,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-writer-version.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 916,
+          "pass": 15,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/unicode-title-key-upgrade.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 324,
+          "pass": 3,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/writer-check-busy-timeout.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 1690,
+          "pass": 0,
+          "fail": 1,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/auto-refresh.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 1302,
+          "pass": 26,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/request-first.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 3957,
+          "pass": 19,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/seed-focus-areas.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 733,
+          "pass": 9,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/skill-scripts-python.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 13568,
+          "pass": 55,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/worker/search/chroma-category-identity.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 1006,
+          "pass": 2,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/connection-lifecycle.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 582,
+          "pass": 7,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/write-json-file-atomic.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 3055,
+          "pass": 15,
+          "fail": 1,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/request-groups.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 889,
+          "pass": 33,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/enterprise-local/cleanup-reference.test.mjs",
+          "status": 0,
+          "timedOut": false,
+          "ms": 401,
+          "pass": 1,
+          "fail": 0,
+          "skip": 0
+        }
+      ]
+    },
+    "ownership-final-NlFjZj": {
+      "classification": "ordinary Windows user isolated attempt",
+      "node": "v22.23.4",
+      "bun": "1.4.4",
+      "python": "3.13.15",
+      "sourceHead": "e113238ade58c8dcd25a5127d9a796b71d8ee124",
+      "results": [
+        {
+          "file": "tests/sqlite/session-store-orphan-fk-repair.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 476,
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/writer-check-busy-timeout.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 1669,
+          "pass": 1,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/write-json-file-atomic.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 2267,
+          "pass": 16,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/infrastructure/cleanup-v12_4_3.test.ts",
+          "status": 1,
+          "timedOut": false,
+          "ms": 677,
+          "pass": 4,
+          "fail": 3,
+          "skip": 0
+        }
+      ]
+    },
+    "final-q8AQ7w": {
+      "classification": "ordinary Windows user isolated attempt",
+      "node": "v22.23.4",
+      "bun": "1.4.4",
+      "python": "3.13.15",
+      "sourceHead": "e113238ade58c8dcd25a5127d9a796b71d8ee124",
+      "results": [
+        {
+          "file": "tests/backup/pending-restore.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 821,
+          "pass": 8,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/backup/restore-swap.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 3552,
+          "pass": 13,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/infrastructure/plugin-distribution.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 13256,
+          "pass": 80,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/infrastructure/version-consistency.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 131,
+          "pass": 15,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/search-fts-any-term-bounded.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 2510,
+          "pass": 13,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/search-fts-any-term-evidence.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 5837,
+          "pass": 20,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/search-fts-partial-setup.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 298,
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/search-fts-probe-scope.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 340,
+          "pass": 2,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/timeline-anchor-tie-boundary.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 488,
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/native-prompt-identity.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 554,
+          "pass": 3,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-fts-triggers.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 1119,
+          "pass": 7,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-orphan-fk-repair.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 599,
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-v7-rebuild-keeps-cascade.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 629,
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-v7-rebuild-keeps-columns.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 394,
+          "pass": 2,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/session-store-writer-version.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 917,
+          "pass": 15,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/unicode-title-key-upgrade.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 395,
+          "pass": 3,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/sqlite/writer-check-busy-timeout.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 1726,
+          "pass": 1,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/auto-refresh.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 1311,
+          "pass": 26,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/request-first.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 3818,
+          "pass": 19,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/seed-focus-areas.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 362,
+          "pass": 9,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/skill-scripts-python.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 13470,
+          "pass": 55,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/worker/search/chroma-category-identity.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 570,
+          "pass": 2,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/services/sqlite/connection-lifecycle.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 323,
+          "pass": 7,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/write-json-file-atomic.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 2222,
+          "pass": 16,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/work-view/request-groups.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 571,
+          "pass": 33,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/enterprise-local/cleanup-reference.test.mjs",
+          "status": 0,
+          "timedOut": false,
+          "ms": 121,
+          "pass": 1,
+          "fail": 0,
+          "skip": 0
+        },
+        {
+          "file": "tests/infrastructure/cleanup-v12_4_3.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 688,
+          "pass": 7,
+          "fail": 0,
+          "skip": 0
+        }
+      ]
+    },
+    "infrastructure-final-sx6qxf": {
+      "classification": "ordinary Windows user isolated attempt",
+      "node": "v22.23.4",
+      "bun": "1.4.4",
+      "python": "3.13.15",
+      "sourceHead": "e113238ade58c8dcd25a5127d9a796b71d8ee124",
+      "results": [
+        {
+          "file": "tests/infrastructure/plugin-distribution.test.ts",
+          "status": 0,
+          "timedOut": false,
+          "ms": 12457,
+          "pass": 80,
+          "fail": 0,
+          "skip": 0
+        }
+      ]
+    }
+  },
+  "summary": {
+    "files": 27,
+    "originallyFailingFiles": 22,
+    "focusedDependencyFiles": 5,
+    "pass": 373,
+    "fail": 0,
+    "skip": 0,
+    "fullSuiteRun": false
+  },
+  "final": [
+    {
+      "file": "tests/backup/pending-restore.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 821,
+      "pass": 8,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "5300ae27baa284baca214b8b95750746fc856315b8e450eb10bc11cbbb9c5fc6",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_backup_pending-restore.test.ts.log",
+      "rawLogSha256": "1683af5b337cc2db5a93a31608ec4fdf90577d1d2e35863098a0981d543d8981"
+    },
+    {
+      "file": "tests/backup/restore-swap.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 3552,
+      "pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "bd07a29a9fdd0b139f67e9d3a9e8f82da6e2ca581c0435285fb2b94e433c6a3e",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_backup_restore-swap.test.ts.log",
+      "rawLogSha256": "86c795fdf16d689bee30eedcb5a5835e51bcadd3e637119fb0e796f7c7fd23d8"
+    },
+    {
+      "file": "tests/infrastructure/plugin-distribution.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 12457,
+      "pass": 80,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "b5b290f0d7774b56bd2090b10851ee88dc7b7f1581b044fea050c7d7b8994d88",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/infrastructure-final-sx6qxf/tests_infrastructure_plugin-distribution.test.ts.log",
+      "rawLogSha256": "7a5c924a0948f7ba986b428102f560874e9a7a6f3fd1aa25d1e7e1a0a926a5b3"
+    },
+    {
+      "file": "tests/infrastructure/version-consistency.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 131,
+      "pass": 15,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "8f9713d36ebb9b08f88d6a612b5f161874a2fdda8f770d8f63d61116f407e515",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_infrastructure_version-consistency.test.ts.log",
+      "rawLogSha256": "4792982534977ac81b847fca0d86da970d8876da74108d523865d3600f90e9ec"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-any-term-bounded.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 2510,
+      "pass": 13,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "41bbe0236941bb7c6afa125a1d00fc399d89baaa4462ceefa5202cb439596c47",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_services_sqlite_search-fts-any-term-bounded.test.ts.log",
+      "rawLogSha256": "a119cd61c520536c1d7bade8e1db81cf7dd7486b732cda00d39d94673b3323d3"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-any-term-evidence.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 5837,
+      "pass": 20,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "422033d8455db1a65116f4cdfeeb76edbdc54fd66e6b7e85b8a7420182612ac8",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_services_sqlite_search-fts-any-term-evidence.test.ts.log",
+      "rawLogSha256": "5d5d91a641b6848f37de0baf07a3ad62209db634025684107a4a1f2a21b66478"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-partial-setup.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 298,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "9b3fcde8996dfba5b0c7e8b5d77ccfba46149b5d76e00bdb321e9d3fd8f97691",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_services_sqlite_search-fts-partial-setup.test.ts.log",
+      "rawLogSha256": "78f9bc51371c7fd93b282d969402c0dd9a153bce0dc950a6dd1f704463f8cacf"
+    },
+    {
+      "file": "tests/services/sqlite/search-fts-probe-scope.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 340,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "793081c4a8fa6412c2d8b43b9e671e3bfeffa058e01c3d59e27afa08c945dc66",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_services_sqlite_search-fts-probe-scope.test.ts.log",
+      "rawLogSha256": "bd895fee158d2cd65f3f71a8bd8fa2a53d81d7e0967c4038dac4385b4f68e9c2"
+    },
+    {
+      "file": "tests/services/sqlite/timeline-anchor-tie-boundary.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 488,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "d759ce90341d3c7e423d9183c40e8b73239fdcb7c92f768d70d17443b3e8f994",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_services_sqlite_timeline-anchor-tie-boundary.test.ts.log",
+      "rawLogSha256": "f55cec2fe4d58138147ca8097e6f2a9d7f2a7d073f6e0cb5e1a9a7311210a405"
+    },
+    {
+      "file": "tests/sqlite/native-prompt-identity.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 554,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "08527703662fe780c9b39d6b25a693a7bd5b072ccd8b48da916b23f3f1f252b2",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_sqlite_native-prompt-identity.test.ts.log",
+      "rawLogSha256": "9499f6bb24c52848c3197edecf2a4660559b388f3cc91165b6a2a1a024dc9ac6"
+    },
+    {
+      "file": "tests/sqlite/session-store-fts-triggers.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 1119,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "822fa6ffacd1cfba36375a0b9ad1b11bda9961e7a200c00b2563d82c32eede9a",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_sqlite_session-store-fts-triggers.test.ts.log",
+      "rawLogSha256": "4b7a3981a8ca9e9826428385d03c5de70e3f989830ddfcd858929fd17ee09f62"
+    },
+    {
+      "file": "tests/sqlite/session-store-orphan-fk-repair.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 599,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "588b46949c3163f3e22095bdc29f4f9e838c0890855ba35f0227bfa667bb0c11",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_sqlite_session-store-orphan-fk-repair.test.ts.log",
+      "rawLogSha256": "343b0fd934f86f93be4770130c079233845f836e03c4dd5b72b34db9a596209e"
+    },
+    {
+      "file": "tests/sqlite/session-store-v7-rebuild-keeps-cascade.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 629,
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "5ce1ae105a9bc6f88758d07ca0fcd502ca312d74085a1965a8ff46d5ca5e9613",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_sqlite_session-store-v7-rebuild-keeps-cascade.test.ts.log",
+      "rawLogSha256": "f6aa1e2780a5da57b57afd079e30e35fb3f3ec42ad3abe7c4af1f78907b72fa7"
+    },
+    {
+      "file": "tests/sqlite/session-store-v7-rebuild-keeps-columns.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 394,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "c9c79a7195593456cda7d715523f3abf0ff3bd7b8e0ddbfa26c587f5ebda4315",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_sqlite_session-store-v7-rebuild-keeps-columns.test.ts.log",
+      "rawLogSha256": "ca79adc9865df3518fe8741491bac49edfac78d09a6afe010c3dd699dbf92edd"
+    },
+    {
+      "file": "tests/sqlite/session-store-writer-version.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 917,
+      "pass": 15,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "c626edbafd4ab183c94b62036f5bb69e2229f0b7b33618f26edf5834b27b6838",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_sqlite_session-store-writer-version.test.ts.log",
+      "rawLogSha256": "2cd47121d28da119eed146e690931467fece3e616ef548e88932fe90a9fccec4"
+    },
+    {
+      "file": "tests/sqlite/unicode-title-key-upgrade.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 395,
+      "pass": 3,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "99a35362e29aeb3eb0817e8e66e48817be39f18081579180fa0cf463c27c3b3e",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_sqlite_unicode-title-key-upgrade.test.ts.log",
+      "rawLogSha256": "3205c14030118d5ff4d3b2ca4d0093b7b37c0ae54f42283d19b8a43186f795f7"
+    },
+    {
+      "file": "tests/sqlite/writer-check-busy-timeout.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 1726,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "7a2f989fc847b651a5054c72f99bb228cee763f7b3d7fc1eaffaf96fbadb36d7",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_sqlite_writer-check-busy-timeout.test.ts.log",
+      "rawLogSha256": "c8f7e09854f2ce572bc8f501538e1bf8b6e8263179a1638d21733ae1a625c95c"
+    },
+    {
+      "file": "tests/work-view/auto-refresh.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 1311,
+      "pass": 26,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "0c13d0552eb7ab8419603d7c1b677bf790b5ae8ea8bc0e32e8a90e7d30bffb78",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_work-view_auto-refresh.test.ts.log",
+      "rawLogSha256": "b28e1f0dc759d202fcee29f7ed732d3acdf1efc92cdb96be55a8043637b85d35"
+    },
+    {
+      "file": "tests/work-view/request-first.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 3818,
+      "pass": 19,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "04fa6238d6d7b0a582aee259611d3ebf2e434de6d015be722cd8ef7089f38404",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_work-view_request-first.test.ts.log",
+      "rawLogSha256": "9508f1e40dc514057dbdd6aff45f33e4ff9531b5a1c6c5131677c0c152010e9c"
+    },
+    {
+      "file": "tests/work-view/seed-focus-areas.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 362,
+      "pass": 9,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "a0f44b2acbfbea963a9e41411e4c1caff22dc4c3c9f6a6dc22ccf8c7b2479f2c",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_work-view_seed-focus-areas.test.ts.log",
+      "rawLogSha256": "515fb0b9c34f42c20db75f07d694a8517bbd51cfc12464a29da5ac983c86ca43"
+    },
+    {
+      "file": "tests/work-view/skill-scripts-python.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 13470,
+      "pass": 55,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "d38b8c5ede5eff447136847af7ec0533259f8ef4f85e2efd5a5d367451e4cbc1",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_work-view_skill-scripts-python.test.ts.log",
+      "rawLogSha256": "e3bed2cf0d5342a0f37079ad6ea460489df2195e1cf6bc0de6a09d2d3eb19351"
+    },
+    {
+      "file": "tests/worker/search/chroma-category-identity.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 570,
+      "pass": 2,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "e17d4759a1da19bdb9ef7aeebb7e74c9e0b846eab6798e4f5fd123d29bc14402",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_worker_search_chroma-category-identity.test.ts.log",
+      "rawLogSha256": "613fafa2ac2b395888295b21d7b6e1a1731a9aa95cce24faa22e47a9e9fb384b"
+    },
+    {
+      "file": "tests/services/sqlite/connection-lifecycle.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 323,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "599444224f9d56b78125f5f2f0ad85397a682cf73e305bb7ea1c82c625b38133",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_services_sqlite_connection-lifecycle.test.ts.log",
+      "rawLogSha256": "52a840e7748db9528150273f2df0f65cf8ea9bf66c6f3cf7095d963d1bec23b9"
+    },
+    {
+      "file": "tests/write-json-file-atomic.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 2222,
+      "pass": 16,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "90e59abbba150ede20604190bfd8e8cadadc5218cf51c73a7a9fbc6024d03c90",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_write-json-file-atomic.test.ts.log",
+      "rawLogSha256": "f6fe7a481daf3a6209d5862c45ee0f6d11e4f389c83656323363572c882222eb"
+    },
+    {
+      "file": "tests/work-view/request-groups.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 571,
+      "pass": 33,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "248b8e21b53767a9bde070fbd99842bdd7b5062787ab2b876df2cfa002625a70",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_work-view_request-groups.test.ts.log",
+      "rawLogSha256": "9b8e4bb0394349fa06cde0f782d7c9ceeab05d0b3b566ad655e77060d7792fdd"
+    },
+    {
+      "file": "tests/enterprise-local/cleanup-reference.test.mjs",
+      "status": 0,
+      "timedOut": false,
+      "ms": 121,
+      "pass": 1,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "6d719af3a95389a69995213872510ebd9aa839256decf044928ccb7638056151",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_enterprise-local_cleanup-reference.test.mjs.log",
+      "rawLogSha256": "dd5450cf9cb641ef9ae0cc22fd0aa80c5e11f3e52bbf0b1d5d717db968050b5e"
+    },
+    {
+      "file": "tests/infrastructure/cleanup-v12_4_3.test.ts",
+      "status": 0,
+      "timedOut": false,
+      "ms": 688,
+      "pass": 7,
+      "fail": 0,
+      "skip": 0,
+      "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
+      "testSha256": "ee225aab6d887c9a37742e2126af2a76c237481671a21139b06ce3ded6261a28",
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/final-q8AQ7w/tests_infrastructure_cleanup-v12_4_3.test.ts.log",
+      "rawLogSha256": "9b0dcb44544903153c996090e96f8663455afd6a59b65463d1cde568769fd18c"
+    }
+  ],
+  "checks": {
+    "typechecks": {
+      "viewer": 0,
+      "root": 0
+    },
+    "compile": {
+      "inputs": 19,
+      "inputDelta": [],
+      "outputs": 186,
+      "changed": [
+        "plugin/scripts/context-read-worker.cjs",
+        "plugin/scripts/context-read-worker.cjs.map",
+        "plugin/scripts/worker-service.cjs",
+        "plugin/scripts/worker-service.cjs.map",
+        "plugin/skills/request-progress/scripts/request-groups.mjs",
+        "plugin/sqlite/SessionStore.js",
+        "plugin/sqlite/SessionStore.js.map"
+      ]
+    },
+    "compileSourceSentinels": {
+      "count": 1943,
+      "changedAcrossCompile": []
+    },
+    "lanes": {
+      "status": "PASS partition only",
+      "files": 1069,
+      "fast": 1045,
+      "integration": 24,
+      "overlap": 0,
+      "missing": 0
+    },
+    "host": {
+      "status": "PASS",
+      "tests": 4,
+      "rawLog": ".scratch/enterprise-local/windows-regression-gate/host.log",
+      "sha256": "2516c8303ea8a3f0b2cdbab65c81d58cf0bb474a6e1642dbda3cb6a324addcf6",
+      "scope": "Direct destination-bound Claude/Codex hook/MCP commands, stopped/wrong worker refusal and interrupted/deliberate recovery; no real CLI registration"
+    },
+    "runtime": {
+      "status": "PASS",
+      "run": "C:\\0\\ai\\claude\\claude-mem-custom\\cmem-light\\.scratch\\enterprise-local\\windows-regression-gate\\run-cafd7b41",
+      "fixtureSha256": "84851d8f62c1e27ba4e8e342827466051d2f1ce4ad801aa6639ca6634855902e",
+      "evidenceSha256": "e45a4343dcc37d2439a95c14b715ac9d85013fd4dc23c2a156bec4c6f3c6eb7e",
+      "capture": {
+        "observations": 3,
+        "summaries": 1,
+        "privacy": true
+      },
+      "chroma": {
+        "phase": "cold-chroma",
+        "connected": true,
+        "collections": 0,
+        "probe": "query"
+      },
+      "restart": {
+        "phase": "restart",
+        "observations": 3,
+        "summaries": 1,
+        "indexRows": 11,
+        "providerPosts": 0
+      },
+      "recovery": {
+        "phase": "deliberate-recovery",
+        "committed": 2,
+        "automaticResends": 0,
+        "repeatedSelectionsRefused": true
+      },
+      "cleanup": {
+        "sampledPidsExited": 37,
+        "portsRebound": 4
+      },
+      "browser": {
+        "viewerRendered": true,
+        "myWorkRendered": true,
+        "resourceOrigins": "loopback only",
+        "remoteLinks": [],
+        "backgroundProxyRequestsBlocked": 11
+      },
+      "auth": {
+        "phase": "local-auth",
+        "status": 500,
+        "candidateInsideCheckout": true
+      },
+      "preparedAssets": "Existing synthetic prepared Chroma runtime and hash-checked multilingual MiniLM; no acquisition or real data"
+    },
+    "references": {
+      "status": "PASS",
+      "sourceInputs": 813,
+      "codexFiles": 81,
+      "claudeFiles": 80,
+      "codexDigest": "4b9aad2ab25698a51ff9b4d249d1205965665e271282435518e0b16d8ea57150",
+      "claudeDigest": "2b80c30cef6f595bec2ece7bdfc49f9f09f9faa82a2324b817d18369fadd8be5",
+      "sourceDigest": "7792089a51f070196eec02ec1a4ff4eb1dcb2dcfaa30bf581690334c76c68842"
+    }
+  },
+  "limits": [
+    "373 selected Bun tests are not the full 1069-file suite. Historical 198 passing files were not relabeled as rerun.",
+    "Inherited POSIX-only ACL/symlink test branches return on Windows; they are not Windows ACL proof.",
+    "Browser background requests were blocked by the local fixture proxy; sampled process/loopback checks are not OS-wide egress/crash containment proof.",
+    "Unused local Better Auth sessions still return HTTP 500; no signup or schema migration.",
+    "Real Claude CLI/Bedrock/AWS/provider auth/live inference and formal distribution/CI NOT RUN."
+  ]
+}

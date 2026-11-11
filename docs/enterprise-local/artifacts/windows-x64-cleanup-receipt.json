@@ -2,7 +2,8 @@
   "schemaVersion": 1,
   "date": "2026-11-11",
   "purpose": "Current cleanup synthetic reference stages; destination-bound, not a portable distribution receipt",
-  "sourceParent": "a5c3c236423401affc62ef8ab8ee3e6485b28cf2",
+  "sourceParent": "974d779e40e85b345149c86a37363cdf78fc31b9",
+  "sourceCommit": "974d779e40e85b345149c86a37363cdf78fc31b9",
   "sourceInputs": [
     {
       "path": ".agents/plugins/marketplace.json",
@@ -101,12 +102,20 @@
       "sha256": "80090e4c1f5496a0ff91e8c0f27d0df6c14d2b6d871fa55accfff94d72904eb2"
     },
     {
+      "path": "scripts/enterprise-local/verify-cleanup-reference.mjs",
+      "sha256": "44d7b3154f1d1e34064c7d2b313c419c1673351ab577a3d781a5b93365a982eb"
+    },
+    {
       "path": "scripts/enterprise-local/verify-windows-artifact.mjs",
       "sha256": "1b5e314c99f38326ea18bf2bef119e5fe25cfb57f0bc58ce29416d66d8f4ed9f"
     },
     {
       "path": "scripts/enterprise-local/windows-bundle.ps1",
       "sha256": "95be1cdef7a9727740c7febb0cb5e7709ecef12a8e60b647b630a63018e01f3c"
+    },
+    {
+      "path": "scripts/enterprise-local/windows-regression-gate.mjs",
+      "sha256": "d3f51d6f4bc9a424f88a977707df6706c57f0610b88a241f29f0e2796bb3e38e"
     },
     {
       "path": "scripts/eval-read-gate.ts",
@@ -730,7 +739,7 @@
     },
     {
       "path": "src/services/backup/restore-swap.ts",
-      "sha256": "6d521356b0bb11a16d22ac034ac1a0e39901cdb11d1ae848a89e1ff2e1b8d26a"
+      "sha256": "adf9796f6eaaff762fd8be4815c3c6b87c2d6b1f271cf0dc07fe4d06477ce443"
     },
     {
       "path": "src/services/backup/snapshot-files.ts",
@@ -862,7 +871,7 @@
     },
     {
       "path": "src/services/infrastructure/CleanupV12_4_3.ts",
-      "sha256": "cb28c8b8100e52a026d7fe0984ce98ada81baadb5a2e1709615a271fe54e5adb"
+      "sha256": "854a56d1b4609438ab96c0ba2078e4fac5ec25cf8831b2383d801c8b1c56ea23"
     },
     {
       "path": "src/services/infrastructure/FtsMaintenance.ts",
@@ -1082,15 +1091,15 @@
     },
     {
       "path": "src/services/sqlite/SessionSearch.ts",
-      "sha256": "de47192ed308fdb12ff3d5b811fe8ee6790eccdc788564e43ef6f47831540ba0"
+      "sha256": "d6f42beb5fb01630b74a8ec2e9de5b6b9213964c68e8c5ef3b158b5a172f0eab"
     },
     {
       "path": "src/services/sqlite/SessionStore.ts",
-      "sha256": "63ddff1566493b1cfa046f5710cba5207a959d8c4a7cb458feef417547be8950"
+      "sha256": "71fc1660aea13b887e68bc2fe921d0ec6b3a0b7234a6139100c0245867258dc7"
     },
     {
       "path": "src/services/sqlite/connection.ts",
-      "sha256": "1e10a0ba0d39cfcd0a29466b3a7a641ec8f8d36bcd87f1ad0a1ebcf15cf26a5f"
+      "sha256": "13c4f9275d77fb073199f69aebd7f02af0902f69227a5211aaf7a6781415d32f"
     },
     {
       "path": "src/services/sqlite/dedup-store.ts",
@@ -1386,7 +1395,7 @@
     },
     {
       "path": "src/services/work-view/request-groups.mjs",
-      "sha256": "3aeb8026b2ea0b91a6fefec2c18855339a39d02745cc31f263196f542f840d28"
+      "sha256": "836d7a4ddcdf97234160054c49beb6b2f60ceae604ef3f40004c64d3c3c94743"
     },
     {
       "path": "src/services/work-view/request-judge.d.mts",
@@ -3249,9 +3258,9 @@
       "sha256": "8bbfe61bcfd5c554a4c3ac45374e7a564195aa66a4341224285dfb60f7f791e7"
     }
   ],
-  "sourceDigest": "eec8e0837c5026ef51cca1cacabee551e01ede509edc31637d2f8272ebea4915",
-  "referenceRoot": "C:\\0\\ai\\claude\\claude-mem-custom\\cmem-light\\.scratch\\enterprise-local\\cleanup-implementation\\run-46f6b0d2\\private candidate",
-  "claudeReferenceRoot": "C:\\0\\ai\\claude\\claude-mem-custom\\cmem-light\\.scratch\\enterprise-local\\cleanup-implementation\\run-46f6b0d2\\Claude reference",
+  "sourceDigest": "7792089a51f070196eec02ec1a4ff4eb1dcb2dcfaa30bf581690334c76c68842",
+  "referenceRoot": "C:\\0\\ai\\claude\\claude-mem-custom\\cmem-light\\.scratch\\enterprise-local\\windows-regression-gate\\run-cafd7b41\\private candidate",
+  "claudeReferenceRoot": "C:\\0\\ai\\claude\\claude-mem-custom\\cmem-light\\.scratch\\enterprise-local\\windows-regression-gate\\run-cafd7b41\\Claude reference",
   "files": [
     {
       "path": "catalog/.agents/plugins/marketplace.json",
@@ -3267,14 +3276,14 @@
     },
     {
       "path": "catalog/plugin/.mcp.json",
-      "bytes": 384,
-      "sha256": "e79cf134679609a779f3f72ff18eeea002f61c59ec8906cc97c81a818b744a8e",
+      "bytes": 385,
+      "sha256": "058fb8426170137c66910c69cb405b490d805b22583d1ab5403b737fa8efde05",
       "kind": "destination-bound"
     },
     {
       "path": "catalog/plugin/hooks/codex-hooks.json",
-      "bytes": 3627,
-      "sha256": "a79cfef36ac44f7c2023906516522f8e664be86c13ed4b2b35d3c42f0f58c66d",
+      "bytes": 3634,
+      "sha256": "73558634352207f9741bd9d55e698d1c8999f5164eec6f7b9bb2e7acfc8738c7",
       "kind": "destination-bound"
     },
     {
@@ -3538,8 +3547,8 @@
     },
     {
       "path": "catalog/plugin/scripts/context-read-worker.cjs",
-      "bytes": 150692,
-      "sha256": "391469a08ca0802b57d042af3368541edfc93f8100aa931bfdb7cead8e1639fb",
+      "bytes": 150786,
+      "sha256": "910f40e7f19d2059562a856231ad1db673843fd995e5a354bcee308054e9fb4f",
       "kind": "copied",
       "source": "plugin/scripts/context-read-worker.cjs"
     },
@@ -3552,8 +3561,8 @@
     },
     {
       "path": "catalog/plugin/scripts/worker-service.cjs",
-      "bytes": 3953606,
-      "sha256": "8e0582ab623bf494743851162a7380ff0ae92c409d679a407deea7a3926c7533",
+      "bytes": 3953760,
+      "sha256": "b8b24e770913216a1716eb4f4f979a7466eeeb648051163c335df211bea12911",
       "kind": "copied",
       "source": "plugin/scripts/worker-service.cjs"
     },
@@ -3594,8 +3603,8 @@
     },
     {
       "path": "catalog/plugin/skills/request-progress/scripts/request-groups.mjs",
-      "bytes": 198818,
-      "sha256": "b72f06e68c6b894146bb7f91581acefed03b1dfc4c29967d26dc0e9c3fb6f219",
+      "bytes": 198643,
+      "sha256": "a6b76e36c1adad75694a8dc7f0bc8fd3f917928ec6a4de93ab5eb990d7d06a72",
       "kind": "copied",
       "source": "plugin/skills/request-progress/scripts/request-groups.mjs"
     },
@@ -3629,15 +3638,15 @@
     },
     {
       "path": "catalog/plugin/sqlite/SessionStore.js",
-      "bytes": 191444,
-      "sha256": "2dbc251ce4287f2bfda3714d539eaeac8d97dbacbde6d6a31f028446f9160d20",
+      "bytes": 191634,
+      "sha256": "9e542fcfd2d06ee6817296ca5fbb52adc1e7908f8614fad118244709e2b29faa",
       "kind": "copied",
       "source": "plugin/sqlite/SessionStore.js"
     },
     {
       "path": "catalog/plugin/sqlite/SessionStore.js.map",
-      "bytes": 158890,
-      "sha256": "4aaec86c304c878244f96f241df551e719227587e7f72638f4793b20b112a476",
+      "bytes": 159151,
+      "sha256": "83c205fb7af4f08315ba3b5b38cab927f1c66061b4dd28ec393fda4845db36fd",
       "kind": "copied",
       "source": "plugin/sqlite/SessionStore.js.map"
     },
@@ -3805,7 +3814,7 @@
     {
       "path": "cmem-light-local.json",
       "bytes": 316,
-      "sha256": "d3de2c980433ab941b20712cc63c096e00c28e1807c63954588b1575c701c554",
+      "sha256": "9067ab6817695aeea57663505f72827470b7b9764a6560469bef038936f4f051",
       "kind": "destination-bound"
     },
     {
@@ -3815,7 +3824,7 @@
       "kind": "destination-bound"
     }
   ],
-  "sha256": "1f93fab07e5d3e563e54c95da9855f70d5aa3704839a305fd0e867e952d5cfa9",
+  "sha256": "4b9aad2ab25698a51ff9b4d249d1205965665e271282435518e0b16d8ea57150",
   "claudeFiles": [
     {
       "path": "catalog/plugin/.claude-plugin/plugin.json",
@@ -3826,14 +3835,14 @@
     },
     {
       "path": "catalog/plugin/.mcp.json",
-      "bytes": 384,
-      "sha256": "4806f7c14d9e5bdf9d2dcd4ba527050eedf25a861b6cda04190fba2e0fb01550",
+      "bytes": 385,
+      "sha256": "6d120bf068d422a26e8c901e9d2df418d6696be2325a08c7382ee33c155d2a69",
       "kind": "destination-bound"
     },
     {
       "path": "catalog/plugin/hooks/hooks.json",
-      "bytes": 4516,
-      "sha256": "26c86a0f65abc1ba0243c716dbe3505af64921e2dfe94086ae346ceb2b0c1b14",
+      "bytes": 4524,
+      "sha256": "d2aefd811803f67c3c8817e308af79d0c87a84b3e88d0178adb338b4d483c056",
       "kind": "destination-bound"
     },
     {
@@ -4097,8 +4106,8 @@
     },
     {
       "path": "catalog/plugin/scripts/context-read-worker.cjs",
-      "bytes": 150692,
-      "sha256": "391469a08ca0802b57d042af3368541edfc93f8100aa931bfdb7cead8e1639fb",
+      "bytes": 150786,
+      "sha256": "910f40e7f19d2059562a856231ad1db673843fd995e5a354bcee308054e9fb4f",
       "kind": "copied",
       "source": "plugin/scripts/context-read-worker.cjs"
     },
@@ -4111,8 +4120,8 @@
     },
     {
       "path": "catalog/plugin/scripts/worker-service.cjs",
-      "bytes": 3953606,
-      "sha256": "8e0582ab623bf494743851162a7380ff0ae92c409d679a407deea7a3926c7533",
+      "bytes": 3953760,
+      "sha256": "b8b24e770913216a1716eb4f4f979a7466eeeb648051163c335df211bea12911",
       "kind": "copied",
       "source": "plugin/scripts/worker-service.cjs"
     },
@@ -4153,8 +4162,8 @@
     },
     {
       "path": "catalog/plugin/skills/request-progress/scripts/request-groups.mjs",
-      "bytes": 198818,
-      "sha256": "b72f06e68c6b894146bb7f91581acefed03b1dfc4c29967d26dc0e9c3fb6f219",
+      "bytes": 198643,
+      "sha256": "a6b76e36c1adad75694a8dc7f0bc8fd3f917928ec6a4de93ab5eb990d7d06a72",
       "kind": "copied",
       "source": "plugin/skills/request-progress/scripts/request-groups.mjs"
     },
@@ -4188,15 +4197,15 @@
     },
     {
       "path": "catalog/plugin/sqlite/SessionStore.js",
-      "bytes": 191444,
-      "sha256": "2dbc251ce4287f2bfda3714d539eaeac8d97dbacbde6d6a31f028446f9160d20",
+      "bytes": 191634,
+      "sha256": "9e542fcfd2d06ee6817296ca5fbb52adc1e7908f8614fad118244709e2b29faa",
       "kind": "copied",
       "source": "plugin/sqlite/SessionStore.js"
     },
     {
       "path": "catalog/plugin/sqlite/SessionStore.js.map",
-      "bytes": 158890,
-      "sha256": "4aaec86c304c878244f96f241df551e719227587e7f72638f4793b20b112a476",
+      "bytes": 159151,
+      "sha256": "83c205fb7af4f08315ba3b5b38cab927f1c66061b4dd28ec393fda4845db36fd",
       "kind": "copied",
       "source": "plugin/sqlite/SessionStore.js.map"
     },
@@ -4369,12 +4378,12 @@
     },
     {
       "path": "cmem-light-local.json",
-      "bytes": 366,
-      "sha256": "4ea52395cdab237ef6fa9ceb25b15b4a704eff34ce06d5e03ee78baf596e897a",
+      "bytes": 367,
+      "sha256": "ab77eb3e5b2c8af7d1b708c6de13ef24000ac41374467e35eda0f808fb6a01df",
       "kind": "destination-bound"
     }
   ],
-  "claudeSha256": "3d09fec77c7517b16ca0c80fd53ba3bb5b9538c0f4909d6cff6b44dd9fdf34fc",
+  "claudeSha256": "2b80c30cef6f595bec2ece7bdfc49f9f09f9faa82a2324b817d18369fadd8be5",
   "chroma": {
     "model": [
       {
@@ -4403,13 +4412,12 @@
     "No new dependency provenance, Codex registration or Claude CLI/Bedrock acceptance."
   ],
   "validation": {
-    "compile": "PASS; final source change in excluded standalone module emitted identical runtime bytes",
+    "compile": "PASS; 19 tool/dependency inputs and 1943 tracked source sentinels unchanged; seven paired outputs changed",
     "typechecks": "root and viewer PASS",
     "hostRecovery": "4 Node fixtures PASS",
-    "runtime": "copied-worker/SQLite/FTS/real Chroma restart/viewer/My Work PASS",
-    "auth": "existing local-auth HTTP 500",
-    "fixtureSha256": "fa852ce9303a4e8ce3f98d4bdfe5324c6a493361ec28406fcc2b61337a3b4894",
-    "evidenceSha256": "4012a2a8f48093ed0d54e392b396a63377cc3210c12a117b3c5dec05c175c67d"
-  },
-  "sourceCommit": "007a128e51cf386192eb1f1c76f1985cf95dc5b9"
+    "runtime": "fresh copied build capture/SQLite/FTS/MCP/real Chroma/bilingual search/viewer/My Work/deliberate recovery/restart PASS",
+    "auth": "separate local Better Auth session HTTP 500 remains; selected viewer flow does not consume it",
+    "fixtureSha256": "84851d8f62c1e27ba4e8e342827466051d2f1ce4ad801aa6639ca6634855902e",
+    "evidenceSha256": "e45a4343dcc37d2439a95c14b715ac9d85013fd4dc23c2a156bec4c6f3c6eb7e"
+  }
 }

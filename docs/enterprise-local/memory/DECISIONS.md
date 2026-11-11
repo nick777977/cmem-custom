@@ -1,5 +1,25 @@
 # Decision log
 
+### A36 — Close the retained Windows regression gate without further pruning (2026-11-11)
+
+The owner explicitly authorizes serial source/resource corrections and portable
+fixtures on `codex/repository-cleanup-plan`, isolated selected checks, guarded
+compile and a fresh copied-runtime test/receipt if shipped bytes change. Keep
+search/identity/worktree/restore/privacy/context/timeouts/stopped-worker
+assertions; no agents, task branches/worktrees, installs/upgrades, real state,
+live inference/AWS, automatic merge or push. This supersedes A35's active
+next-task wording, not its historical evidence or main target-host scope.
+
+Result assessment: resource fixes `dff499e45`, gate/fixtures `974d779e4`.
+373 tests/27 Bun files, four Node host/recovery fixtures, typechecks, compile
+and fresh copied-build real Chroma/viewer/recovery/restart PASS. Current receipt
+refreshes exact 81/80-file synthetic roots and 813 source inputs; old inventories/
+SBOM remain historical. **Cleanup merge is recommended**, not performed.
+Full suite and real Claude/Bedrock/provider acceptance remain separate. Local
+Better Auth sessions still HTTP 500 and unused by the chosen flow; no signup/
+schema migration. Native mode tests do not claim POSIX ACL enforcement on Windows.
+[Evidence](../cleanup/MERGE-READINESS.md).
+
 ## Accepted from the user's current request
 
 | ID | Decision | Reason / authority |

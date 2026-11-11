@@ -1,5 +1,21 @@
 # Development baseline and user-provided execution evidence
 
+**WINDOWS-REGRESSION-GATE, 2026-11-11.** Reused Node 22.23.4/npm 10.9.9/
+Bun 1.4.4/Python 3.13.15 without tool/dependency/model changes. 373 selected
+Bun tests in 27 files, four Node host/recovery tests, root/viewer typechecks
+and guarded compile PASS. 19 inputs/1,943 tracked source sentinels unchanged;
+seven paired outputs changed. Fresh copied-build real prepared Chroma,
+viewer/My Work, capture/search/recovery/restart and owned cleanup PASS.
+Sandbox filesystem/loopback denials are distinct from ordinary-user reruns;
+all elevated Windows tokens refused, no UAC or machine changes. Python's
+Windows timezone can differ from Bun's; portable winter/summer fixtures use
+Python-local timestamps, with no POSIX TZ override. Windows file mode checks
+do not claim POSIX ACL enforcement. Full suite/real provider/target-host
+acceptance NOT RUN; unused Better Auth session route remains HTTP 500.
+Current receipt refreshed to 813 inputs/81 Codex/80 Claude files.
+[Actual results and limits](cleanup/MERGE-READINESS.md). Earlier assessments below
+are historical; no merge/push performed.
+
 **CLEANUP-MERGE-VERIFY, 2026-11-11.** Node 22.23.4/npm 10.9.9/Bun 1.4.4
 retained. Both typechecks and guarded compile pass with 19 inputs, 1,941
 tracked source sentinels and 186 tracked outputs unchanged. Exact reference

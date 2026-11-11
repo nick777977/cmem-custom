@@ -7,6 +7,36 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-11 **WINDOWS-REGRESSION-GATE**, done-bounded by one coordinator
+at clean `e113238ade58c8dcd25a5127d9a796b71d8ee124` on
+`codex/repository-cleanup-plan`. Reserve SQLite SessionStore/SessionSearch/
+connection, backup restore-swap/snapshot-files, work-view request-groups/
+auto-refresh-worker and inspected dependencies needed for resource ownership;
+the 22 failed test files in cleanup/MERGE-READINESS, focused lifecycle tests,
+a reproducible isolated gate runner, paired compile outputs/current staging
+receipt, and cleanup readiness/results plus README/DEV-ENVIRONMENT/NEXT-SESSION
+and memory STATE/TASKS/WORKLOG/DECISIONS. Scratch:
+`.scratch/enterprise-local/windows-regression-gate/`. First reproduce SQLite,
+WAL and atomic-write failures, then make minimal corrections and replay final
+assertions. No agents/branches/worktrees, merge/push, install/update, real
+state/credentials, inference or AWS. Runtime checks use only synthetic owned
+state, fake loopback generation and previously prepared local Chroma assets.
+Reservation extended after the first gate trace: the orphan-FK boot case calls
+`src/services/infrastructure/CleanupV12_4_3.ts`, whose own prepared statements
+survive non-strict close. Change only its three connection closes, with
+`tests/infrastructure/cleanup-v12_4_3.test.ts`; no cleanup policy/data changes.
+Also reserve `tests/write-json-file-atomic.test.ts` to express preservation of
+the actual Windows file mode without claiming POSIX ACL semantics.
+Completed: `dff499e45` resource source/seven paired outputs, `974d779e4`
+reproducible gate and fixtures. 373 PASS/0 FAIL in 27 Bun files; both
+typechecks/guarded compile PASS. Fresh copied-build real Chroma/viewer/
+capture/search/recovery/restart PASS, 37 sampled PIDs exited/four ports rebound;
+four separate Node host/recovery checks PASS. Current receipt 813 inputs and
+81/80 stage files verifies. Merge recommended for bounded cleanup, no merge/push.
+Reservations released. Next ready-unclaimed: owner-directed integration review,
+not another source slice. [Verdict](../cleanup/MERGE-READINESS.md).
+The claim/reservation text above records this session's original scope.
+
 2026-11-11 **CLEANUP-MERGE-VERIFY**, done-bounded by one coordinator from clean
 `493e20b76055a20bfcacec183cacb4bd9f7940b0` on
 `codex/repository-cleanup-plan`. Reserve the two retained hook test files,

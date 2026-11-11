@@ -1398,3 +1398,73 @@ were preserved. MERGE-READINESS gives every failure's impact/next action and
 recommends **do not merge yet**, closing the retained Windows regression gate
 next. Auth, legacy pruning, formal distribution and real Claude/Bedrock remain
 separate nonblocking cleanup deferrals. Reservations released.
+
+## 2026-11-11 — WINDOWS-REGRESSION-GATE
+
+Owner launched the bounded resource/fixture gate on clean
+`e113238ade58c8dcd25a5127d9a796b71d8ee124`, existing
+`codex/repository-cleanup-plan`. One coordinator; no agents, task branches/
+worktrees, merge/push, install/update, live inference, AWS or real user state.
+Read AGENTS entry order, current TASKS/readiness and original per-file attempts.
+
+Before correction reproduced WAL 11 PASS/1 FAIL, FTS probe 0/2, writer-version
+0/15 and My Work refresh 25/1 with isolated synthetic state. Bun non-strict
+close left native statements alive; internally opened refused constructors
+had no surviving owner. Strict close and failure cleanup fix that boundary;
+caller-injected connections remain caller-owned on refusal. The orphan-FK boot
+case traced CleanupV12_4_3's own three closes; its data/cleanup policy is unchanged.
+Raw fixtures/probes close strictly. My Work uses the existing unique-temp,
+fsync/close/bounded-Windows-rename writer; errors still propagate.
+
+The WAL rollback fixture cannot move an idle Windows connection's open sidecars.
+A closed real crashed-WAL fixture now injects checkpoint failure only, then
+checks real sidecar parking/rollback and readable commits. Separate idle
+Windows refusal/data preservation remains asserted. Portable absolute/temp
+paths, explicit non-repository TEMP and Python-local winter/summer timestamp
+fixtures replace platform assumptions. The last also verifies local midnight
+cutoffs. Native file-mode preservation replaces an impossible POSIX ACL claim
+on Windows; POSIX still requires 0600. Inherited symlink/ACL branches that return
+on Windows are not Windows ACL evidence.
+
+All 80 distribution tests retained, with nine discovery scenarios replaced
+one-for-one by canonical refusal/no-load scenarios. Private-bound handler argv,
+matchers, async/context/time limits remain asserted. Offline npm dry-run uses
+selected Node/npm with scripts disabled and a deadline. Transcript watcher has
+no reachable release-version consumer; worker/MCP version checks remain.
+No further pruning, identity/search/data/privacy or auth redesign.
+
+Concern commits: `dff499e45` source/resource tests and seven paired outputs;
+`974d779e4` portable fixtures and tracked isolated gate runner. Final 27 Bun files
+(22 original failures plus five focused dependencies): 373 PASS, zero FAIL/SKIP.
+Original 220-file report/baseline snapshot attempts remain verbatim; retries
+replace file results. Full suite NOT RUN. The reviewed partition check now finds
+1,069 files: 1,045 fast/24 integration, no missing/overlapping entries.
+
+Root/viewer typechecks PASS separately. Guarded compile PASS: 19 tool/dependency
+inputs and 1,943 tracked source sentinels unchanged during compile; seven of 186
+outputs changed and are paired. Compiler-emitted embedded-string whitespace
+was retained. No install/sync/restart/network child; zero blocked-socket events.
+Sandbox filesystem/loopback denials are separate attempts; ordinary-user reruns
+explicitly refuse Administrator tokens. No UAC/machine changes/toolchain changes.
+Reused Node22.23.4/npm10.9.9/Bun1.4.4/Python3.13.15 and prepared synthetic assets.
+
+Fresh copied Windows x64 build at source `974d779e4` PASS: capture/private prompt
+omission, SQLite/FTS, MCP save/search, context reader, bilingual real Chroma
+observation/summary retrieval, viewer/My Work/settings render, persistent 11-row
+index and restart with no provider posts. 401/redirect survive shutdown; two
+explicitly acknowledged selections commit once, repeat selections refuse,
+payloads clear, and next restart does not resend. All 37 sampled child PIDs
+exited/four ports rebound, markers/Chroma writer lock removed. Browser background
+requests were blocked by fixture proxy; ordinary sampling is not OS-wide egress
+or crash containment proof. Four separate Node bound-host/interruption/recovery
+tests PASS, including stopped/wrong-worker refusal. Better Auth sessions remain
+HTTP 500, unused by the tested memory/viewer flow and separate from provider login.
+
+Refreshed current destination-bound receipt verifies 813 source inputs and exact
+81 Codex/80 Claude files; no verifier relaxation for moved targets. Old inventories/
+SBOM remain historical. Raw synthetic logs/fixture hashes are in the current
+windows-regression-results.json; MERGE-READINESS disposes every original failed
+file and records coverage limits. Main-roadmap/real Claude/Bedrock target acceptance
+unchanged. Cleanup merge recommended because the bounded gate and changed runtime
+workflow pass. No merge/push performed. Reservations released; next action is
+owner-directed integration review, with no further cleanup source slice queued.
