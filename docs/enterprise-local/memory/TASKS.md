@@ -7,6 +7,20 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-11 **CLEANUP tree and explanation follow-up**, done by one
+coordinator at clean `0622cc22f` on `codex/repository-cleanup-plan`.
+Reserve unnecessary empty project directories (never ignored/runtime/data or
+dependency trees), `AGENTS.md`, `cleanup/{RESULTS,NEXT-SESSION}.md`,
+`memory/{STATE,TASKS,WORKLOG,DECISIONS}.md` and the main next-session pointer.
+Read only synthetic fixture logs and relevant auth/test source to explain
+remaining checks, merge readiness and the local auth failure. No product edits,
+runtime restart, broad test run, real auth/data, branch switch or merge.
+Removed 116 exact empty directories; zero eligible empties on rescan.
+Documented specific Better Auth schema error, legacy hook expectations,
+focused/full-suite limits and recommendation to finish validation before merge.
+User communication requirements are now in AGENTS. Reservations released.
+Next ready-unclaimed task: [pre-merge verification](../cleanup/NEXT-SESSION.md).
+
 2026-11-11 **REPOSITORY-CLEANUP implementation**, done-bounded. One
 coordinator on `codex/repository-cleanup-plan`, entry `8b93ceb3d`.
 Three concerns remove PDF/automation, extra hosts/presentation and detachable

@@ -175,3 +175,53 @@ installation, memory, credentials, model assets, ignored locks, venv, wheelhouse
 node_modules or Git history was cleaned. No push, agents, worktrees or UAC.
 
 Rollback: reviewed revert of the relevant cleanup commit; no reset/clean.
+
+## Tree follow-up and explanation, 2026-11-11
+
+At `0622cc22f2d8b9b54d51657a20ac1ddeb529829d`, removed **116 empty project
+directories**, including retired host trees, workflow/template directories,
+cloud service trees and their empty fixture folders. A second scan found zero
+eligible empty directories. Each resolved absolute target was checked inside
+the workspace and immediately rechecked empty, including hidden entries;
+PowerShell used `Remove-Item -LiteralPath` without recursive deletion. Ignored
+paths, `.git`, `.scratch`, dependencies, `dist`, venv/model/runtime/data and
+reparse points were excluded. Git does not track these empty directory removals.
+No application file or generated artifact changed, so the existing byte-level
+runtime evidence remains applicable. No tests/build/runtime were rerun for this
+empty-tree/documentation follow-up.
+
+The observed five failures mean four tests still expect the old automatic
+`claude-mem start` command and literal context-injection command at session
+startup/resume/clear/compact. The private local variant starts its foreground
+worker separately and renders host commands with explicit executable/stage
+paths. One additional test locates a timeout by the obsolete command text and
+therefore fails to find it. They must be checked against the intended local
+lifecycle and corrected while retaining behavior coverage; passing direct
+hook/MCP fixtures does not make the failed assertions a full-suite PASS.
+
+**HTTP 500 concerns `GET /api/auth/get-session` on our loopback worker**, not
+Codex/ChatGPT login or corporate AWS SSO. Synthetic log
+`.scratch/enterprise-local/cleanup-implementation/run-46f6b0d2/private candidate/data/logs/claude-mem-2026-11-11.log:80`
+reports `Database schema mismatch`, followed at line 83 by missing Better Auth
+tables: `user`, `session`, `account`, `verification`, `apikey`, `organization`,
+`team`, `teamMember`, `member`, `invitation`. This route cannot supply the local
+web-auth session in that tested configuration. Hooks, MCP, memory capture,
+search and browser views passed independently. Exact intended local auth role
+and the appropriate fix remain to be determined on synthetic state; no real
+database migration or provider-login repair is justified by this error.
+Inspected source at `0622cc22f`: `src/server/auth/BetterAuthRoutes.ts:12,30`
+loads Better Auth lazily for `/api/auth/*`; `src/server/auth/auth.ts:10` binds it
+to the supplied database with API-key/organization plugins.
+
+Full suite was **not run**. Selected passing runs and their scopes are listed
+above; unrun local behavior/integration/distribution checks can reveal additional
+issues. Before merge, review the remaining test lanes, classify old removed-feature
+expectations separately from retained behavior, run the applicable safe local
+checks and verify current artifact tools do not silently use old inventories.
+
+Merge advice at this follow-up: **finish the pre-merge verification on this
+branch first**. `feat/cmem-light-local` is an ancestor (0 commits unique to it,
+6 unique cleanup commits at inspected HEAD), so a fast-forward is currently
+possible. This is topology only, not functional readiness. The old auth defect
+and intentionally retained source need explicit disposition, not an unexplained
+"all clear" or compulsory broad refactor. No merge was performed.

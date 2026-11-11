@@ -3,7 +3,9 @@
 **Separate cleanup result, 2026-11-11:** the three bounded slices on
 `codex/repository-cleanup-plan` are implemented. [Results](cleanup/RESULTS.md)
 record removals/checks and deferred coupled source. The
-[next cleanup task](cleanup/NEXT-SESSION.md) aligns five stale hook assertions;
+[next cleanup task](cleanup/NEXT-SESSION.md) verifies readiness before merge:
+retained local test coverage, five obsolete hook expectations, the specific
+local Better Auth session endpoint error and current artifact verification;
 do not rerun the original deletion launch. New builds have a destination-bound
 cleanup receipt; older inventory/SBOM bytes remain historical. Main-roadmap
 and actual target Claude/Bedrock checks below did not advance.

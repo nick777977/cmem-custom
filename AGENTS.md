@@ -175,3 +175,14 @@ installed plugin settings merely to investigate the repository.
   existing data and organization policy. No automatic migration or upstream update.
 
 This file is development guidance; runtime security must be enforced in code and policy.
+
+## User-facing explanations
+
+The owner requests concise but informative Russian explanations. Do not end
+with unexplained shorthand such as "five stale hook checks", "auth 500" or
+"deferred coupled sources". For each unresolved item say what component/action
+it concerns, what actually failed or was not tested, its practical impact and
+the concrete next action. Distinguish local application auth from Codex/ChatGPT
+login and AWS SSO. Explain a next-session task in observable user terms and
+state whether merge is recommended and why. Report focused checks separately
+from the full suite; never imply full validation from selected passing tests.

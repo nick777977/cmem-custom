@@ -394,3 +394,17 @@ Claude CLI/Bedrock acceptance. No further pruning/refactor inferred.
 
 Formal ADRs should be added when architectural choices are accepted, with alternatives
 and consequences. Do not label these proposals as implemented safeguards.
+
+### A34 — Explain residual issues and verify cleanup before merge (2026-11-11)
+
+Owner requests concise but substantive Russian explanations: name each component,
+actual failure/unverified scope, user impact and concrete next action; avoid
+unexplained test/auth/refactor shorthand. Persisted in root AGENTS. Owner also
+requests empty-tree cleanup and a next-session/merge recommendation. Removed
+116 unnecessary empty project directories, preserving ignored/runtime/data and
+dependency trees. Full-suite execution was not part of the earlier focused run;
+its passing subset is not evidence that every retained test passes. The next
+session checks readiness on the existing cleanup branch and reports whether to
+merge into `feat/cmem-light-local`; this is a recommendation, not permission to
+perform merge or run corporate auth/live inference. Known local Better Auth
+session-schema failure is distinct from Codex/ChatGPT login and AWS SSO.

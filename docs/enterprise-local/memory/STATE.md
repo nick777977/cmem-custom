@@ -1,5 +1,28 @@
 # Current handoff
 
+2026-11-11 **CLEANUP tree/explanation follow-up**: at `0622cc22f`, removed
+116 unnecessary empty project directories; rescan found zero eligible empty
+directories. Ignored/dependency/runtime/data trees were excluded, and no
+application bytes changed. User requests concise Russian explanations that
+identify each unresolved component, impact and next action; recorded in AGENTS.
+
+The auth failure is the worker's **local `GET /api/auth/get-session`**:
+synthetic logs show Better Auth's missing user/session/account/API-key/team
+tables. It is unrelated to Codex/ChatGPT login or AWS SSO. The tested memory,
+MCP and viewer paths worked independently. Five failed checks expect obsolete
+literal/autostart hook commands, not the current separately started foreground
+worker and destination-bound hooks. Full suite was not run.
+
+**Recommendation: finish pre-merge validation on the cleanup branch first**;
+no merge performed. `feat/cmem-light-local` was an ancestor at inspection,
+so fast-forward is possible but does not establish functional readiness.
+[Next-session prompt](../cleanup/NEXT-SESSION.md) now covers retained local
+test lanes, the five failed assertions, local auth impact, current artifact
+verification and an explicit merge-readiness verdict. Coupled legacy source
+refactoring and real Claude/Bedrock execution are not automatic prerequisites.
+[Explanation/evidence](../cleanup/RESULTS.md#tree-follow-up-and-explanation-2026-11-11).
+Reservations released. Earlier narrower next-task wording below is superseded.
+
 2026-11-11 side task: **REPOSITORY-CLEANUP implemented** on
 `codex/repository-cleanup-plan`, entry `8b93ceb3d`, paired source/output
 `007a128e5`. Three bounded slices

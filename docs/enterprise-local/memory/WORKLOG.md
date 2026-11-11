@@ -1323,3 +1323,36 @@ The small documentation-only closure records that SHA and final source citations
 in RESULTS and the current receipt, without changing any application bytes.
 Post-commit source/stage hashes, active links, protected files and deletion
 counts rechecked PASS; checkout was clean before this evidence pin.
+
+## 2026-11-11 — empty-tree cleanup and explicit pre-merge explanation
+
+User requested remaining empty-directory removal, clearer explanations of
+unresolved checks/auth/source and a concrete next-session/merge recommendation.
+At clean `0622cc22f` on the cleanup branch, removed 116 empty project directories
+bottom-up; a second scan found zero eligible empty paths. Resolved every target
+inside the workspace and rechecked it empty including hidden entries; used only
+PowerShell LiteralPath removal, no recursive purge. Excluded ignored paths,
+dependencies, Git, scratch, dist, runtime/venv/assets and reparse points. Empty
+directories are not tracked by Git; only guidance/evidence changes enter this
+follow-up commit. No application byte, model, runtime or real user state changed.
+
+Read the two failed-test files and synthetic Better Auth log. Four tests expect
+legacy automatic worker start/context command strings; another locates timeout
+by obsolete text. Current private hooks use explicit stage/executable binding
+and a separately started foreground worker. Local GET /api/auth/get-session
+fails with Database schema mismatch and missing Better Auth tables (log lines
+80–83 in cleanup run-46f6b0d2). This is local application-session handling,
+not ChatGPT/Codex or AWS login. Capture/MCP/search/viewer passed independently;
+why the auth schema is absent and the route's required local role remain open.
+
+Recorded the owner's explanation preference in AGENTS: identify the component,
+actual failure/unverified area, practical impact and next action, without opaque
+shorthand. Replaced the narrower next launch with pre-merge verification of
+retained local test lanes, five known assertions, auth impact and artifact
+verification. No blanket full-suite claim and no forced deep legacy refactor.
+At inspected HEAD feature branch was an ancestor (0/6 unique commits), so a
+fast-forward was technically possible. Recommended completing verification on
+this branch before deciding merge; no branch switch/merge/push performed.
+No tests/build/runtime rerun for empty directories and documentation only.
+Directory rescan, guidance/evidence checks and git diff --check validate this
+follow-up. Reservations released.
