@@ -141,8 +141,13 @@ export function openConfiguredSqliteDatabase(
   pragmas?: SqlitePragmaOptions,
 ): Database {
   const db = new Database(dbPath, options);
-  applySqliteConnectionPragmas(db, pragmas);
-  return db;
+  try {
+    applySqliteConnectionPragmas(db, pragmas);
+    return db;
+  } catch (error) {
+    db.close(true);
+    throw error;
+  }
 }
 
 /**
@@ -154,7 +159,12 @@ export function openConfiguredSqliteDatabase(
  */
 export function openGuardedSqliteDatabase(dbPath: string): Database {
   const db = new Database(dbPath);
-  assertSchemaWriterCompatible(db, LATEST_SCHEMA_VERSION);
-  applySqliteConnectionPragmas(db);
-  return db;
+  try {
+    assertSchemaWriterCompatible(db, LATEST_SCHEMA_VERSION);
+    applySqliteConnectionPragmas(db);
+    return db;
+  } catch (error) {
+    db.close(true);
+    throw error;
+  }
 }

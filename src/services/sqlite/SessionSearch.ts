@@ -118,15 +118,20 @@ export class SessionSearch {
       this.db = new Database(dbPathOrDb);
     }
 
-    // Refuse before any DDL when the database's schema is newer than this
-    // binary's chain (#3609 step 2); a refused open touches nothing.
-    assertSchemaWriterCompatible(this.db, LATEST_SCHEMA_VERSION);
+    try {
+      // Refuse before any DDL when the database's schema is newer than this
+      // binary's chain (#3609 step 2); a refused open touches nothing.
+      assertSchemaWriterCompatible(this.db, LATEST_SCHEMA_VERSION);
 
-    if (!options.readOnly) applySqliteConnectionPragmas(this.db);
+      if (!options.readOnly) applySqliteConnectionPragmas(this.db);
 
-    this._fts5Available = this.isFts5Available();
+      this._fts5Available = this.isFts5Available();
 
-    if (!options.readOnly) this.ensureFTSTables();
+      if (!options.readOnly) this.ensureFTSTables();
+    } catch (error) {
+      if (!(dbPathOrDb instanceof Database)) this.db.close(true);
+      throw error;
+    }
   }
 
   private _fts5Available: boolean;
@@ -1222,6 +1227,7 @@ export class SessionSearch {
   }
 
   close(): void {
-    this.db.close();
+    this.db.close(true);
+    this.vocabLookups.clear();
   }
 }

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { ActivePill, ClassicViewerLink, DeviceFreshness, GitHubStars, LiveIndicator, WorkspaceContext, type Workspace } from '@/components/bits'
+import { ActivePill, ClassicViewerLink, DeviceFreshness, LiveIndicator, WorkspaceContext, type Workspace } from '@/components/bits'
 import { Navbar, NavBody } from '@/components/aceternity/resizable-navbar'
 import { Notch } from '@/components/aceternity/notch'
 import { StickyBanner } from '@/components/aceternity/sticky-banner'
@@ -206,7 +206,7 @@ function LoadedApp() {
                     <Req ids={['R10.4']}>
                       <span className="flex shrink-0 items-center gap-2">
                         <CmemMark className="size-8 text-[#D86441]" />
-                        <span className="sr-only md:not-sr-only md:text-[0.95rem] md:font-semibold md:tracking-tight">claude-mem</span>
+                        <span className="sr-only md:not-sr-only md:text-[0.95rem] md:font-semibold md:tracking-tight">cmem-light</span>
                       </span>
                     </Req>
                     <h1 className="min-w-0 truncate text-lg font-semibold tracking-tight whitespace-nowrap md:hidden [.header-pill_&]:text-base">{heading}</h1>
@@ -215,7 +215,6 @@ function LoadedApp() {
                       <DeviceFreshness />
                       <LiveIndicator />
                       <ClassicViewerLink />
-                      <GitHubStars />
                     </div>
                   </HeaderBody>
                 </Navbar>

@@ -66,7 +66,7 @@ describe('WINDOWS-09D explicit interpreter / disabled host source contract', () 
     expect(runGate({CLAUDE_MEM_DISABLE_TOOL_HOOKS:'1'},poison,{payload})).toEqual({exit:0,stdout:'',stderr:''});
     expect(runGate({},poison,{payload})).toMatchObject({exit:0,stdout:'',stderr:expect.stringContaining('LOCAL_INTERPRETER_ABSOLUTE_REQUIRED:')});
   });
-  it('pairs all canonical hosts including MCP interpreter and Qoder, leaving structured paths unbound', () => {
+  it('pairs retained canonical hosts and MCP interpreter, leaving structured paths unbound', () => {
     const manifest = shellTemplateManifest(buildShellCommand,buildCodexWindowsCommand,buildExecHook,buildEnsureLauncherExecHook);
     for (const [file,spec] of Object.entries(manifest) as any) {
       const parsed = JSON.parse(readFileSync(file,'utf8'));

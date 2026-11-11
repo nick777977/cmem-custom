@@ -1214,3 +1214,301 @@ Re-staged and verified the refreshed 80-file Claude inventory, raw
 transfer and rebound copy. Reservations released.
 [Checks, receipt and rollback](../handoffs/RECOVERY-11-LOCAL.md).
 [Next target](../NEXT-SESSION.md) is CLAUDE-WINDOWS-VERIFY.
+
+## 2026-11-11 — REPOSITORY-CLEANUP planning
+
+One coordinator from clean `a9364604d026d79be8ab771ecb861688972d169c` on
+`feat/cmem-light-local`; created the owner-requested local branch
+`codex/repository-cleanup-plan`. No agents/worktrees/push. A32 records the
+separate planning authority, two-host target and preservation of `plans/` PDFs.
+The original roadmap and its target check did not advance.
+
+Indexed 2,997 baseline tracked files, 178,676,910 Git-blob bytes; parsed 1,997
+JS/TS source/test/tool files using existing TypeScript 6.0.3 on direct Node
+22.23.4. Found 6,133 local module edges and 463 conservatively reachable files
+from six local entrypoints. No installs/downloads/upgrades. An initial symlink
+refusal was corrected to inventory without following Git symlink targets.
+Static analysis completed. [Plan/index/evidence](../cleanup/README.md).
+
+The proposed first buckets total 373 files / 4,203,620 bytes before final
+consumer review. The conditional standalone server bundle/map pair is another
+4,233,696 bytes. Eight PDFs occupy 123,009,837 bytes and remain protected.
+Manifest/build coupling, local worker auth/API dependencies, common SQLite/sync
+helpers, Chroma gRPC inputs and CI references prevent blanket directory pruning.
+
+Integrity checks passed: unique row/count/byte/closure totals, protected baseline
+docs/plans/CI classification, durable/scratch inventory equality and zero product,
+build, generated, workflow or main-roadmap Git delta. `git diff --check` passed.
+No deletion, application edit, build, typecheck, application test, runtime,
+registration, real data inspection, live inference, AWS or CI. Only planning
+artifacts/analyzer and small shared-memory records changed.
+
+Reservations released. Next in the cleanup chat: discuss/adjust the proposal
+and approve an exact first host-removal slice. Roll back this planning concern
+with a reviewed Git revert; no application/data rollback is needed.
+
+## 2026-11-11 — REPOSITORY-CLEANUP final plan
+
+One coordinator from clean `683bd9062` on `codex/repository-cleanup-plan`.
+The owner now selects CI/CD/workflow removal, all eight presentation PDFs,
+non-target hosts, custom local branding and detachable cloud/standalone
+deployment/scaling. A33 supersedes the initial CI/PDF preservation and pending
+scope-approval wording; main roadmap/Claude target status stays unchanged.
+
+Replaced the active cleanup proposal with three bounded execution slices,
+an exact 440-path/127,537,948-byte candidate manifest and a 6,978-character
+[next-session launch prompt](../cleanup/NEXT-SESSION.md). Prior baseline index
+and static evidence remain; no full analysis/graph replay or new tool install.
+The plan keeps actual core/retained-code/font notices as an explicit assistant
+exception to the owner's requested blanket author/license removal, allows
+retired-code notices to retire, and removes upstream personal/promotional
+metadata from live presentation without global technical-ID migration.
+The Apache license text was consulted; no UI attribution requirement or false
+original authorship is asserted. Expensive shared refactors may be deferred
+after easy cleanup and safe deployment detachment.
+
+Validation PASS: 440 unique candidates and exact byte total, baseline path/blob/
+size equality, eight PDF/13 automation counts, protected-path exclusions,
+planning links and `git diff --check`. Product/build/generated/workflow/main-
+roadmap inputs unchanged; no tracked-file deletion. No compile/typecheck,
+application tests/runtime, acquisition, CI, inference or real-state access.
+Only planning/manifest/prompt/shared-memory documents changed. Reservations
+released; next task is the three-slice implementation launch, without repeated
+approval of the agreed scope. Rollback: reviewed revert of this docs concern.
+
+## 2026-11-11 — REPOSITORY-CLEANUP implementation
+
+Executed the approved launch from `cleanup/NEXT-SESSION.md`, clean entry
+`8b93ceb3db870bbbb766aebf51df65abc6c745e1` on the existing cleanup branch.
+One coordinator; no new branch/worktree, agents or push. First concern
+`04d9f751a` removes eight PDFs and detached hosted automation; second
+`a5c3c2364` retires extra host packages/callers/generators and changes display
+metadata/UI to cmem-light. Third concern pairs standalone/cloud detachment,
+refusal boundaries, current outputs and reference receipt.
+
+Deleted 487 baseline files / 132,312,367 Git-blob bytes. Removed 438/440
+candidates; kept two AI-agent guidance files. Common parsers/identity,
+SQLite/FTS/Chroma/viewer/skills, selected LLM/auth routes and retained-code
+notices preserved. Root setup guidance now targets the local fork; original
+technical README remains explicitly historical. Main roadmap is unchanged.
+No user installation, settings/login/memories, model assets, node_modules,
+venv/wheelhouse, ignored locks or Git history were cleaned.
+
+Validation: slice 2 160 focused tests/1,078 assertions; slice 3 99/497;
+retained cloud/storage regressions 91/482; independent launch 5/7; four Node
+bound-host/recovery fixtures; both typechecks and guarded compile PASS.
+Final compile preserved 19 inputs/1,946 source sentinels and emitted identical
+runtime bytes after closing the excluded BullMQ helper. The copied fixture
+passed synthetic concurrent capture, SQLite/FTS, real local Chroma search and
+restart, MCP/context reader, browser viewer/My Work, refusal preservation and
+owned-child/port cleanup. Fresh current receipt covers 81 Codex/80 Claude
+reference files; old inventories/SBOM stay historical. No tool acquisition,
+UAC, real host registration, AWS, CI or live inference.
+
+Initial validation found a missed Qoder canonical-wrapper preflight, missing
+catalog input in the manifest fixture, a retired webhook assertion and an
+obsolete pre-recovery active-queue expectation in the disposable large fixture.
+Corrected these and reran the affected gates/fresh runtime. Five unchanged
+legacy Claude hook-format assertions remain failures and the independent
+local-auth endpoint still returns HTTP 500. Full diff whitespace flags one
+unmodified esbuild-generated whitespace line; source/docs checks pass.
+No blanket whole-suite claim. Coupled server/storage/cloud and optional legacy
+settings/compatibility source/dependencies remain deferred in
+[RESULTS](../cleanup/RESULTS.md). Reservations released. Next cleanup task:
+align the five retained hook tests with canonical/private-bound contracts.
+Rollback is a reviewed revert of the relevant source/output concern.
+
+Cleanup source/output pin: `007a128e51cf386192eb1f1c76f1985cf95dc5b9`.
+The small documentation-only closure records that SHA and final source citations
+in RESULTS and the current receipt, without changing any application bytes.
+Post-commit source/stage hashes, active links, protected files and deletion
+counts rechecked PASS; checkout was clean before this evidence pin.
+
+## 2026-11-11 — empty-tree cleanup and explicit pre-merge explanation
+
+User requested remaining empty-directory removal, clearer explanations of
+unresolved checks/auth/source and a concrete next-session/merge recommendation.
+At clean `0622cc22f` on the cleanup branch, removed 116 empty project directories
+bottom-up; a second scan found zero eligible empty paths. Resolved every target
+inside the workspace and rechecked it empty including hidden entries; used only
+PowerShell LiteralPath removal, no recursive purge. Excluded ignored paths,
+dependencies, Git, scratch, dist, runtime/venv/assets and reparse points. Empty
+directories are not tracked by Git; only guidance/evidence changes enter this
+follow-up commit. No application byte, model, runtime or real user state changed.
+
+Read the two failed-test files and synthetic Better Auth log. Four tests expect
+legacy automatic worker start/context command strings; another locates timeout
+by obsolete text. Current private hooks use explicit stage/executable binding
+and a separately started foreground worker. Local GET /api/auth/get-session
+fails with Database schema mismatch and missing Better Auth tables (log lines
+80–83 in cleanup run-46f6b0d2). This is local application-session handling,
+not ChatGPT/Codex or AWS login. Capture/MCP/search/viewer passed independently;
+why the auth schema is absent and the route's required local role remain open.
+
+Recorded the owner's explanation preference in AGENTS: identify the component,
+actual failure/unverified area, practical impact and next action, without opaque
+shorthand. Replaced the narrower next launch with pre-merge verification of
+retained local test lanes, five known assertions, auth impact and artifact
+verification. No blanket full-suite claim and no forced deep legacy refactor.
+At inspected HEAD feature branch was an ancestor (0/6 unique commits), so a
+fast-forward was technically possible. Recommended completing verification on
+this branch before deciding merge; no branch switch/merge/push performed.
+No tests/build/runtime rerun for empty directories and documentation only.
+Directory rescan, guidance/evidence checks and git diff --check validate this
+follow-up. Reservations released.
+
+## 2026-11-11 — CLEANUP-MERGE-VERIFY
+
+Owner explicitly launched cleanup/NEXT-SESSION on clean 493e20b76. Target
+feat/cmem-light-local=a9364604d remained an ancestor. Serial work on existing
+cleanup branch, no task branch/worktree, agent, merge or push.
+
+Tests f6f49db53 close the five old hook expectations, strengthen bound source/
+matcher/timeouts and retire only deleted host/server resource expectations.
+Verifier d9fa7f90f checks the exact original cleanup references, source/build
+hashes, sets and destination refusal; unit mutation/path checks pass.
+
+Expanded selected Bun checks: latest per-file attempts 1,806 PASS/90 FAIL/3 SKIP
+in 220 files, 198 fully passing. Original attempts, safe loopback/Python reruns
+and twenty-file target snapshot comparison are tracked in cleanup/
+merge-verification-results.json. No full 1,068-file suite/CI claim. Windows
+file release, WAL rollback, My Work atomic-write and fixture portability remain
+red on unchanged code/baseline; additional common resource assertions still
+expect legacy canonical launch behavior. First recovery attempt failed fetching
+recovery state; separate fresh rerun passed no-resend/exactly-once scenarios.
+Three direct Claude/Codex stage/hook/MCP tests pass. Local GET /api/auth/get-session
+returns 500; fresh disposable direct auth initialization reproduces missing
+Better Auth tables. Viewer/My Work have no session-client caller; independent
+local API-key checks pass. No real auth migration/provider login was attempted.
+
+Root/viewer typechecks PASS. Guarded compile initially refused protected
+generated .agents metadata in sandbox, then passed under an explicitly
+non-admin ordinary-user token: 19 inputs, 1,941 tracked source sentinels and
+186 tracked outputs unchanged. Loopback EACCES cases were rerun outside the
+filesystem/network sandbox without UAC/RunAs. An initial automatic review
+rejection conflated sandbox relaxation with Windows elevation; evidence of
+AdministratorToken=False and explicit elevated-token refusal allowed the
+reviewed rerun. All required approvals resolved; no machine changes.
+
+Exact references PASS: 811 original source inputs, 81 Codex/80 Claude files.
+Historical receipt preserved; newly added verifier/test are outside runtime
+bytes. No fresh real-Chroma or browser matrix replay was required by a runtime
+byte change, and none is claimed. Prepared assets/dependencies/locks/user data
+were preserved. MERGE-READINESS gives every failure's impact/next action and
+recommends **do not merge yet**, closing the retained Windows regression gate
+next. Auth, legacy pruning, formal distribution and real Claude/Bedrock remain
+separate nonblocking cleanup deferrals. Reservations released.
+
+## 2026-11-11 — WINDOWS-REGRESSION-GATE
+
+Owner launched the bounded resource/fixture gate on clean
+`e113238ade58c8dcd25a5127d9a796b71d8ee124`, existing
+`codex/repository-cleanup-plan`. One coordinator; no agents, task branches/
+worktrees, merge/push, install/update, live inference, AWS or real user state.
+Read AGENTS entry order, current TASKS/readiness and original per-file attempts.
+
+Before correction reproduced WAL 11 PASS/1 FAIL, FTS probe 0/2, writer-version
+0/15 and My Work refresh 25/1 with isolated synthetic state. Bun non-strict
+close left native statements alive; internally opened refused constructors
+had no surviving owner. Strict close and failure cleanup fix that boundary;
+caller-injected connections remain caller-owned on refusal. The orphan-FK boot
+case traced CleanupV12_4_3's own three closes; its data/cleanup policy is unchanged.
+Raw fixtures/probes close strictly. My Work uses the existing unique-temp,
+fsync/close/bounded-Windows-rename writer; errors still propagate.
+
+The WAL rollback fixture cannot move an idle Windows connection's open sidecars.
+A closed real crashed-WAL fixture now injects checkpoint failure only, then
+checks real sidecar parking/rollback and readable commits. Separate idle
+Windows refusal/data preservation remains asserted. Portable absolute/temp
+paths, explicit non-repository TEMP and Python-local winter/summer timestamp
+fixtures replace platform assumptions. The last also verifies local midnight
+cutoffs. Native file-mode preservation replaces an impossible POSIX ACL claim
+on Windows; POSIX still requires 0600. Inherited symlink/ACL branches that return
+on Windows are not Windows ACL evidence.
+
+All 80 distribution tests retained, with nine discovery scenarios replaced
+one-for-one by canonical refusal/no-load scenarios. Private-bound handler argv,
+matchers, async/context/time limits remain asserted. Offline npm dry-run uses
+selected Node/npm with scripts disabled and a deadline. Transcript watcher has
+no reachable release-version consumer; worker/MCP version checks remain.
+No further pruning, identity/search/data/privacy or auth redesign.
+
+Concern commits: `dff499e45` source/resource tests and seven paired outputs;
+`974d779e4` portable fixtures and tracked isolated gate runner. Final 27 Bun files
+(22 original failures plus five focused dependencies): 373 PASS, zero FAIL/SKIP.
+Original 220-file report/baseline snapshot attempts remain verbatim; retries
+replace file results. Full suite NOT RUN. The reviewed partition check now finds
+1,069 files: 1,045 fast/24 integration, no missing/overlapping entries.
+
+Root/viewer typechecks PASS separately. Guarded compile PASS: 19 tool/dependency
+inputs and 1,943 tracked source sentinels unchanged during compile; seven of 186
+outputs changed and are paired. Compiler-emitted embedded-string whitespace
+was retained. No install/sync/restart/network child; zero blocked-socket events.
+Sandbox filesystem/loopback denials are separate attempts; ordinary-user reruns
+explicitly refuse Administrator tokens. No UAC/machine changes/toolchain changes.
+Reused Node22.23.4/npm10.9.9/Bun1.4.4/Python3.13.15 and prepared synthetic assets.
+
+Fresh copied Windows x64 build at source `974d779e4` PASS: capture/private prompt
+omission, SQLite/FTS, MCP save/search, context reader, bilingual real Chroma
+observation/summary retrieval, viewer/My Work/settings render, persistent 11-row
+index and restart with no provider posts. 401/redirect survive shutdown; two
+explicitly acknowledged selections commit once, repeat selections refuse,
+payloads clear, and next restart does not resend. All 37 sampled child PIDs
+exited/four ports rebound, markers/Chroma writer lock removed. Browser background
+requests were blocked by fixture proxy; ordinary sampling is not OS-wide egress
+or crash containment proof. Four separate Node bound-host/interruption/recovery
+tests PASS, including stopped/wrong-worker refusal. Better Auth sessions remain
+HTTP 500, unused by the tested memory/viewer flow and separate from provider login.
+
+Refreshed current destination-bound receipt verifies 813 source inputs and exact
+81 Codex/80 Claude files; no verifier relaxation for moved targets. Old inventories/
+SBOM remain historical. Raw synthetic logs/fixture hashes are in the current
+windows-regression-results.json; MERGE-READINESS disposes every original failed
+file and records coverage limits. Main-roadmap/real Claude/Bedrock target acceptance
+unchanged. Cleanup merge recommended because the bounded gate and changed runtime
+workflow pass. No merge/push performed. Reservations released; next action is
+owner-directed integration review, with no further cleanup source slice queued.
+
+## 2026-11-11 — POST-CLEANUP-HANDOFF
+
+Owner will merge cleanup manually, then resume the main roadmap. Compared main
+NEXT-SESSION at supplied pre-cleanup `a9364604d026d79be8ab771ecb861688972d169c`
+with clean entry `e3d58215beb6071dac42121ef7a75d9f3068c4a3` on
+`codex/repository-cleanup-plan`. The main task body was unchanged beneath the
+cleanup preface; docs/roadmap had no intervening delta. The original next task
+was CLAUDE-WINDOWS-VERIFY (step 11), not another cleanup implementation slice.
+`feat/cmem-light-local` still pointed to the supplied base and was an ancestor;
+fast-forward was available. No actual merge, branch switch or push performed.
+
+Updated cleanup/NEXT-SESSION to owner-run PowerShell fast-forward commands with
+clean-tree/error/ancestry checks. Updated main NEXT-SESSION to the post-merge
+entry point: verify real branch/status/integration, then execute the original
+Claude target task with bounded context and explicit target/model scope. Removed
+routing through another cleanup review. No assumption that the owner already
+merged, and no automatic agent merge. A regular ancestry-preserving owner merge
+also works; no reset/force/squash proposed.
+
+Identified stale main-handoff/runbook inventory usage: historical Claude
+inventory certifies pre-cleanup recovery bytes; current cleanup receipt certifies
+only exact synthetic reference roots. Updated handoff/runbook to record/review
+current merged-build target inventory before default verification/target use.
+Static source inspected at e3d58215b: verify-claude-stage.mjs record mode returns
+a proposal and default mode reads the tracked historical inventory. Paired
+runtime build dff499e45c3116d8cb8936733d0edf8f220797a6 and last renderer change
+a5c3c236423401affc62ef8ab8ee3e6485b28cf2 pinned for that procedure. No inventory,
+receipt or runtime bytes changed in this task. Branch-name-only fast-forward
+does not require recompilation; changed inputs/target requirements still do.
+
+Added a roadmap resumption checkpoint (no dependency/edge change), refreshed
+active STATE/TASKS/README, and recorded A37. Completed cleanup evidence is reused;
+full suite/local Better Auth defect/actual Claude and Bedrock scope remain honest
+and separate. Target acceptance leads to separately scoped Bedrock/remaining
+step-11 cases and step 12, as before cleanup. No new runtime authorization from
+this documentation task. No generic audit/cleanup loop queued.
+
+Validation: inspected Git ancestry/base/status, original-versus-current handoff
+and roadmap; checked changed-document links/required routing and preserved
+application/build/artifact inputs. Documentation-only: no tests, compile,
+application/provider/CLI execution, installs or real-state inspection. Reservations
+released. Next: owner manually integrates, then supplies main NEXT-SESSION.md to
+resume CLAUDE-WINDOWS-VERIFY on the authorized target.

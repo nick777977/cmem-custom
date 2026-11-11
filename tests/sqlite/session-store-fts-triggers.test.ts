@@ -205,7 +205,7 @@ describe('FTS sync triggers survive table rebuilds and converge when missing (#3
     seedObservation(db, 'prehistoric mammoth census');
     seedSummary(db, 'prehistoric sabertooth ledger');
     db.run('PRAGMA foreign_keys = ON');
-    db.close();
+    db.close(true);
 
     const store = new SessionStore(dbPath);
     const search = new SessionSearch(store.db);
@@ -249,7 +249,7 @@ describe('FTS sync triggers survive table rebuilds and converge when missing (#3
     seedObservation(db, 'prehistoric mammoth census');
     seedSummary(db, 'prehistoric sabertooth ledger');
     db.run('PRAGMA foreign_keys = ON');
-    db.close();
+    db.close(true);
 
     const store = new SessionStore(dbPath);
     const search = new SessionSearch(store.db);
@@ -293,7 +293,7 @@ describe('FTS sync triggers survive table rebuilds and converge when missing (#3
     db.run('DROP TRIGGER observations_au');
     seedObservation(db, 'triggerless mammoth census');
     db.run('PRAGMA foreign_keys = ON');
-    db.close();
+    db.close(true);
 
     const store = new SessionStore(dbPath);
 
@@ -320,7 +320,7 @@ describe('FTS sync triggers survive table rebuilds and converge when missing (#3
     stampVersions(db, [4, 11, 21]);
     seedSummary(db, 'pre-rebuild heron ledger');
     db.run('PRAGMA foreign_keys = ON');
-    db.close();
+    db.close(true);
 
     // SessionStore only: the triggers must be restored by the rebuild itself,
     // not by SessionSearch's convergence pass.
@@ -352,7 +352,7 @@ describe('FTS sync triggers survive table rebuilds and converge when missing (#3
     stampVersions(db, [4, 7, 11, 21]);
     seedObservation(db, 'pre-rebuild ibex census');
     db.run('PRAGMA foreign_keys = ON');
-    db.close();
+    db.close(true);
 
     const store = new SessionStore(dbPath);
 
@@ -378,7 +378,7 @@ describe('FTS sync triggers survive table rebuilds and converge when missing (#3
     createAllFtsTriggers(db);
     stampVersions(db, [4, 7, 9, 11, 21]);
     db.run('PRAGMA foreign_keys = ON');
-    db.close();
+    db.close(true);
 
     const first = new SessionStore(dbPath);
     new SessionSearch(first.db);
@@ -416,7 +416,7 @@ describe('FTS sync triggers survive table rebuilds and converge when missing (#3
     createAllFtsTriggers(db);
     stampVersions(db, [4, 7, 9, 11, 21]);
     db.run('PRAGMA foreign_keys = ON');
-    db.close();
+    db.close(true);
 
     const store = new SessionStore(dbPath);
     new SessionSearch(store.db);

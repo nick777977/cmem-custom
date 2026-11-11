@@ -276,7 +276,7 @@ describe('export_owner_prompts.py', () => {
         typed('u3', 'explain how <private> works'),
       ].join('\n') + '\n');
       const out = join(home, 'out');
-      const result = spawnPython([join(SKILLS, 'owner-goals', 'scripts', 'export_owner_prompts.py'), '--out', out, '--days', '1'], { env: { ...process.env, HOME: home, USERPROFILE: home } });
+      const result = spawnPython([join(SKILLS, 'owner-goals', 'scripts', 'export_owner_prompts.py'), '--out', out, '--days', '1'], { env: { ...process.env, HOME: home, USERPROFILE: home, CLAUDE_CONFIG_DIR: join(home, '.claude') } });
       expect(result.exitCode).toBe(0);
       const exported = readFileSync(join(out, 'owner-prompts.md'), 'utf8');
       expect(exported).not.toContain('sk-123');
@@ -294,14 +294,26 @@ describe('export_owner_prompts.py', () => {
     try {
       const projectDir = join(home, 'custom-claude', 'projects', '-repo');
       mkdirSync(projectDir, { recursive: true });
-      writeFileSync(join(projectDir, 'session-1.jsonl'), JSON.stringify({ type: 'user', uuid: 'u1', sessionId: 'session-1', timestamp: '2026-07-15T12:00:00.000Z', entrypoint: 'cli', origin: { kind: 'human' }, message: { content: 'summer prompt' } }) + '\n');
-      const out = join(home, 'out');
-      const result = spawnPython([join(SKILLS, 'owner-goals', 'scripts', 'export_owner_prompts.py'), '--out', out, '--start', '2026-07-14', '--end', '2026-07-16'], {
-        env: { ...process.env, HOME: home, USERPROFILE: home, CLAUDE_CONFIG_DIR: join(home, 'custom-claude'), TZ: 'America/New_York' },
-      });
-      expect(result.stderr.toString()).toBe('');
-      // 12:00 UTC is 08:00 in New York during daylight saving time (EDT, UTC-4).
-      expect(readFileSync(join(out, 'owner-prompts.md'), 'utf8')).toContain('## 2026-07-15 08:00 · claude · -repo');
+      // Python on Windows uses the OS timezone, ignoring the POSIX TZ override.
+      // Construct UTC transcripts with Python's actual local timezone (Bun's
+      // Windows timezone can differ from the Python CRT's), using datetime:
+      // both must round-trip to 08:00, including the host's DST when applicable.
+      for (const [month, label] of [[0, 'winter'], [6, 'summer']] as const) {
+        const day = `2026-${String(month + 1).padStart(2, '0')}-15`;
+        const fixture = spawnPython(['-c', 'import datetime,json,sys; start=datetime.datetime(2026,int(sys.argv[1]),15); print(json.dumps([(start+datetime.timedelta(hours=h)).astimezone(datetime.timezone.utc).isoformat() for h in [8,-1,24]]))', String(month + 1)]);
+        expect(fixture.exitCode).toBe(0);
+        const timestamps = JSON.parse(fixture.stdout.toString());
+        const record = (hour: number, uuid: string) => JSON.stringify({ type: 'user', uuid, sessionId: 'session-1', timestamp: timestamps[[8, -1, 24].indexOf(hour)], entrypoint: 'cli', origin: { kind: 'human' }, message: { content: `${label} prompt` } });
+        writeFileSync(join(projectDir, 'session-1.jsonl'), record(8, 'inside') + '\n' + record(-1, 'before-local-midnight') + '\n' + record(24, 'at-end-midnight') + '\n');
+        const out = join(home, `out-${label}`);
+        const result = spawnPython([join(SKILLS, 'owner-goals', 'scripts', 'export_owner_prompts.py'), '--out', out, '--start', day, '--end', `2026-${String(month + 1).padStart(2, '0')}-16`], {
+          env: { ...process.env, HOME: home, USERPROFILE: home, CLAUDE_CONFIG_DIR: join(home, 'custom-claude') },
+        });
+        expect(result.stderr.toString()).toBe('');
+        expect(result.exitCode).toBe(0);
+        expect(readFileSync(join(out, 'owner-prompts.md'), 'utf8')).toContain(`## ${day} 08:00 · claude · -repo`);
+        expect(JSON.parse(result.stdout.toString().trim().split('\n').pop()!).owner_prompts).toBe(1);
+      }
     } finally {
       rmSync(home, { recursive: true, force: true });
     }

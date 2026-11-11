@@ -29,8 +29,8 @@ async function holdExclusiveLock(dbPath: string): Promise<Bun.Subprocess> {
      db.run('BEGIN EXCLUSIVE');
      db.run('PRAGMA user_version = ${LATEST_SCHEMA_VERSION}');
      console.log('LOCKED');
-     setTimeout(() => { db.run('COMMIT'); db.close(); }, ${HOLD_MS});`,
-  ], { stdout: 'pipe' });
+     setTimeout(() => { db.run('COMMIT'); db.close(true); }, ${HOLD_MS});`,
+  ], { stdout: 'pipe', timeout: 10000, windowsHide: true });
   const reader = holder.stdout.getReader();
   let output = '';
   while (!output.includes('LOCKED')) {
@@ -49,14 +49,21 @@ describe('writer-stamp check waits for a concurrent opener', () => {
     const seed = new Database(dbPath);
     seed.run('PRAGMA journal_mode = DELETE');
     seed.run('CREATE TABLE seed (x)');
-    seed.close();
+    seed.close(true);
 
     const holder = await holdExclusiveLock(dbPath);
     // The regression was a throw ("database is locked") about 1 ms into the
     // open; asserting the open succeeds avoids depending on runner timing.
     let opened: Database | null = null;
-    expect(() => { opened = openGuardedSqliteDatabase(dbPath); }).not.toThrow();
-    opened!.close();
-    await holder.exited;
+    try {
+      expect(() => { opened = openGuardedSqliteDatabase(dbPath); }).not.toThrow();
+      opened!.close(true);
+      opened = null;
+      expect(await holder.exited).toBe(0);
+    } finally {
+      opened?.close(true);
+      if (holder.exitCode === null) holder.kill();
+      await holder.exited;
+    }
   });
 });

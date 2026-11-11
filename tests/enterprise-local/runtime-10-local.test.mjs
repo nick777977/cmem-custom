@@ -79,7 +79,7 @@ describe('compiled worker admission', () => {
   test.each([
     ['server', 'start'], ['server', 'stop'], ['server', 'restart'], ['server', 'status'],
     ['server', 'keys', 'rotate'], ['server', 'jobs', 'status'], ['server-start'], ['server-jobs', 'status'],
-  ].map(args => [args.join(' '), args]))('refuses %s before running a neighboring server', (_label, args) => {
+  ].flatMap(args => [undefined, 'worker', 'server'].map(runtime => [args.join(' ') + ' runtime=' + runtime, args, runtime])))('refuses %s before running a neighboring server', (_label, args, runtime) => {
     const root = fixture();
     const worker = join(root, 'worker-service.cjs');
     cpSync(join(plugin, 'scripts', 'worker-service.cjs'), worker);
@@ -92,7 +92,7 @@ describe('compiled worker admission', () => {
         SystemRoot: process.env.SystemRoot, WINDIR: process.env.WINDIR,
         HOME: root, USERPROFILE: root, APPDATA: root, LOCALAPPDATA: root, TEMP: root, TMP: root,
         CLAUDE_CONFIG_DIR: join(root, 'config'), CLAUDE_MEM_DATA_DIR: join(root, 'data'),
-        CLAUDE_MEM_RUNTIME: 'worker', CLAUDE_MEM_WORKER_AUTOSTART: 'false', BUN_INSTALL_AUTO: 'disable',
+        CLAUDE_MEM_RUNTIME: runtime, CLAUDE_MEM_WORKER_AUTOSTART: 'false', BUN_INSTALL_AUTO: 'disable',
       },
     });
     expect(run.error).toBeUndefined();

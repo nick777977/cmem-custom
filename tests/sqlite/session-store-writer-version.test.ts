@@ -89,7 +89,7 @@ function createLegacyDbFile(dir: string): string {
     INSERT INTO sdk_sessions (content_session_id, memory_session_id, project, started_at, started_at_epoch, status)
     VALUES ('content-legacy', 'mem-legacy', 'proj-a', ?, ?, 'completed')
   `).run(ISO, EPOCH);
-  db.close();
+  db.close(true);
   return dbPath;
 }
 
@@ -103,7 +103,7 @@ function snapshotFile(dbPath: string): { stamp: number; integrity: string; table
     ).map(row => row.name);
     return { stamp, integrity, tables };
   } finally {
-    db.close();
+    db.close(true);
   }
 }
 
@@ -124,7 +124,7 @@ describe('schema writer-version stamp', () => {
     const newerStamp = LATEST_SCHEMA_VERSION + 1;
     const raw = new Database(dbPath);
     raw.run(`PRAGMA user_version = ${newerStamp}`);
-    raw.close();
+    raw.close(true);
 
     const before = snapshotFile(dbPath);
     expect(before.stamp).toBe(newerStamp);
@@ -151,7 +151,7 @@ describe('schema writer-version stamp', () => {
     const dbPath = createLegacyDbFile(dir);
     const raw = new Database(dbPath);
     raw.run(`PRAGMA user_version = ${LATEST_SCHEMA_VERSION + 1}`);
-    raw.close();
+    raw.close(true);
 
     const before = snapshotFile(dbPath);
 
@@ -207,7 +207,7 @@ describe('schema writer-version stamp', () => {
 
     db.run(`PRAGMA user_version = ${LATEST_SCHEMA_VERSION}`);
     expect(() => assertSchemaWriterCompatible(db, LATEST_SCHEMA_VERSION - 1)).toThrow(SchemaNewerThanBinaryError);
-    db.close();
+    db.close(true);
   });
 
   it('migrates an older schema stamp up to the current version', () => {
@@ -220,7 +220,7 @@ describe('schema writer-version stamp', () => {
     claimSchemaWriter(db, LATEST_SCHEMA_VERSION);
     expect(readSchemaWriterStamp(db)).toBe(LATEST_SCHEMA_VERSION);
     expect(readSchemaWriterStamp(db)).toBeGreaterThan(olderStamp);
-    db.close();
+    db.close(true);
   });
 
   it('stamps before the migration chain, so a mid-chain failure still refuses older binaries', () => {
@@ -244,10 +244,10 @@ describe('schema writer-version stamp', () => {
     // partially-upgraded file.
     const probe = new Database(dbPath, { readonly: true });
     expect(readSchemaWriterStamp(probe)).toBe(LATEST_SCHEMA_VERSION);
-    probe.close();
+    probe.close(true);
     const older = new Database(dbPath);
     expect(() => assertSchemaWriterCompatible(older, LATEST_SCHEMA_VERSION - 1)).toThrow(SchemaNewerThanBinaryError);
-    older.close();
+    older.close(true);
 
     // The same-chain version reopens and completes the idempotent chain.
     const retried = new SessionStore(dbPath);
@@ -260,17 +260,20 @@ describe('schema writer-version stamp', () => {
     const dbPath = createLegacyDbFile(dir);
     const raw = new Database(dbPath);
     raw.run(`PRAGMA user_version = ${LATEST_SCHEMA_VERSION + 1}`);
-    raw.close();
-    const journalMode = (db: Database): string =>
-      (db.prepare('PRAGMA journal_mode').get() as { journal_mode: string }).journal_mode;
-    expect(journalMode(new Database(dbPath, { readonly: true }))).toBe('delete');
+    raw.close(true);
+    const journalMode = (dbOrPath: Database | string): string => {
+      const db = typeof dbOrPath === 'string' ? new Database(dbOrPath, { readonly: true }) : dbOrPath;
+      try { return (db.query('PRAGMA journal_mode').get() as { journal_mode: string }).journal_mode; }
+      finally { if (typeof dbOrPath === 'string') db.close(true); }
+    };
+    expect(journalMode(dbPath)).toBe('delete');
 
     const before = snapshotFile(dbPath);
     expect(() => openGuardedSqliteDatabase(dbPath)).toThrow(SchemaNewerThanBinaryError);
 
     expect(snapshotFile(dbPath)).toEqual(before);
     // The refusal ran before journal_mode = WAL, so the file keeps DELETE mode.
-    expect(journalMode(new Database(dbPath, { readonly: true }))).toBe('delete');
+    expect(journalMode(dbPath)).toBe('delete');
 
     // The guard ordering does not affect the normal path: a compatible DB is
     // still pragma-configured by the same helper.
@@ -278,7 +281,7 @@ describe('schema writer-version stamp', () => {
     new Database(adoptedPath).close();
     const adopted = openGuardedSqliteDatabase(adoptedPath);
     expect(journalMode(adopted)).toBe('wal');
-    adopted.close();
+    adopted.close(true);
   });
 
   it('stamps after SessionSearch recreates missing FTS tables — the #3609 damage scenario', () => {
@@ -320,7 +323,7 @@ describe('schema writer-version stamp', () => {
           this.raced = true;
           const newerWorker = new Database(this.filename);
           newerWorker.run(`PRAGMA user_version = ${this.newerWorkerStamp}`);
-          newerWorker.close();
+          newerWorker.close(true);
         }
         return super.run(sql, ...(bindings as []));
       }
@@ -333,7 +336,7 @@ describe('schema writer-version stamp', () => {
       const raced = new ConnectionRacedByNewerWorker(dbPath, newerStamp);
 
       expect(() => new SessionStore(raced)).toThrow(SchemaNewerThanBinaryError);
-      raced.close();
+      raced.close(true);
 
       const after = snapshotFile(dbPath);
       // The newer worker's stamp survives, and the legacy file was not migrated.
@@ -349,7 +352,7 @@ describe('schema writer-version stamp', () => {
       const raced = new ConnectionRacedByNewerWorker(dbPath, newerStamp);
 
       expect(() => new SessionSearch(raced)).toThrow(SchemaNewerThanBinaryError);
-      raced.close();
+      raced.close(true);
 
       const after = snapshotFile(dbPath);
       expect(after.stamp).toBe(newerStamp);
@@ -369,7 +372,7 @@ describe('schema writer-version stamp', () => {
 
       expect(() => claimSchemaWriter(older, olderVersion)).toThrow(SchemaNewerThanBinaryError);
       expect(readSchemaWriterStamp(older)).toBe(LATEST_SCHEMA_VERSION);
-      older.close();
+      older.close(true);
     });
 
     it('the claim takes the write lock: it waits on a concurrent writer and re-checks after it commits', () => {
@@ -386,8 +389,8 @@ describe('schema writer-version stamp', () => {
 
       expect(() => claimSchemaWriter(older, LATEST_SCHEMA_VERSION - 1)).toThrow(SchemaNewerThanBinaryError);
       expect(readSchemaWriterStamp(older)).toBe(LATEST_SCHEMA_VERSION);
-      newer.close();
-      older.close();
+      newer.close(true);
+      older.close(true);
     });
 
     it('the claim raises an older stamp and never lowers an equal one', () => {
@@ -397,7 +400,7 @@ describe('schema writer-version stamp', () => {
       expect(readSchemaWriterStamp(db)).toBe(LATEST_SCHEMA_VERSION);
       claimSchemaWriter(db, LATEST_SCHEMA_VERSION);
       expect(readSchemaWriterStamp(db)).toBe(LATEST_SCHEMA_VERSION);
-      db.close();
+      db.close(true);
     });
   });
 });

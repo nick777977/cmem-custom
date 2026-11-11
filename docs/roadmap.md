@@ -1,6 +1,6 @@
 ---
 status: living
-updated_at: 2026-11-10
+updated_at: 2026-11-11
 ---
 
 # Enterprise local memory roadmap
@@ -8,6 +8,15 @@ updated_at: 2026-11-10
 This decomposition does not authorize execution. Current handoff: [STATE](enterprise-local/memory/STATE.md).
 A19/A20 supersede the former Bedrock-only target; original supplied requirements and
 source-pinned historical reports remain audit evidence, not current instructions.
+
+**Post-cleanup resumption, 2026-11-11:** the cleanup side task and retained
+Windows gate are complete; bounded cleanup merge is recommended. The owner
+will integrate manually into `feat/cmem-light-local`; merge has not been
+performed by the agent. Resume the same next task as at `a9364604d`:
+**step 11, CLAUDE-WINDOWS-VERIFY**, using the current merged build and a refreshed
+target inventory. No additional cleanup-review session or new dependency edge.
+[Manual merge](enterprise-local/cleanup/NEXT-SESSION.md) ·
+[Post-merge task](enterprise-local/NEXT-SESSION.md).
 
 ## Destination
 
@@ -40,8 +49,8 @@ A06/A07/A19/A20 where indicated. Source/runtime statuses are deliberately separa
 | 7 | Chroma retrieves from verified local runtime/model assets | IP W5; A17/A27 | M | Done-bounded for Windows x64 with separately staged multilingual MiniLM and persistent synthetic retrieval. [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). |
 | 8 | Local API/viewer and safe effective profile settings | IP W7; A06/A07/A19 | S | Done-bounded for the local viewer on Windows x64. Settings shows effective role choices and Chroma health. A copied worker and browser distinguished missing assets from a passing probe backed by semantic retrieval. [VIEWER-08-LOCAL](enterprise-local/handoffs/VIEWER-08-LOCAL.md) |
 | 9 | User-level Windows local build/setup and host integration | IP W6; A20/A21-A28/A31 | M | Codex CLI host check accepted for this delivery. The private Claude Code Windows stage and direct command fixtures are complete. Actual Claude CLI loading and dispatch are step-11 target checks. [CLAUDE-WINDOWS-STAGE](enterprise-local/handoffs/CLAUDE-WINDOWS-STAGE.md) |
-| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29/A31 | M | The Codex inventory and SBOM cover that stage and shared Windows x64 inputs. The refreshed 80-file Claude inventory passed raw-copy and rebinding checks on the paired recovery build. [Claude inventory](enterprise-local/artifacts/claude-windows-x64-inventory.json) |
-| 11 | Verify local memory, Claude Code CLI and the selected Bedrock route | IP P6/P7; A20; A29–A31 | M | Successful memory flow and deliberate recovery passed their local fixtures. Verify the intended Claude Code host and Bedrock separately in the authorized environment. [Remaining work](#what-remains-in-step-11) |
+| 10 | Pin the compiled files used by the private local install | IP W8; A19/A20; A29/A31 | M | Current cleanup receipt verifies 813 source inputs and exact 81 Codex/80 Claude reference files. Old inventories/SBOM describe earlier builds. Refresh/review the current Claude inventory for a new target destination before execution. [Current receipt](enterprise-local/artifacts/windows-x64-cleanup-receipt.json) |
+| 11 | Verify local memory, Claude Code CLI and the selected Bedrock route | IP P6/P7; A20; A29–A31 | M | Memory/recovery passed again on the current cleanup copied build with real prepared Chroma and viewer/My Work. Actual Claude CLI and Bedrock remain pending in the authorized target environment. [Next task](enterprise-local/NEXT-SESSION.md) · [Remaining work](#what-remains-in-step-11) |
 | 12 | Document regular local setup, updates and data-preserving rollback | IP P8; A19/A20; A29 | S | Pending step 11. Formal packaging and redistribution are optional follow-up work. |
 
 ## Phase-one delivery route (A27, 2026-11-04)

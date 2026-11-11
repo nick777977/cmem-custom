@@ -1,5 +1,22 @@
 # Private CLI plugin setup on Windows
 
+**Current cleanup reference check, 2026-11-11:** use the pinned Node with
+`scripts/enterprise-local/verify-cleanup-reference.mjs` and optionally
+`--host claude`. This verifies the refreshed regression-gate reference roots,
+813 source inputs and copied-build hashes; it refuses another path. Seven
+runtime outputs changed and were restaged/tested with capture/search/recovery,
+real prepared Chroma, viewer/My Work and restart. It does not refresh a portable
+inventory or old SBOM. [Current readiness](cleanup/MERGE-READINESS.md) recommends
+merge for bounded cleanup; full-suite/target-host acceptance remains separate.
+
+**Cleanup branch, 2026-11-11:** new source/bundles use `cmem-light` display
+metadata and retain only Claude Code/Codex hosts. The old inventories/SBOM and
+their verifier defaults describe earlier bytes. The
+[cleanup receipt](artifacts/windows-x64-cleanup-receipt.json) covers the exact
+new synthetic reference stages; it is destination-bound, not a transfer receipt.
+Do not present an old inventory as valid for a new build. Refresh destination
+binding/inventory before target transfer. [Checks and limits](cleanup/RESULTS.md).
+
 The launcher installs a copy of this checkout's compiled plugin under a new
 user-writable directory. It registers `claude-mem@cmem-light-private` in a
 dedicated Codex CLI home. The launcher runs the worker in the foreground on
@@ -204,12 +221,41 @@ directory. Staging only writes files. The renderer prints the directory
 to pass to Claude Code later. The exact receipt should be stored outside
 the staged tree and created before adding settings or starting the worker.
 [Stage evidence](handoffs/CLAUDE-WINDOWS-STAGE.md)
-· [Claude inventory](artifacts/claude-windows-x64-inventory.json).
+· [Historical Claude inventory](artifacts/claude-windows-x64-inventory.json).
+After cleanup merge, that inventory must be refreshed/reviewed for the current
+compiled files before the default verifier can accept a new stage. The
+[cleanup receipt](artifacts/windows-x64-cleanup-receipt.json) checks only its
+exact synthetic roots. Do not treat it as a transfer/new-destination inventory.
 
 ```powershell
 $boundClaudePluginDirectory = & $node scripts/enterprise-local/codex-local.mjs stage-claude `
   --root $claudeStage --bun $bun --port $port
 if ($LASTEXITCODE -ne 0) { throw 'Claude stage failed' }
+```
+
+For the current cleanup build, first record a proposed inventory outside the
+stage, supplying full Git SHAs for the compiled build and renderer. The paired
+build is `dff499e45c3116d8cb8936733d0edf8f220797a6`; the last renderer change is
+`a5c3c236423401affc62ef8ab8ee3e6485b28cf2`. Recheck these inputs if the target
+task changes source or rebuilds. Merely changing the branch name in a
+fast-forward does not require another compile.
+
+```powershell
+$proposedInventory = & $node scripts/enterprise-local/verify-claude-stage.mjs `
+  --candidate $claudeStage --bun $bun --port $port `
+  --record --build $pairedBuildSha --renderer $rendererSha
+if ($LASTEXITCODE -ne 0) { throw 'Claude inventory recording failed' }
+$proposedInventory | Set-Content -LiteralPath $proposedInventoryPath -Encoding utf8
+```
+
+`--record` produces a candidate inventory; it does not validate against an
+accepted inventory. In the target task, compare the staged copied bytes with
+the merged `plugin/`, review the complete file set, binding normalization and
+executable hashes, and review the delta from the historical inventory. Then
+write the reviewed inventory to `docs/enterprise-local/artifacts/claude-windows-x64-inventory.json`
+(preserving the old evidence in Git) and run verification without `--record`:
+
+```powershell
 $receipt = & $node scripts/enterprise-local/verify-claude-stage.mjs `
   --candidate $claudeStage --bun $bun --port $port
 if ($LASTEXITCODE -ne 0) { throw 'Claude stage verification failed' }

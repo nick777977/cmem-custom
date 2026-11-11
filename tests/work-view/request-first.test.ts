@@ -8,7 +8,7 @@ import { reduceWorkState } from '../../src/services/work-view/data-source.mjs';
 import { buildRefreshTask } from '../../src/services/work-view/refresh-task.js';
 import { applyGroupDecisions, groupIdFor, groupingInput, linkBackwards, readCandidates, readLedger, runCli, validateGroupingAnswer } from '../../src/services/work-view/request-groups.mjs';
 import { buildHumanRequests } from '../../src/services/work-view/request-projection.mjs';
-import { NO_PROJECT, pathsIn, projectFromToolPaths, withDerivedProjects, projectRoot, upgradedGroupRoot } from '../../src/services/work-view/session-project.mjs';
+import { NO_PROJECT, pathsIn, projectFromToolPaths, withDerivedProjects, projectRoot, upgradedGroupRoot, repoRootOf } from '../../src/services/work-view/session-project.mjs';
 import { everyRequestInOther, focusWriter } from '../helpers/fake-focus-writer.js';
 
 const DAY = 86400000, NOW = 100 * DAY;
@@ -348,6 +348,9 @@ describe('the real project of an agent scratch-folder session', () => {
       const repo = join(root, 'claude-mem'), tree = join(root, 'worktrees', 'claude-mem 🧠', 'cards'), other = join(root, 'other-repo');
       const scratch = join(root, 'Documents', 'Codex', '2026-10-13', 'det');
       for (const dir of [join(repo, 'src'), other, join(scratch, 'outputs')]) mkdirSync(dir, { recursive: true });
+      // This case requires a real non-repository folder. A TEMP nested inside
+      // the checkout inherits its .git even when git's ceiling env is set.
+      expect(repoRootOf(scratch), 'fixture TEMP must be outside any enclosing Git checkout').toBeNull();
       gitRepo(repo); gitRepo(other);
       git(repo, 'worktree', 'add', '-q', tree);
       expect(pathsIn(JSON.stringify({ command: `rtk git -C '${tree}' status && ls ~15k ./relative` }))).toEqual([tree]);

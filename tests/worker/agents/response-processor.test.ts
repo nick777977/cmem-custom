@@ -457,7 +457,7 @@ describe('ResponseProcessor', () => {
       expect(broadcastIds).toEqual([7]);
     });
 
-    it('drops a title-less observation before storing, so Chroma and the brainbeat webhook get the right ids', async () => {
+    it('keeps titled observation ids aligned in Chroma without dispatch to the retired brainbeat webhook', async () => {
       // Like the real store: one id per TITLED observation it is handed. Before
       // the fix the untitled one was handed over too, and every later id shifted
       // onto the wrong parsed observation.
@@ -501,9 +501,7 @@ describe('ResponseProcessor', () => {
       expect(stored.map(observation => observation.title)).toEqual(['First finding', 'Third finding']);
       expect(mockChromaSyncObservation.mock.calls.map(call => [call[0], (call[3] as { title: string }).title]))
         .toEqual([[101, 'First finding'], [102, 'Third finding']]);
-      const webhookPayloads = fetchSpy.mock.calls.map(call => JSON.parse(String((call[1] as RequestInit).body)));
-      expect(webhookPayloads.map(payload => [payload.observation_id, payload.title]))
-        .toEqual([[101, 'First finding'], [102, 'Third finding']]);
+      expect(fetchSpy.mock.calls.filter(call => String(call[0]).startsWith('https://bot.example/'))).toEqual([]);
     });
 
     it('should parse multiple observations from response', async () => {

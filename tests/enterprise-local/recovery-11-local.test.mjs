@@ -11,7 +11,7 @@ import { test } from 'node:test';
 import { stageLocalInstall } from '../../scripts/enterprise-local/codex-local.mjs';
 
 const bundle = fileURLToPath(new URL('../../plugin', import.meta.url));
-const scratch = fileURLToPath(new URL('../../.scratch/enterprise-local/recovery-11-local/', import.meta.url));
+const scratch = process.env.CMEM_STAGE_TEST_SCRATCH ?? fileURLToPath(new URL('../../.scratch/enterprise-local/recovery-11-local/', import.meta.url));
 const recoveryPath = '/api/processing/recovery';
 
 async function until(probe, label, ms = 12_000) {

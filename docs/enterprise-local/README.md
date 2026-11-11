@@ -1,5 +1,26 @@
 # Enterprise local fork: project memory
 
+**Windows regression gate, 2026-11-11: cleanup merge recommended.** All 22
+original failed files plus five focused dependencies pass: 373 tests in 27 Bun
+files, zero failures. Both typechecks/guarded compile, four Node host/recovery
+checks and a fresh copied build with real prepared Chroma, viewer/My Work,
+capture/search/recovery/restart pass. Seven outputs paired; current receipt
+checks 813 inputs and 81 Codex/80 Claude files. Full suite NOT RUN; unused local
+Better Auth sessions still HTTP 500. No merge/push performed.
+[Verdict and each closed row](cleanup/MERGE-READINESS.md) ·
+[Owner-run merge commands](cleanup/NEXT-SESSION.md) ·
+[After merge: resume step 11](NEXT-SESSION.md). No additional cleanup-review
+session is required. Earlier status below is historical.
+
+**Repository cleanup, 2026-11-11:** the existing cleanup branch now contains
+three bounded implementation slices: PDF/automation removal, extra-host
+retirement and `cmem-light` display metadata, and standalone/cloud deployment
+detachment. [Results and retained source](cleanup/RESULTS.md) include current
+copied-build checks, five stale hook-test failures and the existing auth HTTP
+500. [Current receipt](artifacts/windows-x64-cleanup-receipt.json) covers exact
+synthetic reference stages; older inventories/SBOM remain historical. The main
+roadmap and actual Claude CLI/Bedrock target check have not advanced.
+
 Goal: Windows local-first memory with existing Claude Code/Codex integrations,
 canonical SQLite/FTS5, persistent local Chroma/embedding assets and local viewer.
 The owner explicitly chooses provider, model and auth for every LLM task, with one

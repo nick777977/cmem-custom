@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'bun:test';
-import { startCommandWantsDaemon } from '../../src/server/runtime/ServerService.js';
+import { startCommandWantsDaemon, runServerServiceCli, runServerGenerationWorker } from '../../src/server/runtime/ServerService.js';
+
+describe('retired standalone launch', () => {
+  it('rejects server CLI launch before creating its runtime graph', async () => {
+    await expect(runServerServiceCli(['start', '--daemon'])).rejects.toThrow('LOCAL_WORKER_ONLY');
+  });
+  it('rejects the independent BullMQ generation entrypoint', async () => {
+    await expect(runServerGenerationWorker()).rejects.toThrow('LOCAL_WORKER_ONLY');
+  });
+});
 
 // #2444 — `start` must be FOREGROUND by default (usable under systemd
 // Type=simple) and detach only when `--daemon` is explicitly passed.

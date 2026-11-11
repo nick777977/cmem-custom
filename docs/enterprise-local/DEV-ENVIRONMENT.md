@@ -1,10 +1,50 @@
 # Development baseline and user-provided execution evidence
 
+**WINDOWS-REGRESSION-GATE, 2026-11-11.** Reused Node 22.23.4/npm 10.9.9/
+Bun 1.4.4/Python 3.13.15 without tool/dependency/model changes. 373 selected
+Bun tests in 27 files, four Node host/recovery tests, root/viewer typechecks
+and guarded compile PASS. 19 inputs/1,943 tracked source sentinels unchanged;
+seven paired outputs changed. Fresh copied-build real prepared Chroma,
+viewer/My Work, capture/search/recovery/restart and owned cleanup PASS.
+Sandbox filesystem/loopback denials are distinct from ordinary-user reruns;
+all elevated Windows tokens refused, no UAC or machine changes. Python's
+Windows timezone can differ from Bun's; portable winter/summer fixtures use
+Python-local timestamps, with no POSIX TZ override. Windows file mode checks
+do not claim POSIX ACL enforcement. Full suite/real provider/target-host
+acceptance NOT RUN; unused Better Auth session route remains HTTP 500.
+Current receipt refreshed to 813 inputs/81 Codex/80 Claude files.
+[Actual results and limits](cleanup/MERGE-READINESS.md). Earlier assessments below
+are historical; no merge/push performed.
+
+**CLEANUP-MERGE-VERIFY, 2026-11-11.** Node 22.23.4/npm 10.9.9/Bun 1.4.4
+retained. Both typechecks and guarded compile pass with 19 inputs, 1,941
+tracked source sentinels and 186 tracked outputs unchanged. Exact reference
+verifier passes 811 original source inputs and 81 Codex/80 Claude files.
+Bound-host fixtures pass; recovery passes fresh after an initial connection
+failure. Expanded local selections remain red; baseline replay distinguishes
+inherited Windows failures from cleanup changes. Local Better Auth sessions
+remain HTTP 500 and are separate from provider login. Administrator tokens
+were explicitly refused. Sandbox loopback/generated-metadata write denials
+were resolved through inspected ordinary-user reruns, with no UAC, machine
+configuration or tool/dependency changes. Full suite, fresh real Chroma and
+browser matrix were not rerun. [Exact results and limits](cleanup/MERGE-READINESS.md).
+
 Updated: 2026-11-10. Supersedes the pre-install assumption in the 2026-10-30 launcher.
 This is not full runtime acceptance. Session 02 subsequently ran authorized step-2
 compile/targeted checks; see the current section below and [BUILD-02](handoffs/BUILD-02.md).
 
 ## Preferred local toolchain
+
+**REPOSITORY-CLEANUP, 2026-11-11.** Reused Node 22.23.4, npm 10.9.9 and
+Bun 1.4.4 without acquisition, toolchain or installed-dependency changes.
+Both typechecks and guarded compile pass. Current copied Windows x64 stages
+passed direct Claude/Codex hooks/MCP, durable recovery, real local Chroma/FTS
+and restart, plus browser viewer/My Work rendering. Ordinary-user loopback
+fixtures refused an administrator token and used synthetic task-owned data.
+Five stale legacy hook-format assertions remain failures; local auth still
+returns HTTP 500. Browser background attempts were blocked by its local fixture
+proxy; no OS-wide isolation claim. Current receipt and details are in
+[cleanup results](cleanup/RESULTS.md); older inventories remain historical.
 
 **CLAUDE-WINDOWS-STAGE, 2026-11-10.** Reused the pinned Windows x64 Node
 22.23.4 and Bun 1.4.4 binaries. The default sandbox did not confirm the

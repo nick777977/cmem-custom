@@ -1,169 +1,31 @@
 #!/usr/bin/env node
-
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const rootDir = path.resolve(__dirname, '..');
-
-const packageJsonPath = path.join(rootDir, 'package.json');
-const codexPluginPath = path.join(rootDir, '.codex-plugin', 'plugin.json');
-const bundledCodexPluginPath = path.join(rootDir, 'plugin', '.codex-plugin', 'plugin.json');
-const qoderPluginPath = path.join(rootDir, '.qoder-plugin', 'plugin.json');
-const bundledQoderPluginPath = path.join(rootDir, 'plugin', '.qoder-plugin', 'plugin.json');
-const claudePluginPath = path.join(rootDir, '.claude-plugin', 'plugin.json');
-const bundledClaudePluginPath = path.join(rootDir, 'plugin', '.claude-plugin', 'plugin.json');
-const claudeMarketplacePath = path.join(rootDir, '.claude-plugin', 'marketplace.json');
-const grokPluginPath = path.join(rootDir, '.grok-plugin', 'plugin.json');
-const dshPackagePath = path.join(rootDir, 'dsh', 'package.json');
-const openClawPluginPath = path.join(rootDir, 'openclaw', 'openclaw.plugin.json');
-const cursorPluginPaths = [
-  path.join(rootDir, 'claude-mem-cursor', '.cursor-plugin', 'plugin.json'),
-  path.join(rootDir, 'claude-mem-grok-bot', '.cursor-plugin', 'plugin.json'),
-];
-
-function readJson(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-}
-
-function writeJson(filePath, value) {
-  fs.writeFileSync(filePath, JSON.stringify(value, null, 2) + '\n');
-}
-
-function syncCodexPlugin(plugin, pkg) {
-  const author =
-    typeof plugin.author === 'object' && plugin.author ? plugin.author : {};
-
-  return {
-    ...plugin,
-    name: pkg.name,
-    version: pkg.version,
-    description: pkg.description,
-    homepage: pkg.homepage,
-    repository: normalizeRepositoryUrl(pkg.repository),
-    license: pkg.license,
-    keywords: pkg.keywords,
-    author: {
-      ...author,
-      name: normalizeAuthorName(pkg.author),
-    },
-    interface: {
-      ...plugin.interface,
-      developerName: normalizeAuthorName(pkg.author),
-      websiteURL: normalizeRepositoryUrl(pkg.repository),
-    },
-  };
-}
-
-function syncClaudePlugin(plugin, pkg) {
-  return {
-    ...plugin,
-    name: pkg.name,
-    version: pkg.version,
-    description: pkg.description,
-    homepage: pkg.homepage,
-    repository: normalizeRepositoryUrl(pkg.repository),
-    license: pkg.license,
-    keywords: pkg.keywords,
-    author: {
-      ...(typeof plugin.author === 'object' && plugin.author ? plugin.author : {}),
-      name: normalizeAuthorName(pkg.author),
-    },
-  };
-}
-
-function syncVersionOnly(manifest, pkg) {
-  return {
-    ...manifest,
-    version: pkg.version,
-  };
-}
-
-function syncClaudeMarketplace(marketplace, pkg) {
-  return {
-    ...marketplace,
-    plugins: marketplace.plugins.map((plugin) =>
-      plugin.name === pkg.name ? { ...plugin, version: pkg.version } : plugin,
-    ),
-  };
-}
-
-function normalizeAuthorName(author) {
-  if (typeof author === 'string') return author;
-  if (author && typeof author === 'object' && typeof author.name === 'string') return author.name;
-  return '';
-}
-
-function syncCursorPlugin(plugin, pkg) {
-  return {
-    ...plugin,
-    version: pkg.version,
-    description: plugin.description ?? pkg.description,
-    homepage: plugin.homepage ?? pkg.homepage,
-    repository: normalizeRepositoryUrl(pkg.repository),
-    license: pkg.license,
-    author: {
-      ...(typeof plugin.author === 'object' && plugin.author ? plugin.author : {}),
-      name: normalizeAuthorName(pkg.author),
-    },
-  };
-}
-
-function normalizeRepositoryUrl(repository) {
-  if (typeof repository === 'string') return repository.replace(/\.git$/, '');
-  if (repository && typeof repository === 'object' && typeof repository.url === 'string')
-    return repository.url.replace(/\.git$/, '');
-  return '';
-}
-
-function main() {
-  for (const filePath of [
-    packageJsonPath,
-    codexPluginPath,
-    bundledCodexPluginPath,
-    qoderPluginPath,
-    bundledQoderPluginPath,
-    claudePluginPath,
-    bundledClaudePluginPath,
-    claudeMarketplacePath,
-    grokPluginPath,
-    dshPackagePath,
-    openClawPluginPath,
-    ...cursorPluginPaths,
-  ]) {
-    if (!fs.existsSync(filePath)) {
-      console.error(`Missing required file: ${filePath}`);
-      process.exit(1);
-    }
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const read = file => JSON.parse(fs.readFileSync(path.join(root, file), 'utf8'));
+const write = (file, value) => fs.writeFileSync(path.join(root, file), JSON.stringify(value, null, 2) + '\n');
+const pkg = read('package.json');
+const description = 'cmem-light — local memory for Claude Code and Codex CLI';
+for (const file of ['.claude-plugin/plugin.json', 'plugin/.claude-plugin/plugin.json', '.codex-plugin/plugin.json', 'plugin/.codex-plugin/plugin.json']) {
+  const plugin = read(file);
+  // Technical identity is retained for private staging and existing hosts.
+  Object.assign(plugin, { name: pkg.name, version: pkg.version, description, license: pkg.license, keywords: pkg.keywords });
+  for (const key of ['author', 'homepage', 'repository']) delete plugin[key];
+  if (file.includes('.codex-plugin/')) {
+    plugin.interface = { ...plugin.interface, displayName: 'cmem-light', shortDescription: description,
+      longDescription: 'cmem-light preserves local coding-session memory across Claude Code and Codex CLI sessions.' };
+    delete plugin.interface.developerName;
+    delete plugin.interface.websiteURL;
   }
-
-  const pkg = readJson(packageJsonPath);
-  const codexPlugin = readJson(codexPluginPath);
-  const bundledCodexPlugin = readJson(bundledCodexPluginPath);
-  const qoderPlugin = readJson(qoderPluginPath);
-  const bundledQoderPlugin = readJson(bundledQoderPluginPath);
-  const claudePlugin = readJson(claudePluginPath);
-  const bundledClaudePlugin = readJson(bundledClaudePluginPath);
-  const claudeMarketplace = readJson(claudeMarketplacePath);
-  const grokPlugin = readJson(grokPluginPath);
-  const dshPackage = readJson(dshPackagePath);
-  const openClawPlugin = readJson(openClawPluginPath);
-  const cursorPlugins = cursorPluginPaths.map(readJson);
-
-  writeJson(codexPluginPath, syncCodexPlugin(codexPlugin, pkg));
-  writeJson(bundledCodexPluginPath, syncCodexPlugin(bundledCodexPlugin, pkg));
-  writeJson(qoderPluginPath, syncCursorPlugin(qoderPlugin, pkg));
-  writeJson(bundledQoderPluginPath, syncCursorPlugin(bundledQoderPlugin, pkg));
-  writeJson(claudePluginPath, syncClaudePlugin(claudePlugin, pkg));
-  writeJson(bundledClaudePluginPath, syncClaudePlugin(bundledClaudePlugin, pkg));
-  writeJson(claudeMarketplacePath, syncClaudeMarketplace(claudeMarketplace, pkg));
-  writeJson(grokPluginPath, syncVersionOnly(grokPlugin, pkg));
-  writeJson(dshPackagePath, syncVersionOnly(dshPackage, pkg));
-  writeJson(openClawPluginPath, syncVersionOnly(openClawPlugin, pkg));
-  cursorPluginPaths.forEach((filePath, index) => writeJson(filePath, syncCursorPlugin(cursorPlugins[index], pkg)));
-
-  console.log('✓ Synced plugin manifests from package.json');
+  write(file, plugin);
 }
-
-main();
+const marketplace = read('.claude-plugin/marketplace.json');
+marketplace.owner = { name: 'Local fork maintainers' };
+marketplace.metadata = { ...marketplace.metadata, description };
+marketplace.plugins = marketplace.plugins.filter(plugin => plugin.name === pkg.name).map(plugin => ({ ...plugin, version: pkg.version, description }));
+write('.claude-plugin/marketplace.json', marketplace);
+const catalog = read('.agents/plugins/marketplace.json');
+catalog.interface = { ...catalog.interface, displayName: 'cmem-light' };
+write('.agents/plugins/marketplace.json', catalog);
+console.log('Synced retained local host manifests');

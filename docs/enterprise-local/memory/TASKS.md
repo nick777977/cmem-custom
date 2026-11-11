@@ -7,6 +7,130 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-11 **POST-CLEANUP-HANDOFF**, done-bounded by one coordinator
+at clean `e3d58215beb6071dac42121ef7a75d9f3068c4a3` on
+`codex/repository-cleanup-plan`. Owner will merge manually, then resume the
+main roadmap. Compare main NEXT-SESSION at `a9364604d` with HEAD; reserve
+main/cleanup NEXT-SESSION, README, WINDOWS-LOCAL-SETUP, cleanup readiness,
+docs/roadmap checkpoint and memory STATE/TASKS/DECISIONS/WORKLOG. Documentation
+only: explicit owner-run merge commands, conditional post-merge handoff and
+current-build inventory prerequisite for original CLAUDE-WINDOWS-VERIFY.
+No application/generated/receipt changes, tests/runtime, registration, merge,
+branch switch or push. Next: make the main handoff resume step 11 after the
+owner's merge without another cleanup-review session.
+Completed: original handoff/unchanged roadmap compared at `a9364604d` and
+`e3d58215b`; target remains the base and is an ancestor. Added owner-run
+fast-forward commands and made main NEXT-SESSION the post-merge entry point
+for CLAUDE-WINDOWS-VERIFY. Corrected the stale inventory prerequisite/runbook;
+no artifacts or runtime evidence changed. Documentation/link/Git preservation
+checks PASS; merge not performed. Reservations released. Next ready-unclaimed:
+main step-11 target task, conditional on owner merge and target runtime scope.
+
+2026-11-11 **WINDOWS-REGRESSION-GATE**, done-bounded by one coordinator
+at clean `e113238ade58c8dcd25a5127d9a796b71d8ee124` on
+`codex/repository-cleanup-plan`. Reserve SQLite SessionStore/SessionSearch/
+connection, backup restore-swap/snapshot-files, work-view request-groups/
+auto-refresh-worker and inspected dependencies needed for resource ownership;
+the 22 failed test files in cleanup/MERGE-READINESS, focused lifecycle tests,
+a reproducible isolated gate runner, paired compile outputs/current staging
+receipt, and cleanup readiness/results plus README/DEV-ENVIRONMENT/NEXT-SESSION
+and memory STATE/TASKS/WORKLOG/DECISIONS. Scratch:
+`.scratch/enterprise-local/windows-regression-gate/`. First reproduce SQLite,
+WAL and atomic-write failures, then make minimal corrections and replay final
+assertions. No agents/branches/worktrees, merge/push, install/update, real
+state/credentials, inference or AWS. Runtime checks use only synthetic owned
+state, fake loopback generation and previously prepared local Chroma assets.
+Reservation extended after the first gate trace: the orphan-FK boot case calls
+`src/services/infrastructure/CleanupV12_4_3.ts`, whose own prepared statements
+survive non-strict close. Change only its three connection closes, with
+`tests/infrastructure/cleanup-v12_4_3.test.ts`; no cleanup policy/data changes.
+Also reserve `tests/write-json-file-atomic.test.ts` to express preservation of
+the actual Windows file mode without claiming POSIX ACL semantics.
+Completed: `dff499e45` resource source/seven paired outputs, `974d779e4`
+reproducible gate and fixtures. 373 PASS/0 FAIL in 27 Bun files; both
+typechecks/guarded compile PASS. Fresh copied-build real Chroma/viewer/
+capture/search/recovery/restart PASS, 37 sampled PIDs exited/four ports rebound;
+four separate Node host/recovery checks PASS. Current receipt 813 inputs and
+81/80 stage files verifies. Merge recommended for bounded cleanup, no merge/push.
+Reservations released. Next ready-unclaimed: owner-directed integration review,
+not another source slice. [Verdict](../cleanup/MERGE-READINESS.md).
+The claim/reservation text above records this session's original scope.
+
+2026-11-11 **CLEANUP-MERGE-VERIFY**, done-bounded by one coordinator from clean
+`493e20b76055a20bfcacec183cacb4bd9f7940b0` on
+`codex/repository-cleanup-plan`. Reserve the two retained hook test files,
+`tests/enterprise-local/claude-windows-stage.test.mjs`, applicable retained
+resource assertions, current cleanup receipt/verifier tests and scripts,
+`cleanup/MERGE-READINESS.md`, cleanup/main next-session pointers and
+`memory/{STATE,TASKS,WORKLOG,DECISIONS}.md`, README/runbook/environment status.
+Review local lanes and auth source; run bounded synthetic checks in fresh
+`.scratch/enterprise-local/cleanup-merge-verify/`. No agents, merge, push,
+real state, registration, AWS or live inference. Extend reservation before
+any application/generated changes. Next: align hook contracts and map lanes.
+Compile reservation: fingerprint all tracked plugin outputs, 19 reviewed
+tool/dependency inputs and tracked source/test sentinels. Expect no runtime
+output delta; no generation target, lock, dependency or application edit.
+Completed: hook/resource tests `f6f49db53`, verifier `d9fa7f90f`; both
+typechecks/guarded compile and exact reference verification pass, no runtime
+output delta. Expanded selection has 1,806 PASS/90 FAIL/3 SKIP, with baseline
+comparisons, direct host PASS and recovery fresh-rerun PASS. Verdict: do not
+merge yet; close retained Windows test gate. [Full disposition](../cleanup/MERGE-READINESS.md).
+Reservations released; next task ready-unclaimed in cleanup/NEXT-SESSION.
+The reservation/next-action wording above records the original claim only.
+
+2026-11-11 **CLEANUP tree and explanation follow-up**, done by one
+coordinator at clean `0622cc22f` on `codex/repository-cleanup-plan`.
+Reserve unnecessary empty project directories (never ignored/runtime/data or
+dependency trees), `AGENTS.md`, `cleanup/{RESULTS,NEXT-SESSION}.md`,
+`memory/{STATE,TASKS,WORKLOG,DECISIONS}.md` and the main next-session pointer.
+Read only synthetic fixture logs and relevant auth/test source to explain
+remaining checks, merge readiness and the local auth failure. No product edits,
+runtime restart, broad test run, real auth/data, branch switch or merge.
+Removed 116 exact empty directories; zero eligible empties on rescan.
+Documented specific Better Auth schema error, legacy hook expectations,
+focused/full-suite limits and recommendation to finish validation before merge.
+User communication requirements are now in AGENTS. Reservations released.
+Next ready-unclaimed task: [pre-merge verification](../cleanup/NEXT-SESSION.md).
+
+2026-11-11 **REPOSITORY-CLEANUP implementation**, done-bounded. One
+coordinator on `codex/repository-cleanup-plan`, entry `8b93ceb3d`.
+Three concerns remove PDF/automation, extra hosts/presentation and detachable
+standalone/cloud build/launch. All 438 removable candidates and 49 extra
+exclusive test/helper/output files deleted; two agent-guidance candidates kept.
+Source, generators and paired outputs retained with checks and current receipt.
+Reservation extended to root README, its historical technical archive and the
+Windows runbook receipt warning. No main-roadmap edits, agents/worktrees/push,
+real installation/data/inference or toolchain changes. [Results](../cleanup/RESULTS.md)
+records successful local checks, five stale shared assertions, existing auth
+HTTP 500 and coupled source/dependency deferrals. All reservations released.
+Next task is ready-unclaimed: [align retained hook tests](../cleanup/NEXT-SESSION.md).
+
+2026-11-11 **REPOSITORY-CLEANUP final plan**, done by one coordinator from
+clean `683bd9062` on `codex/repository-cleanup-plan`. Reserve
+`docs/enterprise-local/cleanup/` and brief updates to
+`memory/{STATE,TASKS,DECISIONS,WORKLOG}.md` and `NEXT-SESSION.md`.
+Owner now requests removal of CI/CD, presentation PDFs and detachable non-local
+components in the next implementation session, with local build/tests retained.
+This turn wrote only the final plan, 440-path candidate manifest and next-session
+prompt. No product changes/deletion or runtime. CI/PDF preservation instructions
+are superseded; core provenance remains an explicit plan exception to blanket
+author removal. [Next implementation launch](../cleanup/NEXT-SESSION.md) executes
+the three bounded slices with local checks; defer costly shared refactors.
+Reservations released.
+
+2026-11-11 **REPOSITORY-CLEANUP planning**, historical, superseded by final plan
+above. Done by one coordinator on
+`codex/repository-cleanup-plan`, from clean `a9364604d026d79be8ab771ecb861688972d169c`.
+The owner explicitly requested this separate branch and analysis before deletion.
+Reserve `docs/enterprise-local/cleanup/`, task scratch under
+`.scratch/enterprise-local/repository-cleanup/`, and brief session records in
+`memory/{STATE,TASKS,WORKLOG,DECISIONS}.md` and `NEXT-SESSION.md`.
+No source/dependency/build edits, deletion, application execution or main-roadmap
+progress in this task. Indexed 2,997 baseline files and 6,133 literal module edges.
+The owner confirmed two target hosts and preservation of plans/PDFs. The
+[proposal and evidence](../cleanup/README.md) await discussion and approval of
+the exact first implementation slice. Reservations released.
+
 2026-11-10 **RECOVERY-11-LOCAL**, done-bounded. One coordinator on clean
 `feat/cmem-light-local` at `922eeb841a74e4ca59303048e36722f35355e8fc`.
 Reserve the worker session, provider dispatch, response storage and spool handoff

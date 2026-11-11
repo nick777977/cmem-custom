@@ -1,11 +1,7 @@
 {
   "name": "claude-mem",
   "version": "15.5.0",
-  "description": "Memory compression system for Claude Code - persist context across sessions",
-  "author": {
-    "name": "Alex Newman"
-  },
-  "repository": "https://github.com/thedotmack/claude-mem",
+  "description": "cmem-light — local memory for Claude Code and Codex CLI",
   "license": "Apache-2.0",
   "keywords": [
     "claude",
@@ -19,6 +15,5 @@
     "transcript",
     "typescript",
     "nodejs"
-  ],
-  "homepage": "https://github.com/thedotmack/claude-mem#readme"
+  ]
 }

@@ -11,6 +11,7 @@ import {
   buildShellCommand,
 } from '../../src/build/hook-shell-template.js';
 import { HOOK_TIMEOUTS } from '../../src/shared/hook-constants.js';
+import { stageClaudePlugin, stageLocalInstall } from '../../scripts/enterprise-local/codex-local.mjs';
 import { FILE_CONTEXT_WORKER_BUDGET_MS } from '../../src/cli/handlers/file-context.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -45,38 +46,6 @@ function mcpStartupCommandFrom(relativePath: string): string {
   return parsed.mcpServers['mcp-search'].args[1];
 }
 
-function posixPath(p: string): string {
-  return p.replace(/\\/g, '/');
-}
-
-/** Map Windows %TEMP% paths to Git bash /tmp/... so shell-eval assertions match locally and on CI. */
-function normalizeShellPath(p: string): string {
-  const posix = posixPath(p).replace(/\/+$/, '');
-  const tempMapped = posix.match(
-    /^(?:[A-Za-z]:)?\/(?:Users\/[^/]+\/)?AppData\/Local\/Temp\/(.+)$/i,
-  );
-  if (tempMapped) {
-    return `/tmp/${tempMapped[1]}`;
-  }
-  return posix;
-}
-
-function expectResolvedPath(stdout: string, expectedRoot: string): void {
-  const match = stdout.match(/RESOLVED=(.+)/);
-  expect(match).not.toBeNull();
-  expect(realpathSync(match![1].trim())).toBe(realpathSync(expectedRoot));
-}
-
-function bashExecutable(): string {
-  if (process.platform === 'win32') {
-    const gitBash = 'C:/Program Files/Git/bin/bash.exe';
-    if (existsSync(gitBash)) {
-      return gitBash;
-    }
-  }
-  return 'bash';
-}
-
 function installFakeNvmNode(home: string, version: string): string {
   const nodeBin = path.join(home, '.nvm', 'versions', 'node', `v${version}`, 'bin');
   mkdirSync(nodeBin, { recursive: true });
@@ -86,13 +55,20 @@ function installFakeNvmNode(home: string, version: string): string {
   return nodeBin;
 }
 
-function shellEval(command: string, env: Record<string, string>): { status: number | null; stdout: string; stderr: string } {
-  const result = spawnSync(bashExecutable(), ['-c', command], {
-    env: { PATH: process.env.PATH ?? '', ...env },
-    encoding: 'utf-8',
-  });
-  return { status: result.status, stdout: result.stdout ?? '', stderr: result.stderr ?? '' };
+// Canonical manifests are inert templates. Check operational argv on disposable
+// destination-bound copies, without starting a worker or registering a host.
+function withBoundHooks(host: 'claude' | 'codex', check: (hooks: any) => void) {
+  const parent = mkdtempSync(path.join(tmpdir(), 'distribution-bound-'));
+  const root = path.join(parent, 'literal stage');
+  try {
+    const input = { root, bundle: path.join(projectRoot, 'plugin'), port: 43985, bun: process.execPath };
+    if (host === 'claude') stageClaudePlugin(input);
+    else stageLocalInstall({ ...input, codex: process.execPath }); // Literal fixture executable, never invoked.
+    const file = path.join(root, 'catalog/plugin/hooks', host === 'claude' ? 'hooks.json' : 'codex-hooks.json');
+    check(JSON.parse(readFileSync(file, 'utf8')).hooks);
+  } finally { rmSync(parent, { recursive: true, force: true }); }
 }
+
 
 describe('Plugin Distribution - Skills', () => {
   const skillPath = path.join(projectRoot, 'plugin/skills/mem-search/SKILL.md');
@@ -133,26 +109,14 @@ describe('Plugin Distribution - Required Files', () => {
   const requiredFiles = [
     'plugin/hooks/hooks.json',
     'plugin/hooks/codex-hooks.json',
-    'plugin/hooks/qoder-hooks.json',
-    'plugin/hooks/qoder-repo-hooks.json',
     'plugin/.claude-plugin/plugin.json',
     'plugin/.codex-plugin/plugin.json',
-    'plugin/.qoder-plugin/plugin.json',
-    'plugin/qoder.mcp.json',
-    'plugin/scripts/qoder-hook-launcher.cjs',
     'plugin/.mcp.json',
     'plugin/sqlite/SessionStore.js',
     'plugin/sqlite/observations/files.js',
     'plugin/skills/mem-search/SKILL.md',
     'plugin/skills/mode-creator/SKILL.md',
     '.agents/plugins/marketplace.json',
-    '.cursor-plugin/marketplace.json',
-    'claude-mem-cursor/.cursor-plugin/plugin.json',
-    'claude-mem-cursor/mcp.json',
-    'claude-mem-cursor/hooks/hooks.json',
-    'claude-mem-grok-bot/.cursor-plugin/plugin.json',
-    'claude-mem-grok-bot/mcp.json',
-    'claude-mem-grok-bot/skills/host-observer/SKILL.md',
   ];
 
   for (const filePath of requiredFiles) {
@@ -161,48 +125,6 @@ describe('Plugin Distribution - Required Files', () => {
       expect(existsSync(fullPath)).toBe(true);
     });
   }
-});
-
-describe('Plugin Distribution - Qoder', () => {
-  it('ships root and bundled manifests with the correct relative paths', () => {
-    const root = readJson('.qoder-plugin/plugin.json');
-    const bundled = readJson('plugin/.qoder-plugin/plugin.json');
-    expect(root.hooks).toBe('./plugin/hooks/qoder-repo-hooks.json');
-    expect(root.mcpServers).toBe('./plugin/qoder.mcp.json');
-    expect(bundled.hooks).toBe('./hooks/qoder-hooks.json');
-    expect(bundled.mcpServers).toBe('./qoder.mcp.json');
-  });
-
-  it('runs every Qoder hook through the structured hook launcher', () => {
-    for (const file of ['plugin/hooks/qoder-hooks.json', 'plugin/hooks/qoder-repo-hooks.json']) {
-      const entries = commandHookEntriesFrom(file);
-      expect(entries.length).toBeGreaterThan(0);
-      for (const entry of entries) {
-        expect(entry.command).toBe('node');
-        expect(entry.args.join(' ')).toContain('qoder-hook-launcher.cjs');
-        expect(entry.env.CLAUDE_MEM_CODEX_HOOK).toBe('1');
-      }
-    }
-  });
-
-  it('routes Qoder through the compatible Codex hook adapter', () => {
-    const launcher = readFileSync(
-      path.join(projectRoot, 'plugin/scripts/qoder-hook-launcher.cjs'),
-      'utf-8',
-    );
-    expect(launcher).toContain("'hook',\n    'codex'");
-    expect(launcher.indexOf("version-check.js")).toBeLessThan(
-      launcher.indexOf("bun-runner.js"),
-    );
-    expect(launcher).toContain("event === 'context'");
-  });
-
-  it('gives first-session dependency setup enough time to complete', () => {
-    for (const file of ['plugin/hooks/qoder-hooks.json', 'plugin/hooks/qoder-repo-hooks.json']) {
-      const hooks = readJson(file);
-      expect(hooks.hooks.SessionStart[0].hooks[0].timeout).toBe(180);
-    }
-  });
 });
 
 describe('Plugin Distribution - Codex Marketplace', () => {
@@ -232,71 +154,50 @@ describe('Plugin Distribution - Codex Marketplace', () => {
     }
   });
 
-  it('marks every Codex compaction so the next PostToolUse can re-inject memory', () => {
-    // PostCompact cannot emit additionalContext, and Codex never sends
-    // SessionStart to a subagent thread, so PostCompact marks the thread and its
-    // next PostToolUse (registered for every tool) carries the timeline back.
-    const codexHooks = readJson('plugin/hooks/codex-hooks.json');
-    const postCompact = codexHooks.hooks.PostCompact;
-
-    expect(postCompact).toHaveLength(1);
-    // No matcher: Codex then matches every compaction trigger (manual and auto).
-    expect(postCompact[0].matcher).toBeUndefined();
-    expect(postCompact[0].hooks).toHaveLength(1);
-    expect(postCompact[0].hooks[0].command).toContain('hook codex post-compact');
-    expect(codexHooks.hooks.PostToolUse[0].matcher).toBe('.*');
+  it("binds every Codex compaction and subsequent tool use without changing their matchers", () => {
+    withBoundHooks('codex', hooks => {
+      expect(hooks.PostCompact).toHaveLength(1);
+      expect(hooks.PostCompact[0].matcher).toBeUndefined();
+      expect(hooks.PostCompact[0].hooks[0].commandWindows).toContain(' hook post-compact');
+      expect(hooks.PostToolUse[0].matcher).toBe('.*');
+      expect(hooks.PostToolUse[0].hooks[0].commandWindows).toContain(' hook observation');
+    });
   });
 
-  it('gives a subagent Codex starts its memory timeline', () => {
-    // Codex starts a spawned subagent with SubagentStart instead of SessionStart
-    // (run_pending_session_start_hooks in codex-rs/core/src/hook_runtime.rs).
-    const codexHooks = readJson('plugin/hooks/codex-hooks.json');
-    const subagentStart = codexHooks.hooks.SubagentStart;
-
-    expect(subagentStart).toHaveLength(1);
-    // No matcher: Codex matches it against the agent type, and every type gets memory.
-    expect(subagentStart[0].matcher).toBeUndefined();
-    expect(subagentStart[0].hooks).toHaveLength(1);
-    expect(subagentStart[0].hooks[0].command).toContain('hook codex subagent-context');
+  it("binds Codex subagent memory context for every agent type", () => {
+    withBoundHooks('codex', hooks => {
+      expect(hooks.SubagentStart).toHaveLength(1);
+      expect(hooks.SubagentStart[0].matcher).toBeUndefined();
+      expect(hooks.SubagentStart[0].hooks).toHaveLength(1);
+      expect(hooks.SubagentStart[0].hooks[0].commandWindows).toContain(' hook subagent-context');
+    });
   });
 
-  it('bounds the synchronous Codex observation hook to a short fail-open wait', () => {
-    const codexHooks = readJson('plugin/hooks/codex-hooks.json');
-    const observation = codexHooks.hooks.PostToolUse[0].hooks[0];
+  it("bounds the bound Codex observation to five seconds without asynchronous dispatch", () => {
+    withBoundHooks('codex', hooks => {
+      expect(hooks.PostToolUse[0].hooks[0].commandWindows).toContain(' hook observation');
+      expect(hooks.PostToolUse[0].hooks[0].timeout).toBe(5);
+      for (const event of Object.keys(hooks)) expect(hooks[event][0].hooks[0]).not.toHaveProperty('async');
+    });
+  });
 
-    expect(observation.command).toContain('hook codex observation');
-    expect(observation.timeout).toBe(5);
-    expect(observation).not.toHaveProperty('async');
-
-    for (const event of ['SessionStart', 'UserPromptSubmit', 'PreToolUse', 'Stop', 'PostCompact', 'SubagentStart']) {
-      expect(codexHooks.hooks[event][0].hooks[0]).not.toHaveProperty('async');
+  it("sets the Codex marker in the bound launcher rather than a shell environment prefix", () => {
+    const launcher = readFileSync(path.join(projectRoot, 'scripts/enterprise-local/codex-local.mjs'), 'utf8');
+    expect(launcher).toContain("env.CLAUDE_MEM_CODEX_HOOK = '1'");
+    for (const entry of commandHookEntriesFrom('plugin/hooks/codex-hooks.json')) {
+      expect(entry.command).toBe('exit 1'); expect(entry.commandWindows).toBe('exit 1');
     }
   });
 
-  it('sets the Codex hook marker on every Codex command', () => {
-    for (const command of commandHooksFrom('plugin/hooks/codex-hooks.json')) {
-      expect(command).toContain('CLAUDE_MEM_CODEX_HOOK=1');
-    }
-  });
-
-  it('sets Windows Codex hook overrides without POSIX-only shell syntax', () => {
-    const entries = commandHookEntriesFrom('plugin/hooks/codex-hooks.json');
-    const posixOnlyTokens = ['$(', '${', '[ -', 'printenv', 'export PATH', 'command -v', '2>/dev/null', 'while IFS'];
-
-    expect(entries.length).toBeGreaterThan(0);
-    for (const entry of entries) {
-      expect(typeof entry.commandWindows).toBe('string');
-      expect(entry.commandWindows).toContain('node -e');
-      expect(entry.commandWindows).toContain('CLAUDE_MEM_CODEX_HOOK');
-      expect(entry.commandWindows).toContain('bun-runner.js');
-      expect(entry.commandWindows).toContain('worker-service.cjs');
-      expect(entry.commandWindows).toContain('plugins');
-      expect(entry.commandWindows).toContain('cache');
-      expect(entry.commandWindows).toContain('marketplaces');
-      for (const token of posixOnlyTokens) {
-        expect(entry.commandWindows).not.toContain(token);
+  it("binds literal Windows executable and stage paths without POSIX discovery", () => {
+    withBoundHooks('codex', hooks => {
+      for (const group of Object.values(hooks) as any[]) {
+        const entry = group[0].hooks[0];
+        expect(entry.command).toBe('exit 1');
+        expect(entry.commandWindows).toMatch(/^"[A-Za-z]:.*\.exe" ".*codex-local\.mjs" hook [a-z-]+$/);
+        for (const token of ['$(', '$' + '{', '[ -', 'export PATH', 'command -v', 'plugins/cache', 'marketplaces']) expect(entry.commandWindows).not.toContain(token);
       }
-    }
+    });
   });
 
   it('ships a single Codex SessionStart command', () => {
@@ -306,43 +207,15 @@ describe('Plugin Distribution - Codex Marketplace', () => {
     expect(codexHooks.hooks.SessionStart[0].hooks[0].commandWindows).not.toContain('version-check.js');
   });
 
-  it('MCP launcher can recover without plugin root environment variables', () => {
-    const mcpPath = path.join(projectRoot, 'plugin/.mcp.json');
-    const mcp = JSON.parse(readFileSync(mcpPath, 'utf-8'));
-    const command = mcp.mcpServers['mcp-search'].args.join(' ');
-
-    expect(command).toContain('.codex/plugins/cache/claude-mem-local/claude-mem');
-    expect(command).toContain('plugins/cache/thedotmack/claude-mem');
-    expect(command).toContain('claude-mem: mcp server not found');
+  it("canonical MCP stays unbound and requires explicit local admission", () => {
+    const mcp = readJson('plugin/.mcp.json').mcpServers['mcp-search'];
+    expect(mcp.command).toBe(''); expect(mcp.args[0]).toBe('-e');
+    expect(mcp.args[1]).toContain('LOCAL_INTERPRETER_ABSOLUTE_REQUIRED');
+    expect(mcp.args[1]).toContain('PRIVATE_LAUNCH_POLICY_PENDING');
+    for (const token of ['plugins/cache', 'marketplaces', 'process.cwd', 'mcp-server.cjs']) expect(mcp.args[1]).not.toContain(token);
   });
 });
 
-
-describe('Plugin Distribution - Cursor Marketplace', () => {
-  it('ships independent Cursor and Grok Bot marketplace entries', () => {
-    const marketplace = readJson('.cursor-plugin/marketplace.json');
-    expect(marketplace.owner.name).toBe('Alex Newman');
-    expect(marketplace.plugins.map((plugin: any) => plugin.name)).toEqual([
-      'claude-mem-cursor',
-      'claude-mem-grok-bot',
-    ]);
-  });
-
-  it('wires Cursor hooks through the npx hook entrypoint', () => {
-    const hooks = readJson('claude-mem-cursor/hooks/hooks.json');
-    expect(hooks.hooks.beforeSubmitPrompt[0].command).toContain('npx -y claude-mem hook cursor session-init');
-    expect(hooks.hooks.stop[0].command).toContain('npx -y claude-mem hook cursor summarize');
-  });
-
-  it('ships the shared local and remote MCP definitions for both plugins', () => {
-    for (const relativePath of ['claude-mem-cursor/mcp.json', 'claude-mem-grok-bot/mcp.json']) {
-      const mcp = readJson(relativePath);
-      expect(mcp.mcpServers['claude-mem-local'].args).toEqual(['-y', 'claude-mem', 'mcp']);
-      const expected = 'Bearer ' + '${' + 'CLAUDE_MEM_MCP_TOKEN' + '}';
-      expect(mcp.mcpServers['claude-mem-remote'].headers.Authorization).toBe(expected);
-    }
-  });
-});
 
 describe('Plugin Distribution - hooks.json Integrity', () => {
   it('should have valid JSON in hooks.json', () => {
@@ -352,140 +225,74 @@ describe('Plugin Distribution - hooks.json Integrity', () => {
     expect(parsed.hooks).toBeDefined();
   });
 
-  it('routes every Claude Code runtime hook through the on-PATH claude-mem launcher with the worker args (#3605)', () => {
-    const parsed = readJson('plugin/hooks/hooks.json');
-    const launcherArgsByEvent = Object.fromEntries(
-      Object.entries(parsed.hooks)
-        .filter(([eventName]) => eventName !== 'Setup')
-        .map(([eventName, groups]: [string, any]) => [
-          eventName,
-          groups.flatMap((group: any) => group.hooks)
-            .filter((hook: any) => hook.command === 'claude-mem')
-            .map((hook: any) => hook.args),
-        ]),
-    );
-    expect(launcherArgsByEvent).toEqual({
-      SessionStart: [['start'], ['hook', 'claude-code', 'context']],
-      UserPromptSubmit: [['hook', 'claude-code', 'session-init']],
-      PostToolUse: [['hook', 'claude-code', 'observation']],
-      PostToolUseFailure: [['hook', 'claude-code', 'observation']],
-      PreToolUse: [['hook', 'claude-code', 'file-context']],
-      Stop: [['hook', 'claude-code', 'summarize']],
-      SubagentStop: [['hook', 'claude-code', 'subagent-stop']],
-      SessionEnd: [['hook', 'claude-code', 'session-end']],
+  it("routes every bound Claude event through its literal dedicated launcher", () => {
+    withBoundHooks('claude', hooks => {
+      const handlers = { SessionStart: 'context', UserPromptSubmit: 'session-init', PostToolUse: 'observation', PostToolUseFailure: 'observation', PreToolUse: 'file-context', Stop: 'summarize', SubagentStop: 'subagent-stop', SessionEnd: 'session-end' };
+      expect(Object.keys(hooks).sort()).toEqual(Object.keys(handlers).sort());
+      for (const [event, handler] of Object.entries(handlers)) {
+        expect(hooks[event]).toHaveLength(1); expect(hooks[event][0].hooks).toHaveLength(1);
+        expect(hooks[event][0].hooks[0].command).toBe(process.execPath);
+        expect(hooks[event][0].hooks[0].args.slice(1)).toEqual(['hook', handler]);
+        expect(path.isAbsolute(hooks[event][0].hooks[0].args[0])).toBe(true);
+      }
     });
   });
 
-  it('self-heals the launcher with one shell-free node entry on SessionStart startup only', () => {
+  it("canonical startup preflight stays inert and private binding omits self-heal", () => {
     const parsed = readJson('plugin/hooks/hooks.json');
-    const ensureLauncherGroups = parsed.hooks.SessionStart.filter((group: any) =>
-      group.hooks.some((hook: any) => hook.command === 'node'),
-    );
-    expect(ensureLauncherGroups).toEqual([{
-      matcher: 'startup',
-      hooks: [{
-        type: 'command',
-        command: 'node',
-        args: ['${CLAUDE_PLUGIN_ROOT}/scripts/ensure-launcher.cjs'],
-        // Synchronous: an async hook's systemMessage never reaches the user,
-        // and that message is how a failed self-heal is reported.
-        timeout: 180,
-      }],
-    }]);
-    expect(existsSync(path.join(projectRoot, 'plugin/scripts/ensure-launcher.cjs'))).toBe(true);
+    expect(parsed.hooks.SessionStart[2]).toEqual({ matcher: 'startup', hooks: [{ type: 'command', ...buildEnsureLauncherExecHook(), timeout: 180 }] });
+    expect(parsed.hooks.SessionStart[2].hooks[0].command).toBe('');
+    withBoundHooks('claude', hooks => { expect(hooks.SessionStart).toHaveLength(1); expect(hooks.SessionStart[0].matcher).toBe('startup|clear|compact'); });
   });
 
-  // The Setup entry is the only shell-form hook left (it fires only on
+  // Setup is retained as an inert shell-form refusal (it fires only on
   // `claude --init` / `--maintenance`, SPIKE item 8), so the defensive bash
-  // root-resolution contract is pinned on it alone.
+  // no-discovery contract is pinned on it alone.
   const setupCommand = () => String(readJson('plugin/hooks/hooks.json').hooks.Setup[0].hooks[0].command);
 
-  it('should reference CLAUDE_PLUGIN_ROOT in the Setup hook command', () => {
-    expect(setupCommand()).toContain('CLAUDE_PLUGIN_ROOT');
+  it("Setup refuses without environment or PATH discovery", () => {
+    expect(String(readJson('plugin/hooks/hooks.json').hooks.Setup[0].hooks[0].command)).toBe('exit 1');
   });
 
-  it('should include CLAUDE_PLUGIN_ROOT fallback in the Setup hook command (#1215)', () => {
-    expect(setupCommand()).toContain('$_C/plugins/marketplaces/thedotmack/plugin');
+  it("Setup never falls back to a marketplace", () => {
+    expect(String(readJson('plugin/hooks/hooks.json').hooks.Setup[0].hooks[0].command)).toBe('exit 1');
   });
 
-  it('should try cache path before marketplaces fallback in the Setup hook command (#1533)', () => {
-    const cachePath = '$_C/plugins/cache/thedotmack/claude-mem';
-    const marketplacesPath = '$_C/plugins/marketplaces/thedotmack/plugin';
-    const command = setupCommand();
-    expect(command).toContain(cachePath);
-    expect(command.indexOf(cachePath)).toBeLessThan(command.indexOf(marketplacesPath));
+  it("Setup never chooses either cache or marketplace", () => {
+    expect(String(readJson('plugin/hooks/hooks.json').hooks.Setup[0].hooks[0].command)).toBe('exit 1');
   });
 
   it('should not spawn a login shell to rebuild PATH in the Setup hook (#3190)', () => {
     expect(setupCommand()).not.toContain('SHELL -lc');
   });
 
-  it('should quote NVM ls path inside export PATH in the Setup hook (#3190)', () => {
-    const command = setupCommand();
-    expect(command).toMatch(/ls "\$HOME\/\.nvm\/versions\/node"/);
-    expect(command).not.toMatch(/ls \\"\$HOME\/\.nvm\/versions\/node\\"/);
+  it("Setup never repairs NVM or modifies PATH", () => {
+    expect(String(readJson('plugin/hooks/hooks.json').hooks.Setup[0].hooks[0].command)).toBe('exit 1');
   });
 });
 
 describe('Plugin Distribution - Startup Root Resolution', () => {
-  it('MCP startup command resolves the plugin root cross-platform (#2792)', () => {
-    // The launcher is now a cross-platform `node -e` payload (no `sh`), so it
-    // runs on Windows without Git Bash. It must still resolve the plugin root
-    // with config-dir + env fallbacks and try cache roots before marketplaces.
+  it("MCP canonical payload gates literal interpreter and bundle paths without loading a server", () => {
     const command = mcpStartupCommandFrom('plugin/.mcp.json');
-
-    expect(command).toContain('CLAUDE_CONFIG_DIR');
-    expect(command).toContain('.claude');
-    expect(command).toContain('CLAUDE_PLUGIN_ROOT');
-    expect(command).toContain('PLUGIN_ROOT');
-    expect(command).toContain('plugins/marketplaces/thedotmack/plugin');
-    expect(command).toContain('plugins/cache/thedotmack/claude-mem');
-    expect(command).toContain('mcp-server.cjs');
-    expect(command).toMatch(/require\(p\.resolve\(R,'scripts',["']mcp-server\.cjs["']\)\)/);
-    expect(command).not.toContain('child_process');
-    expect(command).not.toContain('.spawn(');
-    // No bare absolute "/scripts/..." path leaks through.
-    expect(command).not.toContain('"/scripts/mcp-server.cjs"');
-    expect(command.indexOf('plugins/cache/thedotmack/claude-mem')).toBeLessThan(
-      command.indexOf('plugins/marketplaces/thedotmack/plugin')
-    );
+    expect(command).toContain('process.env.CLAUDE_MEM_NODE_EXECUTABLE');
+    expect(command).toContain('process.env.CLAUDE_MEM_BUNDLE_ROOT');
+    expect(command).toContain('LOCAL_BUNDLE_STALE');
+    expect(command).not.toContain("require(p.resolve"); expect(command).not.toContain('mcp-server.cjs');
   });
 
-  it('Codex hook commands should have config-dir based non-empty fallbacks', () => {
-    for (const command of commandHooksFrom('plugin/hooks/codex-hooks.json')) {
-      expect(command).toContain('${CLAUDE_CONFIG_DIR:-$HOME/.claude}');
-      expect(command).toContain('export PATH=');
-      expect(command).toContain('while IFS= read -r _R');
-      expect(command).toContain('$_C/plugins/marketplaces/thedotmack/plugin');
-      expect(command).toContain('$_C/plugins/cache/thedotmack/claude-mem');
-      expect(command).toContain('[ -f "$_Q/scripts/');
-      expect(command).toContain('command -v cygpath');
-      expect(command.indexOf('$_C/plugins/cache/thedotmack/claude-mem')).toBeLessThan(
-        command.indexOf('$_C/plugins/marketplaces/thedotmack/plugin')
-      );
-    }
+  it("canonical Codex commands refuse without implicit root fallbacks", () => {
+    for (const entry of commandHookEntriesFrom('plugin/hooks/codex-hooks.json')) { expect(entry.command).toBe('exit 1'); expect(entry.commandWindows).toBe('exit 1'); }
   });
 
-  it('the Claude Setup hook command should have config-dir based non-empty fallbacks', () => {
-    const setupCommands = commandHooksFrom('plugin/hooks/hooks.json').filter((command) => command.includes('version-check.js'));
-    expect(setupCommands.length).toBeGreaterThanOrEqual(1);
-    for (const command of setupCommands) {
-      expect(command).toContain('${CLAUDE_CONFIG_DIR:-$HOME/.claude}');
-      expect(command).toContain('while IFS= read -r _R');
-      expect(command).toContain('$_C/plugins/marketplaces/thedotmack/plugin');
-      expect(command).toContain('$_C/plugins/cache/thedotmack/claude-mem');
-      expect(command).toContain('[ -f "$_Q/scripts/');
-      expect(command).not.toContain('$HOME/.claude/plugins/');
-    }
+  it("Setup uses the refusing shell builtin with no implicit configuration root", () => {
+    expect(String(readJson('plugin/hooks/hooks.json').hooks.Setup[0].hooks[0].command)).toBe('exit 1');
   });
 });
 
-describe('Plugin Distribution - MCP launcher process (#4269)', () => {
-  // Runs the shipped plugin/.mcp.json entry against a fixture server that
-  // prints its own pid. Loaded in-process, the server's pid is the launcher's,
-  // so each MCP session costs one Node process rather than an idle launcher
-  // plus a child.
-  const { command, args } = readJson('plugin/.mcp.json').mcpServers['mcp-search'];
+describe('Plugin Distribution - canonical MCP admission', () => {
+  // Evaluate the payload with an explicitly selected interpreter, since the
+  // shipped template's empty command is intentionally not executable.
+  const { args } = readJson('plugin/.mcp.json').mcpServers['mcp-search'];
 
   function launchMcpServer(pluginRootFor: ((sandbox: string) => string) | null) {
     const sandbox = mkdtempSync(path.join(tmpdir(), 'claude-mem-mcp-launch-'));
@@ -501,28 +308,25 @@ describe('Plugin Distribution - MCP launcher process (#4269)', () => {
       delete env.CLAUDE_PLUGIN_ROOT;
       delete env.PLUGIN_ROOT;
       if (pluginRootFor) env.CLAUDE_PLUGIN_ROOT = pluginRootFor(sandbox);
-      return spawnSync(command, args, { cwd: sandbox, env, encoding: 'utf-8', timeout: 20000 });
+      return spawnSync(process.execPath, args, { cwd: sandbox, env, encoding: 'utf-8', timeout: 20000 });
     } finally {
       rmSync(sandbox, { recursive: true, force: true });
     }
   }
 
-  it('runs the server inside the launcher process for an absolute plugin root', () => {
+  it("canonical MCP refuses an absolute legacy plugin root without loading it", () => {
     const result = launchMcpServer(sandbox => path.join(sandbox, 'fixture'));
-    expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toBe(String(result.pid));
+    expect(result.status, result.stderr).toBe(1); expect(result.stdout).toBe(''); expect(result.stderr).toContain('LOCAL_INTERPRETER_ABSOLUTE_REQUIRED');
   });
 
-  it('resolves a relative plugin root against the working directory', () => {
+  it("canonical MCP refuses a relative legacy plugin root without cwd discovery", () => {
     const result = launchMcpServer(() => './fixture');
-    expect(result.status, result.stderr).toBe(0);
-    expect(result.stdout).toBe(String(result.pid));
+    expect(result.status).toBe(1); expect(result.stdout).toBe(''); expect(result.stderr).toContain('LOCAL_INTERPRETER_ABSOLUTE_REQUIRED');
   });
 
-  it('exits 1 with the not-found message when no candidate has the server', () => {
+  it("canonical MCP exits one with an admission error when no root is supplied", () => {
     const result = launchMcpServer(null);
-    expect(result.status).toBe(1);
-    expect(result.stderr).toContain('claude-mem: mcp server not found');
+    expect(result.status).toBe(1); expect(result.stdout).toBe(''); expect(result.stderr).toContain('LOCAL_INTERPRETER_ABSOLUTE_REQUIRED');
   });
 });
 
@@ -547,8 +351,11 @@ describe('Plugin Distribution - package.json Files Field', () => {
   });
 
   it('npm tarball includes generated runtime entries and the Claude marketplace root manifests (#3424)', () => {
-    const result = spawnSync('npm', ['pack', '--dry-run', '--json'], {
+    const node = process.env.CMEM_TEST_NODE ?? Bun.which('node');
+    expect(node).toBeTruthy();
+    const result = spawnSync(node!, [path.join(path.dirname(node!), 'node_modules/npm/bin/npm-cli.js'), 'pack', '--dry-run', '--json', '--ignore-scripts', '--offline'], {
       cwd: projectRoot,
+      timeout: 20000, windowsHide: true,
       encoding: 'utf-8',
     });
 
@@ -587,21 +394,8 @@ describe('Plugin Distribution - Setup Hook (#1547)', () => {
     expect(content).not.toContain('setup.sh');
   });
 
-  it('should call version-check.js in the Setup hook', () => {
-    const hooksPath = path.join(projectRoot, 'plugin/hooks/hooks.json');
-    const parsed = JSON.parse(readFileSync(hooksPath, 'utf-8'));
-    const setupHooks: any[] = parsed.hooks['Setup'] ?? [];
-
-    const commandHooks = setupHooks.flatMap((matcher: any) =>
-      (matcher.hooks ?? []).filter((h: any) => h.type === 'command')
-    );
-
-    expect(commandHooks.length).toBeGreaterThan(0);
-
-    const versionCheckHooks = commandHooks.filter((h: any) =>
-      h.command?.includes('version-check.js')
-    );
-    expect(versionCheckHooks.length).toBeGreaterThan(0);
+  it("Setup refuses automatic version/bootstrap execution", () => {
+    expect(String(readJson('plugin/hooks/hooks.json').hooks.Setup[0].hooks[0].command)).toBe('exit 1');
   });
 
   it('version-check.js referenced by Setup hook should exist on disk', () => {
@@ -611,52 +405,25 @@ describe('Plugin Distribution - Setup Hook (#1547)', () => {
 });
 
 describe('Plugin Distribution - Non-blocking bookkeeping hooks (#3206)', () => {
-  it('runs observation, summarization, and SessionEnd asynchronously', () => {
-    const hooksPath = path.join(projectRoot, 'plugin/hooks/hooks.json');
-    const parsed = JSON.parse(readFileSync(hooksPath, 'utf-8'));
-
-    const postToolUse = parsed.hooks.PostToolUse[0].hooks[0];
-    const postToolUseFailure = parsed.hooks.PostToolUseFailure[0].hooks[0];
-    const stop = parsed.hooks.Stop[0].hooks[0];
-    const sessionEnd = parsed.hooks.SessionEnd[0].hooks[0];
-    const subagentStop = parsed.hooks.SubagentStop[0].hooks[0];
-
-    expect(postToolUse.args).toEqual(['hook', 'claude-code', 'observation']);
-    expect(postToolUse.async).toBe(true);
-    expect(parsed.hooks.PostToolUseFailure[0].matcher).toBe('*');
-    expect(postToolUseFailure.args).toEqual(['hook', 'claude-code', 'observation']);
-    expect(postToolUseFailure.async).toBe(true);
-    expect(stop.args).toEqual(['hook', 'claude-code', 'summarize']);
-    expect(stop.async).toBe(true);
-    expect(sessionEnd.args).toEqual(['hook', 'claude-code', 'session-end']);
-    expect(sessionEnd.async).toBe(true);
-    expect(subagentStop.args).toEqual(['hook', 'claude-code', 'subagent-stop']);
-    expect(subagentStop.async).toBe(true);
+  it("bound Claude bookkeeping preserves async flags and handler argv", () => {
+    withBoundHooks('claude', hooks => {
+      for (const [event, handler] of Object.entries({ PostToolUse: 'observation', PostToolUseFailure: 'observation', Stop: 'summarize', SessionEnd: 'session-end', SubagentStop: 'subagent-stop' })) {
+        const entry = hooks[event][0].hooks[0]; expect(entry.args.slice(1)).toEqual(['hook', handler]); expect(entry.async).toBe(true);
+      }
+      expect(hooks.PostToolUseFailure[0].matcher).toBe('*');
+    });
   });
 
-  it('runs the SessionStart worker start asynchronously and keeps context and UserPromptSubmit synchronous (#3303)', () => {
-    const hooksPath = path.join(projectRoot, 'plugin/hooks/hooks.json');
-    const parsed = JSON.parse(readFileSync(hooksPath, 'utf-8'));
-
-    const sessionStart = parsed.hooks.SessionStart.flatMap((group: any) => group.hooks);
-    const workerStart = sessionStart.find((hook: any) => hook.command === 'claude-mem' && hook.args?.[0] === 'start');
-    const context = sessionStart.find((hook: any) => hook.command === 'claude-mem' && hook.args?.join(' ') === 'hook claude-code context');
-    const userPromptSubmit = parsed.hooks.UserPromptSubmit[0].hooks[0];
-
-    // start, context, and the ensure-launcher self-heal.
-    expect(sessionStart).toHaveLength(3);
-    expect(parsed.hooks.SessionStart[1].matcher).toBe('startup|clear|compact');
-    // `start` only prints a status envelope, and the context hook lazily
-    // spawns the worker itself, so session start need not wait for it.
-    expect(workerStart.async).toBe(true);
-    // `context` must stay synchronous: Claude Code hands an async hook's
-    // additionalContext / systemMessage to the model on the next turn and never
-    // shows the systemMessage to the user, which would hide the startup
-    // timeline, the viewer link and the trial notice.
-    expect(context).not.toHaveProperty('async');
-    expect(userPromptSubmit.args).toEqual(['hook', 'claude-code', 'session-init']);
-    // Keep prompt-row persistence ordered before downstream hooks consume it.
-    expect(userPromptSubmit).not.toHaveProperty('async');
+  it("bound Claude startup uses synchronous context/prompt capture with an independently started worker", () => {
+    withBoundHooks('claude', hooks => {
+      expect(hooks.SessionStart).toHaveLength(1); expect(hooks.SessionStart[0].hooks).toHaveLength(1);
+      expect(hooks.SessionStart[0].matcher).toBe('startup|clear|compact');
+      expect(hooks.SessionStart[0].hooks[0].args.slice(1)).toEqual(['hook', 'context']);
+      expect(hooks.SessionStart[0].hooks[0]).not.toHaveProperty('async');
+      expect(hooks.SessionStart[0].hooks[0].timeout).toBe(60);
+      expect(hooks.UserPromptSubmit[0].hooks[0].args.slice(1)).toEqual(['hook', 'session-init']);
+      expect(hooks.UserPromptSubmit[0].hooks[0]).not.toHaveProperty('async');
+    });
   });
 
   it('keeps the PreToolUse Read file-context hook synchronous so the File Read Gate can deny', () => {
@@ -671,7 +438,7 @@ describe('Plugin Distribution - Non-blocking bookkeeping hooks (#3206)', () => {
       expect(matcher.test(tool)).toBe(true);
     }
     expect(matcher.test('save_memory')).toBe(false);
-    expect(fileContext.args).toEqual(['hook', 'claude-code', 'file-context']);
+    expect(fileContext).toMatchObject(buildExecHook(['hook', 'claude-code', 'file-context']));
     // Claude Code ignores permissionDecision from an async hook, so an async
     // file-context hook could never block a whole-file Read.
     expect(fileContext).not.toHaveProperty('async');
@@ -826,300 +593,66 @@ describe('Spawn-Contract Templating - Rule A generator parity', () => {
     expect(timeoutSeconds).toBeGreaterThan(FILE_CONTEXT_WORKER_BUDGET_MS / 1000 + 5);
   });
 
-  it('never leaks a raw ${CLAUDE_PLUGIN_ROOT} into the resolved trailing command', () => {
-    // The placeholder may appear only inside the _E="${CLAUDE_PLUGIN_ROOT:-...}"
-    // expansion, never as a bare `${CLAUDE_PLUGIN_ROOT}` token that would reach
-    // the binary unsubstituted.
-    const shCommands = Object.values(RULE_A_EXPECTATIONS).flatMap((c) =>
-      Object.values(c).map((expectation) =>
-        typeof expectation === 'string' ? expectation : expectation.command
-      )
-    );
-    for (const command of shCommands) {
-      expect(command).not.toMatch(/\$\{CLAUDE_PLUGIN_ROOT\}(?!:-)/);
-      expect(command).toContain('_E="${CLAUDE_PLUGIN_ROOT:-${PLUGIN_ROOT:-}}"');
+  it("canonical commands never leak unresolved host placeholders or run discovery", () => {
+    for (const entries of Object.values(RULE_A_EXPECTATIONS)) for (const value of Object.values(entries)) {
+      const command = typeof value === 'string' ? value : value.command; expect(command).toBe('exit 1');
     }
-    // The MCP node launcher reads env vars directly — it has no `${...}` shell
-    // tokens at all, so a raw placeholder can never reach the binary.
-    expect(MCP_EXPECTED).not.toContain('${CLAUDE_PLUGIN_ROOT}');
-    expect(MCP_EXPECTED).toContain('process.env.CLAUDE_PLUGIN_ROOT');
-    expect(MCP_EXPECTED).toContain('process.env.PLUGIN_ROOT');
+    expect(MCP_EXPECTED).not.toContain('$' + '{CLAUDE_PLUGIN_ROOT}');
+    expect(MCP_EXPECTED).not.toContain('process.env.CLAUDE_PLUGIN_ROOT');
+    expect(MCP_EXPECTED).toContain('process.env.CLAUDE_MEM_BUNDLE_ROOT');
   });
 });
 
-describe('Spawn-Contract Templating - Rule A shell resolution matrix', () => {
-  // Claude Code runtime hooks are exec form now; their root-resolution cases
-  // live in tests/launcher/claude-mem-launcher.test.ts. This matrix covers the
-  // remaining shell-form sites: the Claude Setup hook and the Codex hooks.
-  // Actually shell-evaluate the generated commands across resolution sources:
-  // (a) CLAUDE_PLUGIN_ROOT injected, (b) cache fallback hit, (c) all miss.
-  // Fixture scripts report their location after the complete hook resolves and runs them.
-  function writeProbeScripts(root: string): void {
-    mkdirSync(path.join(root, 'scripts'), { recursive: true });
-    for (const file of ['version-check.js', 'bun-runner.js', 'worker-service.cjs']) {
-      writeFileSync(path.join(root, 'scripts', file),
-        "console.log('RESOLVED=' + require('path').dirname(__dirname));\n");
-    }
-  }
-
-  const claudeCommands = () => {
-    const parsed = readJson('plugin/hooks/hooks.json');
-    return Object.entries(RULE_A_EXPECTATIONS['plugin/hooks/hooks.json']).map(
-      ([dottedPath]) => ({ dottedPath, command: hookCommandByPath(parsed, dottedPath)! })
-    );
-  };
-
-  it('resolves _P from CLAUDE_PLUGIN_ROOT when the env var points at a valid root', () => {
-    const root = mkdtempSync(path.join(tmpdir(), 'cm-root-'));
-    writeProbeScripts(root);
-    const home = mkdtempSync(path.join(tmpdir(), 'cm-home-'));
-    try {
-      for (const { command } of claudeCommands()) {
-        const { status, stdout } = shellEval(command, {
-          CLAUDE_PLUGIN_ROOT: root,
-          HOME: home,
-        });
-        expect(status).toBe(0);
-        expectResolvedPath(stdout, root);
-      }
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-      rmSync(home, { recursive: true, force: true });
-    }
-  });
-
-  it('resolves a valid CLAUDE_PLUGIN_ROOT without scanning the plugin cache (#3449, #4121)', () => {
-    const root = mkdtempSync(path.join(tmpdir(), 'cm-root-'));
-    const home = mkdtempSync(path.join(tmpdir(), 'cm-home-'));
-    const shimBin = mkdtempSync(path.join(tmpdir(), 'cm-bin-'));
-    const cacheScanMarker = path.join(home, 'cache-scan-ran');
-    writeProbeScripts(root);
-    // The Codex hooks require the host root's dependencies (#4763), so this
-    // "valid root" carries node_modules like an installer-prepared copy.
-    mkdirSync(path.join(root, 'node_modules'), { recursive: true });
-    // Only the cache scan sorts with `sort -r`; the NVM PATH prelude sorts by
-    // -t. keys. This shim records `-r` calls and passes input through.
-    writeFileSync(
-      path.join(shimBin, 'sort'),
-      '#!/bin/sh\n[ "$1" = "-r" ] && printf touched > "$CACHE_SCAN_MARKER"\ncat\n',
-    );
-    chmodSync(path.join(shimBin, 'sort'), 0o755);
-
-    const codexHooks = readJson('plugin/hooks/codex-hooks.json');
-    const codexCommands = Object.keys(RULE_A_EXPECTATIONS['plugin/hooks/codex-hooks.json']).map(
-      (dottedPath) => ({ dottedPath, command: hookCommandByPath(codexHooks, dottedPath)! }),
-    );
-
-    try {
-      for (const { dottedPath, command } of [...claudeCommands(), ...codexCommands]) {
-        rmSync(cacheScanMarker, { force: true });
-        const { status, stdout } = shellEval(command, {
-          CLAUDE_PLUGIN_ROOT: root,
-          HOME: home,
-          CACHE_SCAN_MARKER: posixPath(cacheScanMarker),
-          PATH: `${shimBin}${path.delimiter}${process.env.PATH ?? ''}`,
-        });
-        expect({ dottedPath, status }).toEqual({ dottedPath, status: 0 });
-        expectResolvedPath(stdout, root);
-        expect({ dottedPath, cacheScanned: existsSync(cacheScanMarker) }).toEqual({ dottedPath, cacheScanned: false });
-      }
-
-      // Control: with an invalid CLAUDE_PLUGIN_ROOT the cache scan still runs,
-      // so the shim above would have caught a fast path that never engaged.
-      rmSync(cacheScanMarker, { force: true });
-      const [{ command: setupCommand }] = claudeCommands().filter(
-        ({ dottedPath }) => dottedPath === 'Setup.0.0',
-      );
-      shellEval(setupCommand, {
-        CLAUDE_PLUGIN_ROOT: path.join(home, 'not-a-plugin-root'),
-        HOME: home,
-        CACHE_SCAN_MARKER: posixPath(cacheScanMarker),
-        PATH: `${shimBin}${path.delimiter}${process.env.PATH ?? ''}`,
-      });
-      expect(existsSync(cacheScanMarker)).toBe(true);
-    } finally {
-      rmSync(root, { recursive: true, force: true });
-      rmSync(home, { recursive: true, force: true });
-      rmSync(shimBin, { recursive: true, force: true });
-    }
-  });
-
-  it('skips a Codex host root whose dependencies are missing and falls back to the cache (#4763)', () => {
-    // Codex's own plugin copy carries the scripts but never its dependencies:
-    // the CLI rebuilds that folder on every `codex plugin add`, so a hook that
-    // resolves to it dies with `Cannot find module 'zod/v3'` and the session
-    // records nothing. The resolver must reject that root and fall back to the
-    // installer-prepared cache copy instead. One hook proves the resolver
-    // behavior; running all six only multiplies shell spawns.
-    const codexRoot = mkdtempSync(path.join(tmpdir(), 'cm-codex-root-'));
-    const home = mkdtempSync(path.join(tmpdir(), 'cm-home-'));
-    const cacheRoot = path.join(home, '.claude', 'plugins', 'cache', 'thedotmack', 'claude-mem', '99.0.0');
-    writeProbeScripts(codexRoot);
-    // The Codex copy deliberately has no node_modules — that is the bug shape.
-    writeProbeScripts(cacheRoot);
-    // The prepared cache copy has the dependencies (the installer ran bun
-    // install there); only the host root is dependency-checked, so it still
-    // resolves.
-    mkdirSync(path.join(cacheRoot, 'node_modules'), { recursive: true });
-
-    const codexHooks = readJson('plugin/hooks/codex-hooks.json');
-    const command = hookCommandByPath(codexHooks, 'SessionStart.0.0')!;
-
-    try {
-      const { status, stdout } = shellEval(command, {
-        CLAUDE_PLUGIN_ROOT: codexRoot,
-        HOME: home,
-      });
-      expect(status).toBe(0);
-      expectResolvedPath(stdout, cacheRoot);
-    } finally {
-      rmSync(codexRoot, { recursive: true, force: true });
-      rmSync(home, { recursive: true, force: true });
-    }
-  }, 30_000);
-
-  describe('Codex Windows payload dependency check (#4763)', () => {
-    // Runs the generated `node -e` payload for real. Each candidate root's
-    // bun-runner.js is a stub that prints its own plugin root, so stdout names
-    // the root the payload resolved and spawned.
-    function runCodexWindowsPayload(hostRootHasDependencies: boolean) {
-      const sandbox = mkdtempSync(path.join(tmpdir(), 'cm-codex-win-'));
-      const makeRoot = (root: string, withDependencies: boolean) => {
-        mkdirSync(path.join(root, 'scripts'), { recursive: true });
-        writeFileSync(
-          path.join(root, 'scripts', 'bun-runner.js'),
-          "process.stdout.write(require('path').dirname(require('path').dirname(process.argv[1])));\n",
-        );
-        writeFileSync(path.join(root, 'scripts', 'worker-service.cjs'), '');
-        if (withDependencies) mkdirSync(path.join(root, 'node_modules'));
-        return root;
-      };
+describe('Spawn-Contract Templating - canonical refusal matrix', () => {
+  // These replace the nine old implicit-discovery scenarios one-for-one.
+  // The contract now refuses every such source; private binding is tested above.
+  for (const scenario of ['absolute host root', 'host root without cache scan',
+    'host missing dependencies beside a cache', 'Windows host without dependencies',
+    'Windows host with dependencies', 'cache only', 'orphaned newer cache',
+    'no candidate', 'NVM-only PATH']) {
+    it(`refuses ${scenario} without loading candidates or rebuilding PATH`, () => {
+      const parent = mkdtempSync(path.join(tmpdir(), 'distribution-refusal-'));
       try {
-        const home = path.join(sandbox, 'home');
-        const configDir = path.join(home, '.claude');
-        const hostRoot = makeRoot(path.join(sandbox, 'codex-plugin'), hostRootHasDependencies);
-        const cacheRoot = makeRoot(path.join(configDir, 'plugins', 'cache', 'thedotmack', 'claude-mem', '99.0.0'), true);
-        const command = buildCodexWindowsCommand(['hook', 'codex', 'session-init'], { requireDependencies: true });
-        const env: Record<string, string | undefined> = {
-          ...process.env, HOME: home, USERPROFILE: home, CLAUDE_CONFIG_DIR: configDir, CLAUDE_PLUGIN_ROOT: hostRoot,
+        const home = path.join(parent, 'home'); mkdirSync(home);
+        const marker = path.join(parent, 'loaded');
+        const root = path.join(parent, 'plugin');
+        const cache = path.join(home, '.claude/plugins/cache/thedotmack/claude-mem/99.0.0');
+        const writeCandidate = (candidate: string) => {
+          mkdirSync(path.join(candidate, 'scripts'), { recursive: true });
+          for (const name of ['version-check.js', 'bun-runner.js', 'worker-service.cjs', 'mcp-server.cjs', 'claude-mem-launcher.cjs']) {
+            writeFileSync(path.join(candidate, 'scripts', name), `require('fs').writeFileSync(${JSON.stringify(marker)}, 'loaded');\n`);
+          }
         };
-        delete env.PLUGIN_ROOT;
-        delete env.CLAUDE_MEM_DISABLE_TOOL_HOOKS;
-        const result = spawnSync(command, { shell: true, cwd: sandbox, env, encoding: 'utf-8', timeout: 20000 });
-        return {
-          status: result.status,
-          stderr: result.stderr,
-          resolvedRoot: result.stdout ? realpathSync(result.stdout) : '',
-          hostRoot: realpathSync(hostRoot),
-          cacheRoot: realpathSync(cacheRoot),
-        };
-      } finally {
-        rmSync(sandbox, { recursive: true, force: true });
-      }
-    }
-
-    it('falls back to the cache when the host root has no node_modules', () => {
-      const run = runCodexWindowsPayload(false);
-      expect(run.status, run.stderr).toBe(0);
-      expect(run.resolvedRoot).toBe(run.cacheRoot);
+        if (scenario !== 'no candidate') { writeCandidate(root); writeCandidate(cache); }
+        if (scenario.includes('with dependencies')) mkdirSync(path.join(root, 'node_modules'));
+        if (scenario === 'orphaned newer cache') { writeFileSync(path.join(cache, '.orphaned_at'), '1'); utimesSync(cache, new Date(0), new Date(0)); }
+        if (scenario === 'NVM-only PATH') { installFakeNvmNode(home, '18.20.0'); installFakeNvmNode(home, '20.11.0'); }
+        const env = { ...process.env, HOME: home, USERPROFILE: home, CLAUDE_CONFIG_DIR: path.join(home, '.claude'),
+          CLAUDE_PLUGIN_ROOT: scenario === 'cache only' ? '' : root, PLUGIN_ROOT: root,
+          CLAUDE_MEM_NODE_EXECUTABLE: process.execPath, CLAUDE_MEM_BUNDLE_ROOT: root };
+        const commands = [readJson('plugin/hooks/hooks.json').hooks.Setup[0].hooks[0].command,
+          ...commandHooksFrom('plugin/hooks/codex-hooks.json')];
+        for (const command of commands) {
+          expect(command).toBe('exit 1');
+          const result = process.platform === 'win32'
+            ? spawnSync(process.env.ComSpec!, ['/d', '/c', command], { env, timeout: 3000, windowsHide: true, encoding: 'utf8' })
+            : spawnSync('/bin/sh', ['-c', command], { env, timeout: 3000, encoding: 'utf8' });
+          expect(result.status).toBe(1); expect(result.stdout).toBe('');
+        }
+        const mcp = readJson('plugin/.mcp.json').mcpServers['mcp-search'];
+        expect(mcp.command).toBe('');
+        const gate = spawnSync(process.execPath, mcp.args, { env, timeout: 3000, windowsHide: true, encoding: 'utf8' });
+        expect(gate.status).toBe(1); expect(gate.stdout).toBe('');
+        expect(gate.stderr).toMatch(/PRIVATE_LAUNCH_POLICY_PENDING|LOCAL_BUNDLE_MISSING/);
+        expect(existsSync(marker)).toBe(false);
+      } finally { rmSync(parent, { recursive: true, force: true }); }
     });
-
-    it('still prefers a host root that has its dependencies', () => {
-      const run = runCodexWindowsPayload(true);
-      expect(run.status, run.stderr).toBe(0);
-      expect(run.resolvedRoot).toBe(run.hostRoot);
-    });
-  });
-
-  it('resolves _P from the cache directory when CLAUDE_PLUGIN_ROOT is unset', () => {
-    const home = mkdtempSync(path.join(tmpdir(), 'cm-home-'));
-    const cacheRoot = path.join(home, '.claude', 'plugins', 'cache', 'thedotmack', 'claude-mem', '99.0.0');
-    writeProbeScripts(cacheRoot);
-    try {
-      for (const { command } of claudeCommands()) {
-        const { status, stdout } = shellEval(command, { HOME: home });
-        expect(status).toBe(0);
-        // The version-sort producer yields a trailing slash; the hook trims it
-        // via _R="${_R%/}".
-        expectResolvedPath(stdout, cacheRoot);
-      }
-    } finally {
-      rmSync(home, { recursive: true, force: true });
-    }
-  });
-
-  it('prefers the highest cache version over the newest mtime and skips .orphaned_at dirs (2026-07-22 restart storm)', () => {
-    const home = mkdtempSync(path.join(tmpdir(), 'cm-home-'));
-    const cacheBase = path.join(home, '.claude', 'plugins', 'cache', 'thedotmack', 'claude-mem');
-    const makeVersion = (version: string) => {
-      const root = path.join(cacheBase, version);
-      writeProbeScripts(root);
-      return root;
-    };
-    // The storm layout: the OLD version dir carries the .orphaned_at stamp and
-    // the newest mtime; the NEW version dir is older by mtime. The resolver
-    // must pick the new version anyway.
-    const oldRoot = makeVersion('13.11.0');
-    writeFileSync(path.join(oldRoot, '.orphaned_at'), String(Date.now()));
-    const newRoot = makeVersion('13.12.0');
-    const past = new Date(Date.now() - 600_000);
-    utimesSync(newRoot, past, past);
-    try {
-      for (const { command } of claudeCommands()) {
-        const { status, stdout } = shellEval(command, { HOME: home });
-        expect(status).toBe(0);
-        expectResolvedPath(stdout, newRoot);
-      }
-    } finally {
-      rmSync(home, { recursive: true, force: true });
-    }
-  });
-
-  it('keeps Setup fail-loud when no candidate exists', () => {
-    const home = mkdtempSync(path.join(tmpdir(), 'cm-empty-'));
-    try {
-      const parsed = readJson('plugin/hooks/hooks.json');
-      const setupCommand = hookCommandByPath(parsed, 'Setup.0.0')!;
-      const setupResult = shellEval(setupCommand, { HOME: home });
-      expect(setupResult.status).not.toBe(0);
-      expect(setupResult.stderr).toMatch(/claude-mem: .* not found/);
-    } finally {
-      rmSync(home, { recursive: true, force: true });
-    }
-  });
-
-  it('prepends the highest NVM node bin to PATH without login shell (#3190)', () => {
-    const home = mkdtempSync(path.join(tmpdir(), 'cm-nvm-only-'));
-    installFakeNvmNode(home, '18.20.0');
-    const newestBin = installFakeNvmNode(home, '20.11.0');
-    const root = path.join(home, 'plugin');
-    writeProbeScripts(root);
-    const command = hookCommandByPath(readJson('plugin/hooks/hooks.json'), 'Setup.0.0')!;
-    try {
-      const { status, stdout } = shellEval(command, {
-        CLAUDE_PLUGIN_ROOT: root,
-        HOME: home,
-        PATH: '/usr/bin:/bin',
-      });
-      expect(status).toBe(0);
-      const node = stdout.match(/NODE=(.+)/);
-      const nodePath = stdout.match(/PATH=(.+)/);
-      expect(node).not.toBeNull();
-      expect(nodePath).not.toBeNull();
-      expect(normalizeShellPath(node![1])).toBe(normalizeShellPath(path.join(newestBin, 'node')));
-      expect(normalizeShellPath(nodePath![1].split(':')[0])).toBe(normalizeShellPath(newestBin));
-    } finally {
-      rmSync(home, { recursive: true, force: true });
-    }
-  });
+  }
 });
 
 describe('Spawn-Contract Templating - Rule B installers bake absolute paths', () => {
   const installerFiles = [
-    'src/services/integrations/CursorHooksInstaller.ts',
-    'src/services/integrations/WindsurfHooksInstaller.ts',
     'src/services/integrations/McpIntegrations.ts',
-    'src/services/integrations/AntigravityCliHooksInstaller.ts',
   ];
 
   for (const file of installerFiles) {

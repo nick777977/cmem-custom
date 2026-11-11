@@ -1,5 +1,42 @@
 # Decision log
 
+### A37 — Owner-run cleanup merge, then resume the original roadmap (2026-11-11)
+
+The owner will merge cleanup into `feat/cmem-light-local` manually and asks the
+agent to compare the pre-cleanup handoff at `a9364604d` and prepare the next
+session accordingly. No merge/switch/push is delegated. No further cleanup
+review or source slice is needed. Fast-forward is available at inspection;
+the next session must verify actual integration rather than assume it occurred.
+
+The original next task remains step 11 CLAUDE-WINDOWS-VERIFY. Restore it as
+the active main NEXT-SESSION, with current merged-build target inventory
+refresh/review as a prerequisite inside that task. Historical Claude inventory
+and exact-root cleanup receipt are not portable certification of new stages.
+Reuse completed local verification; retain separate target/corporate/live
+model authorization and budget. Later Bedrock checks and daily-use step 12
+remain on the existing roadmap. This is documentation-only resumption, not
+new runtime evidence or permission to inspect real state.
+
+### A36 — Close the retained Windows regression gate without further pruning (2026-11-11)
+
+The owner explicitly authorizes serial source/resource corrections and portable
+fixtures on `codex/repository-cleanup-plan`, isolated selected checks, guarded
+compile and a fresh copied-runtime test/receipt if shipped bytes change. Keep
+search/identity/worktree/restore/privacy/context/timeouts/stopped-worker
+assertions; no agents, task branches/worktrees, installs/upgrades, real state,
+live inference/AWS, automatic merge or push. This supersedes A35's active
+next-task wording, not its historical evidence or main target-host scope.
+
+Result assessment: resource fixes `dff499e45`, gate/fixtures `974d779e4`.
+373 tests/27 Bun files, four Node host/recovery fixtures, typechecks, compile
+and fresh copied-build real Chroma/viewer/recovery/restart PASS. Current receipt
+refreshes exact 81/80-file synthetic roots and 813 source inputs; old inventories/
+SBOM remain historical. **Cleanup merge is recommended**, not performed.
+Full suite and real Claude/Bedrock/provider acceptance remain separate. Local
+Better Auth sessions still HTTP 500 and unused by the chosen flow; no signup/
+schema migration. Native mode tests do not claim POSIX ACL enforcement on Windows.
+[Evidence](../cleanup/MERGE-READINESS.md).
+
 ## Accepted from the user's current request
 
 | ID | Decision | Reason / authority |
@@ -329,6 +366,54 @@ The transcript path remains a source of captures and the retired
 `pending_messages` queue stays outside recovery.
 [Implementation and checks](../handoffs/RECOVERY-11-LOCAL.md).
 
+### A32 — Separate repository-cleanup planning scope (2026-11-11)
+
+Historical initial scope; A33 below supersedes its CI/PDF preservation and
+pending-slice-approval instructions. Its source/index evidence remains valid.
+
+The owner explicitly requested `codex/repository-cleanup-plan` for a separate
+maintenance analysis; this overrides A01's branch restriction only for that task.
+Do not advance the main roadmap. Codex CLI and Claude Code CLI are the two
+retained target hosts; other hosts are candidates for removal, with existing
+explicit LLM providers/auth preserved. Retain documentation, ADRs, CI/CD files,
+licenses and implementation evidence. Keep `plans/`, including upstream PDFs,
+until separate agreement. Planning/index/tool files are authorized now; actual
+deletion and product/dependency/build edits await discussion and approval of
+the concrete slice. [Proposal and evidence](../cleanup/README.md).
+This accepts the analysis scope, not the proposed deletion list.
+
+### A33 — Final cleanup scope and next-session execution (2026-11-11)
+
+The owner now selects deletion of all CI/CD workflows and associated hosted
+automation, all eight presentation PDFs, non-target hosts and detachable
+standalone server/cloud/scaling components. Keep local build/tests/worker,
+Codex CLI/Claude Code CLI and supported explicit LLM/auth adapters, useful
+technical Markdown, ADRs and implementation evidence. Target one working
+session, prioritize easy removal, and defer costly shared refactors rather
+than rewriting common runtime/storage or repeating the whole audit.
+The current turn finalizes documents; the [next launch](../cleanup/NEXT-SESSION.md)
+implements the agreed categories without a repeated scope approval request.
+No product changes or deletion happened during final planning.
+
+The owner also requests removal of license/author references and custom branding.
+The [final plan](../cleanup/README.md) uses `cmem-light` display branding and
+removes optional personal/promotional metadata while retaining technical IDs to
+avoid migration. It expressly keeps core licensing/provenance for retained code
+and fonts and makes no false original-authorship claim. That is the assistant's
+stated exception to the broader request, not owner approval of preserving notices.
+Notices/docs for completely retired code may retire with their owner/preflight.
+Local auth HTTP 500 is an existing defect outside cleanup; it must stay visible.
+The main roadmap and the separately authorized Claude/Bedrock check do not advance.
+
+Execution, 2026-11-11: the owner launched `cleanup/NEXT-SESSION.md` explicitly.
+Three bounded slices implement this scope; [RESULTS](../cleanup/RESULTS.md)
+records 487 removals, source/output checks, fresh reference receipts and
+retained coupled server/storage/cloud internals. Technical identities remain;
+only product display/personal promotion changed. Keep two useful agent-guidance
+candidate files. Old inventories/SBOM stay historical; new reference receipts
+are destination-bound and do not establish portable distribution or real
+Claude CLI/Bedrock acceptance. No further pruning/refactor inferred.
+
 ## Proposed architecture, pending confirmation/implementation
 
 | ID | Proposal | Reason / unresolved part |
@@ -346,3 +431,35 @@ The transcript path remains a source of captures and the retired
 
 Formal ADRs should be added when architectural choices are accepted, with alternatives
 and consequences. Do not label these proposals as implemented safeguards.
+
+### A34 — Explain residual issues and verify cleanup before merge (2026-11-11)
+
+Owner requests concise but substantive Russian explanations: name each component,
+actual failure/unverified scope, user impact and concrete next action; avoid
+unexplained test/auth/refactor shorthand. Persisted in root AGENTS. Owner also
+requests empty-tree cleanup and a next-session/merge recommendation. Removed
+116 unnecessary empty project directories, preserving ignored/runtime/data and
+dependency trees. Full-suite execution was not part of the earlier focused run;
+its passing subset is not evidence that every retained test passes. The next
+session checks readiness on the existing cleanup branch and reports whether to
+merge into `feat/cmem-light-local`; this is a recommendation, not permission to
+perform merge or run corporate auth/live inference. Known local Better Auth
+session-schema failure is distinct from Codex/ChatGPT login and AWS SSO.
+
+### A35 — Execute cleanup merge verification without merging (2026-11-11)
+
+The owner explicitly launches cleanup/NEXT-SESSION to close the five hook checks,
+review retained local behavior, auth-session impact and current build evidence,
+and deliver a justified readiness verdict. No automatic merge or push. Existing
+cleanup branch and serial ownership remain; no live inference/corporate auth or
+real user data is authorized by this launch.
+
+Execution result (assessment, not a newly accepted product-scope decision):
+five checks closed; broader selected checks remain red, including inherited
+Windows file-release/atomic-write failures and additional stale common assertions.
+Recommendation is **do not merge yet**, with the concrete next gate documented
+in [MERGE-READINESS](../cleanup/MERGE-READINESS.md). Local Better Auth sessions
+are not consumed by the selected viewer/memory path and remain a separate defect;
+no real DB migration or signup is introduced. Exact cleanup references can be
+verified with the new bounded verifier, while older inventories/SBOM retain
+their historical meaning. No runtime bytes or identity semantics changed.

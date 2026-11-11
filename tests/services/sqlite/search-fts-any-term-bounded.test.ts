@@ -303,7 +303,7 @@ describe('bounded any-term query on a read-only connection (#4804)', () => {
         const results = search.searchObservations(question, { project: 'proj' });
         expect(results.map(r => r.title)).toEqual(['zebrafish fin regeneration']);
       } finally {
-        reader.close();
+        reader.close(true);
       }
     } finally {
       rmSync(dir, { recursive: true, force: true });

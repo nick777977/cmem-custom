@@ -5,6 +5,7 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 import { swapDatabaseFromSnapshot } from '../../src/services/backup/restore-swap.js';
 import { SNAPSHOT_FILE_PATTERN } from '../../src/services/backup/snapshot-files.js';
+import { runSqliteFileJob } from '../../src/services/backup/sqlite-file-job.js';
 
 let tempRoot: string | undefined;
 
@@ -180,26 +181,43 @@ describe('swapDatabaseFromSnapshot', () => {
 
   it('puts the live sidecars back when the rename fails', async () => {
     const { dbPath, snapshotPath, backupsDir } = setup();
-    // An idle second connection keeps the -wal and -shm on disk on every
-    // platform without blocking the checkpoint.
-    const idle = new Database(dbPath);
-    idle.query('SELECT COUNT(*) FROM observations').get();
+    // Keep the real crashed WAL, with no live Windows connection. Model a
+    // checkpoint failure before SQLite opens/discards the sidecars; only that
+    // child boundary is injected. Parking, final failure and rollback are real.
+    writeFileSync(`${dbPath}-shm`, 'retained SHM bytes');
+    const wal = readFileSync(`${dbPath}-wal`);
+    const runFileJob: typeof runSqliteFileJob = async job => {
+      if (job.kind === 'checkpoint') throw new Error('injected checkpoint damage');
+      return runSqliteFileJob(job);
+    };
     let parkedAtRename: string[] = [];
     const failingRename = (): void => {
       parkedAtRename = readdirSync(join(dbPath, '..')).filter(name => name.includes('.live-'));
       throw new Error('EPERM: injected rename failure');
     };
-    try {
-      await expect(swapDatabaseFromSnapshot(dbPath, snapshotPath, { preRestoreDir: backupsDir, renameSync: failingRename }))
-        .rejects.toThrow('injected rename failure');
+    await expect(swapDatabaseFromSnapshot(dbPath, snapshotPath, { preRestoreDir: backupsDir, renameSync: failingRename, runFileJob }))
+      .rejects.toThrow('injected rename failure');
 
-      expect(parkedAtRename.length).toBeGreaterThan(0);
+    expect(parkedAtRename).toHaveLength(2);
+    expect(existsSync(`${dbPath}-wal`)).toBe(true);
+    expect(existsSync(`${dbPath}-shm`)).toBe(true);
+    expect(readdirSync(join(dbPath, '..')).filter(name => name.includes('.live-'))).toEqual([]);
+    expect(readFileSync(`${dbPath}-wal`)).toEqual(wal);
+    expect(readFileSync(`${dbPath}-shm`, 'utf8')).toBe('retained SHM bytes');
+    expect(readNotes(dbPath)).toEqual(['live-1', 'live-2-wal-only']);
+  });
+
+  it('preserves the live rows when Windows refuses parking an idle connection\'s WAL', async () => {
+    if (process.platform !== 'win32') return;
+    const { dir, dbPath, snapshotPath, backupsDir } = setup();
+    const idle = new Database(dbPath);
+    try {
+      idle.query('SELECT COUNT(*) FROM observations').get();
+      await expect(swapDatabaseFromSnapshot(dbPath, snapshotPath, { preRestoreDir: backupsDir }))
+        .rejects.toThrow(/EBUSY|EPERM|EACCES/);
       expect(existsSync(`${dbPath}-wal`)).toBe(true);
-      expect(existsSync(`${dbPath}-shm`)).toBe(true);
-      expect(readdirSync(join(dbPath, '..')).filter(name => name.includes('.live-'))).toEqual([]);
-    } finally {
-      idle.close();
-    }
+      expect(leftovers(dir)).toEqual([]);
+    } finally { idle.close(true); }
     expect(readNotes(dbPath)).toEqual(['live-1', 'live-2-wal-only']);
   });
 

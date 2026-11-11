@@ -1,5 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
 import { SessionStore } from '../../../src/services/sqlite/SessionStore.js';
+import { mkdtempSync, rmSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
 
 const PROJECT = 'timeline-tie-boundary-test';
 const MEMORY_SESSION_ID = 'mem-session-tie-boundary';
@@ -8,21 +11,19 @@ const CONTENT_SESSION_ID = 'content-tie-boundary';
 describe('getTimelineAroundTimestamp / getTimelineAroundObservation (epoch anchor)', () => {
   let store: SessionStore;
   let testDbPath: string;
+  let directory: string;
 
   beforeEach(() => {
-    testDbPath = `/tmp/test-timeline-tie-${crypto.randomUUID()}.db`;
+    directory = mkdtempSync(join(tmpdir(), 'test-timeline-tie-'));
+    testDbPath = join(directory, 'memory.db');
     store = new SessionStore(testDbPath);
     const sdkId = store.createSDKSession(CONTENT_SESSION_ID, PROJECT, 'initial prompt');
     store.updateMemorySessionId(sdkId, MEMORY_SESSION_ID);
   });
 
   afterEach(() => {
-    store.close();
-    try {
-      require('fs').unlinkSync(testDbPath);
-    } catch (e) {
-      // Ignore cleanup errors
-    }
+    store?.close();
+    rmSync(directory, { recursive: true, force: true });
   });
 
   const baseEpoch = Date.UTC(2024, 0, 1, 0, 0, 0);

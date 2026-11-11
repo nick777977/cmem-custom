@@ -22,9 +22,10 @@
 //   bun request-groups.mjs refresh-needs [--days 14]  what the automatic refresh would do now
 import { Database } from 'bun:sqlite';
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { writeJsonFileAtomic } from '../../shared/atomic-json.js';
 import { conversationKey, isConversationKey, isHumanActionRequest, originalFor, requestText } from './request-projection.mjs';
 import { GOAL_KINDS, goalKindOf, OWNER_GOALS_LIST } from './owner-goals.mjs';
 import { NO_PROJECT, projectRoot, upgradedGroupRoot, withDerivedProjects } from './session-project.mjs';
@@ -186,10 +187,7 @@ function readJson(path, fallback) {
 }
 
 export function writeJsonAtomic(path, value) {
-  mkdirSync(join(path, '..'), { recursive: true });
-  const temp = `${path}.tmp`;
-  writeFileSync(temp, `${JSON.stringify(value, null, 2)}\n`, { mode: 0o600 });
-  renameSync(temp, path);
+  writeJsonFileAtomic(path, value, { mode: 0o600 });
 }
 
 const emptyGroups = () => ({ version: 1, updatedAt: null, conversations: {}, groups: {}, ignored: {} });

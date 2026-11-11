@@ -1,5 +1,136 @@
 # Current handoff
 
+2026-11-11 **POST-CLEANUP-HANDOFF: owner merges, then resume main step 11.**
+Compared main NEXT-SESSION at `a9364604d026d79be8ab771ecb861688972d169c`
+with `e3d58215b`: the original CLAUDE-WINDOWS-VERIFY task body was retained;
+only cleanup-preface wording diverted the next session into another review.
+The roadmap had no intervening delta. That diversion is now removed.
+
+At inspection, clean `codex/repository-cleanup-plan` HEAD was `e3d58215b`;
+`feat/cmem-light-local` still points to `a9364604d` and is its ancestor.
+The owner will perform the merge manually; no merge/branch switch/push has
+been performed here. [Owner-run fast-forward commands](../cleanup/NEXT-SESSION.md).
+Cleanup source/gate are complete with the evidence below; no extra cleanup
+session or implementation slice is required.
+
+**After the owner's merge**, verify branch/status/cleanup ancestry and use
+[main NEXT-SESSION](../NEXT-SESSION.md) on `feat/cmem-light-local`: stage/review
+the current build's target inventory, then verify actual Claude Code CLI
+loading/dispatch/MCP and the synthetic two-project memory workflow on the
+authorized Windows instance. Old Claude inventory cannot certify the cleanup
+bytes; current receipt certifies only exact reference roots. Reuse completed
+373-test/4-Node/typecheck/compile/copied-Chroma/viewer/recovery evidence.
+Live host/worker inference and AWS require their separate exact scope/budget;
+no new runtime authorization is inferred from this documentation task.
+Then continue scoped Bedrock/remaining step-11 cases and step 12 as planned.
+
+Documentation-only handoff repair; application/build/receipts unchanged, no
+runtime or test reruns. Reservations released. Read this newest section for
+active routing; earlier integration-review/cleanup next-task wording is historical.
+
+2026-11-11 **WINDOWS-REGRESSION-GATE completed; cleanup merge recommended.**
+On existing `codex/repository-cleanup-plan`, entry `e113238ad`, source/paired
+outputs `dff499e45`, reproducible gate/portable fixtures `974d779e4`.
+All 22 originally failing files plus five focused dependencies pass:
+**373 PASS / 0 FAIL in 27 Bun files**. Root/viewer typechecks and guarded
+compile pass: 19 inputs and 1,943 tracked source sentinels unchanged across
+compile; seven of 186 outputs changed and are paired. Full 1,069-file suite
+NOT RUN; earlier attempts/baseline provenance remain preserved.
+
+Fresh copied build passes capture/SQLite/FTS/MCP, private prompt omission,
+real prepared Chroma bilingual retrieval/index persistence, viewer/My Work,
+restart and deliberate recovery. Two failed generations survive shutdown,
+require explicit acknowledgement, commit once and never automatically resend.
+37 sampled child PIDs exited; four ports rebound. Four separate Node
+Claude/Codex bound-hook/MCP/interruption/recovery tests pass. New current
+destination-bound receipt verifies 813 source inputs and 81 Codex/80 Claude
+files. Old inventories/SBOM remain historical; moved stages need new binding.
+
+Local Better Auth sessions still return HTTP 500, unused by the selected
+viewer/memory flow; no signup/schema migration. Real provider login/AWS/Claude
+CLI acceptance and broader suite/browser/distribution/CI remain separate.
+No real data, installs/downloads, agents, task branches/worktrees, merge or push.
+Target ancestry rechecked; main-roadmap target-host work did not advance.
+Reservations released. Next: owner review/integration only when explicitly
+requested; no additional cleanup source slice queued.
+[Verdict and every closed row](../cleanup/MERGE-READINESS.md) ·
+[Actual attempts/results](../cleanup/windows-regression-results.json) ·
+[Next-session scope](../cleanup/NEXT-SESSION.md).
+
+**Earlier no-merge/current-task wording below is historical and superseded.**
+
+2026-11-11 **CLEANUP-MERGE-VERIFY completed; merge NOT recommended yet.**
+Source/tests `f6f49db53`, verifier `d9fa7f90f` on the existing cleanup branch.
+The five known hook assertions are closed. Direct bound Claude/Codex hooks/MCP
+pass; recovery passes on a fresh rerun after an initial connection failure.
+Both typechecks and guarded compile pass; 19 inputs, 1,941 tracked source
+sentinels and all 186 tracked outputs remain unchanged across compile.
+Current reference verification passes 811 original source inputs and exact
+81 Codex/80 Claude files. Old inventories/SBOM remain historical.
+
+The expanded selected Bun checks finish at 1,806 PASS / 90 FAIL / 3 SKIP
+across 220 files; this is not the full 1,068-file suite. Most residual failures
+reproduce on the target snapshot or inspect unchanged obsolete templates.
+Windows SQLite file release, restore sidecars and My Work atomic-write tests
+still fail, alongside nonportable fixture and resource-contract expectations.
+The retained gate is not green; inherited origin alone does not close it.
+Local Better Auth session HTTP 500 is reproduced and not used by the selected
+memory/viewer scenario; it is a separate nonblocking cleanup defect, unrelated
+to Codex/ChatGPT login and AWS SSO. No real DB migration is justified.
+
+[Verdict, behavior matrix, every failure's impact and next action](../cleanup/MERGE-READINESS.md)
+· [Exact selected results](../cleanup/merge-verification-results.json)
+· [Next task: close the retained Windows regression gate](../cleanup/NEXT-SESSION.md).
+No merge/push, real state, live inference, AWS or task branch/worktree changes.
+Reservations released. **Earlier active cleanup instructions below are historical
+and superseded by this handoff.** Main-roadmap/target-host work did not advance.
+
+2026-11-11 **CLEANUP tree/explanation follow-up**: at `0622cc22f`, removed
+116 unnecessary empty project directories; rescan found zero eligible empty
+directories. Ignored/dependency/runtime/data trees were excluded, and no
+application bytes changed. User requests concise Russian explanations that
+identify each unresolved component, impact and next action; recorded in AGENTS.
+
+The auth failure is the worker's **local `GET /api/auth/get-session`**:
+synthetic logs show Better Auth's missing user/session/account/API-key/team
+tables. It is unrelated to Codex/ChatGPT login or AWS SSO. The tested memory,
+MCP and viewer paths worked independently. Five failed checks expect obsolete
+literal/autostart hook commands, not the current separately started foreground
+worker and destination-bound hooks. Full suite was not run.
+
+**Recommendation: finish pre-merge validation on the cleanup branch first**;
+no merge performed. `feat/cmem-light-local` was an ancestor at inspection,
+so fast-forward is possible but does not establish functional readiness.
+[Next-session prompt](../cleanup/NEXT-SESSION.md) now covers retained local
+test lanes, the five failed assertions, local auth impact, current artifact
+verification and an explicit merge-readiness verdict. Coupled legacy source
+refactoring and real Claude/Bedrock execution are not automatic prerequisites.
+[Explanation/evidence](../cleanup/RESULTS.md#tree-follow-up-and-explanation-2026-11-11).
+Reservations released. Earlier narrower next-task wording below is superseded.
+
+2026-11-11 side task: **REPOSITORY-CLEANUP implemented** on
+`codex/repository-cleanup-plan`, entry `8b93ceb3d`, paired source/output
+`007a128e5`. Three bounded slices
+retired automation/eight PDFs, extra host packages and standalone/cloud
+build/launch. Deleted 487 baseline files / 132,312,367 bytes; 438/440 exact
+candidates removed, with two agent-guidance files kept. UI/private display
+metadata uses `cmem-light`; technical identities/providers/auth and local
+memory behavior remain. Coupled legacy source/dependencies are explicitly
+retained, not claimed fully pruned. [Actual results](../cleanup/RESULTS.md).
+
+Both typechecks/guarded compile, focused checks, direct bound Claude/Codex
+hooks/MCP, durable recovery and real local Chroma/FTS/restart passed. Browser
+viewer/My Work render with local resources. Five old hook-format assertions
+remain failures and local auth still returns HTTP 500. The new
+[current receipt](../artifacts/windows-x64-cleanup-receipt.json) covers exact
+synthetic reference stages; older inventories/SBOM stay historical and do not
+validate these bytes. Real CLI registration/Claude/Bedrock acceptance did not
+advance. No real installation/data, toolchain, model or ignored cache changes.
+
+[Next cleanup task](../cleanup/NEXT-SESSION.md): align the five retained
+hook-format assertions with the current canonical/private-bound contracts.
+Main roadmap/Claude target below is unchanged. Reservations released.
+
 Updated 2026-11-10 on feat/cmem-light-local by one coordinator. A27 and A29–A31 define current scope.
 Historical blanket refusals and native-sandbox prerequisites are superseded.
 

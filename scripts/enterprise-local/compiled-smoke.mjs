@@ -6,7 +6,7 @@ import { copyFileSync, mkdirSync, readFileSync, realpathSync, writeFileSync } fr
 import path from 'node:path';
 
 export const deadlines = Object.freeze({ runMs: 15_000, cleanupMs: 5_000, maxOutputBytes: 64 * 1024 });
-export const compiledEntries = ['claude-mem-launcher.cjs', 'ensure-launcher.cjs', 'worker-service.cjs', 'mcp-server.cjs', 'bun-runner.js', 'version-check.js', 'worker-wrapper.cjs', 'qoder-hook-launcher.cjs'];
+export const compiledEntries = ['claude-mem-launcher.cjs', 'ensure-launcher.cjs', 'worker-service.cjs', 'mcp-server.cjs', 'bun-runner.js', 'version-check.js', 'worker-wrapper.cjs'];
 const entries = compiledEntries;
 const digest = file => createHash('sha256').update(readFileSync(file)).digest('hex');
 function descendant(root, file) {
@@ -95,7 +95,7 @@ export function refusalCases(fixture) {
 
 /** Copied wrapper negative specs only; no worker/MCP startup success implied. */
 export function wrapperRefusalCases(fixture) {
-  return ['bun-runner.js', 'version-check.js', 'worker-wrapper.cjs', 'qoder-hook-launcher.cjs'].flatMap(name => [
+  return ['bun-runner.js', 'version-check.js', 'worker-wrapper.cjs'].flatMap(name => [
     ['interpreter-required', fixture.env, 'LOCAL_INTERPRETER_ABSOLUTE_REQUIRED'],
     ['interpreter-relative', { ...fixture.env, CLAUDE_MEM_NODE_EXECUTABLE: 'node' }, 'LOCAL_INTERPRETER_ABSOLUTE_REQUIRED'],
     ['interpreter-missing', { ...fixture.env, CLAUDE_MEM_NODE_EXECUTABLE: path.join(fixture.sandbox, 'missing-node.exe') }, 'LOCAL_INTERPRETER_MISSING'],
@@ -106,7 +106,7 @@ export function wrapperRefusalCases(fixture) {
   ].map(([suffix, env, code]) => ({
     id: `${name}-${suffix}`, executable: fixture.tools.node, args: [path.join(fixture.bundle, 'scripts', name)],
     cwd: fixture.sandbox, env, stdin: '', ...deadlines, evidence: 'controlled-refusal',
-    expected: { exit: name === 'qoder-hook-launcher.cjs' ? 0 : 1, stdout: '', stderrCode: code },
+    expected: { exit: 1, stdout: '', stderrCode: code },
   })));
 }
 

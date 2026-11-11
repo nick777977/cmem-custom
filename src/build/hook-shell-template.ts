@@ -78,7 +78,7 @@ export function buildShellCommand(options: ShellTemplateOptions): string {
 }
 
 export function standaloneRefusalWrappers(): Record<string, string> {
-  return Object.fromEntries(['bun-runner.js', 'version-check.js', 'worker-wrapper.cjs', 'qoder-hook-launcher.cjs']
+  return Object.fromEntries(['bun-runner.js', 'version-check.js', 'worker-wrapper.cjs']
     .map(name => ['plugin/scripts/' + name, '// Generated private refusal; source: src/build/hook-shell-template.ts\n'
-      + buildHostRefusalPayload(name === 'qoder-hook-launcher.cjs', [], name) + '\n']));
+      + buildHostRefusalPayload(false, [], name) + '\n']));
 }

@@ -48,7 +48,7 @@ const packageVersion = typeof __DEFAULT_PACKAGE_VERSION__ !== 'undefined' ? __DE
 export const WORKER_BOOT_FAILED_EXIT_CODE = 78;
 
 /** Subcommands that read or write the caller's project, so they run in its directory (#4628). */
-export const COMMANDS_THAT_ACT_ON_CALLER_PROJECT: ReadonlySet<string> = new Set(['generate', 'clean', 'adopt', 'memory', 'cursor']);
+export const COMMANDS_THAT_ACT_ON_CALLER_PROJECT: ReadonlySet<string> = new Set(['generate', 'clean', 'adopt', 'memory']);
 
 // The bind must happen within this window. server.listen() is the first ref'd
 // handle in the boot path, so a stall before it lets the event loop empty and
@@ -97,17 +97,6 @@ import {
   DEFAULT_LOCAL_API_KEY_SCOPES,
 } from '../server/auth/sqlite-api-key-service.js';
 import { ServerV1Routes } from '../server/routes/v1/ServerV1Routes.js';
-
-import {
-  handleCursorCommand
-} from './integrations/CursorHooksInstaller.js';
-import {
-  handleKimiCommand
-} from './integrations/KimiHooksInstaller.js';
-import {
-  handleAntigravityCliCommand
-} from './integrations/AntigravityCliHooksInstaller.js';
-import { notifyGrokBotIndex, watchGrokBotIndexSettings } from './integrations/GrokBotIndexWriter.js';
 
 import { DatabaseManager } from './worker/DatabaseManager.js';
 import { SessionManager } from './worker/SessionManager.js';
@@ -880,12 +869,6 @@ export class WorkerService implements WorkerRef {
         logger.warn('HOOK', 'Memory folder bridge configuration unavailable', { error: error instanceof Error ? error.message : String(error) });
       }
 
-      // Seed Grok Bot Memory INDEX files from current observations so seats
-      // do not wait for the next store before the mid-attach file exists.
-      notifyGrokBotIndex();
-      // Standing line / project-map edits must reach idle seats too.
-      watchGrokBotIndexSettings();
-
       if (this.chromaMcpManager) {
         ChromaSync.registerBackfillStore(this.dbManager.getSessionStore());
         ChromaSync.backfillAllProjects(this.dbManager.getSessionStore()).then(completed => {
@@ -1217,43 +1200,8 @@ function printWorkerAliasHelp(): never {
 }
 
 function runServerServiceCli(command: string, extraArgs: string[] = []): void {
-  if (process.env.CLAUDE_MEM_RUNTIME?.trim().toLowerCase() === 'worker') {
-    console.error('LOCAL_WORKER_ONLY: standalone server commands are unavailable in worker mode.');
-    process.exit(1);
-  }
-
-  // Plan §1c line 149: try the post-rename script first, then fall back
-  // to the legacy `server-beta-service.cjs` so users running against an
-  // already-installed plugin cache (built before the rename) continue to
-  // dispatch without a forced reinstall.
-  let serverScript = path.join(__dirname, 'server-service.cjs');
-  if (!existsSync(serverScript)) {
-    const legacyScript = path.join(__dirname, 'server-beta-service.cjs');
-    if (existsSync(legacyScript)) {
-      serverScript = legacyScript;
-    } else {
-      console.error(`Server script not found at: ${serverScript}`);
-      console.error('Rebuild or reinstall claude-mem so server-service.cjs is available.');
-      process.exit(1);
-    }
-  }
-
-  const child = spawn(process.execPath, [serverScript, command, ...extraArgs], {
-    stdio: 'inherit',
-    windowsHide: true,
-    // Strip host CLI bleed-through (CLAUDE_CODE_*, including EFFORT_LEVEL) and
-    // Anthropic credentials before handing env to the spawned daemon. The
-    // daemon re-reads its own credentials from ~/.claude-mem/.env. See
-    // env-isolation discipline (#2357 / #2375).
-    env: sanitizeEnv(process.env),
-  });
-  child.on('error', (error) => {
-    console.error(`Failed to start server command: ${error.message}`);
-    process.exit(1);
-  });
-  child.on('close', (exitCode) => {
-    process.exit(exitCode ?? 0);
-  });
+  console.error('LOCAL_WORKER_ONLY: standalone server deployment has been retired. Use the private local worker.');
+  process.exit(1);
 }
 
 function parseServerApiKeyOptions(args: string[]): Record<string, string> {
@@ -1651,33 +1599,12 @@ async function main() {
       break;
     }
 
-    case 'cursor': {
-      const subcommand = process.argv[3];
-      const cursorResult = await handleCursorCommand(subcommand, process.argv.slice(4));
-      process.exit(cursorResult);
-      break;
-    }
-
     case 'memory': {
       // Auto-memory ingest (sibling to transcript). Dry-run runs client-side;
       // the real store reaches the worker over HTTP from inside runMemoryCommand.
       const subcommand = process.argv[3];
       const memoryResult = await runMemoryCommand(subcommand, process.argv.slice(4));
       process.exit(memoryResult);
-      break;
-    }
-
-    case 'kimi': {
-      const kimiSubcommand = process.argv[3];
-      const kimiResult = await handleKimiCommand(kimiSubcommand, process.argv.slice(4));
-      process.exit(kimiResult);
-      break;
-    }
-
-    case 'antigravity-cli': {
-      const antigravitySubcommand = process.argv[3];
-      const antigravityResult = await handleAntigravityCliCommand(antigravitySubcommand, process.argv.slice(4));
-      process.exit(antigravityResult);
       break;
     }
 
@@ -1691,7 +1618,7 @@ async function main() {
       const event = process.argv[4];
       if (!platform || !event) {
         console.error('Usage: claude-mem hook <platform> <event>');
-        console.error('Platforms: claude-code, codex, cursor, antigravity-cli, raw');
+        console.error('Platforms: claude-code, codex, raw');
         console.error('Events: context, session-init, observation, summarize, user-message');
         process.exit(1);
       }

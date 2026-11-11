@@ -98,7 +98,7 @@ function seedDbWithUniqueConstraintAfterV21(dbPath: string): void {
     VALUES ('mem-healthy', 'proj-a', 'first summary', 42, 'keep-merged', ?, ?)
   `).run(ISO, EPOCH);
   db.run('PRAGMA foreign_keys = ON');
-  db.close();
+  db.close(true);
 }
 
 /**
@@ -155,7 +155,7 @@ function seedDbThatAlreadyLostCascade(dbPath: string): void {
     VALUES ('mem-healthy', 'proj-a', 'healthy text', 'discovery', ?, ?)
   `).run(ISO, EPOCH);
   db.run('PRAGMA foreign_keys = ON');
-  db.close();
+  db.close(true);
 }
 
 function seedDbThatLostObservationsCascade(dbPath: string): void {
@@ -181,7 +181,7 @@ function seedDbThatLostObservationsCascade(dbPath: string): void {
     VALUES ('mem-healthy', 'proj-a', 'obs that should cascade', 'discovery', ?, ?)
   `).run(ISO, EPOCH);
   db.run('PRAGMA foreign_keys = ON');
-  db.close();
+  db.close(true);
 }
 
 function memorySessionFk(db: Database, table: 'observations' | 'session_summaries'): { on_update: string; on_delete: string } | undefined {
@@ -242,7 +242,7 @@ describe('session_summaries ON UPDATE CASCADE survives v7 rebuild (#3849)', () =
       `SELECT memory_session_id FROM session_summaries WHERE request = 'first summary'`
     ).get()).toEqual({ memory_session_id: 'mem-rotated' });
 
-    store.db.close();
+    store.db.close(true);
   });
 
   it('repairs a database with the v41 origin index that already lost CASCADE after v21', () => {
@@ -291,7 +291,7 @@ describe('session_summaries ON UPDATE CASCADE survives v7 rebuild (#3849)', () =
       `SELECT memory_session_id FROM observations WHERE text = 'healthy text'`
     ).get()).toEqual({ memory_session_id: 'mem-rotated' });
 
-    store.db.close();
+    store.db.close(true);
   });
 
   it('repairs observations that lost ON UPDATE CASCADE after v21 was stamped', () => {
@@ -312,7 +312,7 @@ describe('session_summaries ON UPDATE CASCADE survives v7 rebuild (#3849)', () =
       `SELECT memory_session_id FROM observations WHERE text = 'obs that should cascade'`
     ).get()).toEqual({ memory_session_id: 'mem-rotated' });
 
-    store.db.close();
+    store.db.close(true);
   });
 
   it('repair is a no-op on a second boot of an already-repaired database', () => {
@@ -324,7 +324,7 @@ describe('session_summaries ON UPDATE CASCADE survives v7 rebuild (#3849)', () =
       `SELECT id FROM sdk_sessions WHERE memory_session_id = 'mem-healthy'`
     ).get() as { id: number };
     first.updateMemorySessionId(session.id, 'mem-rotated');
-    first.db.close();
+    first.db.close(true);
 
     const second = new SessionStore(dbPath);
     expect(memorySessionFk(second.db, 'session_summaries')?.on_update).toBe('CASCADE');
@@ -335,6 +335,6 @@ describe('session_summaries ON UPDATE CASCADE survives v7 rebuild (#3849)', () =
     expect(second.db.prepare(
       `SELECT memory_session_id FROM session_summaries WHERE request = 'already summarised'`
     ).get()).toEqual({ memory_session_id: 'mem-rotated-again' });
-    second.db.close();
+    second.db.close(true);
   });
 });

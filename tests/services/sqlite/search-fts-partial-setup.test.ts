@@ -9,7 +9,7 @@ import { SessionSearch } from '../../../src/services/sqlite/SessionSearch.js';
 const databases: Database[] = [];
 const directories: string[] = [];
 afterEach(() => {
-  for (const db of databases.splice(0)) db.close();
+  for (const db of databases.splice(0)) db.close(true);
   for (const directory of directories.splice(0)) rmSync(directory, { recursive: true, force: true });
 });
 

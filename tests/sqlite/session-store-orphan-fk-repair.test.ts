@@ -122,7 +122,7 @@ function seedLegacyV4DbWithOrphans(dbPath: string, opts: OrphanSeedOptions = {})
   }
 
   db.run('PRAGMA foreign_keys = ON');
-  db.close();
+  db.close(true);
 }
 
 function count(db: Database, sql: string, ...params: Array<string | number>): number {
@@ -169,7 +169,7 @@ describe('SessionStore migration chain over a legacy DB with orphaned FK childre
     expect(count(store.db, `SELECT COUNT(*) AS n FROM observations WHERE memory_session_id = 'mem-healthy'`)).toBe(1);
     expect(count(store.db, 'SELECT COUNT(*) AS n FROM schema_versions WHERE version = 9')).toBe(1);
 
-    store.db.close();
+    store.db.close(true);
   });
 
   it('v7 session_summaries rebuild completes over an orphaned summary and repairs its parent', () => {
@@ -186,7 +186,7 @@ describe('SessionStore migration chain over a legacy DB with orphaned FK childre
     expect(count(store.db, `SELECT COUNT(*) AS n FROM sdk_sessions WHERE memory_session_id = 'mem-orphan-sum'`)).toBe(1);
     expect(count(store.db, 'SELECT COUNT(*) AS n FROM schema_versions WHERE version = 7')).toBe(1);
 
-    store.db.close();
+    store.db.close(true);
   });
 
   it('boot sequence over a DB with both orphan kinds: migrations then v12.4.3 cleanup, nothing lost', () => {
@@ -194,7 +194,7 @@ describe('SessionStore migration chain over a legacy DB with orphaned FK childre
     seedLegacyV4DbWithOrphans(dbPath, { orphanObservation: true, orphanSummary: true });
 
     const store = new SessionStore(dbPath);
-    store.db.close();
+    store.db.close(true);
 
     // The next awaited boot step after dbManager.initialize(): the one-time
     // v12.4.3 cleanup (DELETE FROM sdk_sessions with foreign_keys = ON).
@@ -209,7 +209,7 @@ describe('SessionStore migration chain over a legacy DB with orphaned FK childre
       expect(count(db, `SELECT COUNT(*) AS n FROM sdk_sessions WHERE memory_session_id IN ('mem-orphan-obs', 'mem-orphan-sum')`)).toBe(2);
       expect(count(db, `SELECT COUNT(*) AS n FROM sdk_sessions WHERE memory_session_id = 'mem-healthy'`)).toBe(1);
     } finally {
-      db.close();
+      db.close(true);
     }
   });
 
@@ -219,12 +219,12 @@ describe('SessionStore migration chain over a legacy DB with orphaned FK childre
 
     const first = new SessionStore(dbPath);
     const sessionsAfterFirst = count(first.db, 'SELECT COUNT(*) AS n FROM sdk_sessions');
-    first.db.close();
+    first.db.close(true);
 
     const second = new SessionStore(dbPath);
     expect(count(second.db, 'SELECT COUNT(*) AS n FROM sdk_sessions')).toBe(sessionsAfterFirst);
     expect(count(second.db, 'SELECT COUNT(*) AS n FROM observations')).toBe(2);
     expect(count(second.db, 'SELECT COUNT(*) AS n FROM session_summaries')).toBe(1);
-    second.db.close();
+    second.db.close(true);
   });
 });

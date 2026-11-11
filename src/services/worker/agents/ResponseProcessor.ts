@@ -12,12 +12,8 @@ import {
   isTransportFailureObserverOutput,
   previewOutput,
 } from '../../../sdk/output-classifier.js';
-import { updateCursorContextForProject } from '../../integrations/CursorHooksInstaller.js';
 import { notifyTelegram } from '../../integrations/TelegramNotifier.js';
 import { notifyNotion } from '../../integrations/NotionExporter.js';
-import { notifyGrokBotAwareness } from '../../integrations/GrokBotAwarenessPusher.js';
-import { notifyGrokBotBrainbeat } from '../../integrations/GrokBotBrainbeat.js';
-import { notifyGrokBotIndex } from '../../integrations/GrokBotIndexWriter.js';
 import { updateFolderClaudeMdFiles } from '../../../utils/claude-md-utils.js';
 import { getWorkerPort } from '../../../shared/worker-utils.js';
 import { recordObserverFailure, recordObserverSuccess } from '../../../shared/observer-health.js';
@@ -929,22 +925,6 @@ export async function processAgentResponse(
       memorySessionId: registeredMemorySessionId,
     });
 
-    void notifyGrokBotAwareness({
-      observations: fresh.observations,
-      observationIds: fresh.observationIds,
-      project: context.project,
-      memorySessionId: registeredMemorySessionId,
-      agentId: context.pendingAgentId,
-    });
-
-    // Optional brainbeat webhook (off unless CLAUDE_MEM_GROK_BOT_WEBHOOK_URL is set).
-    // Like the alerts above, only newly stored rows fire (a dedup merge re-confirms one that already did).
-    void notifyGrokBotBrainbeat({
-      observations: fresh.observations,
-      observationIds: fresh.observationIds,
-      project: context.project,
-    });
-
     // Optional Notion export (off unless CLAUDE_MEM_NOTION_ENABLED). Queues and
     // returns; the upserts run in the background and never fail capture.
     notifyNotion({
@@ -955,9 +935,6 @@ export async function processAgentResponse(
       createdAtEpoch: result.createdAtEpoch,
     });
 
-    // Growing Grok Bot INDEX: any new observation (any project) can fill a
-    // thin seat diary via the house fallback, so refresh all mapped seats.
-    notifyGrokBotIndex();
   }
 
   await syncAndBroadcastObservations(
@@ -1247,7 +1224,5 @@ async function syncAndBroadcastSummary(
     created_at_epoch: result.createdAtEpoch
   });
 
-  updateCursorContextForProject(context.project).catch(error => {
-    logger.warn('CURSOR', 'Context update failed (non-critical)', { project: context.project }, error as Error);
-  });
+
 }
