@@ -7,6 +7,18 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-11 **REPOSITORY-CLEANUP implementation**, in progress. One coordinator
+on clean `codex/repository-cleanup-plan` at `8b93ceb3db870bbbb766aebf51df65abc6c745e1`.
+Reserve manifest-listed deletion candidates after caller review, shared host
+registry/dispatch/build/manifest/UI presentation inputs and paired generated outputs,
+standalone CLI/build boundaries, affected focused fixtures and package metadata.
+Reserve `cleanup/{RESULTS,NEXT-SESSION,README}.md`, current handoff and
+`memory/{STATE,TASKS,WORKLOG,DECISIONS}.md`, current artifact receipts and
+`DEV-ENVIRONMENT.md` when validation changes. Disposable output is under
+`.scratch/enterprise-local/cleanup-implementation/`. No main-roadmap work,
+agents/worktrees/push, real installation/user data or live inference.
+Next: remove detached PDF/automation inputs and their exclusive npm commands.
+
 2026-11-11 **REPOSITORY-CLEANUP final plan**, done by one coordinator from
 clean `683bd9062` on `codex/repository-cleanup-plan`. Reserve
 `docs/enterprise-local/cleanup/` and brief updates to
