@@ -296,6 +296,14 @@ worker generation route: сначала объясни эти две опера�
 Working Claude Code Bedrock/SSO не является согласием включить background paid
 generation. Не выбирай profile/model/budget от его имени.
 
+Генеративный observer уже был в оригинальном Claude-Mem; мы не добавили новую
+обязательную «вторую подписку». Изменение форка — explicit profile вместо
+implicit defaults/auth/fallback. Разные роли могут использовать одну модель
+и тот же выбранный Bedrock account/SSO. [Сравнение по исходникам](handoffs/UPSTREAM-MEMORY-FLOW.md)
+объясняет upstream defaults/installer options и фактический `profile_required`.
+Сначала объясни это владельцу; не представляй отдельную роль как требование
+подключить другой сервис, account или скачать ещё один локальный LLM.
+
 До первого нового live **test** вызова согласуй точные model ID/inference
 profile, auth route, AWS profile/region/destination, synthetic payload и малый
 бюджет: calls/turns/time + применимый cost cap. Не подставляй historical Luna/

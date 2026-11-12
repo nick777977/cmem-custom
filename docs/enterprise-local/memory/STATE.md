@@ -35,6 +35,14 @@ generation first; exact live-test model/auth/destination/payload/budget remains
 separate. Actual Claude/policy/events/MCP/two-project/worktree acceptance and
 both Bedrock surfaces remain NOT RUN. Steps 11/12 stay open.
 
+Owner requests the original-vs-fork explanation before deciding generation
+routing. [Source comparison](../handoffs/UPSTREAM-MEMORY-FLOW.md): original
+already had observer LLM requests; fork adds mandatory explicit profile
+admission. Separate requests/roles do not require another model/account/
+subscription. Same approved Bedrock model/SSO may be explicitly reused;
+live support/choice/budget remain unverified/unselected. MiniLM is retrieval
+encoding, not prose generation. No provider choice is inferred from the question.
+
 Documentation/link/syntax/provenance consistency checks only; no application,
 generated/inventory changes, tests/build/install/runtime/AWS/model calls,
 agents/branches/worktrees/merge/push. Reservations released. Next: launch

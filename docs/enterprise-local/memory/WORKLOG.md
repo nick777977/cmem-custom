@@ -1671,3 +1671,40 @@ inventory changes, runtime/version/auth/model probes, build/tests/install/
 AWS calls or merge/push. Reservations released. Next: owner decides future
 worker generation route after understanding its purpose; target acceptance
 still follows the prepared prompt with separate model/auth/payload/budget.
+
+## 2026-11-12 — Explain original observer flow and explicit-profile fork change
+
+Entry clean `feat/cmem-light-local` at
+`0e268712a235881d5c1dadfe60df6c2238473014`. Owner asks how original
+Claude-Mem generates notes, whether it uses the user's subscription and
+whether our fork introduced a mandatory second model. Read-only review:
+public original README/current configuration/architecture/provider/auth code,
+README v15.5.0, local retained root snapshot
+`f6df542326fccaa9717d13617ff9b30405c486b2`, current main profile/dispatch/
+launcher source. That local root snapshot has no parent; attempted parent
+lookup failed and was not treated as source evidence. Two tagged raw source
+web fetches failed; current docs and the available snapshot are distinguished.
+
+Retained original defaults: Claude provider, subscription auth, dated Haiku
+4.5 ID. Current upstream docs say Claude/subscription/Haiku alias; installer
+also offers hosted observer and own-provider routes, so not every effective
+installation bills the user's subscription. Original already had a generative
+observer; no second subscription/model/account is intrinsically required.
+Fork's actual source change is explicit default-profile admission and no
+implicit auth/model/fallback. Missing selection pauses generation; private
+start requires --profile. Same selected Bedrock account/model may serve both
+coding and memory roles; actual worker Bedrock acceptance remains NOT RUN.
+
+Created handoffs/UPSTREAM-MEMORY-FLOW.md with dated sources/current SHA+lines
+and conceptual Mermaid sequence. Clarified LLM-PROFILES/bootstrap/STATE/A39:
+separate requests do not mean mandatory different model/service/subscription.
+No new worker profile/model/budget accepted. MiniLM handles retrieval encoding,
+not prose generation. Existing reading versus new AI note creation explained
+without claiming a ready no-profile daily-use launcher mode.
+
+Source citations/whitespace/preservation checked. No application/generated/
+inventory changes, tests/build/runtime, user-state/auth/model/AWS access,
+upstream install/signup/download, agents/branches/worktrees/merge/push.
+Mermaid is conceptual explanation, not recorded runtime trace. Reservations
+released; next choice remains an approved worker route after the explanation,
+followed by existing scoped host/local and separately scoped live checks.

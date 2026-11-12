@@ -79,6 +79,13 @@ provider or budget was selected by this clarification. Local embedding asset
 preparation is a separate setup step; npm dependency installation alone does
 not certify that those runtime/model assets are prepared on the target.
 
+The original Claude-Mem already used a generative observer. "Separate role"
+means additional requests, not a mandatory different model, account, service
+or subscription. One explicit default can reuse the owner's chosen Bedrock
+account/model for observation and summary; target support is still unverified.
+The fork's real change is explicit profile admission instead of upstream's
+implicit defaults/auth discovery/fallback. [Source comparison and explanation](handoffs/UPSTREAM-MEMORY-FLOW.md).
+
 ## Profile contract
 
 The table defines the contract for all retained model jobs. The worker and its

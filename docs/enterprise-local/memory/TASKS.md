@@ -7,6 +7,23 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-12 **UPSTREAM-MEMORY-FLOW**, done by one coordinator at
+`0e268712a235881d5c1dadfe60df6c2238473014`, `feat/cmem-light-local`.
+Owner requests original Claude-Mem vs fork defaults, subscription/model
+behavior, step-by-step diagrams and whether explicit generation was newly
+made mandatory. Reserve a focused explanatory handoff, LLM-PROFILES,
+bootstrap and memory STATE/TASKS/DECISIONS/WORKLOG. Read-only upstream browsing
+and local source/baseline inspection; documentation only. No inference,
+auth/user-state inspection, runtime/download/build/tests, source/output change
+or worker-profile selection. Distinguish additional calls/role from requiring
+a different model/vendor/account/subscription; do not silently change accepted
+explicit-profile/no-fallback contract or treat the question as authorization.
+Completed: source comparison handoff and conceptual flow, explicit distinction
+between an observer role/additional calls and another subscription/model;
+profile contract/bootstrap/current STATE and A39 context updated. No provider
+selection/authorization/source change. Documentation/source-citation checks
+only, no runtime or suite replay. Reservations released; step-11 route unchanged.
+
 2026-11-12 **CLAUDE-CODE-TRANSFER clarification**, done by one coordinator
 at `747c43026957bd902c72aa3ae8a3b187727d28a1`, `feat/cmem-light-local`.
 Owner reports PowerShell `claude`, globally npm-installed Anthropic Claude

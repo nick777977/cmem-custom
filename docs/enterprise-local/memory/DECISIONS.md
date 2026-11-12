@@ -30,6 +30,13 @@ understand CLI internals. The owner asks what memory-worker generation means
 versus the existing local model before selecting that route. No worker
 provider/model/budget or additional AWS execution is accepted by this answer.
 
+Further explanation: generative observer calls existed in upstream Claude-Mem.
+The fork requires an explicit profile and forbids implicit fallback; it does
+not require another subscription, account or a different model for the role.
+One approved default may reuse the selected Bedrock account/model. The owner
+has requested the comparison, not selected a live profile or changed this
+contract. [Evidence](../handoffs/UPSTREAM-MEMORY-FLOW.md).
+
 ### A38 — Prepare here; actual Claude acceptance on another Windows host (2026-11-11)
 
 The owner confirms the intended target is another Windows host and requests
