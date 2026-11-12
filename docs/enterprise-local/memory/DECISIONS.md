@@ -1,5 +1,28 @@
 # Decision log
 
+### A39 — Continue development in Claude Code with a durable bootstrap (2026-11-12)
+
+Owner requests a detailed initial prompt for the other machine's already
+working Claude Code through Bedrock, to continue implementation/tests of the
+existing roadmap and generate reliable session handoffs. Include required
+file navigation, fact-based critical plan review, necessary questions and
+explicit decision/STATE/TASKS/WORKLOG/NEXT-SESSION maintenance. Improvements
+require evidence and practical benefit; no findings or new process for show.
+
+Replace stale root CLAUDE.md upstream build/sync/default-state instructions
+with a thin fork entry to AGENTS/current memory and the first-session prompt.
+Keep one roadmap/ownership board; later sessions consume refreshed NEXT-SESSION
+rather than repeating bootstrap. The working development chat's model is
+separate from child-host and memory-worker test profiles. No fresh runtime,
+real-state/corporate execution, automatic worker-profile selection or live-test
+budget follows from this documentation request. Existing phase-one setup
+authority and separately scoped target tests remain; steps 11/12 are not done.
+
+Record observed unavailable historical Git objects and current content checks
+honestly, without inventing history rewrites or changing historical receipts.
+The new entry corrects context/procedure, not application acceptance or
+dependency edges. [Initial prompt](../CLAUDE-CODE-BOOTSTRAP.md).
+
 ### A38 — Prepare here; actual Claude acceptance on another Windows host (2026-11-11)
 
 The owner confirms the intended target is another Windows host and requests

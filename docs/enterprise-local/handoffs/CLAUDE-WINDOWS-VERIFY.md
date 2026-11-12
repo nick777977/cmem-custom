@@ -5,6 +5,19 @@ will run on another Windows host and requests preparation here. Its approved
 CLI path/version, managed policy, runtime paths and live host scope are not yet
 available. Do not replace this check with direct hook fixtures.
 
+**Transfer note, 2026-11-12:** development is continuing in Claude Code on the
+other machine. First use [the bootstrap prompt](../CLAUDE-CODE-BOOTSTRAP.md).
+Some historical commit IDs below are absent from the current Git object store;
+their cause is unknown. At transfer entry `afcf03689c0ab3749c5bdc8930e45fadf309223f`,
+available build candidate `b5b988931312e2b45b7b7e311250b3d148d122bc` has the
+same recorded plugin tree `96b9e22d975767da37850eb3e85ba85f05ef04c9`;
+renderer candidate is `d4e8259ae3d70f8f5bc4bc269ae6d2004051ce7f`, with the
+recorded file SHA-256. All 76 copied-source hashes match the cleanup file
+receipt. These are fresh content checks, not proof of identical historical
+commits or a rerun of runtime acceptance. Preserve the old receipt metadata;
+record actual resolvable SHAs separately. Reconfirm these candidates on target
+before using the commands. Do not blindly run a diff against an absent object.
+
 ## Completed here: files only
 
 Entry was clean `feat/cmem-light-local` at
@@ -110,12 +123,16 @@ if ([Security.Principal.WindowsPrincipal]::new(
 if ([Runtime.InteropServices.RuntimeInformation]::OSArchitecture -ne 'X64') { throw 'Windows x64 required' }
 if ((git branch --show-current) -ne 'feat/cmem-light-local') { throw 'Wrong branch' }
 git status --short
-git merge-base --is-ancestor codex/repository-cleanup-plan HEAD
-if ($LASTEXITCODE -ne 0) { throw 'Cleanup integration missing' }
+# Confirm these actual available refs/content on the target first; see transfer note.
+$integrationRef = '70913ce5132c185845a5af5b45dff0f53618794f'
+$pairedBuildSha = 'b5b988931312e2b45b7b7e311250b3d148d122bc'
+$rendererSha = 'd4e8259ae3d70f8f5bc4bc269ae6d2004051ce7f'
+git merge-base --is-ancestor $integrationRef HEAD
+if ($LASTEXITCODE -ne 0) { throw 'Integration evidence missing/unresolved; review actual history before continuing' }
 $sourceHead = git rev-parse HEAD
-git diff --exit-code dff499e45c3116d8cb8936733d0edf8f220797a6 HEAD -- plugin
+git diff --exit-code $pairedBuildSha HEAD -- plugin
 if ($LASTEXITCODE -ne 0) { throw 'Build changed: review before staging' }
-git diff --exit-code a5c3c236423401affc62ef8ab8ee3e6485b28cf2 HEAD -- scripts/enterprise-local/codex-local.mjs
+git diff --exit-code $rendererSha HEAD -- scripts/enterprise-local/codex-local.mjs
 if ($LASTEXITCODE -ne 0) { throw 'Renderer changed: review before staging' }
 # Stop if tracked WIP affects the bundle/renderer/inventory; preserve all WIP.
 git diff --exit-code -- plugin scripts/enterprise-local/codex-local.mjs docs/enterprise-local/artifacts/claude-windows-x64-inventory.json

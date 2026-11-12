@@ -1,8 +1,24 @@
 # Session prompts and bounded handoffs
 
-The [current handoff](NEXT-SESSION.md) is CLAUDE-WINDOWS-VERIFY. Start with
-the [recovery evidence](handoffs/RECOVERY-11-LOCAL.md) and the refreshed
-Claude inventory before running the authorized target fixture.
+**Current entry, 2026-11-12:** the owner transfers development to Claude Code
+through Bedrock on the other machine. Use the detailed
+[first-session prompt](CLAUDE-CODE-BOOTSTRAP.md), then the
+[current launcher](NEXT-SESSION.md). Start with AGENTS/README/newest active
+STATE/roadmap/TASKS, not the archive below. Bootstrap includes the file map,
+bounded critical review, actual target assertions and session-close/template
+protocol. Later sessions should receive the newly replaced NEXT-SESSION;
+do not reread this whole template archive.
+
+The next product outcome remains CLAUDE-WINDOWS-VERIFY. Target runtime/live
+model scope is distinct from the already working development chat's Bedrock
+route. No target/provider acceptance has passed from this documentation task.
+
+## Earlier summary and templates — historical context
+
+The text below retains earlier evidence/snapshots. Conflicting old restrictions,
+statuses/paths/SHAs and example launches are not active instructions. Resolve
+facts against current STATE/DECISIONS and actual Git; do not restart completed work.
+
 A27 permits required downloads and ordinary-user build/install/run.
 Claude Code/Bedrock/AWS SSO adapters are retained.
 Strong native OS sandbox and CI are deferred from phase-one prerequisites.

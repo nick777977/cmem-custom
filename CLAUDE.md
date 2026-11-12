@@ -1,37 +1,32 @@
-# Claude-Mem: AI Development Instructions
+# cmem-light: Claude Code entry point
 
-Claude-mem is a Claude Code plugin providing persistent memory across sessions. It captures tool usage, compresses observations using the Claude Agent SDK, and injects relevant context into future sessions.
+This is the private Windows local-first fork. Apply the working agreement:
 
-## Build
+@AGENTS.md
 
-```bash
-npm run build-and-sync        # Build, sync to marketplace, restart worker
-```
+If this Claude Code version does not expand that import, read `AGENTS.md`
+explicitly before acting. Then follow its entry order:
+`docs/enterprise-local/README.md` → newest active `memory/STATE.md` →
+`docs/roadmap.md` → newest `memory/TASKS.md` ownership section.
 
-## File Locations
+For the first session after moving development to another machine, read
+`docs/enterprise-local/CLAUDE-CODE-BOOTSTRAP.md`. For later sessions use the
+current `docs/enterprise-local/NEXT-SESSION.md`; do not replay bootstrap work.
+Tracked repository memory is the durable handoff. Auto memory and old chat
+summaries do not override current decisions or actual Git/source evidence.
 
-- **Source**: `<project-root>/src/`
-- **Built Plugin**: `<project-root>/plugin/`
-- **Installed Plugin**: `~/.claude/plugins/marketplaces/thedotmack/`
-- **Database**: `~/.claude-mem/claude-mem.db`
-- **Chroma**: `~/.claude-mem/chroma/`
+Do not use the old upstream `build-and-sync`/marketplace restart instructions
+as this fork's default. Inspect scripts first; `build:compile` is the separate
+compile lane. Use explicit task-owned host/data/runtime bindings for tests.
+No normal-memory inspection, registration, AWS inference test, publication,
+machine-level installation or permission bypass follows from opening the repo.
 
-## Requirements
+Claude Code already using Bedrock for this development conversation is
+separate from testing a child Claude host or configuring the memory worker's
+model/auth profile. Do not change the working development login or silently
+reuse it for a product inference test. Follow the current owner scope.
 
-- **Bun** (all platforms - auto-installed if missing)
-- **uv** (all platforms - auto-installed if missing, provides Python for Chroma)
-- Node.js
-
-## Documentation
-
-**Public Docs**: https://docs.claude-mem.ai (Mintlify)
-**Source**: `docs/public/` - MDX files, edit `docs.json` for navigation
-**Deploy**: Auto-deploys from GitHub on push to main
-
-## Important
-
-No need to edit the changelog ever, it's generated automatically.
-
-## Hosting
-
-No metered Cloudflare compute. New server-side work goes on Fly or Vercel. Cloudflare Workers, Durable Objects, Queues, Workflows, crons or Workers AI need an owner-approved cost comparison first. Free Cloudflare services (DNS, R2, Email Routing) are fine.
+Work serially on `feat/cmem-light-local`, preserve WIP, and close every session
+through STATE/TASKS/WORKLOG/DECISIONS and one concrete NEXT-SESSION prompt.
+Explain results and missing evidence in concise Russian. Full details and
+exceptions live in AGENTS and the current task contracts, not duplicated here.

@@ -1577,3 +1577,69 @@ temporary hook/signing overrides; that command did not execute. Follow-up
 inspection found no configured core.hooksPath/commit.gpgsign/gpg.format and
 no active non-sample files in `.git/hooks`. No Git security setting was
 changed. Use ordinary `git commit` without overrides for this preparation.
+
+## 2026-11-12 — CLAUDE-CODE-TRANSFER initial prompt and instruction alignment
+
+Owner requests a detailed initial prompt for continuing roadmap implementation
+and testing on the other machine with Claude Code through AWS Bedrock, including
+required file navigation, critical plan review, questions and durable session
+handoff/NEXT-SESSION generation. Entry branch `feat/cmem-light-local`, HEAD
+`afcf03689c0ab3749c5bdc8930e45fadf309223f`. Owner-untracked
+`cmem-light.code-workspace` preserved unread; no user WIP staged.
+
+Followed AGENTS entry order and newest active STATE/TASKS, mapped all 2,529
+tracked paths, then selectively inspected current contracts/instructions,
+package scripts, renderer/verifier, build/test entrypoints and source paths.
+This was not a full content audit. Requested optional target OS and future
+worker-route clarification; those remain target inputs, not invented defaults.
+
+Wrote CLAUDE-CODE-BOOTSTRAP.md as the reusable full first-session prompt:
+goal/invariants/progress, hierarchy/reading order, doc and source navigation,
+transfer/provenance caveats, development assistant vs tested host vs worker
+vs embeddings, fact-based critical review, existing step-11→12 route,
+minimal defect/affected-check process, decisions and complete session-close
+protocol plus filled-by-facts next-prompt template. Current development
+Bedrock chat does not imply child/worker live-test scope; no per-turn
+reapproval of that already working developer conversation is requested.
+
+At entry source SHA above, `package.json:51,53,56` confirms dev→build-and-sync,
+separate build:compile and sync/restart side effects. Old root CLAUDE.md still
+directed build-and-sync, automatic uv/Bun and normal memory paths. Replaced
+it with thin fork entry importing AGENTS (explicit read fallback) and current
+bootstrap/launcher pointers. `.claude/settings.json:5` denies lock/node_modules
+Read; prompt explicitly preserves permissions rather than bypassing them.
+Official Claude memory/import and Bedrock documentation consulted for mechanisms;
+no account/policy inspection, login or configuration mutation.
+
+Historical build `dff499e45c3116d8cb8936733d0edf8f220797a6` and renderer
+`a5c3c236423401affc62ef8ab8ee3e6485b28cf2` objects do not resolve here;
+cause unknown. Fresh read-only evidence: current and available build candidate
+`b5b988931312e2b45b7b7e311250b3d148d122bc` plugin trees both
+`96b9e22d975767da37850eb3e85ba85f05ef04c9`; available renderer candidate
+`d4e8259ae3d70f8f5bc4bc269ae6d2004051ce7f` and current script have SHA-256
+`028d361523cf0a9f604f180f2cdf4b3597e50880082ba56d4bacc0561b0de0c6`.
+All 76 receipt copied-source hashes match. These facts establish content,
+not identical historical commits or rerun acceptance. Preserved inventories/
+receipts unchanged. Target procedure/runbook now distinguish recorded IDs
+from available reviewed candidates; no blind commands against absent objects.
+Existing 811/813 raw-input result remains historical, not revalidated here.
+
+Updated current NEXT-SESSION/README/SESSION-PROMPTS, roadmap entry checkpoint
+(no dependency/route/outcome changes), STATE/TASKS/DECISIONS A39. Old conflicting
+TASKS host-binding context and session-template snapshots explicitly historical;
+no new parallel plan tree or repeated cleanup audit.
+
+Validation: 25 local links and AGENTS import target exist; 19 explicit source
+navigation paths exist; five PowerShell blocks parse without execution; Git
+whitespace checks pass. Reviewed actual diff and confirmed no src/scripts/
+plugin/package/inventory/receipt changes. No tests, compile, installs,
+application/Claude/worker/Chroma startup, model/auth/AWS probes or inference,
+real memories/settings, agents/branches/worktrees/merge/push. No active Git
+hooks/core.hooksPath/signing override configured at inspection; commit uses
+normal Git behavior without disabling controls.
+
+Reservations released. Next: use the bootstrap in the other machine's first
+Claude session, establish actual target inputs, perform bounded critical
+review and advance the first step-11 host assertion. Later sessions use
+newly replaced NEXT-SESSION. Actual target/runtime/live Bedrock outcomes
+and steps 11/12 remain open; no new merge is required for this documentation.

@@ -1,11 +1,34 @@
 # Shared execution board
 
-Updated: 2026-11-11. Single place for active ownership and file reservations.
+Updated: 2026-11-12. Single place for active ownership and file reservations.
 Dependencies/waves remain solely in [roadmap](../../roadmap.md); decisions in
 [DECISIONS](DECISIONS.md); current resumable handoff in [STATE](STATE.md).
 This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
+
+2026-11-12 **CLAUDE-CODE-TRANSFER**, done-bounded by one coordinator on
+`feat/cmem-light-local` at `afcf03689c0ab3749c5bdc8930e45fadf309223f`.
+Owner requests a detailed initial prompt for continuing roadmap implementation
+with Claude Code through Bedrock on the other machine, including critical
+plan review, file navigation and session-close/next-prompt protocol. Reserve
+root CLAUDE.md, new enterprise-local CLAUDE-CODE-BOOTSTRAP.md, active
+NEXT-SESSION/SESSION-PROMPTS/README/roadmap checkpoint, current target-procedure
+portability notes and memory STATE/TASKS/DECISIONS/WORKLOG. Documentation only;
+no application/generated/inventory changes, runtime, installs, AWS/model
+tests, branches/worktrees/agents/merge/push. Preserve owner-untracked
+`cmem-light.code-workspace` without reading/staging it. Verify relevant source
+paths and currently resolvable Git identities; historical missing objects are
+not assumed equivalent to current commits. Target OS/worker-profile answers
+pending; perform independent documentation preparation meanwhile.
+Completed: detailed initial prompt/file map/session-close and next-prompt
+template; root CLAUDE entry aligned with AGENTS; active navigation/launcher
+updated and conflicting old template/context marked historical. Missing old
+commit objects recorded separately from current verified tree/76 copied-source
+hashes; no receipt/inventory rewrite. Focused documentation/syntax/link checks
+only, no runtime/build/test replay. Reservations released. Next ready-unclaimed:
+Claude first target session using the bootstrap, then actual step-11 assertions.
+The claim text above records the original boundary, not continuing ownership.
 
 2026-11-11 **CLAUDE-WINDOWS-VERIFY preparation**, done-bounded by one coordinator
 on clean `feat/cmem-light-local` at
@@ -717,7 +740,12 @@ SESSION-PROMPTS.md, replacing its obsolete current CHROMA-07 launcher reference.
 6. Do not steal stale claims by time alone: check owner/Git, record cancellation/handoff
    before reassignment, explicitly release unused paths on blocked work.
 
-## Minimal context for proposed local host-binding source
+## Historical WINDOWS-09F context — superseded by later local stages
+
+This old context bundle is retained as audit history, including its then-current
+refusals. A27 and later local implementations supersede those active restrictions.
+Use current ownership/STATE/NEXT-SESSION and CLAUDE-CODE-BOOTSTRAP for entry;
+do not take the following old launch as the next task.
 
 - AGENTS -> README -> STATE -> roadmap step 9/graph/checkpoints -> TASKS.
 - DECISIONS A19/A20/A26 and preserved invariants; current environment; NEXT-SESSION.

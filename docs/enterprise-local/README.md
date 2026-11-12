@@ -1,5 +1,16 @@
 # Enterprise local fork: project memory
 
+**Claude Code transfer, 2026-11-12:** development continues with Claude Code
+through the owner's existing Bedrock route on the other machine. Use the
+[detailed initial prompt](CLAUDE-CODE-BOOTSTRAP.md), including file navigation,
+bounded critical review and session-close/NEXT-SESSION template. Root CLAUDE.md
+now loads the fork agreement rather than upstream sync/restart instructions.
+The first session establishes actual target inputs and continues step 11;
+no source/runtime/provider acceptance changed. Some recorded SHA objects are
+unavailable in this checkout; the prompt records available content-verified
+candidates without rewriting old evidence. Later sessions use current
+[NEXT-SESSION](NEXT-SESSION.md). Do not replay the bootstrap/cleanup each time.
+
 **CLAUDE-WINDOWS-VERIFY preparation, 2026-11-11.** Owner merge confirmed on
 `feat/cmem-light-local` at `68d08474f`. The owner selects another Windows host.
 Current Claude inventory reviewed; all 80 staged files pass normal verification.

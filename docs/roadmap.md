@@ -1,6 +1,6 @@
 ---
 status: living
-updated_at: 2026-11-11
+updated_at: 2026-11-12
 ---
 
 # Enterprise local memory roadmap
@@ -8,6 +8,14 @@ updated_at: 2026-11-11
 This decomposition does not authorize execution. Current handoff: [STATE](enterprise-local/memory/STATE.md).
 A19/A20 supersede the former Bedrock-only target; original supplied requirements and
 source-pinned historical reports remain audit evidence, not current instructions.
+
+**Claude Code entry, 2026-11-12:** owner transfers development to the other
+machine's working Claude Code/Bedrock session. First use the
+[bootstrap prompt](enterprise-local/CLAUDE-CODE-BOOTSTRAP.md) for current facts,
+file map, a bounded critical review and the session handoff protocol, then
+continue the actual step-11 target check. This changes the assistant/entry
+procedure, not step dependencies or runtime acceptance. No additional cleanup,
+new architecture pipeline or live worker profile is implied.
 
 **Post-cleanup resumption, 2026-11-11:** the owner integrated cleanup into
 `feat/cmem-light-local` at `68d08474f`; ancestry verified. Cleanup/gate are

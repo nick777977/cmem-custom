@@ -235,13 +235,22 @@ $boundClaudePluginDirectory = & $node scripts/enterprise-local/codex-local.mjs s
 if ($LASTEXITCODE -ne 0) { throw 'Claude stage failed' }
 ```
 
+Before using recorded Git SHAs on another checkout, resolve the objects and
+compare content. The [2026-11-12 transfer note](handoffs/CLAUDE-WINDOWS-VERIFY.md)
+records available build/renderer candidates where older metadata objects are
+absent. Preserve historical IDs; record actual target IDs separately.
+
 For a changed build/renderer/runtime, first record a proposed inventory outside
 the stage, supplying full Git SHAs for the compiled build and renderer. With
 the current reviewed bytes and matching runtime hashes, use normal verification
-below; a new root/port alone does not require replacing the inventory. The paired
-build is `dff499e45c3116d8cb8936733d0edf8f220797a6`; the last renderer change is
-`a5c3c236423401affc62ef8ab8ee3e6485b28cf2`. Recheck these inputs if the target
-task changes source or rebuilds. Merely changing the branch name in a
+below; a new root/port alone does not require replacing the inventory. The
+inventory's historical build/renderer metadata are
+`dff499e45c3116d8cb8936733d0edf8f220797a6` and
+`a5c3c236423401affc62ef8ab8ee3e6485b28cf2`; these objects may be absent here.
+The transfer note records available content-checked candidates. Before a new
+`--record`, select actually resolved/reviewed build and renderer SHAs; do not
+reuse a syntactically valid metadata string as proof of provenance. Recheck
+inputs if source changes or the target rebuilds. Merely changing the branch name in a
 fast-forward does not require another compile.
 
 ```powershell

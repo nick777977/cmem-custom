@@ -1,5 +1,43 @@
 # Current handoff
 
+2026-11-12 **CLAUDE-CODE-TRANSFER complete: use the initial prompt on the target.**
+Owner requests continuing implementation/testing with Claude Code through
+Bedrock on the other machine, including critical plan review and durable
+handoffs. Entry `feat/cmem-light-local` HEAD
+`afcf03689c0ab3749c5bdc8930e45fadf309223f`; owner-untracked
+`cmem-light.code-workspace` preserved unread/unmodified. No product/runtime work.
+
+[Full initial prompt](../CLAUDE-CODE-BOOTSTRAP.md) provides mandatory reading,
+source/doc navigation, scope/progress, bounded fact-based plan critique,
+step-11→12 execution and a concrete session-close/NEXT-SESSION template.
+Root CLAUDE.md now imports AGENTS and points to this first-session entry;
+upstream build-and-sync/default real-state paths are no longer its guidance.
+SESSION-PROMPTS/old TASKS context marked historical; active launcher refreshed.
+
+Fresh read-only content checks: all 76 copied-source receipt entries match;
+plugin tree is `96b9e22d975767da37850eb3e85ba85f05ef04c9` in entry HEAD and
+available build candidate `b5b988931312e2b45b7b7e311250b3d148d122bc`;
+renderer candidate `d4e8259ae3d70f8f5bc4bc269ae6d2004051ce7f` has recorded
+SHA-256 `028d361523cf0a9f604f180f2cdf4b3597e50880082ba56d4bacc0561b0de0c6`.
+Historical dff499e45/a5c3c2364 commit objects are unavailable here; cause unknown.
+Do not equate commits or rewrite old receipts. Target commands now require
+actual resolvable candidates/content review. Full raw-source/runtime gates
+were not replayed; old 811/813 result remains historical with its limits.
+
+Target native Windows vs WSL and future live worker selection remain inputs
+to establish on the other machine. Working developer-chat Bedrock does not
+authorize child-host/worker inference tests. Continue with synthetic local
+generation first; exact live-test model/auth/destination/payload/budget remains
+separate. Actual Claude/policy/events/MCP/two-project/worktree acceptance and
+both Bedrock surfaces remain NOT RUN. Steps 11/12 stay open.
+
+Documentation/link/syntax/provenance consistency checks only; no application,
+generated/inventory changes, tests/build/install/runtime/AWS/model calls,
+agents/branches/worktrees/merge/push. Reservations released. Next: launch
+Claude with the bootstrap, perform its bounded critical review, resolve target
+inputs and advance the first actual host assertion. Later sessions get the
+newly replaced NEXT-SESSION. Earlier active sections below are historical.
+
 2026-11-11 **CLAUDE-WINDOWS-VERIFY: files-only preparation complete; target pending.**
 Entry clean `feat/cmem-light-local` HEAD
 `68d08474ffa0936779086a648bb54ef9bd940b9b` is the owner's regular merge;

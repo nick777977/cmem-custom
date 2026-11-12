@@ -1,18 +1,32 @@
-# Claude target on another Windows host — CLAUDE-WINDOWS-VERIFY
+# Continue in Claude Code — target entry, then CLAUDE-WINDOWS-VERIFY
 
-The owner merged cleanup into `feat/cmem-light-local` at
-`68d08474ffa0936779086a648bb54ef9bd940b9b`; branch, clean entry and cleanup
-ancestry (exit 0) were verified. No agent merge/switch/push. Cleanup and its
-retained Windows gate are complete; no additional cleanup review is required.
+**Owner launch, 2026-11-12:** continue development/implementation/testing in
+Claude Code, already using Bedrock on the other machine. First read the full
+[bootstrap prompt](CLAUDE-CODE-BOOTSTRAP.md) after the AGENTS entry order.
+It supplies the repository map, factual critical-review method and per-session
+handoff/next-prompt protocol. This is not a restart of the roadmap. Make one
+bounded review of current plan/code/environment, fix necessary active doc or
+command contradictions, then proceed to the next actual target assertion.
 
-**Latest owner input: another Windows host; prepare its procedure.** Files-only
+At transfer entry: `feat/cmem-light-local`, HEAD
+`afcf03689c0ab3749c5bdc8930e45fadf309223f`; owner-untracked
+`cmem-light.code-workspace` preserved unread. Recheck actual HEAD/status.
+Some historical IDs below are absent here; bootstrap §5 and target transfer
+note give observed content checks and actual available candidates. Do not
+rewrite old receipts or equate commits from matching content. Cleanup is
+integrated; no extra cleanup review, agent merge/switch/push is requested.
+
+**Completed preparation on the previous machine:** files-only
 preparation is complete: current 80-file Claude inventory reviewed and normal
 verification PASS. [Target procedure and actual results](handoffs/CLAUDE-WINDOWS-VERIFY.md)
 · [review/delta/limitations](artifacts/claude-windows-verify-preparation.json).
 No Claude/worker/Chroma process or inference ran. The two historical raw-source
 receipt mismatches are recorded there; do not reopen cleanup or chase old hashes.
-The next observable task is to run this procedure on the authorized target,
-after its executable/version/policy/runtime inputs and host model scope exist.
+The next observable product task is actual target verification after confirming
+environment/executable/version/policy/runtime and host test model scope. The
+working development chat's Bedrock route does not authorize new child/worker
+inference tests. OS/worker live-profile intent must be established on target;
+do independent preparation while missing inputs are resolved.
 
 This restores the next task from pre-cleanup commit
 `a9364604d026d79be8ab771ecb861688972d169c`: **step 11, actual Claude Code CLI
@@ -34,14 +48,17 @@ git status --short
 git merge-base --is-ancestor codex/repository-cleanup-plan HEAD
 ```
 
-The branch must be `feat/cmem-light-local`; ancestry must return exit 0. Preserve
-WIP. If integration is absent, report it and hand the manual commands to the
-owner; do not merge/switch branches automatically or restart cleanup. A regular
-merge commit also satisfies this check; fast-forward is currently available.
+The branch must be `feat/cmem-light-local`. Preserve WIP. If the cleanup ref is
+present, ancestry must return exit 0. A missing ref on a transferred checkout
+requires checking available merge/history/content evidence, not assuming a
+missing integration or creating a fake ref. If integration is actually absent,
+report it; do not merge/switch/restart cleanup. A regular owner merge counts.
 
 Read only the task-relevant bundle after the entry files:
 
 - [Step 11 remaining outcomes](../roadmap.md#what-remains-in-step-11).
+- [Bootstrap](CLAUDE-CODE-BOOTSTRAP.md), only for this first cross-tool session;
+  replace this launcher with one concrete next task at session close.
 - [Current target procedure](handoffs/CLAUDE-WINDOWS-VERIFY.md): fresh destination
   receipt, host isolation/fake worker recipe, assertion matrix and missing inputs.
 - [Target runbook](WINDOWS-LOCAL-SETUP.md#claude-code-and-bedrock-preparation),
