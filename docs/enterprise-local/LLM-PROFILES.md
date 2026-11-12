@@ -69,6 +69,16 @@ and summary generation requires a compatible generative worker profile chosen
 by the owner. The staged artifact check did not choose that profile.
 [Exact-artifact evidence](handoffs/VERIFY-11-LOCAL.md).
 
+Owner clarification, 2026-11-12: the development Claude Code is globally
+npm-installed and launched as `claude` from Windows PowerShell with Bedrock/
+AWS SSO. This does not select the memory worker's generation route. Explain
+that the worker is the local background application process; a generative
+profile writes observations/summaries, while MiniLM embeds text for search.
+The owner requests that explanation before choosing. No live worker model,
+provider or budget was selected by this clarification. Local embedding asset
+preparation is a separate setup step; npm dependency installation alone does
+not certify that those runtime/model assets are prepared on the target.
+
 ## Profile contract
 
 The table defines the contract for all retained model jobs. The worker and its

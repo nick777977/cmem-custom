@@ -1643,3 +1643,31 @@ Claude session, establish actual target inputs, perform bounded critical
 review and advance the first step-11 host assertion. Later sessions use
 newly replaced NEXT-SESSION. Actual target/runtime/live Bedrock outcomes
 and steps 11/12 remain open; no new merge is required for this documentation.
+
+## 2026-11-12 — Clarify PowerShell/npm target and memory-worker model roles
+
+Entry `747c43026957bd902c72aa3ae8a3b187727d28a1` on
+`feat/cmem-light-local`; owner-untracked code-workspace preserved unread.
+Owner answers: runs `claude` directly from Windows PowerShell, globally
+npm-installed Anthropic Claude Code, Bedrock/AWS SSO. Owner does not know
+the underlying shell/runtime and requests a plain explanation of memory
+worker generation versus the known local model before choosing its route.
+
+Re-read active context and current LLM-PROFILES layer responsibilities plus
+WINDOWS-LOCAL-SETUP Chroma preparation. Explained local background worker,
+generative observation/summary writing and MiniLM local search embeddings
+as distinct operations. Separate local Chroma asset preparation is not
+certified by npm dependency installation alone. No worker provider/model/
+budget was chosen. Working developer Bedrock login is not test authorization.
+
+Updated bootstrap/NEXT-SESSION/target handoff/profile contract and STATE/A39
+follow-up: target assistant resolves actual approved npm shim/entrypoint/
+platform/version, without asking the owner to understand internals or
+reinstalling to force a presumed native executable. This is reported launch
+evidence, not measured process/platform or actual CLI acceptance.
+
+Whitespace/documentation preservation checks PASS; no app/source/generated/
+inventory changes, runtime/version/auth/model probes, build/tests/install/
+AWS calls or merge/push. Reservations released. Next: owner decides future
+worker generation route after understanding its purpose; target acceptance
+still follows the prepared prompt with separate model/auth/payload/budget.

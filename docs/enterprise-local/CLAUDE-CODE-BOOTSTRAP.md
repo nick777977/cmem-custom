@@ -35,6 +35,17 @@ Static source references при подготовке, inspected SHA
 машиной: выясни, где реально запущен процесс и находятся проекты. Bedrock —
 путь модели, а не местоположение локального memory worker.
 
+**Уточнение владельца 2026-11-12:** он запускает `claude` непосредственно из
+Windows PowerShell; Anthropic Claude Code установлен глобально через npm,
+вход — AWS Bedrock/AWS Single Sign-On. Этой информации достаточно для выбора
+Windows target route. Не проси владельца угадывать внутренний shell/Node/WSL:
+на самой машине read-only проверь разрешённый command path, shim/реальный
+entrypoint, process platform и version. Пока они фактически не проверены.
+Не предполагай отдельную native `.exe` установку и не переустанавливай CLI.
+Если `claude` разрешается в npm `.cmd`/`.ps1` shim, установи underlying
+approved executable/script/argv до использования exec-form bindings; случай
+несовместимости воспроизведи, не обходи verifier и не объявляй gate PASS.
+
 Объясняй по-русски, кратко и предметно. Существующие технические документы
 преимущественно английские: продолжай их язык, если владелец не попросит иначе.
 Не поддакивай и не придумывай улучшения ради видимости работы. Если фактов
@@ -276,6 +287,15 @@ data действия — review entrypoints до запуска. `dist/`, `.scr
    Claude login или generative Bedrock model. Для full local acceptance нужен
    real local index; fake embeddings его не заменяют.
 
+Объясняй термин владельцу: **memory worker — локальный фоновый процесс нашей
+программы**, обслуживающий сохранение/поиск/viewer и обработку событий. Для
+автоматического написания кратких наблюдений и итогов он обращается к выбранной
+генеративной модели. MiniLM переводит уже имеющийся текст/запрос в vectors для
+поиска; его назначение другое. Владелец помнит локальную модель и ещё не выбрал
+worker generation route: сначала объясни эти две операции на примере.
+Working Claude Code Bedrock/SSO не является согласием включить background paid
+generation. Не выбирай profile/model/budget от его имени.
+
 До первого нового live **test** вызова согласуй точные model ID/inference
 profile, auth route, AWS profile/region/destination, synthetic payload и малый
 бюджет: calls/turns/time + применимый cost cap. Не подставляй historical Luna/
@@ -325,11 +345,12 @@ audit не заменяет actual host acceptance.
 
 ### A. Установить target и подготовить точные bytes
 
-Подтверди native Windows x64/PowerShell/ordinary token. Если WSL/Linux,
+Проверь actual Windows x64/ordinary token и npm-installed CLI entrypoint,
+учитывая сообщённый PowerShell launch. Если фактически WSL/Linux,
 не запускай Windows-only stage как совпадающую среду: объясни разницу,
 определи Windows process/file location, продолжай independent source/docs
-работу; Linux run не Windows gate. OS на target в момент подготовки prompt
-ещё уточнялся; не выдумывай ответ владельца.
+работу; Linux run не Windows gate. Владелец сообщил способ запуска, а не
+измеренную process platform; проверь её на target без нового опроса об internals.
 
 Проверь approved paths/versions и managed plugin/hook/MCP policy без credential/
 settings corpus inspection. Tested baseline: Node **22.23.4**, npm **10.9.9**,
@@ -520,8 +541,10 @@ Accepted decisions: <ID/scope>. Missing inputs: <что/кто/как получ
 что доказано, ближайший user-visible outcome, observed conflicts/unknowns и
 порядок действий. Не возвращай владельцу весь bootstrap как пересказ.
 
-Спроси лишь ещё неизвестное: native Windows или WSL; approved CLI/policy;
-actual checkout/prepared Chroma location; отдельный host-test model/auth/
+Уже известно: Windows PowerShell `claude`, глобальная npm-установка Anthropic
+Claude Code, Bedrock/SSO. Read-only установи actual CLI path/platform/version.
+Спроси лишь ещё неизвестное: managed policy, actual checkout/prepared Chroma
+location; отдельный host-test model/auth/
 destination/budget; нужен ли live worker Bedrock вообще. Не переспрашивай
 рабочий Bedrock login текущего developer chat и не проси secrets.
 

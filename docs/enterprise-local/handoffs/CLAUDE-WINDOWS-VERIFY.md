@@ -5,6 +5,15 @@ will run on another Windows host and requests preparation here. Its approved
 CLI path/version, managed policy, runtime paths and live host scope are not yet
 available. Do not replace this check with direct hook fixtures.
 
+**Owner target clarification, 2026-11-12:** launch is `claude` in Windows
+PowerShell, Anthropic Claude Code installed globally through npm, auth through
+Bedrock/AWS SSO. Actual CLI command resolution/version/platform is unobserved.
+Resolve the approved npm shim and underlying executable/script on target before
+using direct exec-form assumptions below. Do not reinstall merely to obtain
+an assumed `.exe`, weaken binding checks or ask the owner to guess internals.
+Worker generation provider/model/budget remains undecided; explain its purpose
+versus local MiniLM embeddings before requesting that selection.
+
 **Transfer note, 2026-11-12:** development is continuing in Claude Code on the
 other machine. First use [the bootstrap prompt](../CLAUDE-CODE-BOOTSTRAP.md).
 Some historical commit IDs below are absent from the current Git object store;

@@ -24,8 +24,12 @@ Do not equate commits or rewrite old receipts. Target commands now require
 actual resolvable candidates/content review. Full raw-source/runtime gates
 were not replayed; old 811/813 result remains historical with its limits.
 
-Target native Windows vs WSL and future live worker selection remain inputs
-to establish on the other machine. Working developer-chat Bedrock does not
+Owner clarification: Windows PowerShell `claude`, globally npm-installed
+Anthropic Claude Code, Bedrock/AWS SSO. Actual command/shim/executable,
+version/platform and policy need target observation; do not ask the owner to
+guess internals or automatically reinstall for a native `.exe`. Future live
+worker selection remains undecided: explain observation/summary generation
+versus local MiniLM search before asking. Working developer-chat Bedrock does not
 authorize child-host/worker inference tests. Continue with synthetic local
 generation first; exact live-test model/auth/destination/payload/budget remains
 separate. Actual Claude/policy/events/MCP/two-project/worktree acceptance and

@@ -7,6 +7,22 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-12 **CLAUDE-CODE-TRANSFER clarification**, done by one coordinator
+at `747c43026957bd902c72aa3ae8a3b187727d28a1`, `feat/cmem-light-local`.
+Owner reports PowerShell `claude`, globally npm-installed Anthropic Claude
+Code, Bedrock/AWS SSO; asks to explain memory-worker generation versus local
+model before choosing its profile. Reserve bootstrap/NEXT-SESSION, target
+handoff, LLM-PROFILES and memory STATE/TASKS/DECISIONS/WORKLOG. Docs/explanation
+only; no runtime/probes/install/model selection or inference. Preserve
+owner-untracked code-workspace unread. Actual executable/version/platform
+implementation remains a target observation, not a question the owner must
+answer from internals knowledge.
+Recorded owner launch/auth facts and npm shim/entrypoint caveat in the prompt,
+active launcher, target handoff and profile contract; current STATE/A39 scope
+clarified. Worker route deliberately remains unselected pending explanation.
+Documentation consistency/whitespace checks only; no runtime/source/artifact
+changes or tests. Reservations released; next target task unchanged.
+
 2026-11-12 **CLAUDE-CODE-TRANSFER**, done-bounded by one coordinator on
 `feat/cmem-light-local` at `afcf03689c0ab3749c5bdc8930e45fadf309223f`.
 Owner requests a detailed initial prompt for continuing roadmap implementation

@@ -23,6 +23,13 @@ honestly, without inventing history rewrites or changing historical receipts.
 The new entry corrects context/procedure, not application acceptance or
 dependency edges. [Initial prompt](../CLAUDE-CODE-BOOTSTRAP.md).
 
+Owner follow-up: target entry is Windows PowerShell `claude`, globally
+npm-installed Anthropic Claude Code, Bedrock/AWS SSO. The assistant on target
+should resolve the actual command/platform without requiring the owner to
+understand CLI internals. The owner asks what memory-worker generation means
+versus the existing local model before selecting that route. No worker
+provider/model/budget or additional AWS execution is accepted by this answer.
+
 ### A38 — Prepare here; actual Claude acceptance on another Windows host (2026-11-11)
 
 The owner confirms the intended target is another Windows host and requests

@@ -25,8 +25,12 @@ receipt mismatches are recorded there; do not reopen cleanup or chase old hashes
 The next observable product task is actual target verification after confirming
 environment/executable/version/policy/runtime and host test model scope. The
 working development chat's Bedrock route does not authorize new child/worker
-inference tests. OS/worker live-profile intent must be established on target;
-do independent preparation while missing inputs are resolved.
+inference tests. Owner reports Windows PowerShell `claude`, globally npm-installed
+Anthropic Claude Code, Bedrock/AWS SSO. Resolve its actual approved shim/entrypoint/
+platform/version on target rather than asking the owner about implementation
+internals or assuming a native `.exe` installation. Worker live-profile intent
+is still undecided: explain generation versus local MiniLM search before asking
+for that choice. Do independent preparation while missing inputs are resolved.
 
 This restores the next task from pre-cleanup commit
 `a9364604d026d79be8ab771ecb861688972d169c`: **step 11, actual Claude Code CLI
