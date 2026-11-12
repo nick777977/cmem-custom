@@ -1,5 +1,33 @@
 # Current handoff
 
+2026-11-12 **A40: mandatory memory generation selected; target acceptance pending.**
+Owner confirms automatic observations/summaries are required original
+functionality. Choose Haiku through the target's existing npm-installed Claude
+Code and the same approved AWS Bedrock/AWS SSO account/access. Do not ask that
+provider/family/purpose choice again. Preserve Codex/ChatGPT, ordinary Claude
+subscription/login and retained explicit provider setups/default-role behavior.
+One explicit default covers normal observer/summary/compression; no hidden
+fallback or automatic switch to another account/model. Local MiniLM/Chroma stay.
+
+This session entry: clean `feat/cmem-light-local` at
+`723a3e51cf11bdc0078fe1b5a87fbd34d722c234`. Decision/active docs only; no
+source/generated/inventory change, setup/runtime/AWS/model call or acceptance.
+The family/route is selected; exact approved Haiku Bedrock ID/inference profile,
+AWS region/profile, npm CLI compatibility and small live-test payload/budget
+must be resolved on target. Reuse installation/access, not necessarily the
+interactive process/PID. Model/auth support is still NOT RUN on target.
+
+Existing route: first actual Claude host/local workflow with fake worker
+generation, then separately scoped selected Haiku/Bedrock worker acceptance,
+remaining step-11 cases and daily-use step 12. Implement a source fix only
+for a demonstrated target defect. Retain all original required memory behavior
+within the accepted local-first/no-CMEM/no-telemetry/no-cloud-sync scope.
+[A40](DECISIONS.md) · [Initial prompt](../CLAUDE-CODE-BOOTSTRAP.md) ·
+[Next session](../NEXT-SESSION.md). Reservations released; next task remains
+the target session, now with provider/family choice already answered.
+
+## Earlier handoff history — superseded where the worker choice was undecided
+
 2026-11-12 **CLAUDE-CODE-TRANSFER complete: use the initial prompt on the target.**
 Owner requests continuing implementation/testing with Claude Code through
 Bedrock on the other machine, including critical plan review and durable

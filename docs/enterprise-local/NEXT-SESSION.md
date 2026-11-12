@@ -1,5 +1,14 @@
 # Continue in Claude Code — target entry, then CLAUDE-WINDOWS-VERIFY
 
+**Accepted A40, 2026-11-12:** automatic observations/summaries are mandatory.
+Use Haiku through the existing target Claude Code installation and the same
+approved Bedrock/AWS SSO access for memory generation. Keep Codex/ChatGPT,
+ordinary Claude subscription/login and retained explicit adapters/settings.
+Do not ask whether generation/Bedrock/Haiku is wanted again. Resolve actual
+approved Haiku model ID/inference profile, region/profile/CLI compatibility
+and a small live-test payload/budget on target; these are not supplied here.
+This selects intent, not a passed live test or permission to call AWS here.
+
 **Owner launch, 2026-11-12:** continue development/implementation/testing in
 Claude Code, already using Bedrock on the other machine. First read the full
 [bootstrap prompt](CLAUDE-CODE-BOOTSTRAP.md) after the AGENTS entry order.
@@ -29,8 +38,9 @@ inference tests. Owner reports Windows PowerShell `claude`, globally npm-install
 Anthropic Claude Code, Bedrock/AWS SSO. Resolve its actual approved shim/entrypoint/
 platform/version on target rather than asking the owner about implementation
 internals or assuming a native `.exe` installation. Worker live-profile intent
-is still undecided: explain generation versus local MiniLM search before asking
-for that choice. Do independent preparation while missing inputs are resolved.
+is selected by A40 above. Do independent preparation while the concrete target
+inputs are resolved; retain fake generation for the first local host check,
+then test the selected Haiku/Bedrock worker route under its exact live scope.
 
 This restores the next task from pre-cleanup commit
 `a9364604d026d79be8ab771ecb861688972d169c`: **step 11, actual Claude Code CLI

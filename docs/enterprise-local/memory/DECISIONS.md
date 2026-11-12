@@ -1,5 +1,39 @@
 # Decision log
 
+### A40 — Mandatory memory generation: Haiku through existing Bedrock/SSO (2026-11-12)
+
+Owner confirms automatic observations and summaries are required original
+Claude-Mem functionality, not an optional feature to reconsider. For daily
+use on the intended Windows machine, select the Haiku family through the
+existing globally npm-installed Claude Code and the same approved AWS Bedrock/
+SSO account/access. Reuse the installation/auth route; the observer may run
+its own internal session/process rather than sharing the interactive process.
+No additional subscription, separate account or locally downloaded generative
+model is required by this decision. Local MiniLM/Chroma retrieval remains.
+
+Keep Codex with ChatGPT login, ordinary Claude subscription/login and the
+other already retained explicitly selected adapters. Preserve their supported
+provider setups/default-role behavior; do not hardwire the product to Bedrock,
+prune those routes, silently change their models or restore implicit fallback.
+One explicit default covers normal observer/summary/compression tasks; optional
+supported role overrides remain. After setup, ordinary memory creation is
+automatic under the persistent profile, not a per-note confirmation loop.
+
+Haiku/provider/auth intent is accepted: do not ask that choice again. Resolve
+the exact approved Bedrock Haiku model ID or inference-profile ARN, AWS profile/
+region, npm CLI entrypoint compatibility and minimal live-test payload/budget
+on target before inference. Do not silently choose a dated legacy Haiku ID,
+another model/account or the main coding model. Actual target live acceptance
+is still NOT RUN; existing fake-worker/local host verification route remains,
+followed by separately scoped Haiku/Bedrock worker acceptance and step 12.
+The current machine's task is to persist this selection, not execute AWS here.
+
+This supersedes the earlier undecided-worker wording in A39 follow-ups and
+active handoffs. Original evidence/previous lack of selection remain history.
+Existing generation/profile implementation is retained; source fixes only for
+demonstrated target defects, with paired outputs/affected checks. No source
+change or readiness claim follows just from recording this decision.
+
 ### A39 — Continue development in Claude Code with a durable bootstrap (2026-11-12)
 
 Owner requests a detailed initial prompt for the other machine's already

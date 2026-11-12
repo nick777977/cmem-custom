@@ -340,8 +340,11 @@ organization. IAM Identity Center and Bedrock can use different regions.
 Keep authentication in the host's normal approved flow.
 [Claude Code on Amazon Bedrock](https://code.claude.com/docs/en/amazon-bedrock).
 
-If the memory worker should generate observations and summaries through
-Bedrock as well, its separate profile has this shape. Replace each placeholder
+The owner selected required observation/summary generation through Haiku on
+the same approved Bedrock/AWS SSO access (A40, 2026-11-12). Preserve the other
+supported explicit provider choices. The worker profile has this shape; the
+model placeholder must be an approved Bedrock Haiku ID/inference profile,
+not a silently reused coding model or dated legacy default. Replace each placeholder
 with a confirmed input before enabling it. Keep credentials out of the file.
 
 ```json

@@ -1,5 +1,12 @@
 # Enterprise local fork: project memory
 
+**A40 selected, 2026-11-12:** automatic observations/summaries are mandatory.
+Target generation uses Haiku through the existing Claude Code/Bedrock/AWS SSO
+access. Keep Codex/ChatGPT and ordinary Claude subscription/login options.
+Provider/family intent is decided; exact approved Bedrock model binding and
+bounded live acceptance remain target work, not passed evidence.
+[Current handoff](memory/STATE.md) · [Initial prompt](CLAUDE-CODE-BOOTSTRAP.md).
+
 **Claude Code transfer, 2026-11-12:** development continues with Claude Code
 through the owner's existing Bedrock route on the other machine. Use the
 [detailed initial prompt](CLAUDE-CODE-BOOTSTRAP.md), including file navigation,

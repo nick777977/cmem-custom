@@ -9,6 +9,14 @@ This decomposition does not authorize execution. Current handoff: [STATE](enterp
 A19/A20 supersede the former Bedrock-only target; original supplied requirements and
 source-pinned historical reports remain audit evidence, not current instructions.
 
+**A40 selection, 2026-11-12:** automatic observation/summary generation is
+mandatory. The owner chooses Haiku through existing target Claude Code and
+approved Bedrock/AWS SSO access. Retain Codex/ChatGPT, ordinary Claude
+subscription/login and existing explicit adapters/settings; no Bedrock-only
+pruning or implicit fallback. Provider/family choice is closed; exact approved
+Haiku model binding and bounded live test remain step-11 target work. No
+dependency change, new feature or runtime acceptance follows from this record.
+
 **Claude Code entry, 2026-11-12:** owner transfers development to the other
 machine's working Claude Code/Bedrock session. First use the
 [bootstrap prompt](enterprise-local/CLAUDE-CODE-BOOTSTRAP.md) for current facts,
@@ -119,7 +127,7 @@ reports missing Chroma assets and preserves SQLite data.
 | Private worker auth endpoint | **Separate defect.** The retained local endpoint returned HTTP 500 when it loaded Better Auth from the checkout. Hook capture, MCP, local search and viewer worked independently. Resolve the route before relying on it. |
 | Codex CLI host | **Accepted.** Reuse the private CLI install, hook discovery, MCP and removal evidence. The staged Codex hook and MCP paths passed again after the recovery build. Codex Desktop is outside the current scope. |
 | Claude Code CLI on Windows | **Pending on another Windows host (owner confirmed).** Current 80-file inventory and files-only preparation verify. Run the [target procedure](enterprise-local/handoffs/CLAUDE-WINDOWS-VERIFY.md) with its own receipt, approved CLI/policy/runtime and separately agreed host model scope. Actual loading/eight events/MCP/two projects/subdirectory/worktree/cleanup are NOT RUN. |
-| Bedrock in the corporate environment | **Separate checks.** Confirm Claude Code's interactive Bedrock route and test the worker's explicit Bedrock profile if that profile is selected. Record model, AWS profile/region, SSO behavior and approved scope for each. Keep embeddings and storage on the Windows instance. |
+| Bedrock in the corporate environment | **Separate checks; worker route selected by A40.** Confirm Claude Code's interactive Bedrock route and test the required worker Haiku profile through the same approved Bedrock/AWS SSO access. Bind exact model ID/inference profile, AWS profile/region, SSO behavior and bounded live scope for each. Preserve other explicit adapters. Keep embeddings/storage local. |
 
 The local synthetic workflow is called V4 in the validation contract. Its full
 matrix also includes worktree sharing, more provider failure modes and index
@@ -179,7 +187,7 @@ required; this is separate from the selected summary LLM.
 | D1 | A27 permits required dependency/tool/model downloads; choose compatible versions and official or enterprise-approved sources, document lifecycle. CI runner policy remains D12 | agent; user supplies enterprise restrictions if applicable | concrete dependency setup, 7/10/12 |
 | D2 | Allowed stored/LLM payloads per enabled profile and role? | human | real data/live tests, 8/11 |
 | D5 | A28/A31 cover the Codex CLI target. Confirm private Claude Code CLI loading, managed policy and coexistence on the intended Windows instance. | agent; user-level target scope | Claude Code host acceptance, 9/11/12 |
-| D7 | Choose a generative worker profile and approved auth/destination if a live test is requested. The local embedding model is already selected. | human | only the applicable live provider rows, 11 |
+| D7 | A40 selects Haiku through existing Bedrock/AWS SSO for required memory generation. Bind the exact approved model ID/inference profile, AWS profile/region and small live-test payload/budget on target; do not ask provider/family choice again. Keep other supported explicit adapters. | agent resolves target inputs; owner confirms missing exact live scope | applicable live provider rows, 11 |
 | D8 | Approved local data location, retention/backup rules? | human | deployment, 8/12 |
 | D9 | Resolved for the tested Windows x64 Chroma/MiniLM stack. Versions, sources, hashes, licenses and APIs are in [CHROMA-07-LOCAL](enterprise-local/handoffs/CHROMA-07-LOCAL.md). | agent | exact release closure and transfer, 10/12 |
 | D10 | Complete remaining dynamic clients/entrypoints/connectors and retained-provider closure? | agent | 1/10 |

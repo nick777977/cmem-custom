@@ -98,7 +98,7 @@ git merge-base --is-ancestor codex/repository-cleanup-plan HEAD
 **A27** разрешает необходимый ordinary-user setup/downloads/build/lifecycle:
 старые абсолютные no-runtime/no-download и native-sandbox prerequisites не должны
 снова блокировать phase one. **A19/A20** сохраняют явно выбранные совместимые
-adapters, а не Bedrock-only продукт. Учитывай **A29–A31, A36–A39** и новые решения.
+adapters, а не Bedrock-only продукт. Учитывай **A29–A31, A36–A40** и новые решения.
 Читай нужные секции DECISIONS. Твоя гипотеза не становится Accepted от записи.
 
 ## 3. Продукт и неизменяемые свойства
@@ -291,24 +291,39 @@ data действия — review entrypoints до запуска. `dist/`, `.scr
 программы**, обслуживающий сохранение/поиск/viewer и обработку событий. Для
 автоматического написания кратких наблюдений и итогов он обращается к выбранной
 генеративной модели. MiniLM переводит уже имеющийся текст/запрос в vectors для
-поиска; его назначение другое. Владелец помнит локальную модель и ещё не выбрал
-worker generation route: сначала объясни эти две операции на примере.
-Working Claude Code Bedrock/SSO не является согласием включить background paid
-generation. Не выбирай profile/model/budget от его имени.
+поиска; его назначение другое.
+
+**Владелец уже выбрал маршрут (A40, 2026-11-12):** автоматические наблюдения и
+сводки обязательны; для них использовать **Haiku через существующую установку
+Claude Code и тот же approved AWS Bedrock/AWS SSO доступ** на целевой машине.
+Не переспрашивай необходимость этой функции, выбор Bedrock или семейства Haiku.
+Подтверди на target exact approved Haiku model ID/inference-profile ARN, AWS
+profile/region и минимальный live-test budget/payload. Владелец не задавал
+конкретную версию Haiku и не разрешал произвольные расходы/запросы на этой
+машине подготовки. Наблюдатель может запускать внутренний отдельный процесс/
+сессию через ту же установку; не требуй тот же interactive PID.
+
+Codex/ChatGPT login, обычный Claude subscription/login и остальные retained
+explicit adapters сохранить с их поддерживаемыми настройками/default-role
+поведением. Выбранный Bedrock маршрут не превращает продукт в Bedrock-only,
+не меняет чужие models и не возвращает hidden fallback. После однократной
+настройки обычная генерация памяти работает автоматически; подтверждение
+пользователя перед каждой записью не нужно.
 
 Генеративный observer уже был в оригинальном Claude-Mem; мы не добавили новую
 обязательную «вторую подписку». Изменение форка — explicit profile вместо
 implicit defaults/auth/fallback. Разные роли могут использовать одну модель
 и тот же выбранный Bedrock account/SSO. [Сравнение по исходникам](handoffs/UPSTREAM-MEMORY-FLOW.md)
 объясняет upstream defaults/installer options и фактический `profile_required`.
-Сначала объясни это владельцу; не представляй отдельную роль как требование
+Не представляй отдельную роль как требование
 подключить другой сервис, account или скачать ещё один локальный LLM.
 
 До первого нового live **test** вызова согласуй точные model ID/inference
 profile, auth route, AWS profile/region/destination, synthetic payload и малый
-бюджет: calls/turns/time + применимый cost cap. Не подставляй historical Luna/
-Haiku или текущий assistant model как выбранные автоматически. Предложи
-конкретный вариант по approved доступным inputs и объясни ограничение; если
+бюджет: calls/turns/time + применимый cost cap. Семейство **Haiku и Bedrock/SSO
+уже выбраны**; не подставляй автоматически historical dated Haiku ID, Luna
+или текущий coding model. Предложи точный разрешённый Haiku ID по approved target
+inputs и объясни ограничение; если
 их нет — спроси. Никаких credential/token dumps, printing/copying secrets,
 SSO cache transfer, изменений IAM/managed policy или произвольного model
 discovery/inference. Используй нормальную approved auth-процедуру.
@@ -414,8 +429,8 @@ docs и функциональные patches не смешивать. Укажи
 
 ### D. Выбранные live profiles, затем daily use
 
-Отдельно scope/model/budget для interactive Bedrock и worker Bedrock, если
-worker route выбран владельцем. Он не выбирается автоматически из host login.
+Отдельные results/scope/model/budget для interactive Bedrock и выбранного
+worker **Haiku/Bedrock/SSO** (A40). Маршрут выбран явно, не угадан по host login.
 Не удаляй другой adapter/не расширяй live matrix без потребности. Recovery/error
 и remaining step-11 cases — по roadmap/VALIDATION и фактическому coverage.
 Availability/auth refusal не означает working support.
@@ -553,7 +568,9 @@ Accepted decisions: <ID/scope>. Missing inputs: <что/кто/как получ
 Claude Code, Bedrock/SSO. Read-only установи actual CLI path/platform/version.
 Спроси лишь ещё неизвестное: managed policy, actual checkout/prepared Chroma
 location; отдельный host-test model/auth/
-destination/budget; нужен ли live worker Bedrock вообще. Не переспрашивай
+destination/budget и exact approved Haiku ID/region/profile/budget для worker.
+Worker Haiku/Bedrock/SSO и обязательность автопамяти уже приняты (A40).
+Не переспрашивай эти решения или
 рабочий Bedrock login текущего developer chat и не проси secrets.
 
 Затем bounded critical review §9, необходимые active doc/command исправления

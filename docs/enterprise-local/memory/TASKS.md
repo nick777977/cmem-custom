@@ -7,6 +7,25 @@ This board does not grant permission or duplicate the dependency graph.
 
 ## Current ownership
 
+2026-11-12 **HAIKU-BEDROCK-SELECTION**, done by one coordinator at
+`723a3e51cf11bdc0078fe1b5a87fbd34d722c234`, `feat/cmem-light-local`.
+Reserve also root AGENTS.md current-authorization clarification and the
+WINDOWS-LOCAL-SETUP selected worker-profile wording.
+Owner confirms automatic observations/summaries are mandatory and selects
+Haiku using the existing target Claude Code/Bedrock/AWS SSO installation/access.
+Retain Codex/ChatGPT and Claude subscription routes; no Bedrock-only pruning or
+implicit fallback. Reserve active bootstrap/NEXT-SESSION/README/profile/target
+handoffs/roadmap status and memory STATE/TASKS/DECISIONS/WORKLOG. Docs-only
+selection handoff; actual Bedrock model ID/region/profile/runtime compatibility
+and live-test budget remain target inputs. No local runtime/AWS/model calls,
+source/default-output change, reinstall, branch/worktree/agent/merge/push.
+Completed: accepted A40 and current AGENTS/STATE/bootstrap/profile/runbook/
+NEXT-SESSION/roadmap wording aligned; stale active undecided-choice wording
+removed, older evidence preserved. Mandatory generation/Haiku/Bedrock/SSO
+will not be re-asked; other explicit adapters remain. Doc/link/whitespace and
+source/output preservation checks only. Reservations released; next task is
+target setup/acceptance with exact remaining technical inputs and live budget.
+
 2026-11-12 **UPSTREAM-MEMORY-FLOW**, done by one coordinator at
 `0e268712a235881d5c1dadfe60df6c2238473014`, `feat/cmem-light-local`.
 Owner requests original Claude-Mem vs fork defaults, subscription/model

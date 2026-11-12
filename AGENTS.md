@@ -30,6 +30,17 @@ never print secrets. Propose the exact model and a small live-test budget BEFORE
 the first inference. Real memories, unrelated settings and credentials are not an
 investigation source. Corporate AWS execution is not part of the local test scope.
 
+**A40, 2026-11-12:** automatic observations/summaries are mandatory. The owner
+selects Haiku for the target memory worker through the existing Claude Code
+installation and approved AWS Bedrock/AWS SSO account/access. Keep Codex/ChatGPT,
+ordinary Claude subscription/login and retained explicit adapters. No new
+subscription or different account/model per role is required. Do not ask the
+provider/family choice again; target setup must resolve the exact approved
+Bedrock Haiku model ID/inference profile, region/auth inputs and small live-test
+budget before inference. This selection does not authorize AWS execution on
+the current preparation machine or change previously unrun target evidence.
+See `docs/enterprise-local/memory/DECISIONS.md` A40.
+
 Special Job/AppContainer/WFP/DNS/crash-proof isolation and CI are deferred from
 phase-one prerequisites. Keep ordinary owned-child cleanup, deadlines, task-owned
 test folders and honest result labels. Existing native-kind/source refusals are

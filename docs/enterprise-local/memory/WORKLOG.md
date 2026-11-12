@@ -1708,3 +1708,39 @@ upstream install/signup/download, agents/branches/worktrees/merge/push.
 Mermaid is conceptual explanation, not recorded runtime trace. Reservations
 released; next choice remains an approved worker route after the explanation,
 followed by existing scoped host/local and separately scoped live checks.
+
+## 2026-11-12 — A40: select required Haiku memory generation via Bedrock/SSO
+
+Entry clean `feat/cmem-light-local` at
+`723a3e51cf11bdc0078fe1b5a87fbd34d722c234`. Owner confirms automatic
+observations/summaries are mandatory original functionality and selects
+Haiku using the existing target Claude Code installation and the same
+approved AWS Bedrock/AWS SSO access. Preserve supported Codex/ChatGPT and
+ordinary Claude subscription/login defaults/options plus retained explicit
+adapters. This is not a request for Bedrock-only pruning or implicit fallback.
+
+Recorded Accepted A40; updated current AGENTS and compact active STATE,
+bootstrap/NEXT-SESSION/README, LLM-PROFILES, target/comparison handoffs,
+Windows setup profile wording and roadmap D7/Bedrock status. Earlier
+undecided-worker text retained only as superseded history; active prompts
+must not ask the provider/family/purpose decision again. One selected default
+covers normal observer/summary/compression; generation is automatic after
+setup, not a per-note approval flow. Other supported provider/model choices
+are preserved, with no silent alteration to their configuration.
+
+Haiku family and Bedrock/SSO intent are decided; no exact approved Bedrock
+version/model ID/inference-profile ARN, region/profile, target npm CLI
+compatibility or first live-test payload/budget was supplied. Resolve those
+on the target. Reuse installation/access, not necessarily the interactive
+process itself. No AWS or inference executed on this preparation machine.
+Source generation/profile implementation already exists; only demonstrated
+target defects justify another source slice with paired outputs/checks.
+
+Validation: active-document search finds no remaining undecided-worker
+instructions in the target bundle; documentation links/whitespace and unchanged
+src/scripts/plugin/package/inventory checks PASS. No code/default-config/
+generated/receipt changes, tests/build/install/runtime/auth/model/AWS calls,
+agents/branches/worktrees/merge/push. Actual host/Haiku worker live acceptance
+is still NOT RUN. Reservations released. Next remains actual target host/local
+check with fake generation, then selected Haiku/Bedrock worker verification
+under exact bounded scope and remaining steps 11/12.

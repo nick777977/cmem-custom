@@ -1,5 +1,13 @@
 # Original Claude-Mem versus cmem-light: observer, auth and local embeddings
 
+**Owner selection after this explanation — A40, 2026-11-12:** automatic
+observations/summaries are required. Use Haiku through existing target Claude
+Code and the same approved Bedrock/SSO access. Keep Codex/ChatGPT, ordinary
+Claude subscription/login and retained explicit adapters. Exact target model
+ID/region/profile and live-test budget still need binding. Earlier statements
+that the owner had not chosen refer to the explanation's original scope;
+they no longer describe the current intent. No live test has passed here.
+
 2026-11-12. Explanation/source review only. Fork inspected at
 `0e268712a235881d5c1dadfe60df6c2238473014`, `feat/cmem-light-local`.
 Local retained initial snapshot: `f6df542326fccaa9717d13617ff9b30405c486b2`.
@@ -19,7 +27,8 @@ One default profile can cover observation and summary; overrides are optional.
 The earlier phrase "another model" was ambiguous: the additional operation is
 a generative request, which may use the same model as the coding session.
 Local MiniLM performs vector encoding for retrieval; it does not write prose.
-The owner has not yet selected a live worker profile/model/budget.
+At explanation time the owner had not selected a worker route; A40 now
+selects Haiku/Bedrock/SSO intent, with exact target inputs/budget still pending.
 
 ## Upstream findings and boundaries
 
@@ -90,13 +99,12 @@ used deterministic loopback responses while real local SQLite/Chroma/MiniLM
 were exercised in the previously recorded checks. Fake responses do not
 certify a live account/model or useful real-world summarization quality.
 
-## What remains to decide and test
+## What remains to bind and test after A40
 
-The practical choice is which approved model/auth route may generate memory
-notes in daily use, not whether to buy a mandatory additional model. The owner
-may choose their existing Bedrock/SSO account and one available model; a small
-synthetic test needs exact model/profile/region/payload/budget first. After
+The owner has selected the existing Bedrock/SSO route and Haiku family for
+required daily memory generation, without requiring another subscription.
+A small synthetic test still needs exact model/profile/region/payload/budget. After
 configuration, ordinary generation should be automatic under that persistent
-selection, not a new user prompt for each note. No live choice or test is
-authorized merely by this explanatory question. Preserve the existing
+selection, not a new user prompt for each note. The original explanatory
+question alone selected no route; A40 supersedes that uncertainty. Preserve the existing
 step-11 host/fake-worker check before separately scoped live acceptance.

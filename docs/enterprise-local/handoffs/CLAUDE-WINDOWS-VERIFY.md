@@ -11,8 +11,13 @@ Bedrock/AWS SSO. Actual CLI command resolution/version/platform is unobserved.
 Resolve the approved npm shim and underlying executable/script on target before
 using direct exec-form assumptions below. Do not reinstall merely to obtain
 an assumed `.exe`, weaken binding checks or ask the owner to guess internals.
-Worker generation provider/model/budget remains undecided; explain its purpose
-versus local MiniLM embeddings before requesting that selection.
+Superseding owner selection A40: automatic observations/summaries are required;
+use Haiku through that existing Claude Code installation and the same approved
+Bedrock/SSO access. Provider/family is decided. Exact approved model ID/inference
+profile/region and bounded live-test payload/budget remain target inputs; no
+live acceptance or AWS execution here. Keep Codex and ordinary Claude login
+routes. Fake worker generation for the first host check is still a test seam,
+not the final daily-use setup.
 
 **Transfer note, 2026-11-12:** development is continuing in Claude Code on the
 other machine. First use [the bootstrap prompt](../CLAUDE-CODE-BOOTSTRAP.md).

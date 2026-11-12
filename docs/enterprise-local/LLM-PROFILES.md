@@ -1,5 +1,17 @@
 # User-controlled LLM profiles and task routing
 
+**Current owner selection — A40, 2026-11-12:** automatic memory observations
+and summaries are required. Target default generation is the Haiku family
+through the existing Claude Code installation and the same approved AWS
+Bedrock/AWS SSO account/access. One explicit default covers observer/summary/
+compression; supported overrides remain optional. Resolve the exact approved
+Bedrock Haiku model ID/inference-profile ARN, profile/region and bounded first
+live-test payload/budget on target. Do not ask the provider/family choice again.
+Actual live target acceptance remains NOT RUN. Keep Codex/ChatGPT, ordinary
+Claude subscription/login and other retained explicit adapters/settings;
+no Bedrock-only product change or silent model/account fallback. Normal
+generation is automatic after setup, with no per-note confirmation loop.
+
 Accepted target contract, 2026-11-02, decisions A19/A20. PROFILE-06A and
 PROFILE-06B implement this configuration for the local worker. A28 requires an
 explicit profile in the private Codex launcher.
@@ -69,13 +81,14 @@ and summary generation requires a compatible generative worker profile chosen
 by the owner. The staged artifact check did not choose that profile.
 [Exact-artifact evidence](handoffs/VERIFY-11-LOCAL.md).
 
-Owner clarification, 2026-11-12: the development Claude Code is globally
+Earlier owner clarification (before A40), 2026-11-12: the development Claude Code is globally
 npm-installed and launched as `claude` from Windows PowerShell with Bedrock/
 AWS SSO. This does not select the memory worker's generation route. Explain
 that the worker is the local background application process; a generative
 profile writes observations/summaries, while MiniLM embeds text for search.
-The owner requests that explanation before choosing. No live worker model,
-provider or budget was selected by this clarification. Local embedding asset
+The owner requested an explanation before choosing; A40 above now supplies
+the Haiku/Bedrock/SSO intent. That earlier answer selected no route/budget.
+Exact model and first live-test scope still need target binding. Local embedding asset
 preparation is a separate setup step; npm dependency installation alone does
 not certify that those runtime/model assets are prepared on the target.
 
