@@ -1261,3 +1261,14 @@ GitHub Docs
 [image](https://www.google.com/s2/favicons?domain=https://docs.github.com\&sz=32)
 
 GitHub Docs
+
+
+Прочитай полностью docs/enterprise-local/CLAUDE-CODE-BOOTSTRAP.md
+и следуй ему как стартовому промпту продолжения разработки.
+
+Соблюдай CLAUDE.md и AGENTS.md, прочитай указанный обязательный
+контекст, проверь фактическое состояние репозитория и окружения.
+
+Проведи предусмотренный ограниченный критический анализ,
+затем продолжай существующий roadmap с актуальной следующей задачи.
+Решение A40 о Haiku через Bedrock/SSO уже принято.
